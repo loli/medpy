@@ -1,0 +1,226 @@
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume}{
+\section{medpy.metric.Volume.Volume Class Reference}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume}\index{medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}}
+}
+
+
+Computes different volume metrics between two 3D-\/images contain each a binary object.  
+
+
+
+
+Inheritance diagram for medpy.metric.Volume.Volume:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=228pt]{classmedpy_1_1metric_1_1Volume_1_1Volume__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for medpy.metric.Volume.Volume:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=228pt]{classmedpy_1_1metric_1_1Volume_1_1Volume__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_acd9bb57619003117d40ddb45059f160d}{\_\-\_\-init\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Initialize the class with two binary images whose 0 values are considered to be background voxels and the 1 values foreground. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a0432d5eeea15c24f159ab0c7737be4ad}{GetRelativeVolumeDifference}
+\begin{DoxyCompactList}\small\item\em Returns the relative volume difference between two shapes defined by the non-\/background voxels of in the binary images. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_ac9520b102a7355e1c3b1e6e7338f8d1d}{GetVolumetricOverlapError}
+\begin{DoxyCompactList}\small\item\em Returns the volumetric overlap error between two shapes defined by the non-\/background voxels of in two binary images. \end{DoxyCompactList}\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a2b74258c665afe8c9fb75d81539b2072}{
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a2b74258c665afe8c9fb75d81539b2072}{GetMaskSize}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a2b74258c665afe8c9fb75d81539b2072}
+
+\begin{DoxyCompactList}\small\item\em Computes the mask objects size if not yet done and returns it. \end{DoxyCompactList}\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a9b83c53e0f5742f89e9e42fb91fde96f}{
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a9b83c53e0f5742f89e9e42fb91fde96f}{GetReferenceSize}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a9b83c53e0f5742f89e9e42fb91fde96f}
+
+\begin{DoxyCompactList}\small\item\em Computes the reference objects size if not yet done and returns it. \end{DoxyCompactList}\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a675fe69a77ee67b93da82af7f138deaa}{
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a675fe69a77ee67b93da82af7f138deaa}{GetIntersectionSize}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a675fe69a77ee67b93da82af7f138deaa}
+
+\begin{DoxyCompactList}\small\item\em Computes the two objects intersection size if not yet done and returns it. \end{DoxyCompactList}\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a2ba55a81e112ad5b40fc7d8f58e71f0d}{
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a2ba55a81e112ad5b40fc7d8f58e71f0d}{GetUnionSize}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a2ba55a81e112ad5b40fc7d8f58e71f0d}
+
+\begin{DoxyCompactList}\small\item\em Computes the two objects union size if not yet done and returns it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a30566577c9f3e1812da2c0ecc1e9543b}{\_\-ComputeIntersectionWindow}
+\begin{DoxyCompactList}\small\item\em Computes and sets the intersection windows of the two images. \end{DoxyCompactList}\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a28099a18f703f77e073e35d336da6db5}{
+def \hyperlink{classmedpy_1_1metric_1_1Volume_1_1Volume_a28099a18f703f77e073e35d336da6db5}{\_\-ComputeUnionAndIntersection}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a28099a18f703f77e073e35d336da6db5}
+
+\begin{DoxyCompactList}\small\item\em Computes and sets the two image shapes union and intersection sizes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a3437bb5928998234f90e917f295e9f1a}{
+{\bfseries \_\-mask} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a3437bb5928998234f90e917f295e9f1a}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_ab6340306acf9010f924bee565c293a67}{
+{\bfseries \_\-reference} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_ab6340306acf9010f924bee565c293a67}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a8e479ed7d6f62ea93684f0425d7c0876}{
+{\bfseries \_\-mask\_\-offset} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a8e479ed7d6f62ea93684f0425d7c0876}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_aa1bb2b905b05ec2f7d0293e28cd377d2}{
+{\bfseries \_\-reference\_\-offset} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_aa1bb2b905b05ec2f7d0293e28cd377d2}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a0da7280647425ce48e8bbba9f2eea751}{
+{\bfseries \_\-intersection\_\-window} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a0da7280647425ce48e8bbba9f2eea751}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_aa87392dfe821aa7eed8973211fb54fdb}{
+{\bfseries \_\-mask\_\-size} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_aa87392dfe821aa7eed8973211fb54fdb}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a6996e5b448ef3818964f409e36d7fea6}{
+{\bfseries \_\-reference\_\-size} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a6996e5b448ef3818964f409e36d7fea6}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_af3427348038c6318d388eeee19dc303c}{
+{\bfseries \_\-union\_\-size} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_af3427348038c6318d388eeee19dc303c}
+
+\item 
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a4d8bd483c09923985b8376b3a8850e86}{
+{\bfseries \_\-intersection\_\-size} = None}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a4d8bd483c09923985b8376b3a8850e86}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Computes different volume metrics between two 3D-\/images contain each a binary object. 
+
+Beside this provides a number of statistics of the two images.
+
+Metrics defined in: Heimann, T.; van Ginneken, B.; Styner, M.A.; Arzhaeva, Y.; Aurich, V.; Bauer, C.; Beck, A.; Becker, C.; Beichel, R.; Bekes, G.; Bello, F.; Binnig, G.; Bischof, H.; Bornik, A.; Cashman, P.; Ying Chi; Cordova, A.; Dawant, B.M.; Fidrich, M.; Furst, J.D.; Furukawa, D.; Grenacher, L.; Hornegger, J.; Kainmuller, D.; Kitney, R.I.; Kobatake, H.; Lamecker, H.; Lange, T.; Jeongjin Lee; Lennon, B.; Rui Li; Senhu Li; Meinzer, H.-\/P.; Nemeth, G.; Raicu, D.S.; Rau, A.-\/M.; van Rikxoort, E.M.; Rousson, M.; Rusko, L.; Saddi, K.A.; Schmidt, G.; Seghers, D.; Shimizu, A.; Slagmolen, P.; Sorantin, E.; Soza, G.; Susomboon, R.; Waite, J.M.; Wimmer, A.; Wolf, I.; , \char`\"{}Comparison and Evaluation of Methods for Liver Segmentation From CT Datasets,\char`\"{} Medical Imaging, IEEE Transactions on , vol.28, no.8, pp.1251-\/1265, Aug. 2009 doi: 10.1109/TMI.2009.2013851 \begin{DoxyVerb}The mask image as scipy array.\end{DoxyVerb}
+ 
+
+Definition at line 32 of file Volume.py.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_acd9bb57619003117d40ddb45059f160d}{
+\index{medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
+\index{\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}!medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}}
+\subsubsection[{\_\-\_\-init\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.Volume.Volume.\_\-\_\-init\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{mask, }
+\item[{}]{reference, }
+\item[{}]{mask\_\-offset = {\ttfamily \mbox{[}0}, }
+\item[{}]{reference\_\-offset = {\ttfamily \mbox{[}0}}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_acd9bb57619003117d40ddb45059f160d}
+
+
+Initialize the class with two binary images whose 0 values are considered to be background voxels and the 1 values foreground. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mask,:} & mask as an scipy array (3D image) \\
+\hline
+{\em reference,:} & reference as an scipy array (3D image) \\
+\hline
+{\em mask\_\-offset,:} & offset of the mask array to 0,0,0-\/origin \\
+\hline
+{\em mask\_\-offset,:} & offset of the reference array to 0,0,0-\/origin \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 62 of file Volume.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a30566577c9f3e1812da2c0ecc1e9543b}{
+\index{medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}!\_\-ComputeIntersectionWindow@{\_\-ComputeIntersectionWindow}}
+\index{\_\-ComputeIntersectionWindow@{\_\-ComputeIntersectionWindow}!medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}}
+\subsubsection[{\_\-ComputeIntersectionWindow}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.Volume.Volume.\_\-ComputeIntersectionWindow (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a30566577c9f3e1812da2c0ecc1e9543b}
+
+
+Computes and sets the intersection windows of the two images. 
+
+The intersection window marks the area in which the two images bounding boxes intersect. The returned rectangle is defined by its lower-\/left and upper-\/right corner. 
+
+Definition at line 174 of file Volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_a0432d5eeea15c24f159ab0c7737be4ad}{
+\index{medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}!GetRelativeVolumeDifference@{GetRelativeVolumeDifference}}
+\index{GetRelativeVolumeDifference@{GetRelativeVolumeDifference}!medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}}
+\subsubsection[{GetRelativeVolumeDifference}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.Volume.Volume.GetRelativeVolumeDifference (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_a0432d5eeea15c24f159ab0c7737be4ad}
+
+
+Returns the relative volume difference between two shapes defined by the non-\/background voxels of in the binary images. 
+
+The relative volume distance of 0 means that the volumes are identical. Note that this doesn't apply that the shapes are identical or overlap at all. The result is given as signed number \mbox{[}-\/100,+100\mbox{]} to indicate over-\/ or under-\/segmentation. Warning: Can produce values greater than -\//+100 if the difference in volume exceeds 50\%. Positive values means that the mask volume is too big, a negative value that it is too small.
+
+Warning: This measure is not actually a metric, as it is not symmetric.
+
+Metric definition: The relative volume difference between two sets of voxels $S(A)$ and $S(b)$ is given in percent and defined as: \[ 100 * \frac{|A - B|}{|B|} \] 
+
+Definition at line 93 of file Volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1Volume_1_1Volume_ac9520b102a7355e1c3b1e6e7338f8d1d}{
+\index{medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}!GetVolumetricOverlapError@{GetVolumetricOverlapError}}
+\index{GetVolumetricOverlapError@{GetVolumetricOverlapError}!medpy::metric::Volume::Volume@{medpy::metric::Volume::Volume}}
+\subsubsection[{GetVolumetricOverlapError}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.Volume.Volume.GetVolumetricOverlapError (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1Volume_1_1Volume_ac9520b102a7355e1c3b1e6e7338f8d1d}
+
+
+Returns the volumetric overlap error between two shapes defined by the non-\/background voxels of in two binary images. 
+
+The volumetric overlap error is 0 for a perfect match and 100 if the two shapes don't overlap at all.
+
+Metric definition: The volumetric overlap error between two sets of voxels $S(A)$ and $S(b)$ is given in percent and defined as: \[ 100 * \left( 1 - \frac{|A\cap B|}{|A\cup B|} \right) \] 
+
+Definition at line 118 of file Volume.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+/home/loli/Programming/Python/MedPy/src/medpy/metric/Volume.py\end{DoxyCompactItemize}

@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classmedpy_1_1core_1_1Logger_1_1Logger_1_1LoggerHelper.html" title="A helper class which performs the actual initialization." alt="" coords="151,5,407,35"/>
+<area shape="rect" id="node5" href="$classmedpy_1_1filter_1_1AnisotropicDiffusion_1_1AnisotropicDiffusion.html" title="medpy.filter.AnisotropicDiffusion.AnisotropicDiffusion" alt="" coords="113,59,444,88"/>
+<area shape="rect" id="node7" href="$classmedpy_1_1filter_1_1Watershed_1_1Watershed.html" title="medpy.filter.Watershed.Watershed" alt="" coords="167,112,391,141"/>
+<area shape="rect" id="node9" href="$classmedpy_1_1metric_1_1Surface_1_1Surface.html" title="Computes different surface metrics between two 3D&#45;images contain each an object." alt="" coords="180,165,377,195"/>
+<area shape="rect" id="node11" href="$classmedpy_1_1metric_1_1Volume_1_1Volume.html" title="Computes different volume metrics between two 3D&#45;images contain each a binary object." alt="" coords="180,219,377,248"/>
+</map>
