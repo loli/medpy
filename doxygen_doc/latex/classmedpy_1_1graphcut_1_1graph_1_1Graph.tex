@@ -1,0 +1,345 @@
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph}{
+\section{medpy.graphcut.graph.Graph Class Reference}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph}\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+}
+
+
+Represents a graph suitable for further processing with the graphcut package.  
+
+
+
+
+Inheritance diagram for medpy.graphcut.graph.Graph:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{classmedpy_1_1graphcut_1_1graph_1_1Graph__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for medpy.graphcut.graph.Graph:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=240pt]{classmedpy_1_1graphcut_1_1graph_1_1Graph__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_ada7c2ff7b950159feab5a4d2f69464c9}{
+def {\bfseries \_\-\_\-init\_\-\_\-}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_ada7c2ff7b950159feab5a4d2f69464c9}
+
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a41b5d54706b84e5a11523da1ba626848}{set\_\-nodes}
+\begin{DoxyCompactList}\small\item\em Set the graphs nodes. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_af1726ca138ac2522b5fe98f5ae5b157f}{set\_\-source\_\-nodes}
+\begin{DoxyCompactList}\small\item\em Set the source nodes and compute their t-\/weights. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a54b1a1643e1eedda40c121f9b3e7577d}{set\_\-sink\_\-nodes}
+\begin{DoxyCompactList}\small\item\em Set the sink nodes and compute their t-\/weights. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a197d5cca5684cebfbabb07f13c4c0175}{set\_\-nweights}
+\begin{DoxyCompactList}\small\item\em Sets all nweights. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a5a99c76efac37bc31acf495873933122}{add\_\-tweights}
+\begin{DoxyCompactList}\small\item\em Adds tweights to the current collection of tweights, overwriting already existing ones. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1cf8f8077a620ae6fd90b327f689d5e5}{get\_\-nodes}
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4c8dbbd92c6b0e5534869890810f0c78}{get\_\-source\_\-nodes}
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a988309a34486d834c65d87e83548b969}{get\_\-sink\_\-nodes}
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_aabbf310726d5af9bbd79c6492f683c11}{get\_\-edges}
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1090dadcdad71f1d629425c917e32ba5}{get\_\-nweights}
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}{get\_\-tweights}
+\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0441ff798c06ebf4cb860af7ccf37a36}{get\_\-tweights2}
+\begin{DoxyCompactList}\small\item\em Version of  \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}{get\_\-tweights()} that does not check if all tweights has been set and is therefore slightly faster. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0fbe2b59f746e726f8bcf6c3111d7860}{inconsistent}
+\begin{DoxyCompactList}\small\item\em Perform some consistency tests on the graph represented by this object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_aaed442199a4e04230982c1eb5cf809df}{
+{\bfseries MAX} = \_\-\_\-UINT\_\-16\_\-BIT}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_aaed442199a4e04230982c1eb5cf809df}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Represents a graph suitable for further processing with the graphcut package. 
+
+The graph contains nodes, edges (directed) between the nodes (n-\/edges), edges between two terminals (called source and sink) and the edges (t-\/edges) and a weight for each edge.
+
+Methods: set\_\-nodes(nodes) -\/-\/ Set the nodes. set\_\-source\_\-nodes(source\_\-nodes) -\/-\/ Set the source nodes. set\_\-sink\_\-nodes(sink\_\-nodes) -\/-\/ Set the sink nodes. set\_\-nweights(nweights) -\/-\/ Set the inter-\/node weights-\/ add\_\-tweights(nweights) -\/-\/ Add some terminal-\/to-\/node weights. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1cf8f8077a620ae6fd90b327f689d5e5}{get\_\-nodes()} -\/-\/ Return all nodes. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4c8dbbd92c6b0e5534869890810f0c78}{get\_\-source\_\-nodes()} -\/-\/ Return all nodes connected to the source. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a988309a34486d834c65d87e83548b969}{get\_\-sink\_\-nodes()} -\/-\/ Return all nodes connected to the sink. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_aabbf310726d5af9bbd79c6492f683c11}{get\_\-edges()} -\/-\/ Return all edges. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1090dadcdad71f1d629425c917e32ba5}{get\_\-nweights()} -\/-\/ Return all inter-\/node weights. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}{get\_\-tweights()} -\/-\/ Return all terminal-\/node weights. \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0441ff798c06ebf4cb860af7ccf37a36}{get\_\-tweights2()} -\/-\/ Unsave version of \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}{get\_\-tweights()} 
+
+Definition at line 62 of file graph.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a5a99c76efac37bc31acf495873933122}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!add\_\-tweights@{add\_\-tweights}}
+\index{add\_\-tweights@{add\_\-tweights}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{add\_\-tweights}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.add\_\-tweights (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{tweights}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a5a99c76efac37bc31acf495873933122}
+
+
+Adds tweights to the current collection of tweights, overwriting already existing ones. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tweights,:} & a dictionary with node\_\-ids as keys and (weight-\/to-\/soource, weight-\/to-\/sink) tuples as values.  tweights: dict \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 145 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_aabbf310726d5af9bbd79c6492f683c11}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-edges@{get\_\-edges}}
+\index{get\_\-edges@{get\_\-edges}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-edges}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-edges (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_aabbf310726d5af9bbd79c6492f683c11}
+\begin{DoxyReturn}{Returns}
+: all edges as ordered list of tuples (i.e. \mbox{[}(node\_\-id1, node\_\-id2), (..), ...\mbox{]}. : list 
+\end{DoxyReturn}
+
+
+Definition at line 177 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1cf8f8077a620ae6fd90b327f689d5e5}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-nodes@{get\_\-nodes}}
+\index{get\_\-nodes@{get\_\-nodes}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-nodes}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1cf8f8077a620ae6fd90b327f689d5e5}
+\begin{DoxyReturn}{Returns}
+all nodes as an unordered list. : list 
+\end{DoxyReturn}
+
+
+Definition at line 153 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1090dadcdad71f1d629425c917e32ba5}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-nweights@{get\_\-nweights}}
+\index{get\_\-nweights@{get\_\-nweights}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-nweights}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-nweights (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a1090dadcdad71f1d629425c917e32ba5}
+\begin{DoxyReturn}{Returns}
+: all n-\/weights (inter-\/node weights) as \{edge-\/tuple: weight, ...\} dict. : dict 
+\end{DoxyReturn}
+
+
+Definition at line 185 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a988309a34486d834c65d87e83548b969}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-sink\_\-nodes@{get\_\-sink\_\-nodes}}
+\index{get\_\-sink\_\-nodes@{get\_\-sink\_\-nodes}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-sink\_\-nodes}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-sink\_\-nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a988309a34486d834c65d87e83548b969}
+\begin{DoxyReturn}{Returns}
+: all nodes that are connected with the source as an unordered list. : list 
+\end{DoxyReturn}
+
+
+Definition at line 169 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4c8dbbd92c6b0e5534869890810f0c78}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-source\_\-nodes@{get\_\-source\_\-nodes}}
+\index{get\_\-source\_\-nodes@{get\_\-source\_\-nodes}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-source\_\-nodes}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-source\_\-nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4c8dbbd92c6b0e5534869890810f0c78}
+\begin{DoxyReturn}{Returns}
+: all nodes that are connected with the source as an unordered list. : list 
+\end{DoxyReturn}
+
+
+Definition at line 161 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-tweights@{get\_\-tweights}}
+\index{get\_\-tweights@{get\_\-tweights}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-tweights}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-tweights (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}
+\begin{DoxyReturn}{Returns}
+: all t-\/weights (terminal-\/node weights) as \{node\_\-id: weight, ...\} dict. : dict 
+\end{DoxyReturn}
+
+
+Definition at line 193 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0441ff798c06ebf4cb860af7ccf37a36}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!get\_\-tweights2@{get\_\-tweights2}}
+\index{get\_\-tweights2@{get\_\-tweights2}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{get\_\-tweights2}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.get\_\-tweights2 (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0441ff798c06ebf4cb860af7ccf37a36}
+
+
+Version of  \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a4b033a8067128c8a222f6c466f1b606f}{get\_\-tweights()} that does not check if all tweights has been set and is therefore slightly faster. 
+
+Use with caution! \begin{DoxyReturn}{Returns}
+: all t-\/weights (terminal-\/node weights) as \{node\_\-id: weight, ...\} dict. : dict 
+\end{DoxyReturn}
+
+
+Definition at line 208 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0fbe2b59f746e726f8bcf6c3111d7860}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!inconsistent@{inconsistent}}
+\index{inconsistent@{inconsistent}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{inconsistent}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.inconsistent (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a0fbe2b59f746e726f8bcf6c3111d7860}
+
+
+Perform some consistency tests on the graph represented by this object. 
+
+\begin{DoxyReturn}{Returns}
+: False if consistent, else a list of inconsistency messages. 
+\end{DoxyReturn}
+
+
+Definition at line 216 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a41b5d54706b84e5a11523da1ba626848}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!set\_\-nodes@{set\_\-nodes}}
+\index{set\_\-nodes@{set\_\-nodes}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{set\_\-nodes}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.set\_\-nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{nodes}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a41b5d54706b84e5a11523da1ba626848}
+
+
+Set the graphs nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nodes,:} & a sequence of integers  nodes: sequence \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 85 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a197d5cca5684cebfbabb07f13c4c0175}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!set\_\-nweights@{set\_\-nweights}}
+\index{set\_\-nweights@{set\_\-nweights}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{set\_\-nweights}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.set\_\-nweights (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{nweights}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a197d5cca5684cebfbabb07f13c4c0175}
+
+
+Sets all nweights. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nweights,:} & a dictionary with (region-\/a-\/id, region-\/b-\/id) tuples as keys and (weight-\/a-\/to-\/b, weight-\/b-\/to-\/a) as values.  nweights: dict \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 135 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_a54b1a1643e1eedda40c121f9b3e7577d}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!set\_\-sink\_\-nodes@{set\_\-sink\_\-nodes}}
+\index{set\_\-sink\_\-nodes@{set\_\-sink\_\-nodes}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{set\_\-sink\_\-nodes}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.set\_\-sink\_\-nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{sink\_\-nodes}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_a54b1a1643e1eedda40c121f9b3e7577d}
+
+
+Set the sink nodes and compute their t-\/weights. 
+
+\begin{DoxyWarning}{Warning}
+: It does not get checked if one of the supplied sink-\/nodes already has a weight assigned (e.g. by passing it to  \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_af1726ca138ac2522b5fe98f5ae5b157f}{set\_\-source\_\-nodes()}). This can occur when the foreground-\/ and background-\/markers cover the same region. In this case the order of setting the terminal nodes can affect the graph and therefore the graph-\/cut result.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em sink\_\-nodes,:} & a sequence of integers  sink\_\-nodes: sequence \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 121 of file graph.py.
+
+\hypertarget{classmedpy_1_1graphcut_1_1graph_1_1Graph_af1726ca138ac2522b5fe98f5ae5b157f}{
+\index{medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}!set\_\-source\_\-nodes@{set\_\-source\_\-nodes}}
+\index{set\_\-source\_\-nodes@{set\_\-source\_\-nodes}!medpy::graphcut::graph::Graph@{medpy::graphcut::graph::Graph}}
+\subsubsection[{set\_\-source\_\-nodes}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.Graph.set\_\-source\_\-nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{source\_\-nodes}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1graphcut_1_1graph_1_1Graph_af1726ca138ac2522b5fe98f5ae5b157f}
+
+
+Set the source nodes and compute their t-\/weights. 
+
+\begin{DoxyWarning}{Warning}
+: It does not get checked if one of the supplied source-\/nodes already has a weight assigned (e.g. by passing it to  \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph_a54b1a1643e1eedda40c121f9b3e7577d}{set\_\-sink\_\-nodes()}). This can occur when the foreground-\/ and background-\/markers cover the same region. In this case the order of setting the terminal nodes can affect the graph and therefore the graph-\/cut result.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em source\_\-nodes,:} & a sequence of integers  source\_\-nodes: sequence \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 101 of file graph.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+/home/omaier/Programming/Python/medpy/src/medpy/graphcut/graph.py\end{DoxyCompactItemize}

@@ -1,0 +1,139 @@
+\hypertarget{namespacemedpy_1_1graphcut_1_1graph}{
+\section{Package medpy.graphcut.graph}
+\label{namespacemedpy_1_1graphcut_1_1graph}\index{medpy.graphcut.graph@{medpy.graphcut.graph}}
+}
+
+
+Create and modify graphs from nD label-\/images to be used in graph-\/cut algorithms.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph}{Graph}
+\begin{DoxyCompactList}\small\item\em Represents a graph suitable for further processing with the graphcut package. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacemedpy_1_1graphcut_1_1graph_a2fa7c97da5a7cf9c9e5ee62230eca8ba}{graph\_\-from\_\-labels}
+\begin{DoxyCompactList}\small\item\em Create a  \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph}{Graph} object from a nD label image. \end{DoxyCompactList}\item 
+def \hyperlink{namespacemedpy_1_1graphcut_1_1graph_a60e9e9c436bdb49797ba09b10d97fb2c}{relabel}
+\begin{DoxyCompactList}\small\item\em Relabel the regions of a label image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Create and modify graphs from nD label-\/images to be used in graph-\/cut algorithms. Classes:
+\begin{DoxyItemize}
+\item class \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph}{Graph}: a class for holding graphs
+\end{DoxyItemize}
+
+Functions:
+\begin{DoxyItemize}
+\item def graph\_\-from\_\-labels(label\_\-image, fg\_\-markers, bg\_\-markers, regional\_\-term = False, boundary\_\-term = False, directed = False, extract\_\-marker\_\-features = False, regional\_\-term\_\-args = False, boundary\_\-term\_\-args = False, extract\_\-marker\_\-features\_\-args = False): Creates a \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph}{Graph} object from a nD label image
+\item def relabel(label\_\-image, start = 1): relabels a label image to be consecutive
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Oskar Maier 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+d0.1.0 
+\end{DoxyVersion}
+\begin{DoxySince}{Since}
+2012-\/01-\/18  Development 
+\end{DoxySince}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespacemedpy_1_1graphcut_1_1graph_a2fa7c97da5a7cf9c9e5ee62230eca8ba}{
+\index{medpy::graphcut::graph@{medpy::graphcut::graph}!graph\_\-from\_\-labels@{graph\_\-from\_\-labels}}
+\index{graph\_\-from\_\-labels@{graph\_\-from\_\-labels}!medpy::graphcut::graph@{medpy::graphcut::graph}}
+\subsubsection[{graph\_\-from\_\-labels}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.graph\_\-from\_\-labels (
+\begin{DoxyParamCaption}
+\item[{}]{label\_\-image, }
+\item[{}]{fg\_\-markers, }
+\item[{}]{bg\_\-markers, }
+\item[{}]{regional\_\-term = {\ttfamily False}, }
+\item[{}]{boundary\_\-term = {\ttfamily False}, }
+\item[{}]{directed = {\ttfamily False}, }
+\item[{}]{extract\_\-marker\_\-features = {\ttfamily False}, }
+\item[{}]{regional\_\-term\_\-args = {\ttfamily False}, }
+\item[{}]{boundary\_\-term\_\-args = {\ttfamily False}, }
+\item[{}]{extract\_\-marker\_\-features\_\-args = {\ttfamily False}}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1graphcut_1_1graph_a2fa7c97da5a7cf9c9e5ee62230eca8ba}
+
+
+Create a  \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph}{Graph} object from a nD label image. 
+
+The graph created consists of nodes, edges and weights (two type: n-\/weight, which are inter-\/node weights, and t-\/weights, which are terminat-\/to-\/node weights).
+
+For every region in the supplied label image a node is generated with the region-\/id as node-\/id. Using ndim$\ast$2-\/connectedness (e.g. 3$\ast$2=6 for 3D) the neighbours of each region are determined and a edge created for each such pair of neighbours. The provides boundary\_\-term function is used to compute the weights for all inter-\/node (i.e. inter region) weights (n-\/weights). For the terminal-\/to-\/node weights (t-\/weights) two approaches are taken: all regions that are touched by the supplied foreground mask (fg\_\-markers) the weight from the source is set to a maximum ( Graph.MAX) and the weight to the sink to 0. For the background mask (bg\_\-markers) vice-\/versa. All nodes that are not contained in these receive a weight calculated with the provided regional\_\-term function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em label\_\-image,:} & The label image as an array containing uint values. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+: The region labels have to start from 1 and be continuous ( \hyperlink{namespacemedpy_1_1graphcut_1_1graph_a60e9e9c436bdb49797ba09b10d97fb2c}{relabel()}).  label\_\-image: numpy.ndarray 
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em fg\_\-markers,:} & The foreground markers as binary array.  fg\_\-markers: ndarray \\
+\hline
+{\em bg\_\-markers,:} & The background markers as binary array.  bg\_\-markers: ndarray \\
+\hline
+{\em regional\_\-term,:} & This can be either False -\/ all t-\/weights are set to 0, except for the nodes that are directly connected to the source or sink. , or a function -\/ The supplied function is used to compute the t\_\-edges. It has to have the following signature source\_\-weight, sink\_\-weight = fun(label\_\-image, region\_\-bb, region\_\-id, fg\_\-featurs, bg\_\-features, regional\_\-term\_\-args), where source\_\-weight is the weight from the source to the node of the supplied region; sink\_\-weight the weight from the node to the sink; fg\_\-features the output of the extract\_\-marker\_\-features function over the foreground regions if supplied, otherwise False; bg\_\-features the same for the background regions; region\_\-bb the bounding box of the current region as a list of slice-\/objects; region\_\-id the id og the regions; label\_\-image the label image; and regional\_\-term\_\-args eventual additional parameters passed via the regional\_\-term\_\-args argument.  regional\_\-term: function \\
+\hline
+{\em boundary\_\-term,:} & This can be either False -\/ In which case the weight of all n\_\-edges i.e. between all nodes that are not source or sink, are set to 0. , or a function -\/ In which case it is used to compute the edges weights. The supplied function has to have the following signature weight = fun(label\_\-image, r1\_\-bb, r2\_\-bb, r1\_\-id, r2\_\-id, boundary\_\-term\_\-args), where r1\_\-bb and r2\_\-bb are the bounding boxes around the regions defined by a list of slice-\/objects, r1\_\-id and r2\_\-id the respective regions ids and boundary\_\-term\_\-args eventual additional parameters passed via the boundary\_\-term\_\-args argument. It is called for any two neighbouring regions. If the directed parameter is set to True, it is also called for the computation of the reversed weight.  boundary\_\-term: function \\
+\hline
+{\em directed,:} & Set this to True, if the n\_\-edges should be directed i.e. have different weights for both directions.  directed: bool \\
+\hline
+{\em extract\_\-marker\_\-features,:} & A function that has to follow the signature features = fun(label\_\-image, bbs\_\-of\_\-marked\_\-regions, is\_\-foreground, extract\_\-marker\_\-features\_\-args) and is called once with all regions that are marked by the foreground markers and once with all regions that are marked as background. The return values are passed to the regional\_\-term function.  extract\_\-marker\_\-features: function \\
+\hline
+{\em regional\_\-term\_\-args,:} & Use this to pass some additional parameters to the regional\_\-term function. \\
+\hline
+{\em boundary\_\-term\_\-args,:} & Use this to pass some additional parameters to the boundary\_\-term function. \\
+\hline
+{\em extract\_\-marker\_\-features\_\-args,:} & Use this to pass some additional parameters to the extract\_\-marker\_\-features function.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+: the created graph : \hyperlink{classmedpy_1_1graphcut_1_1graph_1_1Graph}{graph.Graph}
+\end{DoxyReturn}
+AttributeError: If an argument is maleformed. 
+
+Definition at line 317 of file graph.py.
+
+\hypertarget{namespacemedpy_1_1graphcut_1_1graph_a60e9e9c436bdb49797ba09b10d97fb2c}{
+\index{medpy::graphcut::graph@{medpy::graphcut::graph}!relabel@{relabel}}
+\index{relabel@{relabel}!medpy::graphcut::graph@{medpy::graphcut::graph}}
+\subsubsection[{relabel}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.graph.relabel (
+\begin{DoxyParamCaption}
+\item[{}]{label\_\-image, }
+\item[{}]{start = {\ttfamily 1}}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1graphcut_1_1graph_a60e9e9c436bdb49797ba09b10d97fb2c}
+
+
+Relabel the regions of a label image. 
+
+Re-\/processes the labels to make them consecutively and starting from start.
+
+
+\begin{DoxyParams}{Parameters}
+{\em label\_\-image,:} & a label image  label\_\-image: numpy.ndarray \\
+\hline
+{\em start,:} & the id of the first label to assign  start: int \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+: The relabeled image. : numpy.ndarray 
+\end{DoxyReturn}
+
+
+Definition at line 625 of file graph.py.
+

@@ -1,1 +1,3 @@
-from LabelsReduce import fit_labels_to_mask
+from FitLabelsToMask import fit_labels_to_mask
+from LabelImageStatistics import LabelImageStatistics
+from MinimaExtraction import local_minima

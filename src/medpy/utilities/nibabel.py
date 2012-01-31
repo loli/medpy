@@ -12,7 +12,7 @@
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "0.1, 2011-12-12"
+__version__ = "d0.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development" # tested functions marked with tested keyword
 __description__ = "NiBabel image utility functions."
@@ -29,7 +29,6 @@ def image_like(data, reference, origin = None):
                    reference header is used
     @return: a NiBabel image for data of same type as image
     """
-    # !TODO: Move to utilities package
     # !TODO: Check if this covers all know cases i.e. if the data can contain
     # information that is not used.
     header = reference.get_header().copy()

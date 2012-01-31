@@ -1,0 +1,108 @@
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel}{
+\section{Package medpy.utilities.nibabel}
+\label{namespacemedpy_1_1utilities_1_1nibabel}\index{medpy.utilities.nibabel@{medpy.utilities.nibabel}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacemedpy_1_1utilities_1_1nibabel_ae7edf0d24f91a07cd744a32b5768c9b3}{image\_\-like}
+\begin{DoxyCompactList}\small\item\em Creates a NiBabel image for the data of the same type as image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{namespacemedpy_1_1utilities_1_1nibabel_aefad48e608c1f77a365a959cb01abebf}{\_\-\_\-author\_\-\_\-} = \char`\"{}Oskar Maier\char`\"{}
+\begin{DoxyCompactList}\small\item\em Holds a number of utility function to process NiBabel images. \end{DoxyCompactList}\item 
+string \hyperlink{namespacemedpy_1_1utilities_1_1nibabel_aef564d622a872d4a5724f34f5167d0f6}{\_\-\_\-version\_\-\_\-} = \char`\"{}d0.1, 2011-\/12-\/12\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1utilities_1_1nibabel_a91134bb125f3b3ce85dbc67f73edafa3}{\_\-\_\-email\_\-\_\-} = \char`\"{}oskar.maier@googlemail.com\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1utilities_1_1nibabel_ad6d46ba600da8eb4276c1c1d1cc45990}{\_\-\_\-status\_\-\_\-} = \char`\"{}Development\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1utilities_1_1nibabel_aed62d192744122f84ec7eeec74c6936c}{\_\-\_\-description\_\-\_\-} = \char`\"{}NiBabel image utility functions.\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel_ae7edf0d24f91a07cd744a32b5768c9b3}{
+\index{medpy::utilities::nibabel@{medpy::utilities::nibabel}!image\_\-like@{image\_\-like}}
+\index{image\_\-like@{image\_\-like}!medpy::utilities::nibabel@{medpy::utilities::nibabel}}
+\subsubsection[{image\_\-like}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.utilities.nibabel.image\_\-like (
+\begin{DoxyParamCaption}
+\item[{}]{data, }
+\item[{}]{reference, }
+\item[{}]{origin = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1utilities_1_1nibabel_ae7edf0d24f91a07cd744a32b5768c9b3}
+
+
+Creates a NiBabel image for the data of the same type as image. 
+
+Where the data is not sufficient to provide required information, the header attributes of image are used. 
+\begin{DoxyParams}{Parameters}
+{\em data,:} & a numpy array of arbitrary type \\
+\hline
+{\em image,:} & a NiBabel image \\
+\hline
+{\em origin,:} & the images origin that should get set, if None the one from the reference header is used \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+: a NiBabel image for data of same type as image 
+\end{DoxyReturn}
+
+
+Definition at line 33 of file nibabel.py.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel_aefad48e608c1f77a365a959cb01abebf}{
+\index{medpy::utilities::nibabel@{medpy::utilities::nibabel}!\_\-\_\-author\_\-\_\-@{\_\-\_\-author\_\-\_\-}}
+\index{\_\-\_\-author\_\-\_\-@{\_\-\_\-author\_\-\_\-}!medpy::utilities::nibabel@{medpy::utilities::nibabel}}
+\subsubsection[{\_\-\_\-author\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::utilities::nibabel.\_\-\_\-author\_\-\_\-} = \char`\"{}Oskar Maier\char`\"{}}}
+\label{namespacemedpy_1_1utilities_1_1nibabel_aefad48e608c1f77a365a959cb01abebf}
+
+
+Holds a number of utility function to process NiBabel images. 
+
+
+
+Definition at line 15 of file nibabel.py.
+
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel_aed62d192744122f84ec7eeec74c6936c}{
+\index{medpy::utilities::nibabel@{medpy::utilities::nibabel}!\_\-\_\-description\_\-\_\-@{\_\-\_\-description\_\-\_\-}}
+\index{\_\-\_\-description\_\-\_\-@{\_\-\_\-description\_\-\_\-}!medpy::utilities::nibabel@{medpy::utilities::nibabel}}
+\subsubsection[{\_\-\_\-description\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::utilities::nibabel.\_\-\_\-description\_\-\_\-} = \char`\"{}NiBabel image utility functions.\char`\"{}}}
+\label{namespacemedpy_1_1utilities_1_1nibabel_aed62d192744122f84ec7eeec74c6936c}
+
+
+Definition at line 19 of file nibabel.py.
+
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel_a91134bb125f3b3ce85dbc67f73edafa3}{
+\index{medpy::utilities::nibabel@{medpy::utilities::nibabel}!\_\-\_\-email\_\-\_\-@{\_\-\_\-email\_\-\_\-}}
+\index{\_\-\_\-email\_\-\_\-@{\_\-\_\-email\_\-\_\-}!medpy::utilities::nibabel@{medpy::utilities::nibabel}}
+\subsubsection[{\_\-\_\-email\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::utilities::nibabel.\_\-\_\-email\_\-\_\-} = \char`\"{}oskar.maier@googlemail.com\char`\"{}}}
+\label{namespacemedpy_1_1utilities_1_1nibabel_a91134bb125f3b3ce85dbc67f73edafa3}
+
+
+Definition at line 17 of file nibabel.py.
+
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel_ad6d46ba600da8eb4276c1c1d1cc45990}{
+\index{medpy::utilities::nibabel@{medpy::utilities::nibabel}!\_\-\_\-status\_\-\_\-@{\_\-\_\-status\_\-\_\-}}
+\index{\_\-\_\-status\_\-\_\-@{\_\-\_\-status\_\-\_\-}!medpy::utilities::nibabel@{medpy::utilities::nibabel}}
+\subsubsection[{\_\-\_\-status\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::utilities::nibabel.\_\-\_\-status\_\-\_\-} = \char`\"{}Development\char`\"{}}}
+\label{namespacemedpy_1_1utilities_1_1nibabel_ad6d46ba600da8eb4276c1c1d1cc45990}
+
+
+Definition at line 18 of file nibabel.py.
+
+\hypertarget{namespacemedpy_1_1utilities_1_1nibabel_aef564d622a872d4a5724f34f5167d0f6}{
+\index{medpy::utilities::nibabel@{medpy::utilities::nibabel}!\_\-\_\-version\_\-\_\-@{\_\-\_\-version\_\-\_\-}}
+\index{\_\-\_\-version\_\-\_\-@{\_\-\_\-version\_\-\_\-}!medpy::utilities::nibabel@{medpy::utilities::nibabel}}
+\subsubsection[{\_\-\_\-version\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::utilities::nibabel.\_\-\_\-version\_\-\_\-} = \char`\"{}d0.1, 2011-\/12-\/12\char`\"{}}}
+\label{namespacemedpy_1_1utilities_1_1nibabel_aef564d622a872d4a5724f34f5167d0f6}
+
+
+Definition at line 16 of file nibabel.py.
+

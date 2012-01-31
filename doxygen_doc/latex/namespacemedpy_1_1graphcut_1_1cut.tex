@@ -1,0 +1,81 @@
+\hypertarget{namespacemedpy_1_1graphcut_1_1cut}{
+\section{Package medpy.graphcut.cut}
+\label{namespacemedpy_1_1graphcut_1_1cut}\index{medpy.graphcut.cut@{medpy.graphcut.cut}}
+}
+
+
+Prepares, compiles and executed graph-\/cut implementations using the graphs created by the graph module of this package.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacemedpy_1_1graphcut_1_1cut_a964a5abe60de2820b3e234ee7f1b0cfc}{bk\_\-mfmc\_\-cut}
+\begin{DoxyCompactList}\small\item\em BK\_\-MFMC: Boyov and Kolmogorovs (1) C++ max-\/flow/min-\/cut implementation (a) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Prepares, compiles and executed graph-\/cut implementations using the graphs created by the graph module of this package. Note that the functionality provided by this module depends highly on the platform, the availability of 3rd party tools and executes foreign code. It should only be used when completely understood. Otherwise manual execution of this step is preferable.
+
+All functions in this module are highly depend on the actual implementation of the graph-\/cut algorithm they are intended to be used for. They require a minimal version number and it can not be ensured, that they will work with other versions.
+
+See the package description for a list of the supported graph-\/cut implementations.
+
+Functions:
+\begin{DoxyItemize}
+\item def bk\_\-mfmc\_\-cut(source\_\-file, gpp\_\-location = False): Execute a graph cut using Boyov and Kolmogorovs max-\/flow/min-\/cut algorithm.
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Oskar Maier 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+d0.1.0 
+\end{DoxyVersion}
+\begin{DoxySince}{Since}
+2012-\/01-\/18  Development 
+\end{DoxySince}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespacemedpy_1_1graphcut_1_1cut_a964a5abe60de2820b3e234ee7f1b0cfc}{
+\index{medpy::graphcut::cut@{medpy::graphcut::cut}!bk\_\-mfmc\_\-cut@{bk\_\-mfmc\_\-cut}}
+\index{bk\_\-mfmc\_\-cut@{bk\_\-mfmc\_\-cut}!medpy::graphcut::cut@{medpy::graphcut::cut}}
+\subsubsection[{bk\_\-mfmc\_\-cut}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.cut.bk\_\-mfmc\_\-cut (
+\begin{DoxyParamCaption}
+\item[{}]{source\_\-file, }
+\item[{}]{gpp\_\-location = {\ttfamily False}, }
+\item[{}]{keep = {\ttfamily False}}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1graphcut_1_1cut_a964a5abe60de2820b3e234ee7f1b0cfc}
+
+
+BK\_\-MFMC: Boyov and Kolmogorovs (1) C++ max-\/flow/min-\/cut implementation (a) 
+
+Execute a graph cut using the supplied source file of Boyov and Kolmogorovs max-\/flow/min-\/cut algorithm.
+
+The source-\/file is written to a temporary directory, compiled and the executed. The created output is caught and returned.
+
+\begin{DoxyNote}{Note}
+: This function assumes g++ -\/ GNU project C++ compiler to be installed on the host machine. Alternatively the path to g++ can be provided.
+\end{DoxyNote}
+\begin{DoxyWarning}{Warning}
+: If not handled with care, this function can be used to compile and execute arbitrary code on the host machine. Ensure that the input of this function can not be generated or modified by the user and always comes from  bk\_\-mfmc\_\-generate().
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em source\_\-file,:} & The C++ source file as returned by  bk\_\-mfmc\_\-generate().  source\_\-file: str \\
+\hline
+{\em gpp\_\-location,:} & The location of g++ -\/ the GNU project C++ compiler.  gpp\_\-location: str \\
+\hline
+{\em keep,:} & Set this to true to keep the temporary directory after execution. This parameter is intended for debugging purposes only.  keep: bool \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+: The results as a string to be parsed by  bk\_\-mfmc\_\-parse(). : str
+\end{DoxyReturn}
+SubprocessError: When the one step of the compiling or execution can not be assured to have terminated succesfully. 
+
+Definition at line 73 of file cut.py.
+

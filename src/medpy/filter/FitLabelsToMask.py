@@ -6,7 +6,6 @@
 
 # third-party modules
 import numpy
-import time
 
 # path changes
 

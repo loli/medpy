@@ -1,0 +1,63 @@
+\hypertarget{namespacegraphcut}{
+\section{Package graphcut}
+\label{namespacegraphcut}\index{graphcut@{graphcut}}
+}
+
+
+Functionalities to use graph-\/cut (max-\/flow/min-\/cut) algorithms.  
+
+
+\subsection*{Packages}
+\begin{DoxyCompactItemize}
+\item 
+package \hyperlink{namespacegraphcut_1_1cut}{cut}
+
+
+\begin{DoxyCompactList}\small\item\em Prepares, compiles and executed graph-\/cut implementations using the graphs created by the graph module of this package. \end{DoxyCompactList}
+
+\item 
+package \hyperlink{namespacegraphcut_1_1energy}{energy}
+
+
+\begin{DoxyCompactList}\small\item\em Run-\/time optimized energy functions for graph-\/cut. \end{DoxyCompactList}
+
+\item 
+package \hyperlink{namespacegraphcut_1_1generate}{generate}
+
+
+\begin{DoxyCompactList}\small\item\em Generates output files from graphs that are processable by graph-\/cut algorithms. \end{DoxyCompactList}
+
+\item 
+package \hyperlink{namespacegraphcut_1_1parse}{parse}
+
+
+\begin{DoxyCompactList}\small\item\em Parses the output returned by graph-\/cut implementations. \end{DoxyCompactList}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functionalities to use graph-\/cut (max-\/flow/min-\/cut) algorithms. Provides methods to build graphs from label-\/image using arbitrary energy functions (boundary and regional terms), format these graphs to be processed by a number of graph-\/cut implementations, executing these and parsing the results.
+
+Supported graph-\/cut algorithms with tested version number:\par
+
+\begin{DoxyItemize}
+\item {\bfseries BK\_\-MFMC:} Boykov and Kolmogorovs (1) max-\/flow/min-\/cut C++ implementation (a) \mbox{[}v3.01\mbox{]}
+\end{DoxyItemize}
+
+Modules:
+\begin{DoxyItemize}
+\item graph: Create and modify graphs from nD label-\/images to be used in graph-\/cut algorithms.
+\item generate: Generates output files from graphs that are processable by graph-\/cut algorithms.
+\item cut: Prepares, compiles and executed graph-\/cut implementations.
+\item parse: Parses the output returned by graph-\/cut implementations.
+\item energy: Run-\/time optimized energy functions for graph-\/cut.
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+This package makes use of  medpy.core.Logger to generate progress and debug messages.
+\end{DoxyNote}
+(a) \href{http://vision.csd.uwo.ca/code/}{\tt http://vision.csd.uwo.ca/code/} \mbox{[}last seen: 01/2012\mbox{]}
+
+(1) Boykov Y., Kolmogorov V. / \char`\"{}An Experimental Comparison of Min-\/Cut/Max-\/Flow
+ Algorithms for Energy Minimization in Vision\char`\"{} / In IEEE Transactions on PAMI, Vol. 26, No. 9, pp. 1124-\/1137, Sept. 2004 

@@ -1,0 +1,21 @@
+\form#0:$S(A)$
+\form#1:$A$
+\form#2:$v$
+\form#3:\[ d(v,S(A)) = \min_{s_A\in S(A)} ||v-s_A|| \]
+\form#4:$||.||$
+\form#5:\[ MSD(A,B) = \max \left\{ \max_{s_A\in S(A)} d(s_A,S(B)), \max_{s_B\in S(B)} d(s_B,S(A)), \right\} \]
+\form#6:\[ RMSD(A,B) = \sqrt{\frac{1}{|S(A)|+|S(B)|}} \times \sqrt{ \sum_{s_A\in S(A)} d^2(s_A,S(B)) + \sum_{s_B\in S(B)} d^2(s_B,S(A)) } \]
+\form#7:\[ ASD(A,B) = \frac{1}{|S(A)|+|S(B)|} \left( \sum_{s_A\in S(A)} d(s_A,S(B)) + \sum_{s_B\in S(B)} d(s_B,S(A)) \right) \]
+\form#8:$S(b)$
+\form#9:\[ 100 * \frac{|A - B|}{|B|} \]
+\form#10:\[ 100 * \left( 1 - \frac{|A\cap B|}{|A\cup B|} \right) \]
+\form#11:\[ g(x) = \left(\frac{1}{1+|x|}\right)^k \]
+\form#12:$k=2$
+\form#13:$w_{i,j}$
+\form#14:$r_i$
+\form#15:$r_j$
+\form#16:\[ w = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|)) \]
+\form#17:$F_{(r_i,r_j)}$
+\form#18:$e_{m,n}$
+\form#19:$|I(p)|$
+\form#20:$p$

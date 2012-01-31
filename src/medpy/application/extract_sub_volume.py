@@ -19,6 +19,7 @@ from nibabel import Nifti1Image
 
 # own modules
 from medpy.core import ArgumentError, Logger
+from medpy.utilities.nibabel import image_like
 
 # information
 __author__ = "Oskar Maier"
@@ -109,32 +110,7 @@ def main():
     save(image_like(volume, image, origin), args.output + args.image[-4:])
     
     logger.info('Successfully terminated.')
-    
-def image_like(data, reference, origin = None):
-    """
-    Creates a NiBabel image for the data of the same type as image. Where the data
-    is not sufficient to provide required information, the header attributes of image
-    are used.
-    @param data: a numpy array of arbitrary type
-    @param image: a NiBabel image
-    @param origin: the images origin that should get set, if None the one from the
-                   reference header is used
-    @return: a NiBabel image for data of same type as image
-    """
-    # !TODO: Move to utilities package
-    # !TODO: Check if this covers all know cases i.e. if the data can contain
-    # information that is not used.
-    header = reference.get_header().copy()
-    affine = reference.get_affine()
-    # !TODO: This is not working correct: SOmehow ItkSnap shows x/y origins to be negative. Why?
-    if None != origin: affine[:len(origin),-1] = origin
-    image = reference.__class__(data, affine, header=header)
-    image.update_header()
-    # !TODO: Is the following required? Works only for Nifty1. See the Nifty1 documentation/definition.
-    #image.get_header()['qoffset_x'] = origin[0]
-    #image.get_header()['qoffset_y'] = origin[1]
-    #image.get_header()['qoffset_z'] = origin[2]
-    return image
+
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."

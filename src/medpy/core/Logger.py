@@ -15,9 +15,9 @@ import sys
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "0.1, 2011-12-12"
+__version__ = "r0.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
-__status__ = "Development"
+__status__ = "Release"
 __description__ = """
                   A singleton debug class to be used by all applications, classes and 
                   functions of MedPy for raising messages, be it info, debug, exception

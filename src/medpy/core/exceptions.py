@@ -27,4 +27,17 @@ class ArgumentError(Exception):
     pass
     #def __init__(self, message, exception = None):
     #    Exception.__init__(message, exception)
+    
+class FunctionError(Exception):
+    """
+    Thrown when a supplied function returns unexpected results.
+    """
+    pass
+    
+class SubprocessError(Exception):
+    """
+    Thrown by an application when a subprocess execution failed.
+    """
+    pass
+
         

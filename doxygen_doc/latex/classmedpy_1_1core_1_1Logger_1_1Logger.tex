@@ -1,0 +1,88 @@
+\hypertarget{classmedpy_1_1core_1_1Logger_1_1Logger}{
+\section{medpy.core.Logger.Logger Class Reference}
+\label{classmedpy_1_1core_1_1Logger_1_1Logger}\index{medpy::core::Logger::Logger@{medpy::core::Logger::Logger}}
+}
+
+
+This singleton class represents an object that can be used by all applications and classes.  
+
+
+
+
+Inheritance diagram for medpy.core.Logger.Logger:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=212pt]{classmedpy_1_1core_1_1Logger_1_1Logger__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for medpy.core.Logger.Logger:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=227pt]{classmedpy_1_1core_1_1Logger_1_1Logger__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classmedpy_1_1core_1_1Logger_1_1Logger_1_1LoggerHelper}{LoggerHelper}
+\begin{DoxyCompactList}\small\item\em A helper class which performs the actual initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmedpy_1_1core_1_1Logger_1_1Logger_a8fdfdb7972f6ca4f3b20e98985988bc7}{
+def {\bfseries \_\-\_\-init\_\-\_\-}}
+\label{classmedpy_1_1core_1_1Logger_1_1Logger_a8fdfdb7972f6ca4f3b20e98985988bc7}
+
+\item 
+def \hyperlink{classmedpy_1_1core_1_1Logger_1_1Logger_a9b4ca5d9e5d84d5da1ebda4929c3d757}{setHandler}
+\begin{DoxyCompactList}\small\item\em Replaces the current handler with a new one. \end{DoxyCompactList}\item 
+\hypertarget{classmedpy_1_1core_1_1Logger_1_1Logger_a7ef3cbfa57e61d02882e586ff7baa176}{
+def \hyperlink{classmedpy_1_1core_1_1Logger_1_1Logger_a7ef3cbfa57e61d02882e586ff7baa176}{setLevel}}
+\label{classmedpy_1_1core_1_1Logger_1_1Logger_a7ef3cbfa57e61d02882e586ff7baa176}
+
+\begin{DoxyCompactList}\small\item\em Overrides the parent method to adapt the formatting string to the level. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmedpy_1_1core_1_1Logger_1_1Logger_ae169695a25c1a25f4929d03eb5ff016b}{
+tuple {\bfseries getInstance} = \hyperlink{classmedpy_1_1core_1_1Logger_1_1Logger_1_1LoggerHelper}{LoggerHelper}()}
+\label{classmedpy_1_1core_1_1Logger_1_1Logger_ae169695a25c1a25f4929d03eb5ff016b}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This singleton class represents an object that can be used by all applications and classes. 
+
+Definition at line 34 of file Logger.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classmedpy_1_1core_1_1Logger_1_1Logger_a9b4ca5d9e5d84d5da1ebda4929c3d757}{
+\index{medpy::core::Logger::Logger@{medpy::core::Logger::Logger}!setHandler@{setHandler}}
+\index{setHandler@{setHandler}!medpy::core::Logger::Logger@{medpy::core::Logger::Logger}}
+\subsubsection[{setHandler}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.core.Logger.Logger.setHandler (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{hdlr}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1core_1_1Logger_1_1Logger_a9b4ca5d9e5d84d5da1ebda4929c3d757}
+
+
+Replaces the current handler with a new one. 
+
+If none should be replaces, but just one added, use the parent classes addHandler() method. 
+
+Definition at line 76 of file Logger.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+/home/omaier/Programming/Python/medpy/src/medpy/core/Logger.py\end{DoxyCompactItemize}

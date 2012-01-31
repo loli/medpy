@@ -1,0 +1,132 @@
+\hypertarget{namespacemedpy_1_1application_1_1gradient}{
+\section{Package medpy.application.gradient}
+\label{namespacemedpy_1_1application_1_1gradient}\index{medpy.application.gradient@{medpy.application.gradient}}
+}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacemedpy_1_1application_1_1gradient_a95dba978d93b6adc4fe595986182d6ec}{main}
+\item 
+def \hyperlink{namespacemedpy_1_1application_1_1gradient_a0a2c93d1d12810a9653037b9a6928fd9}{getArguments}
+\item 
+def \hyperlink{namespacemedpy_1_1application_1_1gradient_acd9bd2e23c566151381fc136eab9f717}{getParser}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{namespacemedpy_1_1application_1_1gradient_aa1d6344cd5a395d7e4d587483d436166}{\_\-\_\-author\_\-\_\-} = \char`\"{}Oskar Maier\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1application_1_1gradient_a10f82a37bc73425c1d34010f2e630184}{\_\-\_\-version\_\-\_\-} = \char`\"{}r0.1, 2011-\/12-\/12\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1application_1_1gradient_aac896da6093b760d4a08d353cd3f9ec5}{\_\-\_\-email\_\-\_\-} = \char`\"{}oskar.maier@googlemail.com\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1application_1_1gradient_af40fcbc5d5736dcdd259c38727bf4675}{\_\-\_\-status\_\-\_\-} = \char`\"{}Release\char`\"{}
+\item 
+string \hyperlink{namespacemedpy_1_1application_1_1gradient_a51b8dae829491ed7c627731fbff856a5}{\_\-\_\-description\_\-\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespacemedpy_1_1application_1_1gradient_a0a2c93d1d12810a9653037b9a6928fd9}{
+\index{medpy::application::gradient@{medpy::application::gradient}!getArguments@{getArguments}}
+\index{getArguments@{getArguments}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{getArguments}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.application.gradient.getArguments (
+\begin{DoxyParamCaption}
+\item[{}]{parser}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1application_1_1gradient_a0a2c93d1d12810a9653037b9a6928fd9}
+
+
+Definition at line 87 of file gradient.py.
+
+\hypertarget{namespacemedpy_1_1application_1_1gradient_acd9bd2e23c566151381fc136eab9f717}{
+\index{medpy::application::gradient@{medpy::application::gradient}!getParser@{getParser}}
+\index{getParser@{getParser}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{getParser}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.application.gradient.getParser (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1application_1_1gradient_acd9bd2e23c566151381fc136eab9f717}
+
+
+Definition at line 91 of file gradient.py.
+
+\hypertarget{namespacemedpy_1_1application_1_1gradient_a95dba978d93b6adc4fe595986182d6ec}{
+\index{medpy::application::gradient@{medpy::application::gradient}!main@{main}}
+\index{main@{main}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.application.gradient.main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{namespacemedpy_1_1application_1_1gradient_a95dba978d93b6adc4fe595986182d6ec}
+
+
+Definition at line 41 of file gradient.py.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespacemedpy_1_1application_1_1gradient_aa1d6344cd5a395d7e4d587483d436166}{
+\index{medpy::application::gradient@{medpy::application::gradient}!\_\-\_\-author\_\-\_\-@{\_\-\_\-author\_\-\_\-}}
+\index{\_\-\_\-author\_\-\_\-@{\_\-\_\-author\_\-\_\-}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{\_\-\_\-author\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::application::gradient.\_\-\_\-author\_\-\_\-} = \char`\"{}Oskar Maier\char`\"{}}}
+\label{namespacemedpy_1_1application_1_1gradient_aa1d6344cd5a395d7e4d587483d436166}
+
+
+Definition at line 25 of file gradient.py.
+
+\hypertarget{namespacemedpy_1_1application_1_1gradient_a51b8dae829491ed7c627731fbff856a5}{
+\index{medpy::application::gradient@{medpy::application::gradient}!\_\-\_\-description\_\-\_\-@{\_\-\_\-description\_\-\_\-}}
+\index{\_\-\_\-description\_\-\_\-@{\_\-\_\-description\_\-\_\-}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{\_\-\_\-description\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::application::gradient.\_\-\_\-description\_\-\_\-}}}
+\label{namespacemedpy_1_1application_1_1gradient_a51b8dae829491ed7c627731fbff856a5}
+{\bfseries Initial value:}
+\begin{DoxyCode}
+1 """
+2                   Creates a height map of the input images using the gradient mag
+      nitude
+3                   filter.
+4                   The resulting image is saved in the supplied folder with the sa
+      me
+5                   name as the input image, but with a suffix '_gradient'
+6                   attached.
+7                   Note that this script produces the same results as
+8                   @see itkvtk.application.batch_gradient, but is implemented in p
+      ure
+9                   Python, instead of using ITKs GradientMagnitudeImageFilter. 
+10                   """
+\end{DoxyCode}
+
+
+Definition at line 29 of file gradient.py.
+
+\hypertarget{namespacemedpy_1_1application_1_1gradient_aac896da6093b760d4a08d353cd3f9ec5}{
+\index{medpy::application::gradient@{medpy::application::gradient}!\_\-\_\-email\_\-\_\-@{\_\-\_\-email\_\-\_\-}}
+\index{\_\-\_\-email\_\-\_\-@{\_\-\_\-email\_\-\_\-}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{\_\-\_\-email\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::application::gradient.\_\-\_\-email\_\-\_\-} = \char`\"{}oskar.maier@googlemail.com\char`\"{}}}
+\label{namespacemedpy_1_1application_1_1gradient_aac896da6093b760d4a08d353cd3f9ec5}
+
+
+Definition at line 27 of file gradient.py.
+
+\hypertarget{namespacemedpy_1_1application_1_1gradient_af40fcbc5d5736dcdd259c38727bf4675}{
+\index{medpy::application::gradient@{medpy::application::gradient}!\_\-\_\-status\_\-\_\-@{\_\-\_\-status\_\-\_\-}}
+\index{\_\-\_\-status\_\-\_\-@{\_\-\_\-status\_\-\_\-}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{\_\-\_\-status\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::application::gradient.\_\-\_\-status\_\-\_\-} = \char`\"{}Release\char`\"{}}}
+\label{namespacemedpy_1_1application_1_1gradient_af40fcbc5d5736dcdd259c38727bf4675}
+
+
+Definition at line 28 of file gradient.py.
+
+\hypertarget{namespacemedpy_1_1application_1_1gradient_a10f82a37bc73425c1d34010f2e630184}{
+\index{medpy::application::gradient@{medpy::application::gradient}!\_\-\_\-version\_\-\_\-@{\_\-\_\-version\_\-\_\-}}
+\index{\_\-\_\-version\_\-\_\-@{\_\-\_\-version\_\-\_\-}!medpy::application::gradient@{medpy::application::gradient}}
+\subsubsection[{\_\-\_\-version\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf medpy::application::gradient.\_\-\_\-version\_\-\_\-} = \char`\"{}r0.1, 2011-\/12-\/12\char`\"{}}}
+\label{namespacemedpy_1_1application_1_1gradient_a10f82a37bc73425c1d34010f2e630184}
+
+
+Definition at line 26 of file gradient.py.
+
