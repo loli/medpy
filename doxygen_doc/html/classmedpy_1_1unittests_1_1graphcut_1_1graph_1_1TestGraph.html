@@ -76,10 +76,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">medpy.unittests.graphcut.graph.TestGraph Class Reference</div>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="medpy::unittests::graphcut::graph::TestGraph" --><!-- doxytag: inherits="unittest::TestCase" -->
-<p>This class holds a hard wired test for the functions in <a class="el" href="namespacemedpy_1_1graphcut_1_1graph.html" title="Create and modify graphs from nD label-images to be used in graph-cut algorithms.">graphcut.graph</a>.  
- <a href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html#details">More...</a></p>
-<div class="dynheader">
+<!-- doxytag: class="medpy::unittests::graphcut::graph::TestGraph" --><!-- doxytag: inherits="unittest::TestCase" --><div class="dynheader">
 Inheritance diagram for medpy.unittests.graphcut.graph.TestGraph:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph__inherit__graph.png" border="0" usemap="#medpy_8unittests_8graphcut_8graph_8TestGraph_inherit__map" alt="Inheritance graph"/></div>
@@ -91,7 +88,7 @@ Collaboration diagram for medpy.unittests.graphcut.graph.TestGraph:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph__coll__graph.png" border="0" usemap="#medpy_8unittests_8graphcut_8graph_8TestGraph_coll__map" alt="Collaboration graph"/></div>
 <map name="medpy_8unittests_8graphcut_8graph_8TestGraph_coll__map" id="medpy_8unittests_8graphcut_8graph_8TestGraph_coll__map">
-<area shape="rect" id="node2" href="classunittest_1_1TestCase.html" title="TestCase" alt="" coords="20,5,97,35"/></map>
+<area shape="rect" id="node2" href="classunittest_1_1TestCase.html" title="TestCase" alt="" coords="61,5,139,35"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph-members.html">List of all members.</a></p>
@@ -100,22 +97,37 @@ Collaboration diagram for medpy.unittests.graphcut.graph.TestGraph:</div>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a19d5a3f0c6ccd4586e5467f2c5872c96"></a><!-- doxytag: member="medpy::unittests::graphcut::graph::TestGraph::test_graph_from_labels_w_boundary" ref="a19d5a3f0c6ccd4586e5467f2c5872c96" args="" -->
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html#a19d5a3f0c6ccd4586e5467f2c5872c96">test_graph_from_labels_w_boundary</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests the  graph_from_labels() function using a boundary term and no regional term. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a557503006c6cd9b46e8542ad2f550bd5"></a><!-- doxytag: member="medpy::unittests::graphcut::graph::TestGraph::test_compute_min_cut" ref="a557503006c6cd9b46e8542ad2f550bd5" args="" -->
-def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html#a557503006c6cd9b46e8542ad2f550bd5">test_compute_min_cut</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the test for the  compute_min_cut function, which mainly assures that all of the external calls are applicable. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b5d63bc737ad38bff8502901151f0bb"></a><!-- doxytag: member="medpy::unittests::graphcut::graph::TestGraph::test_parse_results" ref="a5b5d63bc737ad38bff8502901151f0bb" args="" -->
-def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html#a5b5d63bc737ad38bff8502901151f0bb">test_parse_results</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Test the  parse_results function by passing some more complicated strings to it. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a2232a7f5e69289335bacb23bdcc0f9"></a><!-- doxytag: member="medpy::unittests::graphcut::graph::TestGraph::test_pipeline" ref="a8a2232a7f5e69289335bacb23bdcc0f9" args="" -->
-def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html#a8a2232a7f5e69289335bacb23bdcc0f9">test_pipeline</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests all functions that participate in the min-cut. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests the <a class="el" href="">function using a boundary term and no regional term. </a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html#ac50662dfbbba6e7a7f740eb3f63e64e7">test_graph_from_labels_nd</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the multi-dimensional capabilities of <a class="el" href="">up to the fourth dimension. </a> <a href="#ac50662dfbbba6e7a7f740eb3f63e64e7"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>This class holds a hard wired test for the functions in <a class="el" href="namespacemedpy_1_1graphcut_1_1graph.html" title="Create and modify graphs from nD label-images to be used in graph-cut algorithms.">graphcut.graph</a>. </p>
+<div class="textblock">
+<p>Definition at line <a class="el" href="unittests_2graphcut_2graph_8py_source.html#l00021">21</a> of file <a class="el" href="unittests_2graphcut_2graph_8py_source.html">graph.py</a>.</p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ac50662dfbbba6e7a7f740eb3f63e64e7"></a><!-- doxytag: member="medpy::unittests::graphcut::graph::TestGraph::test_graph_from_labels_nd" ref="ac50662dfbbba6e7a7f740eb3f63e64e7" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def medpy.unittests.graphcut.graph.TestGraph.test_graph_from_labels_nd </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
-<p>Definition at line <a class="el" href="unittests_2graphcut_2graph_8py_source.html#l00029">29</a> of file <a class="el" href="unittests_2graphcut_2graph_8py_source.html">graph.py</a>.</p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<p>Check the multi-dimensional capabilities of <a class="el" href="">up to the fourth dimension. </a></p>
+<p>(assuming ndim*2-connectedness) </p>
+
+<p>Definition at line <a class="el" href="unittests_2graphcut_2graph_8py_source.html#l00112">112</a> of file <a class="el" href="unittests_2graphcut_2graph_8py_source.html">graph.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/omaier/Programming/Python/medpy/src/medpy/unittests/graphcut/<a class="el" href="unittests_2graphcut_2graph_8py_source.html">graph.py</a></li>
 </ul>
 </div>
@@ -124,7 +136,7 @@ def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -133,7 +145,7 @@ def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:16 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:06 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -39,6 +39,12 @@ package \hyperlink{namespacemedpy_1_1graphcut_1_1parse}{parse}
 
 \begin{DoxyCompactList}\small\item\em Parses the output returned by graph-\/cut implementations. \end{DoxyCompactList}
 
+\item 
+package \hyperlink{namespacemedpy_1_1graphcut_1_1write}{write}
+
+
+\begin{DoxyCompactList}\small\item\em Functions to persist a graph in various file formats. \end{DoxyCompactList}
+
 \end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
@@ -74,4 +80,33 @@ This package makes use of  medpy.core.Logger to generate progress and debug mess
 (a) \href{http://vision.csd.uwo.ca/code/}{\tt http://vision.csd.uwo.ca/code/} \mbox{[}last seen: 01/2012\mbox{]}
 
 (1) Boykov Y., Kolmogorov V. / \char`\"{}An Experimental Comparison of Min-\/Cut/Max-\/Flow
- Algorithms for Energy Minimization in Vision\char`\"{} / In IEEE Transactions on PAMI, Vol. 26, No. 9, pp. 1124-\/1137, Sept. 2004 
+ Algorithms for Energy Minimization in Vision\char`\"{} / In IEEE Transactions on PAMI, Vol. 26, No. 9, pp. 1124-\/1137, Sept. 2004
+
+Provides functionalities to efficiently construct graphs from various sources using arbitrary energy functions (boundary and regional terms). The graph can then be saved in the Dimacs graph standard and/or processed (i.e. cut) using 3rd party graph-\/cut algorithms.
+
+Supported graph-\/cut algorithms with tested version number:\par
+
+\begin{DoxyItemize}
+\item {\bfseries BK\_\-MFMC:} Boykov and Kolmogorovs (1) max-\/flow/min-\/cut C++ implementation (a) \mbox{[}v3.01\mbox{]}
+\end{DoxyItemize}
+
+Modules:
+\begin{DoxyItemize}
+\item graph: The basic Graph object.
+\item write: Functions to persist a graph in various file formats like Dimacs (b).
+\item maxflow: C++ wrapper around the max-\/flow/min-\/cut implementation of (1)
+\item generate: Provides functions to generate graphs efficiently from nD label-\/images.
+\item energy: Run-\/time optimized energy functions for the graph generation.
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+This package makes use of  medpy.core.Logger to generate progress and debug messages.
+\end{DoxyNote}
+(a) \href{http://vision.csd.uwo.ca/code/}{\tt http://vision.csd.uwo.ca/code/} \mbox{[}last seen: 01/2012\mbox{]} (b) \href{http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm}{\tt http://lpsolve.sourceforge.net/5.5/DIMACS\_\-maxf.htm}
+
+(1) Boykov Y., Kolmogorov V. / \char`\"{}An Experimental Comparison of Min-\/Cut/Max-\/Flow
+ Algorithms for Energy Minimization in Vision\char`\"{} / In IEEE Transactions on PAMI, Vol. 26, No. 9, pp. 1124-\/1137, Sept. 2004
+
+\begin{DoxyAuthor}{Author}
+Oskar Maier 
+\end{DoxyAuthor}

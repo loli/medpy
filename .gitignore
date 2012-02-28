@@ -4,6 +4,12 @@
 *.mhd
 *.raw
 
+# DOC dirs #
+############
+epydoc_doc/
+pydoctor_doc/
+sphinx_doc/
+
 # Compiled source #
 ###################
 *.com

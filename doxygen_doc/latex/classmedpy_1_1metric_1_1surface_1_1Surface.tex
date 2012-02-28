@@ -30,24 +30,24 @@ Collaboration diagram for medpy.metric.surface.Surface:\nopagebreak
 \item 
 def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a46994eacbac664bc6d33d19bac6f7b2c}{\_\-\_\-init\_\-\_\-}
 \begin{DoxyCompactList}\small\item\em Initialize the class with two binary images, each containing a single object. \end{DoxyCompactList}\item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_aebdeff8c2d6391c37572e5a791ed40f8}{GetMaximumSymmetricSurfaceDistance}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a8684d8c1382318e6bf319b668c81dd1a}{get\_\-maximum\_\-symmetric\_\-surface\_\-distance}
 \begin{DoxyCompactList}\small\item\em Computes the maximum symmetric surface distance, also known as Hausdorff distance, between the two objects surfaces. \end{DoxyCompactList}\item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a43fc6c5bbe3af05e886341fc3cd6e4a6}{GetRootMeanSquareSymmetricSurfaceDistance}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a920a84703f013d3c30b9a29e352700d9}{get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance}
 \begin{DoxyCompactList}\small\item\em Computes the root mean square symmetric surface distance between the two objects surfaces. \end{DoxyCompactList}\item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a908c895052fb4ae5d6e85b0eb74af561}{GetAverageSymmetricSurfaceDistance}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a1f0c6c294baebf0ca8f45c47697e6410}{get\_\-average\_\-symmetric\_\-surface\_\-distance}
 \begin{DoxyCompactList}\small\item\em Computes the average symmetric surface distance between the two objects surfaces. \end{DoxyCompactList}\item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_aa1286d971da183a1763d0756d35c90bd}{GetMaskReferenceNn}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a24fed896ac83b61f7abd9719ebe8ff6f}{get\_\-mask\_\-reference\_\-nn}
 \item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a1ddfc188d4a3c2e7bf3d9347fdec8b14}{GetReferenceMaskNn}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_abbd8cea3e3dd7a4a9c1af123e889e7bb}{get\_\-reference\_\-mask\_\-nn}
 \item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a56381bbc209cbd46954ebc49e38d266c}{GetMaskEdgePoints}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_adf21c517a7f9cfc187546e2c2db99409}{get\_\-mask\_\-edge\_\-points}
 \item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_a7248264eca680d9c4d327961fd04c8be}{GetReferenceEdgePoints}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_abee40ce81906de3f356a08019985be24}{get\_\-reference\_\-edge\_\-points}
 \end{DoxyCompactItemize}
 \paragraph*{}
 \begin{DoxyCompactItemize}
 \item 
-def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_af49341603861561734d2f8cb6a612bd1}{ComputeContour}
+def \hyperlink{classmedpy_1_1metric_1_1surface_1_1Surface_aee3d28744eeac497b32362ba5ef9f8bb}{compute\_\-contour}
 \begin{DoxyCompactList}\small\item\em Uses a 18-\/neighbourhood filter to create an edge image of the input object. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -84,7 +84,10 @@ Definition at line 44 of file surface.py.
 
 Initialize the class with two binary images, each containing a single object. 
 
-Assumes the input to be a representation of a 3D image, that fits one of the following formats: 1. all 0 values denoting background, all others the foreground/object 2. all False values denoting the background, all others the foreground/object The first image passed is referred to as 'mask', the second as 'reference'. This is only important for some metrics that are not symmetric (and therefore not really metrics). 
+Assumes the input to be a representation of a 3D image, that fits one of the following formats:
+\begin{DoxyItemize}
+\item 1. all 0 values denoting background, all others the foreground/object
+\item 2. all False values denoting the background, all others the foreground/object The first image passed is referred to as 'mask', the second as 'reference'. This is only important for some metrics that are not symmetric (and therefore not really metrics). 
 \begin{DoxyParams}{Parameters}
 {\em mask} & binary mask as an scipy array (3D image) \\
 \hline
@@ -98,21 +101,22 @@ Assumes the input to be a representation of a 3D image, that fits one of the fol
 \hline
 \end{DoxyParams}
 
+\end{DoxyItemize}
 
 Definition at line 74 of file surface.py.
 
 
 
 \subsection{Member Function Documentation}
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_af49341603861561734d2f8cb6a612bd1}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!ComputeContour@{ComputeContour}}
-\index{ComputeContour@{ComputeContour}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{ComputeContour}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.ComputeContour (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_aee3d28744eeac497b32362ba5ef9f8bb}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!compute\_\-contour@{compute\_\-contour}}
+\index{compute\_\-contour@{compute\_\-contour}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{compute\_\-contour}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.compute\_\-contour (
 \begin{DoxyParamCaption}
 \item[{}]{array}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_af49341603861561734d2f8cb6a612bd1}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_aee3d28744eeac497b32362ba5ef9f8bb}
 
 
 Uses a 18-\/neighbourhood filter to create an edge image of the input object. 
@@ -135,15 +139,15 @@ a boolean numpy array with the input objects edges
 
 Definition at line 295 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a908c895052fb4ae5d6e85b0eb74af561}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetAverageSymmetricSurfaceDistance@{GetAverageSymmetricSurfaceDistance}}
-\index{GetAverageSymmetricSurfaceDistance@{GetAverageSymmetricSurfaceDistance}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetAverageSymmetricSurfaceDistance}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetAverageSymmetricSurfaceDistance (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a1f0c6c294baebf0ca8f45c47697e6410}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-average\_\-symmetric\_\-surface\_\-distance@{get\_\-average\_\-symmetric\_\-surface\_\-distance}}
+\index{get\_\-average\_\-symmetric\_\-surface\_\-distance@{get\_\-average\_\-symmetric\_\-surface\_\-distance}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-average\_\-symmetric\_\-surface\_\-distance}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-average\_\-symmetric\_\-surface\_\-distance (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_a908c895052fb4ae5d6e85b0eb74af561}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_a1f0c6c294baebf0ca8f45c47697e6410}
 
 
 Computes the average symmetric surface distance between the two objects surfaces. 
@@ -157,15 +161,15 @@ Metric definition: Let $S(A)$ denote the set of surface voxels of $A$. The short
 
 Definition at line 218 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a56381bbc209cbd46954ebc49e38d266c}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetMaskEdgePoints@{GetMaskEdgePoints}}
-\index{GetMaskEdgePoints@{GetMaskEdgePoints}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetMaskEdgePoints}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetMaskEdgePoints (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_adf21c517a7f9cfc187546e2c2db99409}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-mask\_\-edge\_\-points@{get\_\-mask\_\-edge\_\-points}}
+\index{get\_\-mask\_\-edge\_\-points@{get\_\-mask\_\-edge\_\-points}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-mask\_\-edge\_\-points}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-mask\_\-edge\_\-points (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_a56381bbc209cbd46954ebc49e38d266c}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_adf21c517a7f9cfc187546e2c2db99409}
 \begin{DoxyReturn}{Returns}
 The edge points of the mask object. 
 \end{DoxyReturn}
@@ -173,15 +177,15 @@ The edge points of the mask object.
 
 Definition at line 270 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_aa1286d971da183a1763d0756d35c90bd}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetMaskReferenceNn@{GetMaskReferenceNn}}
-\index{GetMaskReferenceNn@{GetMaskReferenceNn}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetMaskReferenceNn}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetMaskReferenceNn (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a24fed896ac83b61f7abd9719ebe8ff6f}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-mask\_\-reference\_\-nn@{get\_\-mask\_\-reference\_\-nn}}
+\index{get\_\-mask\_\-reference\_\-nn@{get\_\-mask\_\-reference\_\-nn}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-mask\_\-reference\_\-nn}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-mask\_\-reference\_\-nn (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_aa1286d971da183a1763d0756d35c90bd}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_a24fed896ac83b61f7abd9719ebe8ff6f}
 \begin{DoxyReturn}{Returns}
 The distances of the nearest neighbours of all mask edge points to all reference edge points. 
 \end{DoxyReturn}
@@ -189,15 +193,15 @@ The distances of the nearest neighbours of all mask edge points to all reference
 
 Definition at line 239 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_aebdeff8c2d6391c37572e5a791ed40f8}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetMaximumSymmetricSurfaceDistance@{GetMaximumSymmetricSurfaceDistance}}
-\index{GetMaximumSymmetricSurfaceDistance@{GetMaximumSymmetricSurfaceDistance}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetMaximumSymmetricSurfaceDistance}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetMaximumSymmetricSurfaceDistance (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a8684d8c1382318e6bf319b668c81dd1a}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-maximum\_\-symmetric\_\-surface\_\-distance@{get\_\-maximum\_\-symmetric\_\-surface\_\-distance}}
+\index{get\_\-maximum\_\-symmetric\_\-surface\_\-distance@{get\_\-maximum\_\-symmetric\_\-surface\_\-distance}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-maximum\_\-symmetric\_\-surface\_\-distance}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-maximum\_\-symmetric\_\-surface\_\-distance (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_aebdeff8c2d6391c37572e5a791ed40f8}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_a8684d8c1382318e6bf319b668c81dd1a}
 
 
 Computes the maximum symmetric surface distance, also known as Hausdorff distance, between the two objects surfaces. 
@@ -211,15 +215,15 @@ Metric definition: Let $S(A)$ denote the set of surface voxels of $A$. The short
 
 Definition at line 133 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a7248264eca680d9c4d327961fd04c8be}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetReferenceEdgePoints@{GetReferenceEdgePoints}}
-\index{GetReferenceEdgePoints@{GetReferenceEdgePoints}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetReferenceEdgePoints}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetReferenceEdgePoints (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_abee40ce81906de3f356a08019985be24}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-reference\_\-edge\_\-points@{get\_\-reference\_\-edge\_\-points}}
+\index{get\_\-reference\_\-edge\_\-points@{get\_\-reference\_\-edge\_\-points}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-reference\_\-edge\_\-points}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-reference\_\-edge\_\-points (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_a7248264eca680d9c4d327961fd04c8be}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_abee40ce81906de3f356a08019985be24}
 \begin{DoxyReturn}{Returns}
 The edge points of the reference object. 
 \end{DoxyReturn}
@@ -227,15 +231,15 @@ The edge points of the reference object.
 
 Definition at line 277 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a1ddfc188d4a3c2e7bf3d9347fdec8b14}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetReferenceMaskNn@{GetReferenceMaskNn}}
-\index{GetReferenceMaskNn@{GetReferenceMaskNn}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetReferenceMaskNn}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetReferenceMaskNn (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_abbd8cea3e3dd7a4a9c1af123e889e7bb}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-reference\_\-mask\_\-nn@{get\_\-reference\_\-mask\_\-nn}}
+\index{get\_\-reference\_\-mask\_\-nn@{get\_\-reference\_\-mask\_\-nn}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-reference\_\-mask\_\-nn}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-reference\_\-mask\_\-nn (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_a1ddfc188d4a3c2e7bf3d9347fdec8b14}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_abbd8cea3e3dd7a4a9c1af123e889e7bb}
 \begin{DoxyReturn}{Returns}
 The distances of the nearest neighbours of all reference edge points to all mask edge points.
 \end{DoxyReturn}
@@ -243,15 +247,15 @@ The underlying algorithm used for the scipy.spatial.KDTree implementation is bas
 
 Definition at line 257 of file surface.py.
 
-\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a43fc6c5bbe3af05e886341fc3cd6e4a6}{
-\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!GetRootMeanSquareSymmetricSurfaceDistance@{GetRootMeanSquareSymmetricSurfaceDistance}}
-\index{GetRootMeanSquareSymmetricSurfaceDistance@{GetRootMeanSquareSymmetricSurfaceDistance}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
-\subsubsection[{GetRootMeanSquareSymmetricSurfaceDistance}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.GetRootMeanSquareSymmetricSurfaceDistance (
+\hypertarget{classmedpy_1_1metric_1_1surface_1_1Surface_a920a84703f013d3c30b9a29e352700d9}{
+\index{medpy::metric::surface::Surface@{medpy::metric::surface::Surface}!get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance@{get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance}}
+\index{get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance@{get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance}!medpy::metric::surface::Surface@{medpy::metric::surface::Surface}}
+\subsubsection[{get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.surface.Surface.get\_\-root\_\-mean\_\-square\_\-symmetric\_\-surface\_\-distance (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1surface_1_1Surface_a43fc6c5bbe3af05e886341fc3cd6e4a6}
+\label{classmedpy_1_1metric_1_1surface_1_1Surface_a920a84703f013d3c30b9a29e352700d9}
 
 
 Computes the root mean square symmetric surface distance between the two objects surfaces. 

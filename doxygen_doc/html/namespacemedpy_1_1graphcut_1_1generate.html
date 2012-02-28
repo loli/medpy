@@ -67,8 +67,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Package medpy.graphcut.generate</div>  </div>
 </div>
@@ -79,26 +78,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemedpy_1_1graphcut_1_1generate.html#a3c9ab1aed31733093c0b0bbc6c903ea1">bk_mfmc_generate</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a C++ file executing the Boyov and Kolmogorovs max-flow/min-cut algorithm over the supplied graph.  <a href="#a3c9ab1aed31733093c0b0bbc6c903ea1"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaddaff4f3365c3cb13949a2ecddc7066"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_GRAPH_LIB" ref="aaddaff4f3365c3cb13949a2ecddc7066" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemedpy_1_1graphcut_1_1generate.html#aaddaff4f3365c3cb13949a2ecddc7066">__BK_MFMC_GRAPH_LIB</a> = '/cpp/maxflow/graph.h'</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">BK_MFMC: Boyov and Kolmogorovs (1) C++ max-flow/min-cut implementation (a) <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f682968481d59ec21b24ecf1e7dc163"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_GRAPH_FILE" ref="a4f682968481d59ec21b24ecf1e7dc163" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_GRAPH_FILE</b> = '/cpp/maxflow/graph.cpp'</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa19c09ba323f9714bea465ee57076b47"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_MAXFLOW_FILE" ref="aa19c09ba323f9714bea465ee57076b47" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_MAXFLOW_FILE</b> = '/cpp/maxflow/maxflow.cpp'</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a921090f034e86c356c56604193fca130"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_SOURCE_MARKER" ref="a921090f034e86c356c56604193fca130" args="" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_SOURCE_MARKER</b> = 1</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee4d16ae8712edb67e48d79b608818ff"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_SINK_MARKER" ref="aee4d16ae8712edb67e48d79b608818ff" args="" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_SINK_MARKER</b> = 0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_HEADER</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_FOOTER</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemedpy_1_1graphcut_1_1generate.html#a137ecdeeb31eb5be7bdcf70da1509477">graph_from_labels</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="">object from a nD label image. </a> <a href="#a137ecdeeb31eb5be7bdcf70da1509477"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Generates output files from graphs that are processable by graph-cut algorithms. </p>
+<p>Provides functionality to generate graphs efficiently from nD label-images.</p>
 <p>All functions in this module are highly depend on the actual implementation of the graph-cut algorithm they are intended to be used for. They require a minimal version number and it can not be ensured, that they will work with other versions.</p>
 <p>See the package description for a list of the supported graph-cut implementations.</p>
 <p>Functions:</p>
@@ -107,90 +92,75 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_SINK_MARKER<
 </ul>
 <dl class="author"><dt><b>Author:</b></dt><dd>Oskar Maier </dd></dl>
 <dl class="version"><dt><b>Version:</b></dt><dd>d0.1.0 </dd></dl>
+<dl class="since"><dt><b>Since:</b></dt><dd>2012-01-18  Development</dd></dl>
+<p>Functions:</p>
+<ul>
+<li>def graph_from_labels((label_image, fg_markers, bg_markers, regional_term = False, boundary_term = False, regional_term_args = False, boundary_term_args = False): Creates a Graph object from a nD label image. <dl class="author"><dt><b>Author:</b></dt><dd>Oskar Maier </dd></dl>
+<dl class="version"><dt><b>Version:</b></dt><dd>d0.1.0 </dd></dl>
 <dl class="since"><dt><b>Since:</b></dt><dd>2012-01-18  Development </dd></dl>
+</li>
+</ul>
 </div><hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a3c9ab1aed31733093c0b0bbc6c903ea1"></a><!-- doxytag: member="medpy::graphcut::generate::bk_mfmc_generate" ref="a3c9ab1aed31733093c0b0bbc6c903ea1" args="" -->
+<a class="anchor" id="a137ecdeeb31eb5be7bdcf70da1509477"></a><!-- doxytag: member="medpy::graphcut::generate::graph_from_labels" ref="a137ecdeeb31eb5be7bdcf70da1509477" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">def medpy.graphcut.generate.bk_mfmc_generate </td>
+          <td class="memname">def medpy.graphcut.generate.graph_from_labels </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>graph</em></td><td>)</td>
+          <td class="paramname"><em>label_image</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>fg_markers</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Generate a C++ file executing the Boyov and Kolmogorovs max-flow/min-cut algorithm over the supplied graph. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">graphs,:</td><td>The graph representing the problem.  graphs: medpy.graphcut.Graph </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>: A compile-ready, pre-formated version of the problem to be compiled/executed either using the methods provided by the  cut module or manually. : str</dd></dl>
-<p>SubprocessError: When the algorithm library can not be accessed. </p>
-
-<p>Definition at line <a class="el" href="generate_8py_source.html#l00088">88</a> of file <a class="el" href="generate_8py_source.html">generate.py</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="a0444e029241e9e7b6f0aa593e44bf9d1"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_FOOTER" ref="a0444e029241e9e7b6f0aa593e44bf9d1" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">string medpy::graphcut::generate.__BK_MFMC_FOOTER</td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>bg_markers</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespacemedpy_1_1graphcut_1_1generate.html">00001</a> <span class="stringliteral">&quot;&quot;&quot;</span>
-<a name="l00002"></a>00002 <span class="stringliteral">    int flow = g -&gt; maxflow();</span>
-<a name="l00003"></a>00003 <span class="stringliteral"></span>
-<a name="l00004"></a>00004 <span class="stringliteral">    printf(&quot;flow=%d\\n&quot;, flow);</span>
-<a name="l00005"></a>00005 <span class="stringliteral">    int i;</span>
-<a name="l00006"></a>00006 <span class="stringliteral">    for(i= 0; i &lt; {}; i++) {{</span>
-<a name="l00007"></a>00007 <span class="stringliteral">        if (g-&gt;what_segment(i) == GraphType::SOURCE)</span>
-<a name="l00008"></a>00008 <span class="stringliteral">            printf(&quot;%d={}\\n&quot;, i + 1); /* adjust id systems by adding a 1 */</span>
-<a name="l00009"></a>00009 <span class="stringliteral">        else</span>
-<a name="l00010"></a>00010 <span class="stringliteral">            printf(&quot;%d={}\\n&quot;, i + 1); /* adjust id systems by adding a 1 */</span>
-<a name="l00011"></a>00011 <span class="stringliteral">    }}</span>
-<a name="l00012"></a>00012 <span class="stringliteral">    delete g;</span>
-<a name="l00013"></a>00013 <span class="stringliteral"></span>
-<a name="l00014"></a>00014 <span class="stringliteral">    return 0;</span>
-<a name="l00015"></a>00015 <span class="stringliteral">}}</span>
-<a name="l00016"></a>00016 <span class="stringliteral">&quot;&quot;&quot;</span>
-</pre></div>
-<p>Definition at line <a class="el" href="generate_8py_source.html#l00058">58</a> of file <a class="el" href="generate_8py_source.html">generate.py</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a64165b173e6d183953b7e30ed52eac6f"></a><!-- doxytag: member="medpy::graphcut::generate::__BK_MFMC_HEADER" ref="a64165b173e6d183953b7e30ed52eac6f" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">string medpy::graphcut::generate.__BK_MFMC_HEADER</td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>regional_term</em> = <code>False</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>boundary_term</em> = <code>False</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>regional_term_args</em> = <code>False</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>boundary_term_args</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespacemedpy_1_1graphcut_1_1generate.html">00001</a> <span class="stringliteral">&quot;&quot;&quot;</span>
-<a name="l00002"></a>00002 <span class="stringliteral">#include &lt;stdio.h&gt;</span>
-<a name="l00003"></a>00003 <span class="stringliteral">#include &quot;{}&quot;</span>
-<a name="l00004"></a>00004 <span class="stringliteral"></span>
-<a name="l00005"></a>00005 <span class="stringliteral">int main()</span>
-<a name="l00006"></a>00006 <span class="stringliteral">{{</span>
-<a name="l00007"></a>00007 <span class="stringliteral">    typedef Graph&lt;int,int,int&gt; GraphType;</span>
-<a name="l00008"></a>00008 <span class="stringliteral">    GraphType *g = new GraphType(/*estimated # of nodes*/ {}, /*estimated # of edges*/ {}); </span>
-<a name="l00009"></a>00009 <span class="stringliteral">&quot;&quot;&quot;</span>
-</pre></div>
-<p>Definition at line <a class="el" href="generate_8py_source.html#l00048">48</a> of file <a class="el" href="generate_8py_source.html">generate.py</a>.</p>
+
+<p>Create a <a class="el" href="">object from a nD label image. </a></p>
+<p>Every region of the label image is regarded as a node. They are connected to their immediate neighbours by arcs. If to regions are neighbours is determined using ndim*2-connectedness (e.g. 3*2=6 for 3D). In the next step the arcs weights (n-weights) are computed using the supplied boundary_term function.</p>
+<p>Implicitly the graph holds two additional nodes: the source and the sink, so called terminal nodes. These are connected with all other nodes through arcs of an initial weight (t-weight) of zero. All regions that are under the foreground markers are considered to be tightly bound to the source: The t-weight of the arc from source to these nodes is set to a maximum (<a class="el" href="">value. The same goes for the background markers: The covered regions receive a maximum ( Graph.MAX) t-weight for their arc towards the sink.   If a region is marked as both, foreground and background, the background marker is given higher priority.   all arcs whose weight is not explicitly set are assumed to carry a weight of zero.   label_image The label image as an array containing uint values. : The region labels have to start from 1 and be continuous ( relabel()).  label_image numpy.ndarray  fg_markers The foreground markers as binary array of the same shape as the label image.  fg_markers ndarray  bg_markers The background markers as binary array of the same shape as the label image.  bg_markers ndarray  regional_term This can be either False - all t-weights are set to 0, except for the nodes that are directly connected to the source or sink. , or a function - The supplied function is used to compute the t_edges. It has to have the following signature regional_term(label_image, regions, bounding_boxes, regional_term_args), and is supposed to return a dictionary with region-ids as keys and a tuple (source_t_weight, sink_t_weight) as values. The returned dictionary does only need to contain entries for nodes where one of the t-weights is not zero. Additional parameters can be passed via the regional_term_args argument.  regional_term function  boundary_term This can be either False - In which case the weight of all n_edges i.e. between all nodes that are not source or sink, are set to 0. , or a function - In which case it is used to compute the edges weights. The supplied function has to have the following signature fun(label_image, boundary_term_args), and is supposed to return a dictionary with the graphs edges as keys and their n-weights as values. These weights are tuples of numbers assigning the weights in both directions of the edge. Additional parameters can be passed via the boundary_term_args argument.  boundary_term function  regional_term_args Use this to pass some additional parameters to the regional_term function.  boundary_term_args Use this to pass some additional parameters to the boundary_term function.   the created graph  graph.Graph   AttributeError If an argument is maleformed.  FunctionError If one of the supplied functions returns unexpected results. </a></p>
+
+<p>Definition at line <a class="el" href="graphcut_2generate_8py_source.html#l00101">101</a> of file <a class="el" href="graphcut_2generate_8py_source.html">generate.py</a>.</p>
 
 </div>
 </div>
@@ -200,7 +170,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_SINK_MARKER<
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -209,7 +179,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>__BK_MFMC_SINK_MARKER<
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:16 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:06 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

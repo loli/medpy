@@ -69,102 +69,181 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">test2.py</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
-<a name="l00002"></a>00002 <span class="keyword">import</span> logging
-<a name="l00003"></a>00003 
-<a name="l00004"></a>00004 <span class="keyword">import</span> scipy
-<a name="l00005"></a>00005 <span class="keyword">from</span> nibabel.loadsave <span class="keyword">import</span> load, save
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">#!/usr/bin/python</span>
+<a name="l00002"></a>00002 
+<a name="l00003"></a>00003 <span class="comment">#</span>
+<a name="l00004"></a>00004 <span class="comment"># COMPUTE MEAN; ENTROPY AND UNIFORMITY</span>
+<a name="l00005"></a>00005 <span class="comment">#</span>
 <a name="l00006"></a>00006 
-<a name="l00007"></a>00007 <span class="keyword">from</span> medpy.core <span class="keyword">import</span> Logger
-<a name="l00008"></a>00008 <span class="keyword">from</span> medpy.graphcut <span class="keyword">import</span> graph, generate, cut, parse, energy
-<a name="l00009"></a>00009 <span class="keyword">from</span> medpy.utilities.nibabel <span class="keyword">import</span> image_like
-<a name="l00010"></a>00010 
-<a name="l00011"></a>00011 <span class="keyword">def </span>main():
-<a name="l00012"></a>00012     <span class="comment"># prepare logger</span>
-<a name="l00013"></a>00013     logger = Logger.getInstance()
-<a name="l00014"></a>00014     logger.setLevel(logging.DEBUG)
-<a name="l00015"></a>00015     
-<a name="l00016"></a>00016     <span class="comment"># input image locations</span>
-<a name="l00017"></a>00017     i = <span class="stringliteral">&#39;/home/omaier/Experiments/Regionsegmentation/Evaluation_Viscous/00originalvolumes/o09.nii&#39;</span> <span class="comment"># original image</span>
-<a name="l00018"></a>00018     g = <span class="stringliteral">&#39;/home/omaier/Experiments/Regionsegmentation/Evaluation_Viscous/01gradient/o09_gradient.nii&#39;</span> <span class="comment"># gradient magnitude image</span>
-<a name="l00019"></a>00019     l = <span class="stringliteral">&#39;image.nii&#39;</span> <span class="comment"># label image</span>
-<a name="l00020"></a>00020     
-<a name="l00021"></a>00021     <span class="comment"># output image locations</span>
-<a name="l00022"></a>00022     r = <span class="stringliteral">&#39;result.nii&#39;</span> <span class="comment"># liver mask</span>
-<a name="l00023"></a>00023     c = <span class="stringliteral">&#39;original.nii&#39;</span> <span class="comment"># croped original image</span>
-<a name="l00024"></a>00024     f = <span class="stringliteral">&#39;foreground.nii&#39;</span> <span class="comment"># foreground markers</span>
-<a name="l00025"></a>00025     b = <span class="stringliteral">&#39;background.nii&#39;</span> <span class="comment"># background markers</span>
-<a name="l00026"></a>00026     
-<a name="l00027"></a>00027     <span class="comment"># load images</span>
-<a name="l00028"></a>00028     i_i = load(i)
-<a name="l00029"></a>00029     g_i = load(g)
-<a name="l00030"></a>00030     l_i = load(l)
-<a name="l00031"></a>00031     
-<a name="l00032"></a>00032     <span class="comment"># extract and prepare image data</span>
-<a name="l00033"></a>00033     i_d = scipy.squeeze(i_i.get_data())
-<a name="l00034"></a>00034     g_d = scipy.squeeze(g_i.get_data())
-<a name="l00035"></a>00035     l_d = scipy.squeeze(l_i.get_data())
-<a name="l00036"></a>00036     
-<a name="l00037"></a>00037     <span class="comment"># crop input images to achieve faster execution</span>
-<a name="l00038"></a>00038     i_d = i_d[50:-50,50:-50,50:-50]
-<a name="l00039"></a>00039     g_d = g_d[50:-50,50:-50,50:-50]
-<a name="l00040"></a>00040     l_d = l_d[50:-50,50:-50,50:-50]
+<a name="l00007"></a>00007 <span class="comment"># build-in modules</span>
+<a name="l00008"></a>00008 
+<a name="l00009"></a>00009 <span class="comment"># third-party modules</span>
+<a name="l00010"></a>00010 <span class="keyword">import</span> scipy
+<a name="l00011"></a>00011 <span class="keyword">import</span> scipy.stats
+<a name="l00012"></a>00012 <span class="keyword">import</span> math
+<a name="l00013"></a>00013 <span class="keyword">from</span> scipy.ndimage.filters <span class="keyword">import</span> gaussian_laplace, convolve
+<a name="l00014"></a>00014 
+<a name="l00015"></a>00015 <span class="comment"># path changes</span>
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 <span class="comment"># own modules</span>
+<a name="l00018"></a>00018 
+<a name="l00019"></a>00019 <span class="comment"># code</span>
+<a name="l00020"></a>00020 <span class="keyword">def </span>main():
+<a name="l00021"></a>00021     <span class="comment"># set parameters</span>
+<a name="l00022"></a>00022     img = scipy.asarray([[[1,2,3],
+<a name="l00023"></a>00023                           [1,2,3],
+<a name="l00024"></a>00024                           [1,2,3]],
+<a name="l00025"></a>00025                          [[1,2,3],
+<a name="l00026"></a>00026                           [1,2,3],
+<a name="l00027"></a>00027                           [1,2,3]]])
+<a name="l00028"></a>00028     img = scipy.asarray([[[1,2,3,4],
+<a name="l00029"></a>00029                           [1,2,3,-6],
+<a name="l00030"></a>00030                           [1,2,3,4]],
+<a name="l00031"></a>00031                          [[1,2,3,3],
+<a name="l00032"></a>00032                           [1,2,3,-9],
+<a name="l00033"></a>00033                           [1,2,3,2]]])
+<a name="l00034"></a>00034     mean_exp = 6*6/18.
+<a name="l00035"></a>00035     entropy_exp = -3 * 1./3 * math.log(1./3, 2)
+<a name="l00036"></a>00036     uniformity_exp = 3 * math.pow(1./3, 2)
+<a name="l00037"></a>00037         
+<a name="l00038"></a>00038     <span class="keywordflow">print</span> mean_exp, entropy_exp, uniformity_exp
+<a name="l00039"></a>00039     <span class="keywordflow">print</span> features(img)
+<a name="l00040"></a>00040     <span class="keywordflow">print</span> features2(img.ravel())
 <a name="l00041"></a>00041     
-<a name="l00042"></a>00042     <span class="comment"># recompute the label ids to start from id</span>
-<a name="l00043"></a>00043     l_d =  graph.relabel(l_d)
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045     <span class="comment"># create markers</span>
-<a name="l00046"></a>00046     <span class="comment"># fg: (slightly left of center)</span>
-<a name="l00047"></a>00047     fg = scipy.zeros(i_d.shape, dtype=scipy.bool_)
-<a name="l00048"></a>00048     <span class="comment">#mid = scipy.asarray(i_d.shape)/2</span>
-<a name="l00049"></a>00049     <span class="comment">#fg[mid[0]-50:mid[0]+50, mid[1]-10:mid[1]+10, mid[2]-10:mid[2]+10] = True</span>
-<a name="l00050"></a>00050     fg[0:10,20:-20,-40:] = <span class="keyword">True</span> <span class="comment"># x (down-&gt;up/0-&gt;end) , y (down-&gt;up/0-&gt;end), z (down-&gt;up/0-&gt;end)</span>
-<a name="l00051"></a>00051 
-<a name="l00052"></a>00052     <span class="comment"># bg: 1px at image borders</span>
-<a name="l00053"></a>00053     bg = scipy.zeros(i_d.shape, dtype=scipy.bool_)
-<a name="l00054"></a>00054     bg[80:,:,0:30]
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056     <span class="comment"># execute</span>
-<a name="l00057"></a>00057     logger.info(<span class="stringliteral">&#39;Preparing graph...&#39;</span>)
-<a name="l00058"></a>00058     gr = graph.graph_from_labels(l_d, fg, bg, boundary_term = energy.boundary_stawiaski, boundary_term_args = g_d)
-<a name="l00059"></a>00059     inconsistent = gr.inconsistent()
-<a name="l00060"></a>00060     <span class="keywordflow">if</span> inconsistent:
-<a name="l00061"></a>00061         logger.error(<span class="stringliteral">&#39;The created graph contains inconsistencies: {}&#39;</span>.format(<span class="stringliteral">&#39;\n&#39;</span>.join(inconsistent)))
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063     <span class="comment"># execute min-cut</span>
-<a name="l00064"></a>00064     logger.info(<span class="stringliteral">&#39;Executing min-cut...&#39;</span>)
-<a name="l00065"></a>00065     source_file = generate.bk_mfmc_generate(gr)
-<a name="l00066"></a>00066     output = cut.bk_mfmc_cut(source_file)
+<a name="l00042"></a>00042 <span class="comment">#    points = [(x, y) for x in range(-4, 5) for y in range(-4, 5)]</span>
+<a name="l00043"></a>00043 <span class="comment">#    scipy.set_printoptions(precision=4)</span>
+<a name="l00044"></a>00044 <span class="comment">#    scipy.set_printoptions(suppress=True)</span>
+<a name="l00045"></a>00045 <span class="comment">#    for sigma in [x/10. + 0.1 for x in range(0, 10)]:</span>
+<a name="l00046"></a>00046 <span class="comment">#        res = []</span>
+<a name="l00047"></a>00047 <span class="comment">#        for p in points:</span>
+<a name="l00048"></a>00048 <span class="comment">#            res.append(LoG2d(p[0], p[1], sigma))</span>
+<a name="l00049"></a>00049 <span class="comment">#        res = (scipy.asarray(res)).reshape(9,9)</span>
+<a name="l00050"></a>00050 <span class="comment">#        print &quot;SIGMA&quot;, sigma</span>
+<a name="l00051"></a>00051 <span class="comment">#        print res</span>
+<a name="l00052"></a>00052     
+<a name="l00053"></a>00053     img =  [[1,1,1,1,1,1,1],
+<a name="l00054"></a>00054             [1,2,2,2,2,2,1],
+<a name="l00055"></a>00055             [1,2,3,3,3,2,1],
+<a name="l00056"></a>00056             [1,2,3,4,3,2,1],
+<a name="l00057"></a>00057             [1,2,3,3,3,2,1],
+<a name="l00058"></a>00058             [1,2,2,2,2,2,1],
+<a name="l00059"></a>00059             [1,1,1,1,1,1,1]]
+<a name="l00060"></a>00060     scipy.set_printoptions(precision=4)
+<a name="l00061"></a>00061     img = scipy.asarray(img)
+<a name="l00062"></a>00062     points = [(x, y) <span class="keywordflow">for</span> x <span class="keywordflow">in</span> range(-10, 11) <span class="keywordflow">for</span> y <span class="keywordflow">in</span> range(-10, 11)]
+<a name="l00063"></a>00063     res = []
+<a name="l00064"></a>00064     <span class="keywordflow">for</span> p <span class="keywordflow">in</span> points:
+<a name="l00065"></a>00065         res.append(LoG2d(p[0], p[1], 0.5))
+<a name="l00066"></a>00066     res = (scipy.asarray(res)).reshape(21,21)
 <a name="l00067"></a>00067     
-<a name="l00068"></a>00068     <span class="comment"># parse</span>
-<a name="l00069"></a>00069     logger.info(<span class="stringliteral">&#39;Parsing results...&#39;</span>)
-<a name="l00070"></a>00070     result = parse.bk_mfmc_parse(output)
-<a name="l00071"></a>00071     <span class="comment">#print result</span>
-<a name="l00072"></a>00072     
-<a name="l00073"></a>00073     <span class="comment"># apply results to label image</span>
-<a name="l00074"></a>00074     logger.info(<span class="stringliteral">&#39;Applying results...&#39;</span>)
-<a name="l00075"></a>00075     l_d = parse.apply_mapping(l_d, result[1])
-<a name="l00076"></a>00076                 
-<a name="l00077"></a>00077     logger.info(<span class="stringliteral">&#39;Saving images resulting mask...&#39;</span>)
-<a name="l00078"></a>00078     <span class="comment"># save resulting mask    </span>
-<a name="l00079"></a>00079     save(image_like(l_d, l_i), r)
-<a name="l00080"></a>00080     
-<a name="l00081"></a>00081     logger.info(<span class="stringliteral">&#39;Saving regarded original image...&#39;</span>)
-<a name="l00082"></a>00082     <span class="comment"># save cut input image</span>
-<a name="l00083"></a>00083     save(image_like(i_d, i_i), c)
-<a name="l00084"></a>00084     
-<a name="l00085"></a>00085     logger.info(<span class="stringliteral">&#39;Saving foreground marker...&#39;</span>)
-<a name="l00086"></a>00086     save(image_like(fg, i_i), f)
-<a name="l00087"></a>00087     
-<a name="l00088"></a>00088     logger.info(<span class="stringliteral">&#39;Saving background marker...&#39;</span>)
-<a name="l00089"></a>00089     save(image_like(bg, i_i), b)
-<a name="l00090"></a>00090         
-<a name="l00091"></a>00091     logger.info(<span class="stringliteral">&#39;Done!&#39;</span>)
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093     
-<a name="l00094"></a>00094 <span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:
-<a name="l00095"></a>00095     main()
-<a name="l00096"></a>00096 
+<a name="l00068"></a>00068     img_con = scipy.zeros(img.shape, dtype=scipy.float_)
+<a name="l00069"></a>00069     convolve(img, res, img_con)
+<a name="l00070"></a>00070     
+<a name="l00071"></a>00071     img_log = scipy.zeros(img.shape, dtype=scipy.float_)
+<a name="l00072"></a>00072     gaussian_laplace(img, 0.5, output=img_log)
+<a name="l00073"></a>00073     
+<a name="l00074"></a>00074     <span class="keywordflow">print</span> img_con
+<a name="l00075"></a>00075     <span class="keywordflow">print</span> features2(img_con.ravel())
+<a name="l00076"></a>00076     <span class="keywordflow">print</span> img_log
+<a name="l00077"></a>00077     <span class="keywordflow">print</span> features2(img_log.ravel())
+<a name="l00078"></a>00078     
+<a name="l00079"></a>00079     
+<a name="l00080"></a>00080     points = [(x, y) <span class="keywordflow">for</span> x <span class="keywordflow">in</span> range(-10, 11) <span class="keywordflow">for</span> y <span class="keywordflow">in</span> range(-10, 11)]
+<a name="l00081"></a>00081     res = []
+<a name="l00082"></a>00082     <span class="keywordflow">for</span> p <span class="keywordflow">in</span> points:
+<a name="l00083"></a>00083         res.append(LoG2d(p[0], p[1], 1.5))
+<a name="l00084"></a>00084     res = (scipy.asarray(res)).reshape(21,21)
+<a name="l00085"></a>00085     
+<a name="l00086"></a>00086     img_con = scipy.zeros(img.shape, dtype=scipy.float_)
+<a name="l00087"></a>00087     convolve(img, res, img_con)
+<a name="l00088"></a>00088     
+<a name="l00089"></a>00089     img_log = scipy.zeros(img.shape, dtype=scipy.float_)
+<a name="l00090"></a>00090     gaussian_laplace(img, 1.5, output=img_log)
+<a name="l00091"></a>00091     
+<a name="l00092"></a>00092     <span class="keywordflow">print</span> img_con
+<a name="l00093"></a>00093     <span class="keywordflow">print</span> features2(img_con.ravel())
+<a name="l00094"></a>00094     <span class="keywordflow">print</span> img_log
+<a name="l00095"></a>00095     <span class="keywordflow">print</span> features2(img_log.ravel())    
+<a name="l00096"></a>00096     
+<a name="l00097"></a>00097     
+<a name="l00098"></a>00098     
+<a name="l00099"></a>00099     <span class="keywordflow">print</span> <span class="stringliteral">&quot;All done.&quot;</span>
+<a name="l00100"></a>00100     
+<a name="l00101"></a>00101 <span class="keyword">def </span>gauss(x, y, sigma):
+<a name="l00102"></a>00102     <span class="keywordflow">return</span> math.exp(-1 * (math.pow(x, 2) + math.pow(x, 2)) / 2 * math.pi * math.pow(sigma, 2))
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 <span class="keyword">def </span>laplace(x, y, sigma):
+<a name="l00105"></a>00105     a = -1. / (math.pi * math.pow(sigma, 4))
+<a name="l00106"></a>00106     b = 1 - (math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))
+<a name="l00107"></a>00107     <span class="keywordflow">return</span> a * b * gauss(x, y, sigma)
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 <span class="keyword">def </span>LoG2d(x, y, sigma):
+<a name="l00110"></a>00110     xysqr = math.pow(x, 2) + math.pow(y, 2)
+<a name="l00111"></a>00111     ssqrdbl = -2 * math.pow(sigma, 2)
+<a name="l00112"></a>00112     term = xysqr/ssqrdbl
+<a name="l00113"></a>00113     <span class="keywordflow">return</span> -1. / (math.pi * math.pow(sigma, 4)) * (1 + term) * math.exp(term)
+<a name="l00114"></a>00114     
+<a name="l00115"></a>00115 <span class="comment">##</span>
+<a name="l00116"></a>00116 <span class="comment"># </span>
+<a name="l00117"></a>00117 <span class="comment">#     Compute the mean, entropy and uniformity of the supplied image.</span>
+<a name="l00118"></a>00118 <span class="comment">#     @param image an image of integers</span>
+<a name="l00119"></a>00119 <span class="comment">#     @returns mean, entropy, uniformity as tuple</span>
+<a name="l00120"></a>00120 <span class="comment">#     </span>
+<a name="l00121"></a>00121 <span class="keyword">def </span>features(image): <span class="comment"># 100^3 in 60-100ms</span>
+<a name="l00122"></a>00122     mean = image.mean()
+<a name="l00123"></a>00123     img = image - image.min() <span class="comment"># remove eventual negative values</span>
+<a name="l00124"></a>00124     dist = scipy.bincount(img.ravel())/float(img.size) <span class="comment"># compute probability histogram (work only for ints)</span>
+<a name="l00125"></a>00125     entropy = 0
+<a name="l00126"></a>00126     uniformity = 0
+<a name="l00127"></a>00127     <span class="keywordflow">for</span> grey_value <span class="keywordflow">in</span> scipy.unique(img):
+<a name="l00128"></a>00128         entropy += dist[grey_value] * math.log(dist[grey_value], 2)
+<a name="l00129"></a>00129         uniformity += math.pow(dist[grey_value], 2)
+<a name="l00130"></a>00130     entropy *= -1
+<a name="l00131"></a>00131     <span class="keywordflow">return</span> mean, entropy, uniformity
+<a name="l00132"></a>00132 
+<a name="l00133"></a>00133 <span class="comment">##</span>
+<a name="l00134"></a>00134 <span class="comment"># </span>
+<a name="l00135"></a>00135 <span class="comment">#     Compute the mean, entropy and uniformity of the supplied image.</span>
+<a name="l00136"></a>00136 <span class="comment">#     @param image as an 1D array of voxels</span>
+<a name="l00137"></a>00137 <span class="comment">#     @returns mean, entropy, uniformity as tuple</span>
+<a name="l00138"></a>00138 <span class="comment">#     </span>
+<a name="l00139"></a>00139 <span class="keyword">def </span>features2(voxels): <span class="comment"># 100^3 in 60-100ms</span>
+<a name="l00140"></a>00140     mean = voxels.mean()
+<a name="l00141"></a>00141     voxels = scipy.digitize(voxels, scipy.unique(voxels)) <span class="comment"># digitize (each grey value is mapped to an int); this is possible as the calculations below do not care about the actual grey values, but only their probabilities</span>
+<a name="l00142"></a>00142     dist = scipy.bincount(voxels)/float(voxels.size) <span class="comment"># compute probability histogram (work only for ints)</span>
+<a name="l00143"></a>00143     entropy = 0
+<a name="l00144"></a>00144     uniformity = 0
+<a name="l00145"></a>00145     <span class="keywordflow">for</span> grey_value <span class="keywordflow">in</span> scipy.unique(voxels):
+<a name="l00146"></a>00146         entropy += dist[grey_value] * math.log(dist[grey_value], 2)
+<a name="l00147"></a>00147         uniformity += math.pow(dist[grey_value], 2)
+<a name="l00148"></a>00148     entropy *= -1
+<a name="l00149"></a>00149     <span class="keywordflow">return</span> mean, entropy, uniformity
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151 <span class="comment">##</span>
+<a name="l00152"></a>00152 <span class="comment"># </span>
+<a name="l00153"></a>00153 <span class="comment">#     Compute the mean, entropy and uniformity of the supplied image.</span>
+<a name="l00154"></a>00154 <span class="comment">#     @param image as an 1D array of voxels</span>
+<a name="l00155"></a>00155 <span class="comment">#     @returns mean, entropy, uniformity as tuple</span>
+<a name="l00156"></a>00156 <span class="comment">#     </span>
+<a name="l00157"></a>00157 <span class="keyword">def </span>features3(voxels): <span class="comment"># 100^3 in 60-100ms</span>
+<a name="l00158"></a>00158     mean = voxels.mean()
+<a name="l00159"></a>00159     grey_values = scipy.unique(voxels)
+<a name="l00160"></a>00160     voxels = voxels.tolist()
+<a name="l00161"></a>00161     l = float(len(voxels))
+<a name="l00162"></a>00162     entropy = 0
+<a name="l00163"></a>00163     uniformity = 0
+<a name="l00164"></a>00164     <span class="keywordflow">for</span> grey_value <span class="keywordflow">in</span> grey_values:
+<a name="l00165"></a>00165         p = voxels.count(grey_value) / l
+<a name="l00166"></a>00166         entropy += p * math.log(p, 2)
+<a name="l00167"></a>00167         uniformity += math.pow(p, 2)
+<a name="l00168"></a>00168     entropy *= -1
+<a name="l00169"></a>00169     <span class="keywordflow">return</span> mean, entropy, uniformity
+<a name="l00170"></a>00170     
+<a name="l00171"></a>00171 <span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:
+<a name="l00172"></a>00172     main()     
+<a name="l00173"></a>00173     
+<a name="l00174"></a>00174     
+<a name="l00175"></a>00175 
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -172,7 +251,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -181,7 +260,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:15 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:05 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

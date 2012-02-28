@@ -29,8 +29,6 @@
 	If you use this option, you should cite
 	the aforementioned paper in any resulting publication.
 */
-	
-
 
 /*
 	For description, license, example usage see README.TXT.
@@ -96,6 +94,12 @@ public:
 
 	// Adds new edges 'SOURCE->i' and 'i->SINK' with corresponding weights.
 	// Can be called multiple times for each node.
+	// NOTE: calling add_tweights(x, a, b) is equal to two calls
+	//			add_tweights(x, a, 0)
+	// 		add_tweights(x, 0, b)
+	//			respectively
+	// 		add_tweights(x, 0, b)
+	//			add_tweights(x, a, 0)
 	// Weights can be negative.
 	// NOTE: the number of such edges is not counted in edge_num_max.
 	//       No internal memory is allocated by this call.
@@ -385,7 +389,8 @@ template <typename captype, typename tcaptype, typename flowtype>
 }
 
 template <typename captype, typename tcaptype, typename flowtype> 
-	inline void Graph<captype,tcaptype,flowtype>::add_tweights(node_id i, tcaptype cap_source, tcaptype cap_sink)
+	inline void Graph<captype,tcaptype,flowtype>::add_
+(node_id i, tcaptype cap_source, tcaptype cap_sink)
 {
 	assert(i >= 0 && i < node_num);
 

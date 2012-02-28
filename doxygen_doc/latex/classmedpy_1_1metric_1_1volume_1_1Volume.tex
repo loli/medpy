@@ -30,29 +30,17 @@ Collaboration diagram for medpy.metric.volume.Volume:\nopagebreak
 \item 
 def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_ad5c463235786414fc4ff2b2157995722}{\_\-\_\-init\_\-\_\-}
 \begin{DoxyCompactList}\small\item\em Initialize the class with two binary images whose 0 values are considered to be background voxels and the 1 values foreground. \end{DoxyCompactList}\item 
-def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_ac1778f1c2a896936dc587e43da5dc6ab}{GetRelativeVolumeDifference}
-\begin{DoxyCompactList}\small\item\em Returns the relative volume difference between two shapes defined by the non-\/background voxels of in the binary images. \end{DoxyCompactList}\item 
-def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a0b56a5881f4587543d6e12457700ad61}{GetVolumetricOverlapError}
-\begin{DoxyCompactList}\small\item\em Returns the volumetric overlap error between two shapes defined by the non-\/background voxels of in two binary images. \end{DoxyCompactList}\item 
-\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a71ceaa45f8287f4f1f811f2589218454}{
-def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a71ceaa45f8287f4f1f811f2589218454}{GetMaskSize}}
-\label{classmedpy_1_1metric_1_1volume_1_1Volume_a71ceaa45f8287f4f1f811f2589218454}
-
+def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a7aa74dbef135230a14cfd4395faef16c}{get\_\-relative\_\-volume\_\-difference}
+\begin{DoxyCompactList}\small\item\em Return the relative volume difference between two shapes defined by the non-\/background voxels of in the binary images. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a742f8e8c275f27aae19a0b5a7c7f9946}{get\_\-volumetric\_\-overlap\_\-error}
+\begin{DoxyCompactList}\small\item\em Return the volumetric overlap error between two shapes defined by the non-\/background voxels of in two binary images. \end{DoxyCompactList}\item 
+def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a70fe2aa96e50c1f61404b9c9988111cf}{get\_\-mask\_\-size}
 \begin{DoxyCompactList}\small\item\em Computes the mask objects size if not yet done and returns it. \end{DoxyCompactList}\item 
-\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_ae2437de6098136c28250c9bdacc9a235}{
-def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_ae2437de6098136c28250c9bdacc9a235}{GetReferenceSize}}
-\label{classmedpy_1_1metric_1_1volume_1_1Volume_ae2437de6098136c28250c9bdacc9a235}
-
+def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a99cbdf7c5a6ce732c6007a163f48f3fb}{get\_\-reference\_\-size}
 \begin{DoxyCompactList}\small\item\em Computes the reference objects size if not yet done and returns it. \end{DoxyCompactList}\item 
-\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a2740aebb1d3a30e50a4facb355bcf1a4}{
-def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_a2740aebb1d3a30e50a4facb355bcf1a4}{GetIntersectionSize}}
-\label{classmedpy_1_1metric_1_1volume_1_1Volume_a2740aebb1d3a30e50a4facb355bcf1a4}
-
+def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_af1eacc2b4badc09ecb2e73b7d38b7356}{get\_\-intersection\_\-size}
 \begin{DoxyCompactList}\small\item\em Computes the two objects intersection size if not yet done and returns it. \end{DoxyCompactList}\item 
-\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_ae8d79f3cbe067d886c4d1519c100a33a}{
-def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_ae8d79f3cbe067d886c4d1519c100a33a}{GetUnionSize}}
-\label{classmedpy_1_1metric_1_1volume_1_1Volume_ae8d79f3cbe067d886c4d1519c100a33a}
-
+def \hyperlink{classmedpy_1_1metric_1_1volume_1_1Volume_afbd1496384ddb1233432dda30a961769}{get\_\-union\_\-size}
 \begin{DoxyCompactList}\small\item\em Computes the two objects union size if not yet done and returns it. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -88,13 +76,13 @@ Initialize the class with two binary images whose 0 values are considered to be 
 
 
 \begin{DoxyParams}{Parameters}
-{\em mask,:} & mask as an scipy array (3D image) \\
+{\em mask} & mask as an scipy array (3D image) \\
 \hline
-{\em reference,:} & reference as an scipy array (3D image) \\
+{\em reference} & reference as an scipy array (3D image) \\
 \hline
-{\em mask\_\-offset,:} & offset of the mask array to 0,0,0-\/origin \\
+{\em mask\_\-offset} & offset of the mask array to 0,0,0-\/origin \\
 \hline
-{\em mask\_\-offset,:} & offset of the reference array to 0,0,0-\/origin \\
+{\em mask\_\-offset} & offset of the reference array to 0,0,0-\/origin \\
 \hline
 \end{DoxyParams}
 
@@ -104,45 +92,136 @@ Definition at line 62 of file volume.py.
 
 
 \subsection{Member Function Documentation}
-\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_ac1778f1c2a896936dc587e43da5dc6ab}{
-\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!GetRelativeVolumeDifference@{GetRelativeVolumeDifference}}
-\index{GetRelativeVolumeDifference@{GetRelativeVolumeDifference}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
-\subsubsection[{GetRelativeVolumeDifference}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.GetRelativeVolumeDifference (
+\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_af1eacc2b4badc09ecb2e73b7d38b7356}{
+\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!get\_\-intersection\_\-size@{get\_\-intersection\_\-size}}
+\index{get\_\-intersection\_\-size@{get\_\-intersection\_\-size}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
+\subsubsection[{get\_\-intersection\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.get\_\-intersection\_\-size (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1volume_1_1Volume_ac1778f1c2a896936dc587e43da5dc6ab}
+\label{classmedpy_1_1metric_1_1volume_1_1Volume_af1eacc2b4badc09ecb2e73b7d38b7356}
 
 
-Returns the relative volume difference between two shapes defined by the non-\/background voxels of in the binary images. 
+Computes the two objects intersection size if not yet done and returns it. 
+
+\begin{DoxyReturn}{Returns}
+The size of the intersection between the two shape. 
+\end{DoxyReturn}
+
+
+Definition at line 163 of file volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a70fe2aa96e50c1f61404b9c9988111cf}{
+\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!get\_\-mask\_\-size@{get\_\-mask\_\-size}}
+\index{get\_\-mask\_\-size@{get\_\-mask\_\-size}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
+\subsubsection[{get\_\-mask\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.get\_\-mask\_\-size (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1volume_1_1Volume_a70fe2aa96e50c1f61404b9c9988111cf}
+
+
+Computes the mask objects size if not yet done and returns it. 
+
+\begin{DoxyReturn}{Returns}
+The size of the mask object. 
+\end{DoxyReturn}
+
+
+Definition at line 137 of file volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a99cbdf7c5a6ce732c6007a163f48f3fb}{
+\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!get\_\-reference\_\-size@{get\_\-reference\_\-size}}
+\index{get\_\-reference\_\-size@{get\_\-reference\_\-size}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
+\subsubsection[{get\_\-reference\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.get\_\-reference\_\-size (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1volume_1_1Volume_a99cbdf7c5a6ce732c6007a163f48f3fb}
+
+
+Computes the reference objects size if not yet done and returns it. 
+
+\begin{DoxyReturn}{Returns}
+The size of the reference object. 
+\end{DoxyReturn}
+
+
+Definition at line 150 of file volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a7aa74dbef135230a14cfd4395faef16c}{
+\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!get\_\-relative\_\-volume\_\-difference@{get\_\-relative\_\-volume\_\-difference}}
+\index{get\_\-relative\_\-volume\_\-difference@{get\_\-relative\_\-volume\_\-difference}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
+\subsubsection[{get\_\-relative\_\-volume\_\-difference}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.get\_\-relative\_\-volume\_\-difference (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1volume_1_1Volume_a7aa74dbef135230a14cfd4395faef16c}
+
+
+Return the relative volume difference between two shapes defined by the non-\/background voxels of in the binary images. 
 
 The relative volume distance of 0 means that the volumes are identical. Note that this doesn't apply that the shapes are identical or overlap at all. The result is given as signed number \mbox{[}-\/100,+100\mbox{]} to indicate over-\/ or under-\/segmentation. Warning: Can produce values greater than -\//+100 if the difference in volume exceeds 50\%. Positive values means that the mask volume is too big, a negative value that it is too small.
 
-Warning: This measure is not actually a metric, as it is not symmetric.
+\begin{DoxyWarning}{Warning}
+This measure is not actually a metric, as it is not symmetric.
+\end{DoxyWarning}
+Metric definition: The relative volume difference between two sets of voxels $S(A)$ and $S(b)$ is given in percent and defined as: \[ 100 * \frac{|A - B|}{|B|} \]
 
-Metric definition: The relative volume difference between two sets of voxels $S(A)$ and $S(b)$ is given in percent and defined as: \[ 100 * \frac{|A - B|}{|B|} \] 
+\begin{DoxyReturn}{Returns}
+The relative volume difference between two shapes 
+\end{DoxyReturn}
 
-Definition at line 93 of file volume.py.
 
-\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a0b56a5881f4587543d6e12457700ad61}{
-\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!GetVolumetricOverlapError@{GetVolumetricOverlapError}}
-\index{GetVolumetricOverlapError@{GetVolumetricOverlapError}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
-\subsubsection[{GetVolumetricOverlapError}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.GetVolumetricOverlapError (
+Definition at line 95 of file volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_afbd1496384ddb1233432dda30a961769}{
+\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!get\_\-union\_\-size@{get\_\-union\_\-size}}
+\index{get\_\-union\_\-size@{get\_\-union\_\-size}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
+\subsubsection[{get\_\-union\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.get\_\-union\_\-size (
 \begin{DoxyParamCaption}
 \item[{}]{self}
 \end{DoxyParamCaption}
 )}}
-\label{classmedpy_1_1metric_1_1volume_1_1Volume_a0b56a5881f4587543d6e12457700ad61}
+\label{classmedpy_1_1metric_1_1volume_1_1Volume_afbd1496384ddb1233432dda30a961769}
 
 
-Returns the volumetric overlap error between two shapes defined by the non-\/background voxels of in two binary images. 
+Computes the two objects union size if not yet done and returns it. 
+
+\begin{DoxyReturn}{Returns}
+The size of the union between the two shape. 
+\end{DoxyReturn}
+
+
+Definition at line 174 of file volume.py.
+
+\hypertarget{classmedpy_1_1metric_1_1volume_1_1Volume_a742f8e8c275f27aae19a0b5a7c7f9946}{
+\index{medpy::metric::volume::Volume@{medpy::metric::volume::Volume}!get\_\-volumetric\_\-overlap\_\-error@{get\_\-volumetric\_\-overlap\_\-error}}
+\index{get\_\-volumetric\_\-overlap\_\-error@{get\_\-volumetric\_\-overlap\_\-error}!medpy::metric::volume::Volume@{medpy::metric::volume::Volume}}
+\subsubsection[{get\_\-volumetric\_\-overlap\_\-error}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.metric.volume.Volume.get\_\-volumetric\_\-overlap\_\-error (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}
+\label{classmedpy_1_1metric_1_1volume_1_1Volume_a742f8e8c275f27aae19a0b5a7c7f9946}
+
+
+Return the volumetric overlap error between two shapes defined by the non-\/background voxels of in two binary images. 
 
 The volumetric overlap error is 0 for a perfect match and 100 if the two shapes don't overlap at all.
 
-Metric definition: The volumetric overlap error between two sets of voxels $S(A)$ and $S(b)$ is given in percent and defined as: \[ 100 * \left( 1 - \frac{|A\cap B|}{|A\cup B|} \right) \] 
+Metric definition: The volumetric overlap error between two sets of voxels $S(A)$ and $S(b)$ is given in percent and defined as: \[ 100 * \left( 1 - \frac{|A\cap B|}{|A\cup B|} \right) \]
 
-Definition at line 118 of file volume.py.
+\begin{DoxyReturn}{Returns}
+The volumetric overlap error between two shapes. 
+\end{DoxyReturn}
+
+
+Definition at line 122 of file volume.py.
 
 
 

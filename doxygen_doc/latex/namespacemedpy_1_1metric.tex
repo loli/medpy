@@ -4,11 +4,17 @@
 }
 
 
-Metric measures between two binary mask images.  
+Metric measures.  
 
 
 \subsection*{Packages}
 \begin{DoxyCompactItemize}
+\item 
+package \hyperlink{namespacemedpy_1_1metric_1_1histogram}{histogram}
+
+
+\begin{DoxyCompactList}\small\item\em Provides a number of histogram distance and similarity measures. \end{DoxyCompactList}
+
 \item 
 package \hyperlink{namespacemedpy_1_1metric_1_1surface}{surface}
 
@@ -27,12 +33,13 @@ list {\bfseries \_\-\_\-all\_\-\_\-} = \mbox{[}$\,$\mbox{]}}
 
 
 \subsection{Detailed Description}
-Metric measures between two binary mask images. Provides a number of metric measures that can be used for testing and/or evaluation purposes on two binary masks (i.e. measuring their similarity).
+Metric measures. Provides a number of metric measures that e.g. can be used for testing and/or evaluation purposes on two binary masks (i.e. measuring their similarity) or distance between histograms.
 
 Modules:
 \begin{DoxyItemize}
 \item Surface: Holds a class to compute and extract surface similarities as used in (1).
 \item Volume: Holds a class to compute and extract volume similarities as used in (1).
+\item Histogram: Holds a number of real or near histogram distance metrics.
 \end{DoxyItemize}
 
 (1) The MICCAI 2997 Grand Challenge: Heimann T. et al. / \char`\"{}Comparison and Evaluation of

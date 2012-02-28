@@ -66,8 +66,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <div class="header">
-  <div class="summary">
-<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Package medpy.graphcut.cut</div>  </div>
 </div>
@@ -76,10 +74,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Prepares, compiles and executed graph-cut implementations using the graphs created by the graph module of this package.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemedpy_1_1graphcut_1_1cut.html#a964a5abe60de2820b3e234ee7f1b0cfc">bk_mfmc_cut</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">BK_MFMC: Boyov and Kolmogorovs (1) C++ max-flow/min-cut implementation (a)  <a href="#a964a5abe60de2820b3e234ee7f1b0cfc"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Prepares, compiles and executed graph-cut implementations using the graphs created by the graph module of this package. </p>
@@ -93,65 +87,13 @@ Functions</h2></td></tr>
 <dl class="author"><dt><b>Author:</b></dt><dd>Oskar Maier </dd></dl>
 <dl class="version"><dt><b>Version:</b></dt><dd>d0.1.0 </dd></dl>
 <dl class="since"><dt><b>Since:</b></dt><dd>2012-01-18  Development </dd></dl>
-</div><hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a964a5abe60de2820b3e234ee7f1b0cfc"></a><!-- doxytag: member="medpy::graphcut::cut::bk_mfmc_cut" ref="a964a5abe60de2820b3e234ee7f1b0cfc" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def medpy.graphcut.cut.bk_mfmc_cut </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>source_file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>gpp_location</em> = <code>False</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>keep</em> = <code>False</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>BK_MFMC: Boyov and Kolmogorovs (1) C++ max-flow/min-cut implementation (a) </p>
-<p>Execute a graph cut using the supplied source file of Boyov and Kolmogorovs max-flow/min-cut algorithm.</p>
-<p>The source-file is written to a temporary directory, compiled and the executed. The created output is caught and returned.</p>
-<dl class="note"><dt><b>Note:</b></dt><dd>: This function assumes g++ - GNU project C++ compiler to be installed on the host machine. Alternatively the path to g++ can be provided.</dd></dl>
-<dl class="warning"><dt><b>Warning:</b></dt><dd>: If not handled with care, this function can be used to compile and execute arbitrary code on the host machine. Ensure that the input of this function can not be generated or modified by the user and always comes from  bk_mfmc_generate().</dd></dl>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">source_file,:</td><td>The C++ source file as returned by  bk_mfmc_generate().  source_file: str </td></tr>
-    <tr><td class="paramname">gpp_location,:</td><td>The location of g++ - the GNU project C++ compiler.  gpp_location: str </td></tr>
-    <tr><td class="paramname">keep,:</td><td>Set this to true to keep the temporary directory after execution. This parameter is intended for debugging purposes only.  keep: bool </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>: The results as a string to be parsed by  bk_mfmc_parse(). : str</dd></dl>
-<p>SubprocessError: When the one step of the compiling or execution can not be assured to have terminated succesfully. </p>
-
-<p>Definition at line <a class="el" href="cut_8py_source.html#l00073">73</a> of file <a class="el" href="cut_8py_source.html">cut.py</a>.</p>
-
-</div>
-</div>
-</div>
+</div></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -160,7 +102,7 @@ Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:16 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:06 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

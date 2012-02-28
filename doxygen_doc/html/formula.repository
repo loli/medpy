@@ -19,3 +19,40 @@
 \form#18:$e_{m,n}$
 \form#19:$|I(p)|$
 \form#20:$p$
+\form#21:$H$
+\form#22:$H'$
+\form#23:$m$
+\form#24:\[ d_p(H, H') = \left(\sum_{m=1}^M|H_m - H'_m|^p \right)^{\frac{1}{p}} \]
+\form#25:$L_{\infty}$
+\form#26:$+\infty$
+\form#27:$-\infty$
+\form#28:\[ d_{\infty}(H, H') = \max_{m=1}^M|H_m-H'_m| \]
+\form#29:$L_{-\infty}$
+\form#30:\[ d_{-\infty}(H, H') = \min_{m=1}^M|H_m-H'_m| \]
+\form#31:\[ d_{\cap}(H, H') = \sum_{m=1}^M\min(H_m, H'_m) \]
+\form#32:\[ d_{rd}(H, H') = \frac{ \sqrt{\sum_{m=1}^M(H_m - H'_m)^2} }{ \frac{1}{2} \left( \sqrt{\sum_{m=1}^M H_m^2} + \sqrt{\sum_{m=1}^M {H'}_m^2} \right) } \]
+\form#33:\[ d_{rbd}(H, H') = \sum_{m=1}^M \frac{ \sqrt{(H_m - H'_m)^2} }{ \frac{1}{2} \left( \sqrt{H_m^2} + \sqrt{{H'}_m^2} \right) } \]
+\form#34:\[ d_{\chi^2}(H, H') = \sum_{m=1}^M \frac{ (H_m - H'_m)^2 }{ H_m + H_m } \]
+\form#35:$\chi^2$
+\form#36:$\frac{d_{KL}(h1, h2) + d_{KL}(h2, h1)}{2}$
+\form#37:\[ d_{KL}(H, H') = \sum_{m=1}^M H_m\log\frac{H_m}{H'_m} \]
+\form#38:\[ d_{JSD}(H, H') = \sum_{m=1}^M \left( H_m\log\frac{2H_m}{H_m+H'_m} + H'_m\log\frac{2H'_m}{H'_m+H_m} \right) \]
+\form#39:\[ d_{F}(H, H') = \sum_{m=1}^M\sqrt{H_m * H'_m} \]
+\form#40:\[ d_{\bar{F}}(H, H') = 1 - d_{F}(H, H') \]
+\form#41:$d_{F}(H, H')$
+\form#42:\[ d_{\sqrt{1-F}}(H, H') = \sqrt{1 - d_{F}(H, H')} \]
+\form#43:\[ d_{\log(2-F)}(H, H') = \log(2 - d_{F}(H, H')) \]
+\form#44:\[ d_{\arccos F}(H, H') = \frac{2}{\pi} \arccos d_{F}(H, H') \]
+\form#45:\[ d_{\sin F}(H, H') = \sqrt{1 -d_{F}^2(H, H')} \]
+\form#46:\[ d_{\cos}(H, H') = \cos\alpha = \frac{H * H'}{\|H\| \|H'\|} = \frac{\sum_{m=1}^M H_m*H'_m}{\sqrt{\sum_{m=1}^M H_m^2} * \sqrt{\sum_{m=1}^M {H'}_m^2}} \]
+\form#47:$d_p(H, H')\in[0, \sqrt[p]{2}]$
+\form#48:$d_p(H, H) = 0$
+\form#49:$d_p(H, H')\in[0, \infty)$
+\form#50:$d(H, H')\in[0, \sqrt[p]{2}]$
+\form#51:$d(H, H) = 0$
+\form#52:$d(H, H') = d(H', H)$
+\form#53:$d(H, H')\in[0, \infty)$
+\form#54:$d(H, H')\in[0, 1]$
+\form#55:$d(H, H) = 1$
+\form#56:$d(H, H')\in[0, \sqrt{2}]$
+\form#57:$d(H, H')\in[0, 2]$

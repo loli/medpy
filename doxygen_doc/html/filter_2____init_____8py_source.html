@@ -69,10 +69,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">__init__.py</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="keyword">from</span> FitLabelsToMask <span class="keyword">import</span> fit_labels_to_mask
-<a name="l00002"></a>00002 <span class="keyword">from</span> LabelImageStatistics <span class="keyword">import</span> LabelImageStatistics
-<a name="l00003"></a>00003 <span class="keyword">from</span> MinimaExtraction <span class="keyword">import</span> local_minima
-<a name="l00004"></a>00004 
+<div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespacemedpy_1_1filter.html">00001</a> <span class="comment">##</span>
+<a name="l00002"></a>00002 <span class="comment"># </span>
+<a name="l00003"></a>00003 <span class="comment"># @package medpy.filter</span>
+<a name="l00004"></a>00004 <span class="comment"># Various image filters and manipulation functions.</span>
+<a name="l00005"></a>00005 <span class="comment"># </span>
+<a name="l00006"></a>00006 <span class="comment"># Modules:</span>
+<a name="l00007"></a>00007 <span class="comment">#     - label: Filter for label images.</span>
+<a name="l00008"></a>00008 <span class="comment">#     </span>
+<a name="l00009"></a>00009 <span class="comment"># @author Oskar Maier</span>
+<a name="l00010"></a>00010 <span class="comment"># </span>
+<a name="l00011"></a>00011 
+<a name="l00012"></a>00012 <span class="comment"># determines the modules that should be imported when &quot;from filter import *&quot; is used</span>
+<a name="l00013"></a>00013 __all__ = []
+<a name="l00014"></a>00014 
+<a name="l00015"></a>00015 <span class="comment"># if __all__ is not set, only the following, explicit import statements are executed</span>
+<a name="l00016"></a>00016 <span class="keyword">from</span> label <span class="keyword">import</span> relabel, fit_labels_to_mask, relabel_map
+<a name="l00017"></a>00017 
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -80,7 +93,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:14 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:04 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

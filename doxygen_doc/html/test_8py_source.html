@@ -71,230 +71,97 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">#!/usr/bin/python</span>
 <a name="l00002"></a>00002 
-<a name="l00003"></a>00003 <span class="keyword">from</span> medpy.graphcut <span class="keyword">import</span> graph_from_labels, compute_min_cut, parse_results
-<a name="l00004"></a>00004 <span class="keyword">from</span> nibabel.loadsave <span class="keyword">import</span> load, save
-<a name="l00005"></a>00005 <span class="keyword">import</span> scipy
-<a name="l00006"></a>00006 <span class="keyword">from</span> medpy.core <span class="keyword">import</span> Logger
-<a name="l00007"></a>00007 <span class="keyword">import</span> logging
-<a name="l00008"></a>00008 <span class="keyword">from</span> medpy.utilities.nibabel <span class="keyword">import</span> image_like
-<a name="l00009"></a>00009 <span class="keyword">import</span> math
-<a name="l00010"></a>00010 
-<a name="l00011"></a>00011 <span class="comment">##</span>
-<a name="l00012"></a>00012 <span class="comment"># </span>
-<a name="l00013"></a>00013 <span class="comment">#     Version with per-filtering (using narrays).</span>
-<a name="l00014"></a>00014 <span class="comment">#     </span>
-<a name="l00015"></a>00015 <span class="keyword">def </span>boundary_term3(image, label_image, r1_bb, r2_bb, r1_id, r2_id, (gradient_image)):
-<a name="l00016"></a>00016     <span class="comment"># compute the region of interest (the intersection of the bounding boxes)</span>
-<a name="l00017"></a>00017     roi = __intersection(r1_bb, r2_bb)
-<a name="l00018"></a>00018     
-<a name="l00019"></a>00019     <span class="comment"># prepare strictly positive and decreasing function (Note: input is expected to be a tuple)</span>
-<a name="l00020"></a>00020     g = <span class="keyword">lambda</span> x: math.pow(1./(1. + max(x)), 2) <span class="comment"># k = 2</span>
-<a name="l00021"></a>00021     
-<a name="l00022"></a>00022     <span class="comment"># prepare iterator lists</span>
-<a name="l00023"></a>00023     values, labels = __get_nb_iterators3(gradient_image[roi], label_image[roi])
-<a name="l00024"></a>00024     
-<a name="l00025"></a>00025     <span class="comment"># filter values by the labels</span>
-<a name="l00026"></a>00026     labels_mask = ((r1_id, r2_id) == labels)
-<a name="l00027"></a>00027     values = values[labels_mask]
-<a name="l00028"></a>00028     
-<a name="l00029"></a>00029     <span class="comment"># iterate over values and compute results</span>
-<a name="l00030"></a>00030     <span class="keywordflow">return</span> sum([g(x) <span class="keywordflow">for</span> x <span class="keywordflow">in</span> zip(values[::2].flat, values[1::2].flat)])
+<a name="l00003"></a>00003 <span class="comment">#</span>
+<a name="l00004"></a>00004 <span class="comment"># COMPARISON OF LAPLACIAN OF GAUSSIANS</span>
+<a name="l00005"></a>00005 <span class="comment">#</span>
+<a name="l00006"></a>00006 
+<a name="l00007"></a>00007 <span class="comment"># build-in modules</span>
+<a name="l00008"></a>00008 <span class="keyword">import</span> itk
+<a name="l00009"></a>00009 
+<a name="l00010"></a>00010 <span class="comment"># third-party modules</span>
+<a name="l00011"></a>00011 <span class="keyword">import</span> scipy
+<a name="l00012"></a>00012 <span class="keyword">from</span> nibabel.loadsave <span class="keyword">import</span> load, save
+<a name="l00013"></a>00013 <span class="keyword">from</span> scipy.ndimage.filters <span class="keyword">import</span> gaussian_laplace
+<a name="l00014"></a>00014 <span class="keyword">import</span> time
+<a name="l00015"></a>00015 <span class="keyword">from</span> medpy.utilities.nibabel <span class="keyword">import</span> image_like
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 <span class="comment"># path changes</span>
+<a name="l00018"></a>00018 
+<a name="l00019"></a>00019 <span class="comment"># own modules</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="comment"># code</span>
+<a name="l00022"></a>00022 <span class="keyword">def </span>main():
+<a name="l00023"></a>00023     <span class="comment"># set parameters</span>
+<a name="l00024"></a>00024     sigma = 5.0
+<a name="l00025"></a>00025     original_image_n = <span class="stringliteral">&#39;/home/omaier/Experiments/Regionsegmentation/Evaluation_Viscous/00originalvolumes/o09.nii&#39;</span>
+<a name="l00026"></a>00026     
+<a name="l00027"></a>00027     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Load image for scipy...&quot;</span>
+<a name="l00028"></a>00028     original_image = load(original_image_n)
+<a name="l00029"></a>00029     original_image_d = scipy.squeeze(original_image.get_data())
+<a name="l00030"></a>00030     <span class="comment">#original_image_d = original_image_d.astype(scipy.float32)</span>
 <a name="l00031"></a>00031     
-<a name="l00032"></a>00032 <span class="comment">##</span>
-<a name="l00033"></a>00033 <span class="comment"># </span>
-<a name="l00034"></a>00034 <span class="comment">#     Version without per-filtering (using lists).</span>
-<a name="l00035"></a>00035 <span class="comment">#     </span>
-<a name="l00036"></a>00036 <span class="keyword">def </span>boundary_term4(image, label_image, r1_bb, r2_bb, r1_id, r2_id, (gradient_image)):
-<a name="l00037"></a>00037     <span class="comment"># compute the region of interest (the intersection of the bounding boxes)</span>
-<a name="l00038"></a>00038     roi = __intersection(r1_bb, r2_bb)
-<a name="l00039"></a>00039     
-<a name="l00040"></a>00040     <span class="comment"># prepare strictly positive and decreasing function (Note: input is expected to be a tuple)</span>
-<a name="l00041"></a>00041     g = <span class="keyword">lambda</span> x: math.pow(1./(1. + max(x)), 2) <span class="comment"># k = 2</span>
-<a name="l00042"></a>00042     
-<a name="l00043"></a>00043     <span class="comment"># prepare iterator lists</span>
-<a name="l00044"></a>00044     values, labels = __get_nb_iterators2(gradient_image[roi], label_image[roi])
-<a name="l00045"></a>00045     
-<a name="l00046"></a>00046     <span class="comment"># iterate over values and compute results</span>
-<a name="l00047"></a>00047     sum = 0
-<a name="l00048"></a>00048     <span class="keywordflow">for</span> label, value <span class="keywordflow">in</span> zip(labels, values):
-<a name="l00049"></a>00049         <span class="keywordflow">if</span> (r1_id, r2_id) == label:
-<a name="l00050"></a>00050             sum += g(value)
-<a name="l00051"></a>00051     <span class="keywordflow">return</span> sum * 100
-<a name="l00052"></a>00052     
-<a name="l00053"></a>00053 <span class="keyword">def </span>__get_nb_iterators2(image, label_image):
-<a name="l00054"></a>00054     values = []
-<a name="l00055"></a>00055     labels = []
-<a name="l00056"></a>00056     <span class="keywordflow">for</span> dim <span class="keywordflow">in</span> range(image.ndim):
-<a name="l00057"></a>00057         slices_x = []
-<a name="l00058"></a>00058         slices_y = []
-<a name="l00059"></a>00059         <span class="keywordflow">for</span> di <span class="keywordflow">in</span> range(image.ndim):
-<a name="l00060"></a>00060             slices_x.append(slice(<span class="keywordtype">None</span>, -1 <span class="keywordflow">if</span> di == dim <span class="keywordflow">else</span> <span class="keywordtype">None</span>))
-<a name="l00061"></a>00061             slices_y.append(slice(1 <span class="keywordflow">if</span> di == dim <span class="keywordflow">else</span> <span class="keywordtype">None</span>, <span class="keywordtype">None</span>))
-<a name="l00062"></a>00062         values.extend(zip(image[slices_x].flat,
-<a name="l00063"></a>00063                           image[slices_y].flat))
-<a name="l00064"></a>00064         labels.extend(zip(label_image[slices_x].flat,
-<a name="l00065"></a>00065                           label_image[slices_y].flat))
-<a name="l00066"></a>00066     <span class="keywordflow">return</span> (values, labels)
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068 <span class="keyword">def </span>__get_nb_iterators3(image, label_image): <span class="comment"># !TODO:Has bug</span>
-<a name="l00069"></a>00069     x,y,z = image.shape
-<a name="l00070"></a>00070     length = (x-1)*y*z + x*(y-1)*z + x*y*(z-1)
-<a name="l00071"></a>00071     slices = (slice(0, (x-1)*y*z),
-<a name="l00072"></a>00072               slice((x-1)*y*z, (x-1)*y*z + x*(y-1)*z),
-<a name="l00073"></a>00073               slice((x-1)*y*z + x*(y-1)*z, (x-1)*y*z + x*(y-1)*z + x*y*(z-1)))
-<a name="l00074"></a>00074     values = scipy.zeros((length, 2))
-<a name="l00075"></a>00075     labels = scipy.zeros((length, 2))
-<a name="l00076"></a>00076     <span class="keywordflow">for</span> dim <span class="keywordflow">in</span> range(image.ndim):
-<a name="l00077"></a>00077         slices_x = []
-<a name="l00078"></a>00078         slices_y = []
-<a name="l00079"></a>00079         <span class="keywordflow">for</span> di <span class="keywordflow">in</span> range(image.ndim):
-<a name="l00080"></a>00080             slices_x.append(slice(<span class="keywordtype">None</span>, -1 <span class="keywordflow">if</span> di == dim <span class="keywordflow">else</span> <span class="keywordtype">None</span>))
-<a name="l00081"></a>00081             slices_y.append(slice(1 <span class="keywordflow">if</span> di == dim <span class="keywordflow">else</span> <span class="keywordtype">None</span>, <span class="keywordtype">None</span>))
-<a name="l00082"></a>00082         values[slices[dim]] = zip(image[slices_x].flat,
-<a name="l00083"></a>00083                                   image[slices_y].flat)
-<a name="l00084"></a>00084         labels[slices[dim]] = zip(label_image[slices_x].flat,
-<a name="l00085"></a>00085                                   label_image[slices_y].flat)
-<a name="l00086"></a>00086     <span class="keywordflow">return</span> (values, labels)
-<a name="l00087"></a>00087 
+<a name="l00032"></a>00032     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Scipy LoG...&quot;</span>,
+<a name="l00033"></a>00033     scp_log = scipy.zeros(original_image_d.shape, dtype=scipy.float32)
+<a name="l00034"></a>00034     t1 = time.time()
+<a name="l00035"></a>00035     gaussian_laplace(original_image_d, sigma, output=scp_log)
+<a name="l00036"></a>00036     t2 = time.time()
+<a name="l00037"></a>00037     <span class="keywordflow">print</span> t2-t1, <span class="stringliteral">&quot;seconds&quot;</span>
+<a name="l00038"></a>00038     
+<a name="l00039"></a>00039     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Load image for ITK...&quot;</span>
+<a name="l00040"></a>00040     image_type = itk.Image[itk.F, 3]
+<a name="l00041"></a>00041     reader = itk.ImageFileReader[image_type].New()
+<a name="l00042"></a>00042     reader.SetFileName(original_image_n)
+<a name="l00043"></a>00043     reader.Update()
+<a name="l00044"></a>00044     
+<a name="l00045"></a>00045     <span class="keywordflow">print</span> <span class="stringliteral">&quot;To scipy array...&quot;</span>
+<a name="l00046"></a>00046     itk_orig = itk.PyBuffer[image_type].GetArrayFromImage(reader.GetOutput())
+<a name="l00047"></a>00047     itk_orig = itk_orig.swapaxes(0, 2) <span class="comment"># correct axes</span>
+<a name="l00048"></a>00048     
+<a name="l00049"></a>00049     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Input images the same...&quot;</span>,
+<a name="l00050"></a>00050     <span class="keywordflow">print</span> (original_image_d == itk_orig).all()
+<a name="l00051"></a>00051     
+<a name="l00052"></a>00052     <span class="keywordflow">print</span> <span class="stringliteral">&quot;ITK LoG...&quot;</span>,
+<a name="l00053"></a>00053     log_filter = itk.LaplacianRecursiveGaussianImageFilter[image_type, image_type].New()
+<a name="l00054"></a>00054     log_filter.SetInput(reader.GetOutput())
+<a name="l00055"></a>00055     log_filter.SetSigma(sigma)
+<a name="l00056"></a>00056     t1 = time.time()
+<a name="l00057"></a>00057     log_filter.Update()
+<a name="l00058"></a>00058     t2 = time.time()
+<a name="l00059"></a>00059     <span class="keywordflow">print</span> t2-t1, <span class="stringliteral">&quot;seconds&quot;</span>
+<a name="l00060"></a>00060     
+<a name="l00061"></a>00061     <span class="keywordflow">print</span> <span class="stringliteral">&quot;To scipy array...&quot;</span>
+<a name="l00062"></a>00062     itk_log = itk.PyBuffer[image_type].GetArrayFromImage(log_filter.GetOutput())
+<a name="l00063"></a>00063     itk_log = itk_log.swapaxes(0, 2) <span class="comment"># correct axes</span>
+<a name="l00064"></a>00064     
+<a name="l00065"></a>00065     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Result shapes the same...&quot;</span>,
+<a name="l00066"></a>00066     <span class="keywordflow">print</span> itk_log.shape == scp_log.shape 
+<a name="l00067"></a>00067     
+<a name="l00068"></a>00068     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Result dtypes the same...&quot;</span>,
+<a name="l00069"></a>00069     <span class="keywordflow">print</span> itk_log.dtype == scp_log.dtype
+<a name="l00070"></a>00070     
+<a name="l00071"></a>00071     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Resulting inner values the same...&quot;</span>,
+<a name="l00072"></a>00072     <span class="keywordflow">print</span> (itk_log[50][50][45:50] == scp_log[50][50][45:50]).all()
+<a name="l00073"></a>00073      
+<a name="l00074"></a>00074     <span class="keywordflow">print</span> scp_log[50][50][45:50]
+<a name="l00075"></a>00075     <span class="keywordflow">print</span> itk_log[50][50][45:50]
+<a name="l00076"></a>00076     
+<a name="l00077"></a>00077     <span class="keywordflow">print</span> <span class="stringliteral">&quot;All values the same...&quot;</span>,
+<a name="l00078"></a>00078     <span class="keywordflow">print</span> (scp_log == itk_log).all()
+<a name="l00079"></a>00079     
+<a name="l00080"></a>00080     <span class="keywordflow">print</span> <span class="stringliteral">&quot;Saving results...&quot;</span>
+<a name="l00081"></a>00081     scp_img = image_like(scp_log, original_image)
+<a name="l00082"></a>00082     scp_img.get_header().set_data_dtype(scipy.float32)
+<a name="l00083"></a>00083     save(scp_img, <span class="stringliteral">&#39;scp_log.nii&#39;</span>)
+<a name="l00084"></a>00084     
+<a name="l00085"></a>00085     itk_img = image_like(itk_log, original_image)
+<a name="l00086"></a>00086     itk_img.get_header().set_data_dtype(scipy.float32)
+<a name="l00087"></a>00087     save(itk_img, <span class="stringliteral">&#39;itk_log.nii&#39;</span>)
 <a name="l00088"></a>00088     
-<a name="l00089"></a>00089 <span class="keyword">def </span>main():
-<a name="l00090"></a>00090     <span class="comment"># prepare logger</span>
-<a name="l00091"></a>00091     logger = Logger.getInstance()
-<a name="l00092"></a>00092     logger.setLevel(logging.DEBUG)
-<a name="l00093"></a>00093     
-<a name="l00094"></a>00094     <span class="comment"># load images</span>
-<a name="l00095"></a>00095     i = <span class="stringliteral">&#39;/home/omaier/Experiments/Regionsegmentation/Evaluation_Viscous/00originalvolumes/o09.nii&#39;</span>
-<a name="l00096"></a>00096     g = <span class="stringliteral">&#39;/home/omaier/Experiments/Regionsegmentation/Evaluation_Viscous/01gradient/o09_gradient.nii&#39;</span>
-<a name="l00097"></a>00097     m = <span class="stringliteral">&#39;image.nii&#39;</span>
-<a name="l00098"></a>00098     r = <span class="stringliteral">&#39;result.nii&#39;</span>
-<a name="l00099"></a>00099     c = <span class="stringliteral">&#39;original.nii&#39;</span>
-<a name="l00100"></a>00100     
-<a name="l00101"></a>00101     i_i = load(i)
-<a name="l00102"></a>00102     g_i = load(g)
-<a name="l00103"></a>00103     m_i = load(m)
-<a name="l00104"></a>00104     
-<a name="l00105"></a>00105     i_d = scipy.squeeze(i_i.get_data())
-<a name="l00106"></a>00106     g_d = scipy.squeeze(g_i.get_data())
-<a name="l00107"></a>00107     m_d = scipy.squeeze(m_i.get_data())
-<a name="l00108"></a>00108     
-<a name="l00109"></a>00109     <span class="keywordflow">print</span> i_d.shape
-<a name="l00110"></a>00110     
-<a name="l00111"></a>00111     <span class="comment">#i_d = i_d[0:100,0:100,0:100]</span>
-<a name="l00112"></a>00112     <span class="comment">#m_d = m_d[0:100,0:100,0:100]</span>
-<a name="l00113"></a>00113     
-<a name="l00114"></a>00114     <span class="comment"># recompute the label ids to start from id</span>
-<a name="l00115"></a>00115     mapping = {}
-<a name="l00116"></a>00116     id = 1
-<a name="l00117"></a>00117     <span class="keywordflow">for</span> x <span class="keywordflow">in</span> range(m_d.shape[0]):
-<a name="l00118"></a>00118         <span class="keywordflow">for</span> y <span class="keywordflow">in</span> range(m_d.shape[1]):
-<a name="l00119"></a>00119             <span class="keywordflow">for</span> z <span class="keywordflow">in</span> range(m_d.shape[2]):
-<a name="l00120"></a>00120                 val = m_d[x,y,z]
-<a name="l00121"></a>00121                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> val <span class="keywordflow">in</span> mapping:
-<a name="l00122"></a>00122                     mapping[val] = id
-<a name="l00123"></a>00123                     id += 1
-<a name="l00124"></a>00124                 m_d[x,y,z] = mapping[val]
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126     <span class="comment"># create markers</span>
-<a name="l00127"></a>00127     fg = scipy.zeros(i_d.shape, dtype=scipy.bool_)
-<a name="l00128"></a>00128     mid = scipy.asarray(i_d.shape)/2
-<a name="l00129"></a>00129     fg[mid[0]-50:mid[0]+50, mid[1]-10:mid[1]+10, mid[2]-10:mid[2]+10] = <span class="keyword">True</span>
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131     bg = scipy.zeros(i_d.shape, dtype=scipy.bool_)
-<a name="l00132"></a>00132     bg[0,:,:] = <span class="keyword">True</span>
-<a name="l00133"></a>00133     bg[-1,:,:] = <span class="keyword">True</span>
-<a name="l00134"></a>00134     bg[:,0,:] = <span class="keyword">True</span>
-<a name="l00135"></a>00135     bg[:,-1,:] = <span class="keyword">True</span>
-<a name="l00136"></a>00136     bg[:,:,0] = <span class="keyword">True</span>
-<a name="l00137"></a>00137     bg[:,:,-1] = <span class="keyword">True</span>
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139 
-<a name="l00140"></a>00140     <span class="comment"># execute</span>
-<a name="l00141"></a>00141     graph = graph_from_labels(i_d, m_d, fg, bg, boundary_term = boundary_term4, boundary_term_args = g_d)
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143     <span class="comment"># execute min-cut</span>
-<a name="l00144"></a>00144     logger.info(<span class="stringliteral">&#39;Executing min-cut...&#39;</span>)
-<a name="l00145"></a>00145     text = compute_min_cut(graph)
-<a name="l00146"></a>00146     <span class="comment">#print text</span>
-<a name="l00147"></a>00147     logger.info(<span class="stringliteral">&#39;Parsing results...&#39;</span>)
-<a name="l00148"></a>00148     result = parse_results(text)
-<a name="l00149"></a>00149     <span class="comment">#print result</span>
-<a name="l00150"></a>00150     
-<a name="l00151"></a>00151     <span class="comment"># apply results to image</span>
-<a name="l00152"></a>00152     logger.info(<span class="stringliteral">&#39;Applying results...&#39;</span>)
-<a name="l00153"></a>00153     <span class="keywordflow">for</span> x <span class="keywordflow">in</span> range(m_d.shape[0]):
-<a name="l00154"></a>00154         <span class="keywordflow">for</span> y <span class="keywordflow">in</span> range(m_d.shape[1]):
-<a name="l00155"></a>00155             <span class="keywordflow">for</span> z <span class="keywordflow">in</span> range(m_d.shape[2]):
-<a name="l00156"></a>00156                 m_d[x,y,z] = result[1][m_d[x,y,z] - 1]
-<a name="l00157"></a>00157                 
-<a name="l00158"></a>00158     logger.info(<span class="stringliteral">&#39;Saving images resulting mask...&#39;</span>)
-<a name="l00159"></a>00159     <span class="comment"># save resulting mask    </span>
-<a name="l00160"></a>00160     save(image_like(m_d, m_i), r)
-<a name="l00161"></a>00161     
-<a name="l00162"></a>00162     logger.info(<span class="stringliteral">&#39;Saving regarded original image...&#39;</span>)
-<a name="l00163"></a>00163     <span class="comment"># save cut input image</span>
-<a name="l00164"></a>00164     save(image_like(i_d, i_i), c)
-<a name="l00165"></a>00165     
-<a name="l00166"></a>00166     logger.info(<span class="stringliteral">&#39;Saving foreground marker...&#39;</span>)
-<a name="l00167"></a>00167     save(image_like(fg, i_i), <span class="stringliteral">&#39;foreground.nii&#39;</span>)
-<a name="l00168"></a>00168     
-<a name="l00169"></a>00169     logger.info(<span class="stringliteral">&#39;Saving background marker...&#39;</span>)
-<a name="l00170"></a>00170     save(image_like(bg, i_i), <span class="stringliteral">&#39;background.nii&#39;</span>)
-<a name="l00171"></a>00171         
-<a name="l00172"></a>00172     logger.info(<span class="stringliteral">&#39;Done!&#39;</span>)
-<a name="l00173"></a>00173     
-<a name="l00174"></a>00174 <span class="comment">##</span>
-<a name="l00175"></a>00175 <span class="comment"># </span>
-<a name="l00176"></a>00176 <span class="comment">#     Computes the intersection rectangle of two rectangles increased by one.</span>
-<a name="l00177"></a>00177 <span class="comment">#     The intersection window marks the area in which the two images</span>
-<a name="l00178"></a>00178 <span class="comment">#     bounding boxes intersect.</span>
-<a name="l00179"></a>00179 <span class="comment">#     The returned rectangle is defined by its lower-left and upper-right corner.</span>
-<a name="l00180"></a>00180 <span class="comment">#     </span>
-<a name="l00181"></a>00181 <span class="comment">#     @param rect1: The first rectangle defined by a sequence of slice objects.</span>
-<a name="l00182"></a>00182 <span class="comment">#     @param rect2: The second rectangle defined by a sequence of slice objects.</span>
-<a name="l00183"></a>00183 <span class="comment">#     @return: The intersection rectangle defined by a sequence of slice objects or False.</span>
-<a name="l00184"></a>00184 <span class="comment">#     </span>
-<a name="l00185"></a>00185 <span class="comment">#     </span>
-<a name="l00186"></a>00186 <span class="keyword">def </span>__intersection(rect1, rect2): <span class="comment"># slightly tested</span>
-<a name="l00187"></a>00187     <span class="comment"># unpack and extend the rectangles by one in all dimensions</span>
-<a name="l00188"></a>00188     rec1 = ([],[]) <span class="comment"># lower-left / upper-right</span>
-<a name="l00189"></a>00189     rec2 = ([],[]) <span class="comment"># lower-left / upper-right</span>
-<a name="l00190"></a>00190     <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(len(rect1)):
-<a name="l00191"></a>00191         rec1[0].append(max(rect1[i].start - 1, 0))
-<a name="l00192"></a>00192         rec1[1].append(rect1[i].stop + 1)
-<a name="l00193"></a>00193         rec2[0].append(max(rect2[i].start - 1, 0))
-<a name="l00194"></a>00194         rec2[1].append(rect2[i].stop + 1)
-<a name="l00195"></a>00195     
-<a name="l00196"></a>00196     <span class="comment"># check if an intersection occurs at all</span>
-<a name="l00197"></a>00197     intersect = rec1[0][0] &lt; rec2[1][0] <span class="keywordflow">and</span> \
-<a name="l00198"></a>00198                 rec1[0][1] &lt; rec2[1][1] <span class="keywordflow">and</span> \
-<a name="l00199"></a>00199                 rec1[0][2] &lt; rec2[1][2] <span class="keywordflow">and</span> \
-<a name="l00200"></a>00200                 rec1[1][0] &gt; rec2[0][0] <span class="keywordflow">and</span> \
-<a name="l00201"></a>00201                 rec1[1][1] &gt; rec2[0][1] <span class="keywordflow">and</span> \
-<a name="l00202"></a>00202                 rec1[1][2] &gt; rec2[0][2]    
-<a name="l00203"></a>00203     
-<a name="l00204"></a>00204     <span class="comment"># if not, return False</span>
-<a name="l00205"></a>00205     <span class="keywordflow">if</span> <span class="keywordflow">not</span> intersect:
-<a name="l00206"></a>00206         <span class="keywordflow">return</span> <span class="keyword">False</span>
-<a name="l00207"></a>00207     
-<a name="l00208"></a>00208     <span class="comment"># otherwise compute intersection cube</span>
-<a name="l00209"></a>00209     intersection = ((max(rec1[0][0], rec2[0][0]), <span class="comment">#x lower</span>
-<a name="l00210"></a>00210                      max(rec1[0][1], rec2[0][1]), <span class="comment">#y lower</span>
-<a name="l00211"></a>00211                      max(rec1[0][2], rec2[0][2])), <span class="comment">#z lower</span>
-<a name="l00212"></a>00212                     (min(rec1[1][0], rec2[1][0]), <span class="comment">#x upper</span>
-<a name="l00213"></a>00213                      min(rec1[1][1], rec2[1][1]), <span class="comment">#y upper</span>
-<a name="l00214"></a>00214                      min(rec1[1][2], rec2[1][2]))) <span class="comment">#z upper</span>
-<a name="l00215"></a>00215     
-<a name="l00216"></a>00216     <span class="comment"># create slices from intersection cube</span>
-<a name="l00217"></a>00217     slices = []
-<a name="l00218"></a>00218     <span class="keywordflow">for</span> dim <span class="keywordflow">in</span> range(len(intersection[0])):
-<a name="l00219"></a>00219         slices.append(slice(intersection[0][dim], intersection[1][dim]))
-<a name="l00220"></a>00220     
-<a name="l00221"></a>00221     <span class="keywordflow">return</span> slices        
-<a name="l00222"></a>00222     
-<a name="l00223"></a>00223     
-<a name="l00224"></a>00224 <span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:
-<a name="l00225"></a>00225     main()
-<a name="l00226"></a>00226 
+<a name="l00089"></a>00089     <span class="keywordflow">print</span> <span class="stringliteral">&quot;All done.&quot;</span>
+<a name="l00090"></a>00090     
+<a name="l00091"></a>00091 <span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:
+<a name="l00092"></a>00092     main()  
+<a name="l00093"></a>00093 
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -302,7 +169,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -311,7 +178,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:15 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:05 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

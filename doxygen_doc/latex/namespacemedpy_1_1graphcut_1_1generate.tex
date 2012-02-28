@@ -10,44 +10,14 @@ Generates output files from graphs that are processable by graph-\/cut algorithm
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-def \hyperlink{namespacemedpy_1_1graphcut_1_1generate_a3c9ab1aed31733093c0b0bbc6c903ea1}{bk\_\-mfmc\_\-generate}
-\begin{DoxyCompactList}\small\item\em Generate a C++ file executing the Boyov and Kolmogorovs max-\/flow/min-\/cut algorithm over the supplied graph. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Variables}
-\begin{DoxyCompactItemize}
-\item 
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_aaddaff4f3365c3cb13949a2ecddc7066}{
-string \hyperlink{namespacemedpy_1_1graphcut_1_1generate_aaddaff4f3365c3cb13949a2ecddc7066}{\_\-\_\-BK\_\-MFMC\_\-GRAPH\_\-LIB} = '/cpp/maxflow/graph.h'}
-\label{namespacemedpy_1_1graphcut_1_1generate_aaddaff4f3365c3cb13949a2ecddc7066}
-
-\begin{DoxyCompactList}\small\item\em BK\_\-MFMC: Boyov and Kolmogorovs (1) C++ max-\/flow/min-\/cut implementation (a) \end{DoxyCompactList}\item 
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_a4f682968481d59ec21b24ecf1e7dc163}{
-string {\bfseries \_\-\_\-BK\_\-MFMC\_\-GRAPH\_\-FILE} = '/cpp/maxflow/graph.cpp'}
-\label{namespacemedpy_1_1graphcut_1_1generate_a4f682968481d59ec21b24ecf1e7dc163}
-
-\item 
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_aa19c09ba323f9714bea465ee57076b47}{
-string {\bfseries \_\-\_\-BK\_\-MFMC\_\-MAXFLOW\_\-FILE} = '/cpp/maxflow/maxflow.cpp'}
-\label{namespacemedpy_1_1graphcut_1_1generate_aa19c09ba323f9714bea465ee57076b47}
-
-\item 
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_a921090f034e86c356c56604193fca130}{
-int {\bfseries \_\-\_\-BK\_\-MFMC\_\-SOURCE\_\-MARKER} = 1}
-\label{namespacemedpy_1_1graphcut_1_1generate_a921090f034e86c356c56604193fca130}
-
-\item 
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_aee4d16ae8712edb67e48d79b608818ff}{
-int {\bfseries \_\-\_\-BK\_\-MFMC\_\-SINK\_\-MARKER} = 0}
-\label{namespacemedpy_1_1graphcut_1_1generate_aee4d16ae8712edb67e48d79b608818ff}
-
-\item 
-string {\bfseries \_\-\_\-BK\_\-MFMC\_\-HEADER}
-\item 
-string {\bfseries \_\-\_\-BK\_\-MFMC\_\-FOOTER}
-\end{DoxyCompactItemize}
+def \hyperlink{namespacemedpy_1_1graphcut_1_1generate_a137ecdeeb31eb5be7bdcf70da1509477}{graph\_\-from\_\-labels}
+\begin{DoxyCompactList}\small\item\em Create a \hyperlink{}{object from a nD label image. }\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-Generates output files from graphs that are processable by graph-\/cut algorithms. All functions in this module are highly depend on the actual implementation of the graph-\/cut algorithm they are intended to be used for. They require a minimal version number and it can not be ensured, that they will work with other versions.
+Generates output files from graphs that are processable by graph-\/cut algorithms. Provides functionality to generate graphs efficiently from nD label-\/images.
+
+All functions in this module are highly depend on the actual implementation of the graph-\/cut algorithm they are intended to be used for. They require a minimal version number and it can not be ensured, that they will work with other versions.
 
 See the package description for a list of the supported graph-\/cut implementations.
 
@@ -63,86 +33,45 @@ Oskar Maier
 d0.1.0 
 \end{DoxyVersion}
 \begin{DoxySince}{Since}
+2012-\/01-\/18  Development
+\end{DoxySince}
+Functions:
+\begin{DoxyItemize}
+\item def graph\_\-from\_\-labels((label\_\-image, fg\_\-markers, bg\_\-markers, regional\_\-term = False, boundary\_\-term = False, regional\_\-term\_\-args = False, boundary\_\-term\_\-args = False): Creates a Graph object from a nD label image. \begin{DoxyAuthor}{Author}
+Oskar Maier 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+d0.1.0 
+\end{DoxyVersion}
+\begin{DoxySince}{Since}
 2012-\/01-\/18  Development 
 \end{DoxySince}
 
+\end{DoxyItemize}
 
 \subsection{Function Documentation}
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_a3c9ab1aed31733093c0b0bbc6c903ea1}{
-\index{medpy::graphcut::generate@{medpy::graphcut::generate}!bk\_\-mfmc\_\-generate@{bk\_\-mfmc\_\-generate}}
-\index{bk\_\-mfmc\_\-generate@{bk\_\-mfmc\_\-generate}!medpy::graphcut::generate@{medpy::graphcut::generate}}
-\subsubsection[{bk\_\-mfmc\_\-generate}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.generate.bk\_\-mfmc\_\-generate (
+\hypertarget{namespacemedpy_1_1graphcut_1_1generate_a137ecdeeb31eb5be7bdcf70da1509477}{
+\index{medpy::graphcut::generate@{medpy::graphcut::generate}!graph\_\-from\_\-labels@{graph\_\-from\_\-labels}}
+\index{graph\_\-from\_\-labels@{graph\_\-from\_\-labels}!medpy::graphcut::generate@{medpy::graphcut::generate}}
+\subsubsection[{graph\_\-from\_\-labels}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.generate.graph\_\-from\_\-labels (
 \begin{DoxyParamCaption}
-\item[{}]{graph}
+\item[{}]{label\_\-image, }
+\item[{}]{fg\_\-markers, }
+\item[{}]{bg\_\-markers, }
+\item[{}]{regional\_\-term = {\ttfamily False}, }
+\item[{}]{boundary\_\-term = {\ttfamily False}, }
+\item[{}]{regional\_\-term\_\-args = {\ttfamily False}, }
+\item[{}]{boundary\_\-term\_\-args = {\ttfamily False}}
 \end{DoxyParamCaption}
 )}}
-\label{namespacemedpy_1_1graphcut_1_1generate_a3c9ab1aed31733093c0b0bbc6c903ea1}
+\label{namespacemedpy_1_1graphcut_1_1generate_a137ecdeeb31eb5be7bdcf70da1509477}
 
 
-Generate a C++ file executing the Boyov and Kolmogorovs max-\/flow/min-\/cut algorithm over the supplied graph. 
+Create a \hyperlink{}{object from a nD label image. }
 
+Every region of the label image is regarded as a node. They are connected to their immediate neighbours by arcs. If to regions are neighbours is determined using ndim$\ast$2-\/connectedness (e.g. 3$\ast$2=6 for 3D). In the next step the arcs weights (n-\/weights) are computed using the supplied boundary\_\-term function.
 
-\begin{DoxyParams}{Parameters}
-{\em graphs,:} & The graph representing the problem.  graphs: medpy.graphcut.Graph \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-: A compile-\/ready, pre-\/formated version of the problem to be compiled/executed either using the methods provided by the  cut module or manually. : str
-\end{DoxyReturn}
-SubprocessError: When the algorithm library can not be accessed. 
+Implicitly the graph holds two additional nodes: the source and the sink, so called terminal nodes. These are connected with all other nodes through arcs of an initial weight (t-\/weight) of zero. All regions that are under the foreground markers are considered to be tightly bound to the source: The t-\/weight of the arc from source to these nodes is set to a maximum (\hyperlink{}{value. The same goes for the background markers: The covered regions receive a maximum ( Graph.MAX) t-\/weight for their arc towards the sink.   If a region is marked as both, foreground and background, the background marker is given higher priority.   all arcs whose weight is not explicitly set are assumed to carry a weight of zero.   label\_\-image The label image as an array containing uint values. : The region labels have to start from 1 and be continuous ( relabel()).  label\_\-image numpy.ndarray  fg\_\-markers The foreground markers as binary array of the same shape as the label image.  fg\_\-markers ndarray  bg\_\-markers The background markers as binary array of the same shape as the label image.  bg\_\-markers ndarray  regional\_\-term This can be either False -\/ all t-\/weights are set to 0, except for the nodes that are directly connected to the source or sink. , or a function -\/ The supplied function is used to compute the t\_\-edges. It has to have the following signature regional\_\-term(label\_\-image, regions, bounding\_\-boxes, regional\_\-term\_\-args), and is supposed to return a dictionary with region-\/ids as keys and a tuple (source\_\-t\_\-weight, sink\_\-t\_\-weight) as values. The returned dictionary does only need to contain entries for nodes where one of the t-\/weights is not zero. Additional parameters can be passed via the regional\_\-term\_\-args argument.  regional\_\-term function  boundary\_\-term This can be either False -\/ In which case the weight of all n\_\-edges i.e. between all nodes that are not source or sink, are set to 0. , or a function -\/ In which case it is used to compute the edges weights. The supplied function has to have the following signature fun(label\_\-image, boundary\_\-term\_\-args), and is supposed to return a dictionary with the graphs edges as keys and their n-\/weights as values. These weights are tuples of numbers assigning the weights in both directions of the edge. Additional parameters can be passed via the boundary\_\-term\_\-args argument.  boundary\_\-term function  regional\_\-term\_\-args Use this to pass some additional parameters to the regional\_\-term function.  boundary\_\-term\_\-args Use this to pass some additional parameters to the boundary\_\-term function.   the created graph  graph.Graph   AttributeError If an argument is maleformed.  FunctionError If one of the supplied functions returns unexpected results. }
 
-Definition at line 88 of file generate.py.
-
-
-
-\subsection{Variable Documentation}
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_a0444e029241e9e7b6f0aa593e44bf9d1}{
-\index{medpy::graphcut::generate@{medpy::graphcut::generate}!\_\-\_\-BK\_\-MFMC\_\-FOOTER@{\_\-\_\-BK\_\-MFMC\_\-FOOTER}}
-\index{\_\-\_\-BK\_\-MFMC\_\-FOOTER@{\_\-\_\-BK\_\-MFMC\_\-FOOTER}!medpy::graphcut::generate@{medpy::graphcut::generate}}
-\subsubsection[{\_\-\_\-BK\_\-MFMC\_\-FOOTER}]{\setlength{\rightskip}{0pt plus 5cm}string medpy::graphcut::generate.\_\-\_\-BK\_\-MFMC\_\-FOOTER}}
-\label{namespacemedpy_1_1graphcut_1_1generate_a0444e029241e9e7b6f0aa593e44bf9d1}
-{\bfseries Initial value:}
-\begin{DoxyCode}
-1 """
-2     int flow = g -> maxflow();
-3 
-4     printf("flow=%d\\n", flow);
-5     int i;
-6     for(i= 0; i < {}; i++) {{
-7         if (g->what_segment(i) == GraphType::SOURCE)
-8             printf("%d={}\\n", i + 1); /* adjust id systems by adding a 1 */
-9         else
-10             printf("%d={}\\n", i + 1); /* adjust id systems by adding a 1 */
-11     }}
-12     delete g;
-13 
-14     return 0;
-15 }}
-16 """
-\end{DoxyCode}
-
-
-Definition at line 58 of file generate.py.
-
-\hypertarget{namespacemedpy_1_1graphcut_1_1generate_a64165b173e6d183953b7e30ed52eac6f}{
-\index{medpy::graphcut::generate@{medpy::graphcut::generate}!\_\-\_\-BK\_\-MFMC\_\-HEADER@{\_\-\_\-BK\_\-MFMC\_\-HEADER}}
-\index{\_\-\_\-BK\_\-MFMC\_\-HEADER@{\_\-\_\-BK\_\-MFMC\_\-HEADER}!medpy::graphcut::generate@{medpy::graphcut::generate}}
-\subsubsection[{\_\-\_\-BK\_\-MFMC\_\-HEADER}]{\setlength{\rightskip}{0pt plus 5cm}string medpy::graphcut::generate.\_\-\_\-BK\_\-MFMC\_\-HEADER}}
-\label{namespacemedpy_1_1graphcut_1_1generate_a64165b173e6d183953b7e30ed52eac6f}
-{\bfseries Initial value:}
-\begin{DoxyCode}
-1 """
-2 #include <stdio.h>
-3 #include "{}"
-4 
-5 int main()
-6 {{
-7     typedef Graph<int,int,int> GraphType;
-8     GraphType *g = new GraphType(/*estimated # of nodes*/ {}, /*estimated # of ed
-      ges*/ {}); 
-9 """
-\end{DoxyCode}
-
-
-Definition at line 48 of file generate.py.
+Definition at line 101 of file generate.py.
 

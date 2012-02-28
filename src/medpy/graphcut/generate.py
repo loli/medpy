@@ -1,17 +1,15 @@
 """
 @package medpy.graphcut.generate
-Generates output files from graphs that are processable by graph-cut algorithms.
-
-All functions in this module are highly depend on the actual implementation of the
-graph-cut algorithm they are intended to be used for. They require a minimal version
-number and it can not be ensured, that they will work with other versions.
-
-See the package description for a list of the supported graph-cut implementations.
+Provides functionality to generate graphs efficiently from nD label-images.
 
 Functions:
-    - def bk_mfmc_generate(graph): Generate a C++ file for Boyov and Kolmogorovs
-                                   max-flow/min-cut algorithm.
-
+    - def graph_from_labels((label_image,
+                      fg_markers,
+                      bg_markers,
+                      regional_term = False,
+                      boundary_term = False,
+                      regional_term_args = False,
+                      boundary_term_args = False): Creates a Graph object from a nD label image.
 @author Oskar Maier
 @version d0.1.0
 @since 2012-01-18
@@ -19,123 +17,211 @@ Functions:
 """
 
 # build-in modules
-import os.path
+import inspect
 
 # third-party modules
+import scipy
+from scipy.ndimage.measurements import find_objects
 
 # own modules
-import medpy
 from ..core.Logger import Logger
-from ..core.exceptions import SubprocessError
+from ..graphcut import Graph
 
 
-#####
-# BK_MFMC: Boyov and Kolmogorovs (1) C++ max-flow/min-cut implementation (a)
-#####
-
-# constants
-# relative position of the algorithm from the medpy package
-__BK_MFMC_GRAPH_LIB = '/cpp/maxflow/graph.h'
-__BK_MFMC_GRAPH_FILE = '/cpp/maxflow/graph.cpp'
-__BK_MFMC_MAXFLOW_FILE = '/cpp/maxflow/maxflow.cpp'   
-
-# symbols to be used to mark source or sink affiliation 
-__BK_MFMC_SOURCE_MARKER = 1
-__BK_MFMC_SINK_MARKER = 0
-
-# preformted header and footer of the C++ file to generate with placeholders
-__BK_MFMC_HEADER = """
-#include <stdio.h>
-#include "{}"
-
-int main()
-{{
-    typedef Graph<double,double,double> GraphType;
-    GraphType *g = new GraphType(/*estimated # of nodes*/ {}, /*estimated # of edges*/ {}); 
-"""
-
-__BK_MFMC_FOOTER = """
-    int flow = g -> maxflow();
-
-    printf("flow=%d\\n", flow);
-    int i;
-    for(i= 0; i < {}; i++) {{
-        if (g->what_segment(i) == GraphType::SOURCE)
-            printf("%d={}\\n", i + 1); /* adjust id systems by adding a 1 */
-        else
-            printf("%d={}\\n", i + 1); /* adjust id systems by adding a 1 */
-    }}
-    delete g;
-
-    return 0;
-}}
-"""
-
-def bk_mfmc_generate(graph):
+def graph_from_labels(label_image,
+                      fg_markers,
+                      bg_markers,
+                      regional_term = False,
+                      boundary_term = False,
+                      regional_term_args = False,
+                      boundary_term_args = False):
     """
-    Generate a C++ file executing the Boyov and Kolmogorovs max-flow/min-cut algorithm
-    over the supplied graph.
+    Create a @link Graph object from a nD label image.
     
-    @param graphs: The graph representing the problem. 
-    @type graphs: medpy.graphcut.Graph
-    @return: A compile-ready, pre-formated version of the problem to be compiled/executed
-             either using the methods provided by the @link: cut module or manually.
-    @rtype: str
+    Every region of the label image is regarded as a node. They are connected to their
+    immediate neighbours by arcs. If to regions are neighbours is determined using
+    ndim*2-connectedness (e.g. 3*2=6 for 3D).
+    In the next step the arcs weights (n-weights) are computed using the supplied
+    boundary_term function.
     
-    @raise SubprocessError: When the algorithm library can not be accessed.
+    Implicitly the graph holds two additional nodes: the source and the sink, so called
+    terminal nodes. These are connected with all other nodes through arcs of an initial
+    weight (t-weight) of zero.
+    All regions that are under the foreground markers are considered to be tightly bound
+    to the source: The t-weight of the arc from source to these nodes is set to a maximum
+    (@link Graph.MAX) value. The same goes for the background markers: The covered regions
+    receive a maximum (@link Graph.MAX) t-weight for their arc towards the sink.
+    
+    @note If a region is marked as both, foreground and background, the background marker
+    is given higher priority.
+     
+    @note all arcs whose weight is not explicitly set are assumed to carry a weight of
+    zero.
+    
+    @param label_image The label image as an array containing uint values. @note: The
+                       region labels have to start from 1 and be continuous
+                       (@link relabel()).
+    @type label_image numpy.ndarray 
+    @param fg_markers The foreground markers as binary array of the same shape as the label image.
+    @type fg_markers ndarray
+    @param bg_markers The background markers as binary array of the same shape as the label image.
+    @type bg_markers ndarray
+    @param regional_term This can be either
+                         False - all t-weights are set to 0, except for the nodes that are
+                         directly connected to the source or sink.
+                         , or a function - 
+                         The supplied function is used to compute the t_edges. It has to
+                         have the following signature
+                         regional_term(label_image, regions, bounding_boxes, regional_term_args),
+                         and is supposed to return a dictionary with region-ids as keys
+                         and a tuple (source_t_weight, sink_t_weight) as values. The
+                         returned dictionary does only need to contain entries for nodes
+                         where one of the t-weights is not zero. Additional parameters
+                         can be passed via the regional_term_args argument.
+    @type regional_term function
+    @param boundary_term This can be either
+                         False - 
+                         In which case the weight of all n_edges i.e. between all nodes
+                         that are not source or sink, are set to 0.
+                         , or a function -
+                         In which case it is used to compute the edges weights. The
+                         supplied function has to have the following signature
+                         fun(label_image, boundary_term_args), and is supposed to return
+                         a dictionary with the graphs edges as keys and their n-weights
+                         as values. These weights are tuples of numbers assigning the
+                         weights in both directions of the edge. Additional parameters
+                         can be passed via the boundary_term_args argument.
+    @type boundary_term function
+    @param regional_term_args Use this to pass some additional parameters to the
+                              regional_term function.
+    @param boundary_term_args Use this to pass some additional parameters to the
+                              boundary_term function.
+    
+    @return the created graph
+    @rtype graph.Graph
+    
+    @raise AttributeError If an argument is maleformed.
+    @raise FunctionError If one of the supplied functions returns unexpected results.
     """
     # prepare logger
     logger = Logger.getInstance()
     
-    logger.info('Checking conditions for BK_MFMC source file creation...')
+    # prepare result graph
+    graph = Graph()
     
-    # get the algorithms library
-    library = __bk_mfmc_get_library()
+    logger.info('Performing attribute tests...')
     
-    # format header and footer
-    header = __BK_MFMC_HEADER.format(library['graph_lib'], len(graph.get_tweights()), len(graph.get_nweights()))
-    footer = __BK_MFMC_FOOTER.format(len(graph.get_nodes()), __BK_MFMC_SOURCE_MARKER, __BK_MFMC_SINK_MARKER)
+    # check, set and convert all supplied parameters
+    label_image = scipy.asarray(label_image)
+    fg_markers = scipy.asarray(fg_markers, dtype=scipy.bool_)
+    bg_markers = scipy.asarray(bg_markers, dtype=scipy.bool_)
     
-    logger.info('Generating BK_MFMC C++ source file...')
+    # check supplied labels image
+    if not 1 == min(label_image.flat):
+        raise AttributeError('The supplied label image does either not contain any regions or they are not labeled consecutively starting from 1.')
     
-    # generate cpp file with the graph encoded
-    # Note: The min-cut/max-flow algorithm required node ids to start from 0, while the
-    # regions ids and therefore node ids returned by the graph object start from one.
-    # The ids written to the file are therefore decremented by 1. This is taken into
-    # account in the way the result is printed (i.e. increment of 1, see the __FOOTER)
-    source_file = header
-    source_file += '\tg -> add_node({});\n\n'.format(len(graph.get_nodes()))
-    for node_id in graph.get_tweights():
-        source_file += '\tg -> add_tweights({}, {}, {});\n'.format(node_id - 1, graph.get_tweights()[node_id][0], graph.get_tweights()[node_id][1])
-    source_file += '\n'
-    for edge in graph.get_nweights():
-        source_file += '\tg -> add_edge({}, {}, {}, {});\n'.format(edge[0] - 1, edge[1] - 1, graph.get_nweights()[edge], graph.get_nweights()[edge])
-    source_file += '\n'
-    source_file += footer
+    # set dummy functions if not supplied
+    if not regional_term: regional_term = __regional_term
+    if not boundary_term: boundary_term = __boundary_term
     
-    return source_file
+    # check supplied functions and their signature
+    if not hasattr(regional_term, '__call__') or not 4 == len(inspect.getargspec(regional_term)[0]):
+        raise AttributeError('regional_term has to be a callable object which takes four parameters.')
+    if not hasattr(boundary_term, '__call__') or not 2 == len(inspect.getargspec(boundary_term)[0]):
+        raise AttributeError('boundary_term has to be a callable object which takes two parameters.')
 
-def __bk_mfmc_get_library():
+    logger.info('Collecting nodes...')
+
+    # collect all labels i.e.
+    # collect all nodes Vr of the graph
+    graph.set_nodes(len(scipy.unique(label_image)))
+    
+    # collect all regions that are under the foreground resp. background markers i.e.
+    # collect all nodes that are connected to the source resp. sink
+    graph.set_source_nodes(scipy.unique(label_image[fg_markers]))
+    graph.set_sink_nodes(scipy.unique(label_image[bg_markers]))
+    
+    logger.debug('#nodes={}, #hardwired-nodes source/sink={}/{}'.format(len(graph.get_nodes()),
+                                                                        len(graph.get_source_nodes()),
+                                                                        len(graph.get_sink_nodes())))
+    
+    logger.info('Extracting the regions bounding boxes...')
+    
+    # extract the bounding boxes
+    bounding_boxes = find_objects(label_image)
+        
+    # compute the weights of all edges from the source and to the sink i.e.
+    # compute the weights of the t_edges Wt
+    logger.info('Computing terminal edge weights...')
+    regions = set(graph.get_nodes()) - set(graph.get_source_nodes()) - set(graph.get_sink_nodes())
+    Wt = regional_term(label_image, regions, bounding_boxes, regional_term_args) # bounding boxes indexed from 0
+    graph.add_tweights(Wt)
+
+    # compute the weights of the edges between the neighbouring nodes i.e.
+    # compute the weights of the n_edges Wr
+    logger.info('Computing inter-node edge weights...')
+    Wr = boundary_term(label_image, boundary_term_args)
+    graph.set_nweights(Wr)
+    
+    return graph
+
+def __regional_term(label_image, regions, bounding_boxes, regional_term_args):
+    """Fake regional_term function with the appropriate signature."""
+    return {}
+
+def __boundary_term(label_image, boundary_term_args):
+    """Fake regional_term function with the appropriate signature."""
+    # !TODO: An empty dictionary would actually also do here ... despite the fact that 
+    # supplying no boundary term contradicts the whole graph cut idea.
+    
+    # compute the edges between all regions
+    edges = __compute_edges(label_image)
+    # return a dict with the edges as keys and 0s as values (behaves like no edge exists between the regions)
+    return dict.fromkeys(edges, (0, 0))
+    
+
+def __compute_edges(label_image):
     """
-    Return the location of the required algorithm files as dict after ensuring their existence.
+    Computes the region neighbourhood defined by a star shaped n-dimensional structuring
+    element (as returned by scipy.ndimage.generate_binary_structure(ndim, 1)) for the
+    supplied region/label image.
+    Note The returned set contains neither duplicates, nor self-references
+    (i.e. (id_1, id_1)), nor reversed references (e.g. (id_1, id_2) and (id_2, id_1).
     
-    @raise SubprocessError: When the algorithm library can not be accessed.
+    @param label_image An image with labeled regions (nD).
+    @param return A set with tuples denoting the edge neighbourhood.
     """
-    library = {}
+    # compute the neighbours
+    Er = __compute_edges_nd(label_image)
     
-    # access the algorithms location
-    try:
-        library['graph_lib'] = medpy.__path__[0] + __BK_MFMC_GRAPH_LIB
-        library['graph_file'] = medpy.__path__[0] + __BK_MFMC_GRAPH_FILE
-        library['maxflow_file'] = medpy.__path__[0] + __BK_MFMC_MAXFLOW_FILE
-    except Exception as e:
-        raise SubprocessError('The path to the algorithm could not be accessed, reason: {}.'.format(e.message))
+    # remove reversed neighbours and self-references
+    for edge in list(Er):
+        if (edge[1], edge[0]) in Er:
+            Er.remove(edge)
+    return Er
     
-    # test if the algorithm files exist
-    if not (os.path.exists(library['graph_lib']) or
-            os.path.exists(library['graph_file']) or 
-            os.path.exists(library['maxflow_file'])):
-        raise SubprocessError('At least one of the required algorithm files does not seem to exists ({}, {}, {}).'.format(library['graph_lib'], library['graph_file'], library['maxflow_file']))
     
-    return library
+def __compute_edges_nd(label_image):
+    """
+    Computes the region neighbourhood defined by a star shaped n-dimensional structuring
+    element (as returned by scipy.ndimage.generate_binary_structure(ndim, 1)) for the
+    supplied region/label image.
+    @note The returned set can contain self references (i.e. (id_1, id_1)) as well as
+    reversed references (e.g. (id_1, id_2) and (id_2, id_1).
+    @see __compute_edges_nd2 alternative implementation (slighty slower)
+    @see __compute_edges_3d faster implementation for three dimensions only
     
+    @param label_image An image with labeled regions (nD).
+    @param return A set with tuples denoting the edge neighbourhood.
+    """
+    Er = set()
+    for dim in range(label_image.ndim):
+        slices_x = []
+        slices_y = []
+        for di in range(label_image.ndim):
+            slices_x.append(slice(None, -1 if di == dim else None))
+            slices_y.append(slice(1 if di == dim else None, None))
+        Er = Er.union(set(zip(label_image[slices_x].flat,
+                              label_image[slices_y].flat)))
+    return Er
+

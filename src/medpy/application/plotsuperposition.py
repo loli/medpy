@@ -50,10 +50,10 @@ def main():
     
     # extract relevant area from image_data
     highlighted_data = image_data.copy()
-    highlighted_data[~mask_data] = 0
+    highlighted_data[~mask_data] = image_data.min()
     
     # set the same values in the image to zero
-    image_data[mask_data] = 0
+    image_data[mask_data] = image_data.min()
     
     # load gnuplot
     g = Gnuplot.Gnuplot(debug=1)

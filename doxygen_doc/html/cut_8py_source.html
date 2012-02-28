@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>MedPy: /home/omaier/Programming/Python/medpy/src/medpy/graphcut/cut.py Source File</title>
+<title>MedPy: /home/omaier/Programming/Python/medpy/src/medpy/_graphcut/cut.py Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -60,7 +60,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul>
       <li class="navelem"><a class="el" href="dir_39b96f9c4012765d2b281918e9f3d34d.html">src</a>      </li>
       <li class="navelem"><a class="el" href="dir_38eb81983c5e08a00adc0664db29ada6.html">medpy</a>      </li>
-      <li class="navelem"><a class="el" href="dir_59c3afa8d11d678041e98ae320c1dfd8.html">graphcut</a>      </li>
+      <li class="navelem"><a class="el" href="dir_068fda1acee30f0af139aaae1e62455f.html">_graphcut</a>      </li>
     </ul>
   </div>
 </div>
@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">cut.py</div>  </div>
 </div>
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespacemedpy_1_1graphcut_1_1cut.html">00001</a> <span class="comment">##</span>
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">##</span>
 <a name="l00002"></a>00002 <span class="comment"># </span>
 <a name="l00003"></a>00003 <span class="comment"># @package medpy.graphcut.cut</span>
 <a name="l00004"></a>00004 <span class="comment"># Prepares, compiles and executed graph-cut implementations using the graphs created by</span>
@@ -141,7 +141,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00070"></a>00070 <span class="comment">#     @raise SubprocessError: When the one step of the compiling or execution can not be</span>
 <a name="l00071"></a>00071 <span class="comment">#                             assured to have terminated succesfully.</span>
 <a name="l00072"></a>00072 <span class="comment">#     </span>
-<a name="l00073"></a><a class="code" href="namespacemedpy_1_1graphcut_1_1cut.html#a964a5abe60de2820b3e234ee7f1b0cfc">00073</a> <span class="keyword">def </span><a class="code" href="namespacemedpy_1_1graphcut_1_1cut.html#a964a5abe60de2820b3e234ee7f1b0cfc" title="BK_MFMC: Boyov and Kolmogorovs (1) C++ max-flow/min-cut implementation (a)">bk_mfmc_cut</a>(source_file, gpp_location = False, keep = False):
+<a name="l00073"></a>00073 <span class="keyword">def </span>bk_mfmc_cut(source_file, gpp_location = False, keep = False):
 <a name="l00074"></a>00074     <span class="comment"># prepare logger</span>
 <a name="l00075"></a>00075     logger = Logger.getInstance()
 <a name="l00076"></a>00076     
@@ -217,7 +217,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -226,7 +226,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jan 25 2012 13:44:15 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:04 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

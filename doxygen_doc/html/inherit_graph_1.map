@@ -1,4 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classNativeLogger.html" title="NativeLogger" alt="" coords="5,5,104,35"/>
-<area shape="rect" id="node3" href="$classmedpy_1_1core_1_1Logger_1_1Logger.html" title="This singleton class represents an object that can be used by all applications and classes..." alt="" coords="152,5,328,35"/>
+<area shape="rect" id="node1" href="$classmedpy_1_1application_1_1plotsuperposition_1_1__Getch.html" title="Gets a single character from standard input." alt="" coords="5,5,280,35"/>
 </map>

@@ -1,1 +1,1 @@
-export PYTHONPATH=/home/loli/Programming/Python/MedPy/src:$PYTHONPATH
+export PYTHONPATH=/home/omaier/Programming/Python/medpy/src:$PYTHONPATH

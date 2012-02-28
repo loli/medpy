@@ -11,13 +11,7 @@ Run-\/time optimized energy functions for graph-\/cut.
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespacemedpy_1_1graphcut_1_1energy_a2bf88e97c3a4d86bfa293ead5bdefb33}{boundary\_\-stawiaski}
-\begin{DoxyCompactList}\small\item\em An implementation of the boundary term in (1), suitable to be used with the  graph\_\-from\_\-labels() function. \end{DoxyCompactList}\item 
-def \hyperlink{namespacemedpy_1_1graphcut_1_1energy_a53cb6ebef205639a0465db7630ea669a}{slices\_\-to\_\-points}
-\begin{DoxyCompactList}\small\item\em Translate a sequence of slice objects into the corner-\/points of a nD rectangle. \end{DoxyCompactList}\item 
-def \hyperlink{namespacemedpy_1_1graphcut_1_1energy_a15e31b09496557c3993b3bffaf272c9c}{points\_\-to\_\-slices}
-\begin{DoxyCompactList}\small\item\em Translate a nD rectangle defined by its corner points into a sequence of slice objects. \end{DoxyCompactList}\item 
-def \hyperlink{namespacemedpy_1_1graphcut_1_1energy_a6366d423b18ab03571da7ff44e634c2f}{intersection}
-\begin{DoxyCompactList}\small\item\em Computes the intersection rectangle of two nD rectangles increased. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em An implementation of the boundary term in (1), suitable to be used with the \hyperlink{}{function. }\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -26,6 +20,25 @@ Run-\/time optimized energy functions for graph-\/cut. Provides a number of stan
 Functions:
 \begin{DoxyItemize}
 \item def boundary\_\-stawiaski(label\_\-image, r1\_\-bb, r2\_\-bb, r1\_\-id, r2\_\-id, (gradient\_\-image)): boundary term implementation in (1)
+\end{DoxyItemize}
+
+(1) Stawiaski J., Decenciere E., Bidlaut F. / \char`\"{}Interactive Liver Tumor Segmentation
+ Using Graph-\/cuts and watershed\char`\"{} / MICCAI 2008 participation
+
+\begin{DoxyAuthor}{Author}
+Oskar Maier 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+d0.1.0 
+\end{DoxyVersion}
+\begin{DoxySince}{Since}
+2012-\/01-\/18  Development
+\end{DoxySince}
+Provides a number of standard energy functions for both, boundary and regional terms, that follow the signature required for building graphs using the graph module of this package. Additionally a number of convenience functions for re-\/occurring data processing are given.
+
+Functions:
+\begin{DoxyItemize}
+\item def boundary\_\-stawiaski(label\_\-image, (gradient\_\-image)): boundary term implementation in (1)
 \end{DoxyItemize}
 
 (1) Stawiaski J., Decenciere E., Bidlaut F. / \char`\"{}Interactive Liver Tumor Segmentation
@@ -49,125 +62,22 @@ d0.1.0
 \subsubsection[{boundary\_\-stawiaski}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.energy.boundary\_\-stawiaski (
 \begin{DoxyParamCaption}
 \item[{}]{label\_\-image, }
-\item[{}]{r1\_\-bb, }
-\item[{}]{r2\_\-bb, }
-\item[{}]{r1\_\-id, }
-\item[{}]{r2\_\-id, }
 \item[{}]{gradient\_\-image}
 \end{DoxyParamCaption}
 )}}
 \label{namespacemedpy_1_1graphcut_1_1energy_a2bf88e97c3a4d86bfa293ead5bdefb33}
 
 
-An implementation of the boundary term in (1), suitable to be used with the  graph\_\-from\_\-labels() function. 
+An implementation of the boundary term in (1), suitable to be used with the \hyperlink{}{function. }
 
 Determines for each two supplied regions the voxels forming their border assuming ndim$\ast$2-\/connectedness (e.g. 3$\ast$2=6 for 3D). From the gradient magnitude values of each end-\/point voxel the border-\/voxel pairs, the highest one is selected and passed to a strictly positive and decreasing function g, which is defined as: \[ g(x) = \left(\frac{1}{1+|x|}\right)^k \] ,where $k=2$. The final weight $w_{i,j}$ between two regions $r_i$ and $r_j$ is then determined by the sum of all these neighbour values: \[ w = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|)) \] , where $F_{(r_i,r_j)}$ is the set of border voxel-\/pairs $e_{m,n}$ between the regions $r_i$ and $r_j$ and $|I(p)|$ the absolute of the gradient magnitude at the voxel $p$
 
 This boundary\_\-function works as an edge indicator in the original image. In simpler words the weight (and therefore the energy) is obtained by summing the local contrast along the boundaries between two regions.
 
 \begin{DoxyNote}{Note}
-This function requires the gradient magnitude image of the original image to be passed along. That means that  graph\_\-from\_\-labels() has to be called with boundary\_\-term\_\-args set to the gradient image.
+This function requires the gradient magnitude image of the original image to be passed along. That means that \hyperlink{}{has to be called with boundary\_\-term\_\-args set to the gradient image.   label\_\-image the label image  label\_\-image numpy.ndarray  gradient\_\-image The gradient magnitude image of the original image.  gradient\_\-image numpy.ndarray   a dictionary with the edges as keys and the respective weight tuples as values  dict }
 \end{DoxyNote}
 
-\begin{DoxyParams}{Parameters}
-{\em label\_\-image,:} & the label image  label\_\-image: numpy.ndarray \\
-\hline
-{\em r1\_\-bb,:} & The bounding box of the first region, as a list of slice objects.  r1\_\-bb: list \\
-\hline
-{\em r2\_\-bb,:} & The bounding box of the second region, as a list of slice objects.  r2\_\-bb: list \\
-\hline
-{\em r1\_\-id,:} & The region/node id of the first region.  r1\_\-id: int \\
-\hline
-{\em r2\_\-id,:} & The region/node id of the second region.  r2\_\-id: int \\
-\hline
-{\em gradient\_\-image,:} & The gradient magnitude image of the original image.  gradient\_\-image: numpy.ndarray \\
-\hline
-\end{DoxyParams}
 
-
-Definition at line 73 of file energy.py.
-
-\hypertarget{namespacemedpy_1_1graphcut_1_1energy_a6366d423b18ab03571da7ff44e634c2f}{
-\index{medpy::graphcut::energy@{medpy::graphcut::energy}!intersection@{intersection}}
-\index{intersection@{intersection}!medpy::graphcut::energy@{medpy::graphcut::energy}}
-\subsubsection[{intersection}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.energy.intersection (
-\begin{DoxyParamCaption}
-\item[{}]{rect1, }
-\item[{}]{rect2}
-\end{DoxyParamCaption}
-)}}
-\label{namespacemedpy_1_1graphcut_1_1energy_a6366d423b18ab03571da7ff44e634c2f}
-
-
-Computes the intersection rectangle of two nD rectangles increased. 
-
-The intersection window marks the area in which the two images bounding boxes intersect. The returned rectangle is defined by its lower-\/left and upper-\/right corner.
-
-
-\begin{DoxyParams}{Parameters}
-{\em rect1,:} & The first rectangle defined by its lower-\/left and upper-\/right corners (lower\_\-left, uper\_\-right). \\
-\hline
-{\em rect2,:} & The second rectangle defined by its lower-\/left and upper-\/right corners (lower\_\-left, uper\_\-right). \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-: The intersection rectangle defined by a sequence of slice objects or False if no intersection occured. 
-\end{DoxyReturn}
-
-
-Definition at line 158 of file energy.py.
-
-\hypertarget{namespacemedpy_1_1graphcut_1_1energy_a15e31b09496557c3993b3bffaf272c9c}{
-\index{medpy::graphcut::energy@{medpy::graphcut::energy}!points\_\-to\_\-slices@{points\_\-to\_\-slices}}
-\index{points\_\-to\_\-slices@{points\_\-to\_\-slices}!medpy::graphcut::energy@{medpy::graphcut::energy}}
-\subsubsection[{points\_\-to\_\-slices}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.energy.points\_\-to\_\-slices (
-\begin{DoxyParamCaption}
-\item[{}]{rect}
-\end{DoxyParamCaption}
-)}}
-\label{namespacemedpy_1_1graphcut_1_1energy_a15e31b09496557c3993b3bffaf272c9c}
-
-
-Translate a nD rectangle defined by its corner points into a sequence of slice objects. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em rect,:} & rectangle defined by its lower-\/left and upper-\/right corners (lower\_\-left, uper\_\-right).  rect: sequence \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-: list of slice objects 
-
-: list 
-\end{DoxyReturn}
-
-
-Definition at line 137 of file energy.py.
-
-\hypertarget{namespacemedpy_1_1graphcut_1_1energy_a53cb6ebef205639a0465db7630ea669a}{
-\index{medpy::graphcut::energy@{medpy::graphcut::energy}!slices\_\-to\_\-points@{slices\_\-to\_\-points}}
-\index{slices\_\-to\_\-points@{slices\_\-to\_\-points}!medpy::graphcut::energy@{medpy::graphcut::energy}}
-\subsubsection[{slices\_\-to\_\-points}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.energy.slices\_\-to\_\-points (
-\begin{DoxyParamCaption}
-\item[{}]{slices}
-\end{DoxyParamCaption}
-)}}
-\label{namespacemedpy_1_1graphcut_1_1energy_a53cb6ebef205639a0465db7630ea669a}
-
-
-Translate a sequence of slice objects into the corner-\/points of a nD rectangle. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em slices,:} & a sequence of slices  slices: sequence \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-: (lower\_\-left, uper\_\-right) with each point being a nD tuple 
-
-: tuple 
-\end{DoxyReturn}
-
-
-Definition at line 117 of file energy.py.
+Definition at line 72 of file energy.py.
 
