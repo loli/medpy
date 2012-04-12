@@ -1,12 +1,14 @@
 """
 @package medpy.graphcut.graph
-A basic graph class.
+Basic graph classes.
 
 Classes:
-    - class Graph: a class for holding graphs
-
+    - class Graph: a class representing a graph; flexible Python implementation
+    - class GCGraph: a class representing a graph; directly based on the graph cut C++
+                     implementation graph maxflow.GraphDouble
+    
 @author Oskar Maier
-@version r0.1.0
+@version r0.1.1
 @since 2012-02-06
 @status Release
 """
@@ -223,15 +225,16 @@ class GCGraph:
     error messages.
     
     Methods:
-        - set_source_nodes(source_nodes) -- Set multiple source nodes.
-        - set_sink_nodes(sink_nodes) -- Set multiple sink nodes.
-        - set_nweight(node_from, node_to, weight_there, weight_back) -- Set a single n-weight / edge-weight.
-        - set_nweights(nweights) -- Set multiple inter-node weights.
-        - set_tweight(node, weight_source, weight_sink) -- Set a single t-weight / terminal-weight.
-        - set_tweights(tweights) -- Set multiple terminal-to-node weights.
+        - set_source_nodes() -- Set multiple source nodes.
+        - set_sink_nodes() -- Set multiple sink nodes.
+        - set_nweight() -- Set a single n-weight / edge-weight.
+        - set_nweights() -- Set multiple inter-node weights.
+        - set_tweight() -- Set a single t-weight / terminal-weight.
+        - set_tweights() -- Set multiple terminal-to-node weights.
+        - get_graph() -- Return the C++ graph.
         - get_nodes() -- Return all nodes.
-        - get_node_count() -- Return the number of nodes
-        - get_edge_count() -- Return the number of edges
+        - get_node_count() -- Return the number of nodes.
+        - get_edge_count() -- Return the number of edges.
     """
     # @var __INT_16_BIT The maximum value of signed int 16bit.
     __INT_16_BIT = 32767
@@ -391,6 +394,10 @@ class GCGraph:
             self.set_tweight(node, weight[0], weight[1]) # (weight-to-source, weight-to-sink)
         
     def get_graph(self):
+        """
+        @return the underlying maxflow.GraphDouble C++ implementation of the graph.
+        @rtype maxflow.GraphDouble
+        """
         return self.__graph
         
     def get_node_count(self):

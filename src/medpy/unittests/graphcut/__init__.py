@@ -1,6 +1,5 @@
 # !TODO: Update these imports
+from cut import TestCut
 from graph import TestGraph
-from generatecut import TestGenerateCut
-from parse import TestParse
-from pipeline import TestBkMfmc
+from generate import TestGenerate
 from energy_label import TestEnergyLabel

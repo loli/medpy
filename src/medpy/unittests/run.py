@@ -4,8 +4,8 @@
 
 # build-in modules
 import unittest
-from medpy.unittests.metric import TestSurfaceClass, TestVolumeClass
-from medpy.unittests.graphcut import TestGenerateCut, TestGraph, TestParse, TestBkMfmc, TestEnergyLabel
+from medpy.unittests.metric import *
+from medpy.unittests.graphcut import *
 
 # third-party modules
 
@@ -30,10 +30,9 @@ def main():
     # load graphcut tests
     suite_graphcut = unittest.TestSuite()
     suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestGraph))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestGenerateCut))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestParse))
+    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCut))
+    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestGenerate))
     suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestEnergyLabel))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestBkMfmc))
     
     # execute tests
     unittest.TextTestRunner(verbosity=2).run(suite_metric)

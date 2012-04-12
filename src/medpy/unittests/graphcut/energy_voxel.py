@@ -26,9 +26,7 @@ from medpy.graphcut import boundary_difference_of_means_voxel
 class TestEnergyVoxel(unittest.TestCase):
         
     def test_boundary_difference_of_means_voxel_borders(self):
-        """
-        Test the @link medpy.graphcut.boundary_difference_of_means_voxel() border conditions.
-        """ 
+        """Test the @link medpy.graphcut.boundary_difference_of_means_voxel() border conditions.""" 
         # TEST1: test for a label image with not continuous label ids not starting from 0
         label = [[1, 4, 8],
                  [1, 3, 10],
@@ -89,15 +87,14 @@ class TestEnergyVoxel(unittest.TestCase):
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')        
         
     def test_boundary_difference_of_means_voxel_2d(self):
-        """
-        Test the @link medpy.graphcut.boundary_difference_of_means_voxel() function for 2D.
-        """
+        """Test the @link medpy.graphcut.boundary_difference_of_means_voxel() function for 2D."""
         # the original image
-        original = [[0., 0., 0., 0.1, 0.1, 0.5],
-                    [0., 0., 0., 0.1, 0.1, 0.1],
-                    [0., 0.3, 0.3, 0.2, 0.2, 0.2],
-                    [0., 0., 0.3, 0.3, 0.3, 0.2],
-                    [0., 0., 0.3, 0.2, 0.2, 0.4]]
+        original = [[[1,0,1,2,3],
+                     [1,0,1,4,3].
+                     [0,1,1,6,4]],
+                    [[1,0,1,2,3],
+                     [1,0,1,4,3].
+                     [0,1,1,6,4]]]
         # the label image (labels have to start from 0)
         label = [[0, 0, 0, 1, 1, 5],
                  [0, 0, 0, 1, 1, 1],
@@ -119,9 +116,7 @@ class TestEnergyVoxel(unittest.TestCase):
         self.__compare_dictionaries(result, expected_result)
         
     def test_boundary_difference_of_means_voxel_3d(self):
-        """
-        Test the @link medpy.graphcut.boundary_difference_of_means_voxel() function for 3D.
-        """
+        """Test the @link medpy.graphcut.boundary_difference_of_means_voxel() function for 3D."""
         # 3D VERSION
         # the gradient magnitude image
         original = [[[0., 0., 0., 0.1, 0.1, 0.5],

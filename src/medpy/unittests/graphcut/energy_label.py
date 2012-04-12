@@ -21,9 +21,7 @@ from medpy.graphcut import boundary_stawiaski_label, boundary_difference_of_mean
 class TestEnergyLabel(unittest.TestCase):
     
     def test_boundary_stawiaski_label_borders(self):
-        """
-        Test the @link medpy.graphcut.test_boundary_stawiaski_label() border conditions.
-        """ 
+        """Test the @link medpy.graphcut.test_boundary_stawiaski_label() border conditions.""" 
         # TEST1: test for a label image with not continuous label ids not starting from 0
         label = [[1, 4, 8],
                  [1, 3, 10],
@@ -76,9 +74,7 @@ class TestEnergyLabel(unittest.TestCase):
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')
         
     def test_boundary_stawiaski_label_2d(self):
-        """
-        Test the @link medpy.graphcut.test_boundary_stawiaski_label() function for 2D.
-        """
+        """Test the @link medpy.graphcut.test_boundary_stawiaski_label() function for 2D."""
         # the gradient magnitude image
         gradient = [[0., 0., 0., 0.1, 0.1, 0.5],
                     [0., 0., 0., 0.1, 0.1, 0.1],
@@ -105,9 +101,7 @@ class TestEnergyLabel(unittest.TestCase):
         self.__compare_dictionaries(result, expected_result)
         
     def test_boundary_stawiaski_label_3d(self):
-        """
-        Test the @link medpy.graphcut.test_boundary_stawiaski_label() function for 3D.
-        """
+        """Test the @link medpy.graphcut.test_boundary_stawiaski_label() function for 3D."""
         # the gradient magnitude image
         gradient = [[[0., 0., 0., 0.1, 0.1, 0.5],
                      [0., 0., 0., 0.1, 0.1, 0.1],
@@ -149,9 +143,7 @@ class TestEnergyLabel(unittest.TestCase):
         
         
     def test_boundary_difference_of_means_label_borders(self):
-        """
-        Test the @link medpy.graphcut.boundary_difference_of_means_label() border conditions.
-        """ 
+        """Test the @link medpy.graphcut.boundary_difference_of_means_label() border conditions.""" 
         # TEST1: test for a label image with not continuous label ids not starting from 0
         label = [[1, 4, 8],
                  [1, 3, 10],
@@ -212,9 +204,7 @@ class TestEnergyLabel(unittest.TestCase):
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')        
         
     def test_boundary_difference_of_means_label_2d(self):
-        """
-        Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 2D.
-        """
+        """Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 2D."""
         # the original image
         original = [[0., 0., 0., 0.1, 0.1, 0.5],
                     [0., 0., 0., 0.1, 0.1, 0.1],
@@ -242,9 +232,7 @@ class TestEnergyLabel(unittest.TestCase):
         self.__compare_dictionaries(result, expected_result)
         
     def test_boundary_difference_of_means_label_3d(self):
-        """
-        Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 3D.
-        """
+        """Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 3D."""
         # 3D VERSION
         # the gradient magnitude image
         original = [[[0., 0., 0., 0.1, 0.1, 0.5],

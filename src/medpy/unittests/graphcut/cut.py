@@ -49,7 +49,7 @@ class TestCut(unittest.TestCase):
     __maxflow = 16
     
     def test_region_based(self):
-        """Executes the complete pipeline of the BK_MFMC algorithm."""
+        """Executes the complete pipeline of the graph cut algorithm."""
         # create the graph from the image
         label_image = self.__label_image
         graph = graph_from_labels(label_image,
