@@ -1,0 +1,1 @@
+export PYTHONPATH=/home/omaier/Programming/Python/medpy/src:$PYTHONPATH
