@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classException.html" title="Exception" alt="" coords="5,59,85,88"/>
-<area shape="rect" id="node3" href="$classmedpy_1_1core_1_1exceptions_1_1ArgumentError.html" title="Thrown by an application when an invalid command line argument has been supplied." alt="" coords="140,5,385,35"/>
-<area shape="rect" id="node5" href="$classmedpy_1_1core_1_1exceptions_1_1FunctionError.html" title="Thrown when a supplied function returns unexpected results." alt="" coords="144,59,381,88"/>
-<area shape="rect" id="node7" href="$classmedpy_1_1core_1_1exceptions_1_1SubprocessError.html" title="Thrown by an application when a subprocess execution failed." alt="" coords="133,112,392,141"/>
-</map>
