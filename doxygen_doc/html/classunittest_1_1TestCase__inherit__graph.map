@@ -1,11 +1,12 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classmedpy_1_1unittests_1_1features_1_1texture_1_1TestSurfaceClass.html" title="medpy.unittests.features.texture.TestSurfaceClass" alt="" coords="203,5,520,35"/>
-<area shape="rect" id="node5" href="$classmedpy_1_1unittests_1_1filter_1_1LabelImageStatistics_1_1TestLabelImageStatisticsClass.html" title="medpy.unittests.filter.LabelImageStatistics.TestLabelImageStatisticsClass" alt="" coords="133,59,589,88"/>
-<area shape="rect" id="node7" href="$classmedpy_1_1unittests_1_1graphcut_1_1energy_1_1TestEnergy.html" title="medpy.unittests.graphcut.energy.TestEnergy" alt="" coords="220,112,503,141"/>
-<area shape="rect" id="node9" href="$classmedpy_1_1unittests_1_1graphcut_1_1generatecut_1_1TestGenerateCut.html" title="medpy.unittests.graphcut.generatecut.TestGenerateCut" alt="" coords="189,165,533,195"/>
-<area shape="rect" id="node11" href="$classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html" title="medpy.unittests.graphcut.graph.TestGraph" alt="" coords="227,219,496,248"/>
-<area shape="rect" id="node13" href="$classmedpy_1_1unittests_1_1graphcut_1_1parse_1_1TestParse.html" title="medpy.unittests.graphcut.parse.TestParse" alt="" coords="227,272,496,301"/>
-<area shape="rect" id="node15" href="$classmedpy_1_1unittests_1_1graphcut_1_1pipeline_1_1TestBkMfmc.html" title="Executes the complete pipeline of the BK_MFMC algorithm, checking the results." alt="" coords="213,325,509,355"/>
-<area shape="rect" id="node17" href="$classmedpy_1_1unittests_1_1metric_1_1surface_1_1TestSurfaceClass.html" title="medpy.unittests.metric.surface.TestSurfaceClass" alt="" coords="207,379,516,408"/>
-<area shape="rect" id="node19" href="$classmedpy_1_1unittests_1_1metric_1_1volume_1_1TestVolumeClass.html" title="medpy.unittests.metric.volume.TestVolumeClass" alt="" coords="207,432,516,461"/>
+<area shape="rect" id="node3" href="$classmedpy_1_1unittests_1_1features_1_1histogram_1_1TestSurfaceClass.html" title="medpy.unittests.features.histogram.TestSurfaceClass" alt="" coords="193,5,529,35"/>
+<area shape="rect" id="node5" href="$classmedpy_1_1unittests_1_1features_1_1texture_1_1TestSurfaceClass.html" title="medpy.unittests.features.texture.TestSurfaceClass" alt="" coords="203,59,520,88"/>
+<area shape="rect" id="node7" href="$classmedpy_1_1unittests_1_1filter_1_1LabelImageStatistics_1_1TestLabelImageStatisticsClass.html" title="medpy.unittests.filter.LabelImageStatistics.TestLabelImageStatisticsClass" alt="" coords="133,112,589,141"/>
+<area shape="rect" id="node9" href="$classmedpy_1_1unittests_1_1graphcut_1_1cut_1_1TestCut.html" title="Executes the complete pipeline of the graph cut algorithm, checking the results." alt="" coords="240,165,483,195"/>
+<area shape="rect" id="node11" href="$classmedpy_1_1unittests_1_1graphcut_1_1energy__label_1_1TestEnergyLabel.html" title="medpy.unittests.graphcut.energy_label.TestEnergyLabel" alt="" coords="188,219,535,248"/>
+<area shape="rect" id="node13" href="$classmedpy_1_1unittests_1_1graphcut_1_1energy__voxel_1_1TestEnergyVoxel.html" title="medpy.unittests.graphcut.energy_voxel.TestEnergyVoxel" alt="" coords="184,272,539,301"/>
+<area shape="rect" id="node15" href="$classmedpy_1_1unittests_1_1graphcut_1_1generate_1_1TestGenerateCut.html" title="medpy.unittests.graphcut.generate.TestGenerateCut" alt="" coords="199,325,524,355"/>
+<area shape="rect" id="node17" href="$classmedpy_1_1unittests_1_1graphcut_1_1graph_1_1TestGraph.html" title="medpy.unittests.graphcut.graph.TestGraph" alt="" coords="227,379,496,408"/>
+<area shape="rect" id="node19" href="$classmedpy_1_1unittests_1_1metric_1_1surface_1_1TestSurfaceClass.html" title="medpy.unittests.metric.surface.TestSurfaceClass" alt="" coords="207,432,516,461"/>
+<area shape="rect" id="node21" href="$classmedpy_1_1unittests_1_1metric_1_1volume_1_1TestVolumeClass.html" title="medpy.unittests.metric.volume.TestVolumeClass" alt="" coords="207,485,516,515"/>
 </map>

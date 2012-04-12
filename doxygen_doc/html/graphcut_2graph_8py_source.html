@@ -78,9 +78,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00007"></a>00007 <span class="comment">#     - class Graph: a class for holding graphs</span>
 <a name="l00008"></a>00008 <span class="comment"># </span>
 <a name="l00009"></a>00009 <span class="comment"># @author Oskar Maier</span>
-<a name="l00010"></a>00010 <span class="comment"># @version d0.1.0</span>
+<a name="l00010"></a>00010 <span class="comment"># @version r0.1.0</span>
 <a name="l00011"></a>00011 <span class="comment"># @since 2012-02-06</span>
-<a name="l00012"></a>00012 <span class="comment"># @status Development</span>
+<a name="l00012"></a>00012 <span class="comment"># @status Release</span>
 <a name="l00013"></a>00013 <span class="comment"># </span>
 <a name="l00014"></a>00014 
 <a name="l00015"></a>00015 <span class="comment"># build-in module</span>
@@ -88,7 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00017"></a>00017 <span class="comment"># third-party modules</span>
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 <span class="comment"># own modules</span>
-<a name="l00020"></a>00020 
+<a name="l00020"></a>00020 <span class="keyword">from</span> maxflow <span class="keyword">import</span> GraphDouble
 <a name="l00021"></a>00021 
 <a name="l00022"></a>00022 <span class="comment"># code</span>
 <a name="l00023"></a>00023 <span class="comment">##</span>
@@ -101,14 +101,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00030"></a>00030 <span class="comment">#     </span>
 <a name="l00031"></a>00031 <span class="comment">#     @note the node-ids used by the graph are assumed to start with 1 and be</span>
 <a name="l00032"></a>00032 <span class="comment">#     continuous. This is not actually checked, except when calling the</span>
-<a name="l00033"></a>00033 <span class="comment">#     @link inconsistent() method, so be careful.</span>
+<a name="l00033"></a>00033 <span class="comment">#     inconsistent() method, so be careful.</span>
 <a name="l00034"></a>00034 <span class="comment">#     </span>
 <a name="l00035"></a>00035 <span class="comment">#     Methods:</span>
-<a name="l00036"></a>00036 <span class="comment">#         - set_nodes(nodes) -- Set the nodes.</span>
-<a name="l00037"></a>00037 <span class="comment">#         - set_source_nodes(source_nodes) -- Set the source nodes.</span>
-<a name="l00038"></a>00038 <span class="comment">#         - set_sink_nodes(sink_nodes) -- Set the sink nodes.</span>
-<a name="l00039"></a>00039 <span class="comment">#         - set_nweights(nweights) -- Set the inter-node weights-</span>
-<a name="l00040"></a>00040 <span class="comment">#         - add_tweights(nweights) -- Add some terminal-to-node weights.</span>
+<a name="l00036"></a>00036 <span class="comment">#         - set_nodes() -- Set the nodes.</span>
+<a name="l00037"></a>00037 <span class="comment">#         - set_source_nodes() -- Set the source nodes.</span>
+<a name="l00038"></a>00038 <span class="comment">#         - set_sink_nodes() -- Set the sink nodes.</span>
+<a name="l00039"></a>00039 <span class="comment">#         - set_nweights() -- Set the inter-node weights-</span>
+<a name="l00040"></a>00040 <span class="comment">#         - add_tweights() -- Add some terminal-to-node weights.</span>
 <a name="l00041"></a>00041 <span class="comment">#         - get_node_count() -- Return the number of nodes</span>
 <a name="l00042"></a>00042 <span class="comment">#         - get_nodes() -- Return all nodes.</span>
 <a name="l00043"></a>00043 <span class="comment">#         - get_source_nodes() -- Return all nodes connected to the source.</span>
@@ -144,14 +144,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00073"></a>00073     <span class="comment">#         @type nodes int</span>
 <a name="l00074"></a>00074     <span class="comment">#         </span>
 <a name="l00075"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a41b5d54706b84e5a11523da1ba626848">00075</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a41b5d54706b84e5a11523da1ba626848" title="Set the number of graph nodes (starting from node-id = 1), excluding sink and source.">set_nodes</a>(self, nodes):
-<a name="l00076"></a>00076         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aad29b8b92f3290f9744b06c8e38fe228">__nodes</a> = nodes
+<a name="l00076"></a>00076         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aad29b8b92f3290f9744b06c8e38fe228">__nodes</a> = int(nodes)
 <a name="l00077"></a>00077         
 <a name="l00078"></a>00078     <span class="comment">##</span>
 <a name="l00079"></a>00079     <span class="comment"># </span>
 <a name="l00080"></a>00080     <span class="comment">#         Set the source nodes and compute their t-weights.</span>
 <a name="l00081"></a>00081     <span class="comment">#         </span>
 <a name="l00082"></a>00082     <span class="comment">#         @warning It does not get checked if one of the supplied source-nodes already has</span>
-<a name="l00083"></a>00083     <span class="comment">#         a weight assigned (e.g. by passing it to @link set_sink_nodes()). This can</span>
+<a name="l00083"></a>00083     <span class="comment">#         a weight assigned (e.g. by passing it to set_sink_nodes()). This can</span>
 <a name="l00084"></a>00084     <span class="comment">#         occur when the foreground- and background-markers cover the same region. In this</span>
 <a name="l00085"></a>00085     <span class="comment">#         case the order of setting the terminal nodes can affect the graph and therefore</span>
 <a name="l00086"></a>00086     <span class="comment">#         the graph-cut result.</span>
@@ -189,7 +189,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00118"></a>00118     <span class="comment">##</span>
 <a name="l00119"></a>00119     <span class="comment"># </span>
 <a name="l00120"></a>00120     <span class="comment">#         Sets all n-weights.</span>
-<a name="l00121"></a>00121     <span class="comment">#         @param nweights a dictionary with (region-a-id, region-b-id) tuples as keys and</span>
+<a name="l00121"></a>00121     <span class="comment">#         @param nweights a dictionary with (node-id, node-id) tuples as keys and</span>
 <a name="l00122"></a>00122     <span class="comment">#                          (weight-a-to-b, weight-b-to-a) as values.</span>
 <a name="l00123"></a>00123     <span class="comment">#         @type nweights dict</span>
 <a name="l00124"></a>00124     <span class="comment">#         </span>
@@ -212,7 +212,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00141"></a>00141         
 <a name="l00142"></a>00142     <span class="comment">##</span>
 <a name="l00143"></a>00143     <span class="comment"># </span>
-<a name="l00144"></a>00144     <span class="comment">#         @return the numnber of nodes (excluding sink and source).</span>
+<a name="l00144"></a>00144     <span class="comment">#         @return the number of nodes (excluding sink and source).</span>
 <a name="l00145"></a>00145     <span class="comment">#         @rtype int</span>
 <a name="l00146"></a>00146     <span class="comment">#         </span>
 <a name="l00147"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a146e523cb0c30515b5d3a765205461da">00147</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a146e523cb0c30515b5d3a765205461da">get_node_count</a>(self):
@@ -279,9 +279,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00208"></a>00208         messages = []
 <a name="l00209"></a>00209         <span class="keywordflow">for</span> node <span class="keywordflow">in</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aa92a3138acf66185da12e877c08065c9">__tweights</a>.iterkeys():
 <a name="l00210"></a>00210             <span class="keywordflow">if</span> <span class="keywordflow">not</span> node &lt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aad29b8b92f3290f9744b06c8e38fe228">__nodes</a>: messages.append(<span class="stringliteral">&quot;Node {} in t-weights but not in nodes.&quot;</span>.format(node))
-<a name="l00211"></a>00211         <span class="keywordflow">for</span> node <span class="keywordflow">in</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#af4d970390797375f3ddd44fc7326e043">__snodes</a>.iterkeys():
+<a name="l00211"></a>00211         <span class="keywordflow">for</span> node <span class="keywordflow">in</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#af4d970390797375f3ddd44fc7326e043">__snodes</a>:
 <a name="l00212"></a>00212             <span class="keywordflow">if</span> <span class="keywordflow">not</span> node &lt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aad29b8b92f3290f9744b06c8e38fe228">__nodes</a>: messages.append(<span class="stringliteral">&quot;Node {} in s-nodes but not in nodes.&quot;</span>.format(node))
-<a name="l00213"></a>00213         <span class="keywordflow">for</span> node <span class="keywordflow">in</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a2fe7f149a47d090b394de57be11c1535">__tnodes</a>.iterkeys():
+<a name="l00213"></a>00213         <span class="keywordflow">for</span> node <span class="keywordflow">in</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a2fe7f149a47d090b394de57be11c1535">__tnodes</a>:
 <a name="l00214"></a>00214             <span class="keywordflow">if</span> <span class="keywordflow">not</span> node &lt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aad29b8b92f3290f9744b06c8e38fe228">__nodes</a>: messages.append(<span class="stringliteral">&quot;Node {} in t-nodes but not in nodes.&quot;</span>.format(node))
 <a name="l00215"></a>00215         <span class="keywordflow">for</span> e <span class="keywordflow">in</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#ada71f580f4690ed1326f9ac6357b4dd9">__nweights</a>.iterkeys():
 <a name="l00216"></a>00216             <span class="keywordflow">if</span> <span class="keywordflow">not</span> e[0] &lt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aad29b8b92f3290f9744b06c8e38fe228">__nodes</a>: messages.append(<span class="stringliteral">&quot;Node {} in edge {} but not in nodes.&quot;</span>.format(e[0], e))
@@ -291,7 +291,227 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00220"></a>00220             
 <a name="l00221"></a>00221         <span class="keywordflow">if</span> 0 == len(messages): <span class="keywordflow">return</span> <span class="keyword">False</span>
 <a name="l00222"></a>00222         <span class="keywordflow">else</span>: <span class="keywordflow">return</span> messages
-<a name="l00223"></a>00223 
+<a name="l00223"></a>00223         
+<a name="l00224"></a>00224 <span class="comment">##</span>
+<a name="l00225"></a>00225 <span class="comment"># </span>
+<a name="l00226"></a>00226 <span class="comment">#     A graph representation that works directly with the maxflow.GraphDouble graph as</span>
+<a name="l00227"></a>00227 <span class="comment">#     base. It is therefore less flexible as @link Graph, but leads to lower memory</span>
+<a name="l00228"></a>00228 <span class="comment">#     requirements.</span>
+<a name="l00229"></a>00229 <span class="comment">#     </span>
+<a name="l00230"></a>00230 <span class="comment">#     The graph contains nodes, edges (directed) between the nodes (n-edges), edges</span>
+<a name="l00231"></a>00231 <span class="comment">#     between two terminals (called source and sink) and the nodes (t-edges), and a</span>
+<a name="l00232"></a>00232 <span class="comment">#     weight for each edge. </span>
+<a name="l00233"></a>00233 <span class="comment">#     </span>
+<a name="l00234"></a>00234 <span class="comment">#     @note the node-ids used by the graph are assumed to start with 0 and be</span>
+<a name="l00235"></a>00235 <span class="comment">#     continuous. This is not actually checked, so be careful.</span>
+<a name="l00236"></a>00236 <span class="comment">#     </span>
+<a name="l00237"></a>00237 <span class="comment">#     @note This wrapper tries to catch the most usual exception that can occur in the</span>
+<a name="l00238"></a>00238 <span class="comment">#     underlying C++ implementation and to convert them into catchable and meaningful</span>
+<a name="l00239"></a>00239 <span class="comment">#     error messages.</span>
+<a name="l00240"></a>00240 <span class="comment">#     </span>
+<a name="l00241"></a>00241 <span class="comment">#     Methods:</span>
+<a name="l00242"></a>00242 <span class="comment">#         - set_source_nodes(source_nodes) -- Set multiple source nodes.</span>
+<a name="l00243"></a>00243 <span class="comment">#         - set_sink_nodes(sink_nodes) -- Set multiple sink nodes.</span>
+<a name="l00244"></a>00244 <span class="comment">#         - set_nweight(node_from, node_to, weight_there, weight_back) -- Set a single n-weight / edge-weight.</span>
+<a name="l00245"></a>00245 <span class="comment">#         - set_nweights(nweights) -- Set multiple inter-node weights.</span>
+<a name="l00246"></a>00246 <span class="comment">#         - set_tweight(node, weight_source, weight_sink) -- Set a single t-weight / terminal-weight.</span>
+<a name="l00247"></a>00247 <span class="comment">#         - set_tweights(tweights) -- Set multiple terminal-to-node weights.</span>
+<a name="l00248"></a>00248 <span class="comment">#         - get_nodes() -- Return all nodes.</span>
+<a name="l00249"></a>00249 <span class="comment">#         - get_node_count() -- Return the number of nodes</span>
+<a name="l00250"></a>00250 <span class="comment">#         - get_edge_count() -- Return the number of edges</span>
+<a name="l00251"></a>00251 <span class="comment">#     </span>
+<a name="l00252"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html">00252</a> <span class="keyword">class </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html" title="A graph representation that works directly with the maxflow.GraphDouble graph as base.">GCGraph</a>:
+<a name="l00253"></a>00253     <span class="comment"># @var __INT_16_BIT The maximum value of signed int 16bit.</span>
+<a name="l00254"></a>00254     __INT_16_BIT = 32767
+<a name="l00255"></a>00255     <span class="comment"># @var __UINT_16_BIT: The maximum value of unsigned int 16bit.</span>
+<a name="l00256"></a>00256     __UINT_16_BIT = 65535
+<a name="l00257"></a>00257     <span class="comment"># @var MAX The maximum value a weight can take.</span>
+<a name="l00258"></a>00258     MAX = __UINT_16_BIT
+<a name="l00259"></a>00259     
+<a name="l00260"></a>00260     <span class="comment">##</span>
+<a name="l00261"></a>00261     <span class="comment"># </span>
+<a name="l00262"></a>00262     <span class="comment">#         @param nodes the number of nodes in the graph</span>
+<a name="l00263"></a>00263     <span class="comment">#         @type nodes int</span>
+<a name="l00264"></a>00264     <span class="comment">#         @param edges the number of edges in the graph</span>
+<a name="l00265"></a>00265     <span class="comment">#         @type edges int</span>
+<a name="l00266"></a>00266     <span class="comment">#         </span>
+<a name="l00267"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a0ccf83841da6eec9625617921f534a9e">00267</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a0ccf83841da6eec9625617921f534a9e">__init__</a>(self, nodes, edges):
+<a name="l00268"></a>00268         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a> = GraphDouble(nodes, edges)
+<a name="l00269"></a>00269         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a>.add_node(nodes)
+<a name="l00270"></a>00270         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> = nodes
+<a name="l00271"></a>00271         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#ab094abb6cb19a24191c1871f7eb49e7c">__edges</a> = edges
+<a name="l00272"></a>00272         
+<a name="l00273"></a>00273     <span class="comment">##</span>
+<a name="l00274"></a>00274     <span class="comment"># </span>
+<a name="l00275"></a>00275     <span class="comment">#         Set multiple source nodes and compute their t-weights.</span>
+<a name="l00276"></a>00276     <span class="comment">#         </span>
+<a name="l00277"></a>00277     <span class="comment">#         @warning It does not get checked if one of the supplied source-nodes already has</span>
+<a name="l00278"></a>00278     <span class="comment">#         a weight assigned (e.g. by passing it to @link set_sink_nodes()). This can</span>
+<a name="l00279"></a>00279     <span class="comment">#         occur when the foreground- and background-markers cover the same region. In this</span>
+<a name="l00280"></a>00280     <span class="comment">#         case the order of setting the terminal nodes can affect the graph and therefore</span>
+<a name="l00281"></a>00281     <span class="comment">#         the graph-cut result.</span>
+<a name="l00282"></a>00282     <span class="comment">#         </span>
+<a name="l00283"></a>00283     <span class="comment">#         @param source_nodes a sequence of integers</span>
+<a name="l00284"></a>00284     <span class="comment">#         @type source_nodes sequence</span>
+<a name="l00285"></a>00285     <span class="comment">#         </span>
+<a name="l00286"></a>00286     <span class="comment">#         @raise ValueError if a passed node id does not refer to any node of the graph</span>
+<a name="l00287"></a>00287     <span class="comment">#                           (i.e. it is either higher than the initially set number of</span>
+<a name="l00288"></a>00288     <span class="comment">#                           nodes or lower than zero).</span>
+<a name="l00289"></a>00289     <span class="comment">#         </span>
+<a name="l00290"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#ac7949d2f11a834857ec5678010c8cdca">00290</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#ac7949d2f11a834857ec5678010c8cdca" title="Set multiple source nodes and compute their t-weights.">set_source_nodes</a>(self, source_nodes):
+<a name="l00291"></a>00291         <span class="keywordflow">if</span> max(source_nodes) &gt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> <span class="keywordflow">or</span> min(source_nodes) &lt; 0:
+<a name="l00292"></a>00292             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;Invalid node id of {} or {}. Valid values are 0 to {}.&#39;</span>.format(max(source_nodes), min(source_nodes), self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> - 1))
+<a name="l00293"></a>00293         <span class="comment"># set the source-to-node weights (t-weights)</span>
+<a name="l00294"></a>00294         <span class="keywordflow">for</span> snode <span class="keywordflow">in</span> source_nodes:
+<a name="l00295"></a>00295             self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a>.add_tweights(int(snode), self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a14cab98f6cb73037b41fb8639675ca9b">MAX</a>, 0) <span class="comment"># (weight-to-source, weight-to-sink)</span>
+<a name="l00296"></a>00296             
+<a name="l00297"></a>00297     <span class="comment">##</span>
+<a name="l00298"></a>00298     <span class="comment"># </span>
+<a name="l00299"></a>00299     <span class="comment">#         Set multiple sink nodes and compute their t-weights.</span>
+<a name="l00300"></a>00300     <span class="comment">#         </span>
+<a name="l00301"></a>00301     <span class="comment">#         @warning It does not get checked if one of the supplied sink-nodes already has</span>
+<a name="l00302"></a>00302     <span class="comment">#         a weight assigned (e.g. by passing it to @link set_source_nodes()). This can</span>
+<a name="l00303"></a>00303     <span class="comment">#         occur when the foreground- and background-markers cover the same region. In this</span>
+<a name="l00304"></a>00304     <span class="comment">#         case the order of setting the terminal nodes can affect the graph and therefore</span>
+<a name="l00305"></a>00305     <span class="comment">#         the graph-cut result.</span>
+<a name="l00306"></a>00306     <span class="comment">#         </span>
+<a name="l00307"></a>00307     <span class="comment">#         @param sink_nodes a sequence of integers</span>
+<a name="l00308"></a>00308     <span class="comment">#         @type sink_nodes sequence</span>
+<a name="l00309"></a>00309     <span class="comment">#         </span>
+<a name="l00310"></a>00310     <span class="comment">#         @raise ValueError if a passed node id does not refer to any node of the graph</span>
+<a name="l00311"></a>00311     <span class="comment">#                           (i.e. it is either higher than the initially set number of</span>
+<a name="l00312"></a>00312     <span class="comment">#                           nodes or lower than zero).</span>
+<a name="l00313"></a>00313     <span class="comment">#         </span>
+<a name="l00314"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a4d05def8b70abe1d3aa2427962ffa32a">00314</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a4d05def8b70abe1d3aa2427962ffa32a" title="Set multiple sink nodes and compute their t-weights.">set_sink_nodes</a>(self, sink_nodes):
+<a name="l00315"></a>00315         <span class="keywordflow">if</span> max(sink_nodes) &gt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> <span class="keywordflow">or</span> min(sink_nodes) &lt; 0:
+<a name="l00316"></a>00316             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;Invalid node id of {} or {}. Valid values are 0 to {}.&#39;</span>.format(max(sink_nodes), min(sink_nodes), self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> - 1))
+<a name="l00317"></a>00317         <span class="comment"># set the node-to-sink weights (t-weights)</span>
+<a name="l00318"></a>00318         <span class="keywordflow">for</span> snode <span class="keywordflow">in</span> sink_nodes:
+<a name="l00319"></a>00319             self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a>.add_tweights(int(snode), 0, self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a14cab98f6cb73037b41fb8639675ca9b">MAX</a>) <span class="comment"># (weight-to-source, weight-to-sink)</span>
+<a name="l00320"></a>00320             
+<a name="l00321"></a>00321     <span class="comment">##</span>
+<a name="l00322"></a>00322     <span class="comment"># </span>
+<a name="l00323"></a>00323     <span class="comment">#         Set a single n-weight / edge-weight.</span>
+<a name="l00324"></a>00324     <span class="comment">#         @param node_from node-id from the first node of the edge</span>
+<a name="l00325"></a>00325     <span class="comment">#         @param node_to node-id from the second node of the edge</span>
+<a name="l00326"></a>00326     <span class="comment">#         @param weight_there weight from first to second node (&gt;0) </span>
+<a name="l00327"></a>00327     <span class="comment">#         @param weight_back weight from second to first node (&gt;0)</span>
+<a name="l00328"></a>00328     <span class="comment">#         </span>
+<a name="l00329"></a>00329     <span class="comment">#         @note The object does not check if the number of supplied edges in total exceeds</span>
+<a name="l00330"></a>00330     <span class="comment">#               the number passed to the init-method. If this is the case, the underlying</span>
+<a name="l00331"></a>00331     <span class="comment">#               C++ implementation will double the memory, which is very unefficient.</span>
+<a name="l00332"></a>00332     <span class="comment">#                </span>
+<a name="l00333"></a>00333     <span class="comment">#         @note The underlying C++ implementation allows zero weights, but these are highly</span>
+<a name="l00334"></a>00334     <span class="comment">#               undesirable for inter-node weights and therefore raise an error.</span>
+<a name="l00335"></a>00335     <span class="comment">#               </span>
+<a name="l00336"></a>00336     <span class="comment">#         @raise ValueError if a passed node id does not refer to any node of the graph</span>
+<a name="l00337"></a>00337     <span class="comment">#                           (i.e. it is either higher than the initially set number of</span>
+<a name="l00338"></a>00338     <span class="comment">#                           nodes or lower than zero).</span>
+<a name="l00339"></a>00339     <span class="comment">#         @raise ValueError if the two node-ids of the edge are the same (graph cut does</span>
+<a name="l00340"></a>00340     <span class="comment">#                           not allow self-edges).</span>
+<a name="l00341"></a>00341     <span class="comment">#         @raise ValueError if one of the passed weights is &lt;= 0.</span>
+<a name="l00342"></a>00342     <span class="comment">#         </span>
+<a name="l00343"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a295f9ac7b20d2e27836d7365e53b21b7">00343</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a295f9ac7b20d2e27836d7365e53b21b7" title="Set a single n-weight / edge-weight.">set_nweight</a>(self, node_from, node_to, weight_there, weight_back):
+<a name="l00344"></a>00344         <span class="keywordflow">if</span> node_from &gt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> <span class="keywordflow">or</span> node_from &lt; 0:
+<a name="l00345"></a>00345             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;Invalid node id (node_from) of {}. Valid values are 0 to {}.&#39;</span>.format(node_from, self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> - 1))
+<a name="l00346"></a>00346         <span class="keywordflow">elif</span> node_to &gt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> <span class="keywordflow">or</span> node_to &lt; 0:
+<a name="l00347"></a>00347             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;Invalid node id (node_to) of {}. Valid values are 0 to {}.&#39;</span>.format(node_to, self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> - 1))
+<a name="l00348"></a>00348         <span class="keywordflow">elif</span> node_from == node_to:
+<a name="l00349"></a>00349             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;The node_from ({}) can not be equal to the node_to ({}) (self-connections are forbidden in graph cuts).&#39;</span>.format(node_from, node_to))
+<a name="l00350"></a>00350         <span class="keywordflow">elif</span> weight_there &lt;= 0 <span class="keywordflow">or</span> weight_back &lt;= 0:
+<a name="l00351"></a>00351             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;Negative or zero weights are not allowed.&#39;</span>)
+<a name="l00352"></a>00352         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a>.add_edge(int(node_from), int(node_to), float(weight_there), float(weight_back))
+<a name="l00353"></a>00353             
+<a name="l00354"></a>00354     <span class="comment">##</span>
+<a name="l00355"></a>00355     <span class="comment"># </span>
+<a name="l00356"></a>00356     <span class="comment">#         Set multiple n-weights / edge-weights.</span>
+<a name="l00357"></a>00357     <span class="comment">#         @param nweights a dictionary with (node-id, node-id) tuples as keys and</span>
+<a name="l00358"></a>00358     <span class="comment">#                         (weight-a-to-b, weight-b-to-a) as values.</span>
+<a name="l00359"></a>00359     <span class="comment">#         @type nweights dict</span>
+<a name="l00360"></a>00360     <span class="comment">#         </span>
+<a name="l00361"></a>00361     <span class="comment">#         @note The object does not check if the number of supplied edges in total exceeds</span>
+<a name="l00362"></a>00362     <span class="comment">#               the number passed to the init-method. If this is the case, the underlying</span>
+<a name="l00363"></a>00363     <span class="comment">#               C++ implementation will double the memory, which is very inefficient.</span>
+<a name="l00364"></a>00364     <span class="comment">#               </span>
+<a name="l00365"></a>00365     <span class="comment">#         @note see @link set_nweight() for raise errors.</span>
+<a name="l00366"></a>00366     <span class="comment">#         </span>
+<a name="l00367"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a832e5f062e9c3fb254ed05509dd55f52">00367</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a832e5f062e9c3fb254ed05509dd55f52" title="Set multiple n-weights / edge-weights.">set_nweights</a>(self, nweights):
+<a name="l00368"></a>00368         <span class="keywordflow">for</span> edge, weight <span class="keywordflow">in</span> nweights.iteritems():
+<a name="l00369"></a>00369             self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a295f9ac7b20d2e27836d7365e53b21b7" title="Set a single n-weight / edge-weight.">set_nweight</a>(edge[0], edge[1], weight[0], weight[1])
+<a name="l00370"></a>00370             
+<a name="l00371"></a>00371     <span class="comment">##</span>
+<a name="l00372"></a>00372     <span class="comment"># </span>
+<a name="l00373"></a>00373     <span class="comment">#         Set a single n-weight / edge-weight.</span>
+<a name="l00374"></a>00374     <span class="comment">#         @param node the node whoch t-weights to set</span>
+<a name="l00375"></a>00375     <span class="comment">#         @param weight_source weight from the source to the node</span>
+<a name="l00376"></a>00376     <span class="comment">#         @param weight_sink weight from the node to the sink</span>
+<a name="l00377"></a>00377     <span class="comment">#         </span>
+<a name="l00378"></a>00378     <span class="comment">#         @note The object does not check if the number of supplied edges in total exceeds</span>
+<a name="l00379"></a>00379     <span class="comment">#               the number passed to the init-method. If this is the case, the underlying</span>
+<a name="l00380"></a>00380     <span class="comment">#               C++ implementation will double the memory, which is very inefficient.</span>
+<a name="l00381"></a>00381     <span class="comment">#               </span>
+<a name="l00382"></a>00382     <span class="comment">#         @note Terminal weights can be zero or negative.</span>
+<a name="l00383"></a>00383     <span class="comment">#               </span>
+<a name="l00384"></a>00384     <span class="comment">#         @raise ValueError if a passed node id does not refer to any node of the graph</span>
+<a name="l00385"></a>00385     <span class="comment">#                           (i.e. it is either higher than the initially set number of</span>
+<a name="l00386"></a>00386     <span class="comment">#                           nodes or lower than zero).</span>
+<a name="l00387"></a>00387     <span class="comment">#         </span>
+<a name="l00388"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#af7785877a8848b0fbfce6a6b01d2143f">00388</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#af7785877a8848b0fbfce6a6b01d2143f" title="Set a single n-weight / edge-weight.">set_tweight</a>(self, node, weight_source, weight_sink):
+<a name="l00389"></a>00389         <span class="keywordflow">if</span> node &gt;= self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> <span class="keywordflow">or</span> node &lt; 0:
+<a name="l00390"></a>00390             <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&#39;Invalid node id of {}. Valid values are 0 to {}.&#39;</span>.format(node, self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a> - 1))
+<a name="l00391"></a>00391         self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a>.add_tweights(int(node), float(weight_source), float(weight_sink)) <span class="comment"># (weight-to-source, weight-to-sink)</span>
+<a name="l00392"></a>00392             
+<a name="l00393"></a>00393     <span class="comment">##</span>
+<a name="l00394"></a>00394     <span class="comment"># </span>
+<a name="l00395"></a>00395     <span class="comment">#         Set multiple t-weights to the current collection of t-weights, overwriting</span>
+<a name="l00396"></a>00396     <span class="comment">#         already existing ones.</span>
+<a name="l00397"></a>00397     <span class="comment">#         </span>
+<a name="l00398"></a>00398     <span class="comment">#         @warning since this method overrides already existing t-weights, it is strongly</span>
+<a name="l00399"></a>00399     <span class="comment">#         recommended to run @link set_source_nodes() and @link set_sink_nodes() after the</span>
+<a name="l00400"></a>00400     <span class="comment">#         last call to this method.</span>
+<a name="l00401"></a>00401     <span class="comment">#         </span>
+<a name="l00402"></a>00402     <span class="comment">#         @note the weights for nodes directly connected to either the source or the sink</span>
+<a name="l00403"></a>00403     <span class="comment">#         are best set using @link set_source_nodes() or @link set_sink_nodes() to ensure</span>
+<a name="l00404"></a>00404     <span class="comment">#         consistency of their maximum values.</span>
+<a name="l00405"></a>00405     <span class="comment">#         </span>
+<a name="l00406"></a>00406     <span class="comment">#         @param tweights a dictionary with node_ids as keys and (weight-to-source, weight-to-sink) tuples as values.</span>
+<a name="l00407"></a>00407     <span class="comment">#         @type tweights dict</span>
+<a name="l00408"></a>00408     <span class="comment">#         </span>
+<a name="l00409"></a>00409     <span class="comment">#         @raise ValueError if a passed node id does not refer to any node of the graph</span>
+<a name="l00410"></a>00410     <span class="comment">#                           (i.e. it is either higher than the initially set number of</span>
+<a name="l00411"></a>00411     <span class="comment">#                           nodes or lower than zero).</span>
+<a name="l00412"></a>00412     <span class="comment">#         </span>
+<a name="l00413"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#ab155aaf60186e34bcb108e81137e483e">00413</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#ab155aaf60186e34bcb108e81137e483e" title="Set multiple t-weights to the current collection of t-weights, overwriting already existing ones...">set_tweights</a>(self, tweights):
+<a name="l00414"></a>00414         <span class="keywordflow">for</span> node, weight <span class="keywordflow">in</span> tweights.iteritems():
+<a name="l00415"></a>00415             self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#af7785877a8848b0fbfce6a6b01d2143f" title="Set a single n-weight / edge-weight.">set_tweight</a>(node, weight[0], weight[1]) <span class="comment"># (weight-to-source, weight-to-sink)</span>
+<a name="l00416"></a>00416         
+<a name="l00417"></a>00417     <span class="keyword">def </span>get_graph(self):
+<a name="l00418"></a>00418         <span class="keywordflow">return</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a47c3b7729506524dddfd93bbe62e6b2e">__graph</a>
+<a name="l00419"></a>00419         
+<a name="l00420"></a>00420     <span class="comment">##</span>
+<a name="l00421"></a>00421     <span class="comment"># </span>
+<a name="l00422"></a>00422     <span class="comment">#         @return the number of nodes (excluding sink and source).</span>
+<a name="l00423"></a>00423     <span class="comment">#         @rtype int</span>
+<a name="l00424"></a>00424     <span class="comment">#         </span>
+<a name="l00425"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a877503224a05f3ed85fc4b403695b5b5">00425</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a877503224a05f3ed85fc4b403695b5b5">get_node_count</a>(self):
+<a name="l00426"></a>00426         <span class="keywordflow">return</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a>
+<a name="l00427"></a>00427         
+<a name="l00428"></a>00428     <span class="comment">##</span>
+<a name="l00429"></a>00429     <span class="comment"># </span>
+<a name="l00430"></a>00430     <span class="comment">#         @return all nodes as an ordered list (starting from 0).</span>
+<a name="l00431"></a>00431     <span class="comment">#         @rtype list</span>
+<a name="l00432"></a>00432     <span class="comment">#         </span>
+<a name="l00433"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a85bd5401378f2927bc55765b1db00163">00433</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a85bd5401378f2927bc55765b1db00163">get_nodes</a>(self):
+<a name="l00434"></a>00434         <span class="keywordflow">return</span> range(0, self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a9cfacc512effdad082c2f107a7300468">__nodes</a>)
+<a name="l00435"></a>00435     
+<a name="l00436"></a>00436     <span class="comment">##</span>
+<a name="l00437"></a>00437     <span class="comment"># </span>
+<a name="l00438"></a>00438     <span class="comment">#         @return the number of edges</span>
+<a name="l00439"></a>00439     <span class="comment">#         @rtype int</span>
+<a name="l00440"></a>00440     <span class="comment">#         </span>
+<a name="l00441"></a><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a18322377bcba4dee14fe37b0cdb91fa1">00441</a>     <span class="keyword">def </span><a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#a18322377bcba4dee14fe37b0cdb91fa1">get_edge_count</a>(self):
+<a name="l00442"></a>00442         <span class="keywordflow">return</span> self.<a class="code" href="classmedpy_1_1graphcut_1_1graph_1_1GCGraph.html#ab094abb6cb19a24191c1871f7eb49e7c">__edges</a>
+<a name="l00443"></a>00443 
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -308,7 +528,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:05 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Apr 11 2012 17:54:49 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

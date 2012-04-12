@@ -56,3 +56,46 @@
 \form#55:$d(H, H) = 1$
 \form#56:$d(H, H')\in[0, \sqrt{2}]$
 \form#57:$d(H, H')\in[0, 2]$
+\form#58:\[ d_{\chi^2}(H, H') = \sum_{m=1}^M \frac{ (H_m - H'_m)^2 }{ H_m + H'_m } \]
+\form#59:\[ d_{JSD}(H, H') = \frac{1}{2} d_{KL}(H, H^*) + \frac{1}{2} d_{KL}(H', H^*) \]
+\form#60:$H^*=\frac{1}{2}(H + H')$
+\form#61:$\sqrt{H}$
+\form#62:$\sqrt{H'}$
+\form#63:$d(H, H')\in[0, log(2)]$
+\form#64:$d(H, H')\in[-1, 1]$
+\form#65:\[ d_{\bar{\cos}}(H, H') = 1 - d_{\cos}(H, H') \]
+\form#66:$d_{\cos}(H, H')$
+\form#67:\[ d_{\bar{corr}}(H, H') = \frac{1 - d_{corr}(H, H')}{2}. \]
+\form#68:$d_{corr}(H, H')$
+\form#69:$n$
+\form#70:\[ A_{m,n} = 1 - \frac{d_2(H_m, {H'}_n)}{d_{max}} \]
+\form#71:\[ d_{max} = \max_{m,n}d_2(H_m, {H'}_n) \]
+\form#72:\[ d_{corr}(H, H') = \frac{ \sum_{m=1}^M (H_m-\bar{H}) * (H'_m-\bar{H'}) }{ \sqrt{\sum_{m=1}^M (H_m-\bar{H})^2 * \sum_{m=1}^M (H'_m-\bar{H'})^2} } \]
+\form#73:\[ d_{\bar{\cos}}(H, H') = 1 - d_{\cap}(H, H') \]
+\form#74:$d_{\cap}(H, H')$
+\form#75:\[ d_{\bar{\cos}}(H, H') = 1 - \frac{2*\arccos d_{\cos}(H, H')}{pi} \]
+\form#76:\[ d_{\bar{corr}}(H, H') = 1-\frac{d_{corr}(H, H')}{2}. \]
+\form#77:\[ \mu_{\triangle}(x) = \left\{ \begin{array}{ll} 0, & x<a, x>c\\ \frac{x-a}{b-a}, & a\leq x\leq b \\ \frac{c-x}{c-b}, & b<x\leq c\\ \end{array} \right. \]
+\form#78:\[ \mu_{trapez}(x) = \left\{ \begin{array}{ll} 0, & x<a, x>d\\ \frac{x-a}{b-a}, & a\leq x\leq b \\ 1, & b<x<c\\ \frac{d-x}{d-c}, & c\leq x\leq d\\ \end{array} \right. \]
+\form#79:\[ \mu_{gauss}(x) = e^{-\frac{(x-\zeta)^2}{2\sigma^2}} \]
+\form#80:\[ \mu_{sigmoid}(x) = \left[1+e^{-\alpha_1 (x-\zeta_1)}\right]^{-1} - \left[1+e^{-\alpha_2 (x-\zeta_2)}\right]^{-1} \]
+\form#81:\[ \mu_{bell}(x) = \left[1+\left|\frac{x-\zeta}{\alpha}\right|^{2\beta}\right]^{-1} \]
+\form#82:\[ d_{corr}(H, H') = \frac{ \sum_{m=1}^M (H_m-\bar{H}) \cdot (H'_m-\bar{H'}) }{ \sqrt{\sum_{m=1}^M (H_m-\bar{H})^2 \cdot \sum_{m=1}^M (H'_m-\bar{H'})^2} } \]
+\form#83:$\bar{H}$
+\form#84:$\bar{H'}$
+\form#85:\[ \mu_{gauss}(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\zeta)^2}{2\sigma^2}} \]
+\form#86:\[ \alpha = \|\min \bar{I} - \max \bar{I}\| \]
+\form#87:$\min \bar{I}$
+\form#88:$\max \bar{I}$
+\form#89:$x$
+\form#90:$y$
+\form#91:\[ w(x,y) = 1 - \frac{\|\bar{I}_x - \bar{I}_y\|}{\alpha + 1} \]
+\form#92:$w(x,y) \in (0, 1]$
+\form#93:\[ \alpha = \|\min I - \max I\| \]
+\form#94:$\min I$
+\form#95:$\max I$
+\form#96:\[ w(x,y) = 1 - \frac{\|I_x - I_y\|}{\alpha + 1} \]
+\form#97:\[ w(x,y) = \max\(1 - \frac{\|\bar{I}_x - \bar{I}_y\|}{\alpha}, \epsilon\) \]
+\form#98:\[ w(x,y) = \max \left( 1 - \frac{\|\bar{I}_x - \bar{I}_y\|}{\alpha}, \epsilon \right) \]
+\form#99:$\epsilon$
+\form#100:\[ \alpha = \|\max \bar{I} - \min \bar{I}\| \]

@@ -66,8 +66,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <div class="header">
-  <div class="summary">
-<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Package medpy.graphcut.energy</div>  </div>
 </div>
@@ -76,10 +74,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Run-time optimized energy functions for graph-cut.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemedpy_1_1graphcut_1_1energy.html#a2bf88e97c3a4d86bfa293ead5bdefb33">boundary_stawiaski</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of the boundary term in (1), suitable to be used with the <a class="el" href="">function. </a> <a href="#a2bf88e97c3a4d86bfa293ead5bdefb33"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Run-time optimized energy functions for graph-cut. </p>
@@ -92,61 +86,8 @@ Functions</h2></td></tr>
  Using Graph-cuts and watershed" / MICCAI 2008 participation</p>
 <dl class="author"><dt><b>Author:</b></dt><dd>Oskar Maier </dd></dl>
 <dl class="version"><dt><b>Version:</b></dt><dd>d0.1.0 </dd></dl>
-<dl class="since"><dt><b>Since:</b></dt><dd>2012-01-18  Development</dd></dl>
-<p>Provides a number of standard energy functions for both, boundary and regional terms, that follow the signature required for building graphs using the graph module of this package. Additionally a number of convenience functions for re-occurring data processing are given.</p>
-<p>Functions:</p>
-<ul>
-<li>def boundary_stawiaski(label_image, (gradient_image)): boundary term implementation in (1)</li>
-</ul>
-<p>(1) Stawiaski J., Decenciere E., Bidlaut F. / "Interactive Liver Tumor Segmentation
- Using Graph-cuts and watershed" / MICCAI 2008 participation</p>
-<dl class="author"><dt><b>Author:</b></dt><dd>Oskar Maier </dd></dl>
-<dl class="version"><dt><b>Version:</b></dt><dd>d0.1.0 </dd></dl>
 <dl class="since"><dt><b>Since:</b></dt><dd>2012-01-18  Development </dd></dl>
-</div><hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a2bf88e97c3a4d86bfa293ead5bdefb33"></a><!-- doxytag: member="medpy::graphcut::energy::boundary_stawiaski" ref="a2bf88e97c3a4d86bfa293ead5bdefb33" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def medpy.graphcut.energy.boundary_stawiaski </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>label_image</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>gradient_image</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>An implementation of the boundary term in (1), suitable to be used with the <a class="el" href="">function. </a></p>
-<p>Determines for each two supplied regions the voxels forming their border assuming ndim*2-connectedness (e.g. 3*2=6 for 3D). From the gradient magnitude values of each end-point voxel the border-voxel pairs, the highest one is selected and passed to a strictly positive and decreasing function g, which is defined as: </p>
-<p class="formulaDsp">
-<img class="formulaDsp" alt="\[ g(x) = \left(\frac{1}{1+|x|}\right)^k \]" src="form_11.png"/>
-</p>
-<p> ,where <img class="formulaInl" alt="$k=2$" src="form_12.png"/>. The final weight <img class="formulaInl" alt="$w_{i,j}$" src="form_13.png"/> between two regions <img class="formulaInl" alt="$r_i$" src="form_14.png"/> and <img class="formulaInl" alt="$r_j$" src="form_15.png"/> is then determined by the sum of all these neighbour values: </p>
-<p class="formulaDsp">
-<img class="formulaDsp" alt="\[ w = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|)) \]" src="form_16.png"/>
-</p>
-<p> , where <img class="formulaInl" alt="$F_{(r_i,r_j)}$" src="form_17.png"/> is the set of border voxel-pairs <img class="formulaInl" alt="$e_{m,n}$" src="form_18.png"/> between the regions <img class="formulaInl" alt="$r_i$" src="form_14.png"/> and <img class="formulaInl" alt="$r_j$" src="form_15.png"/> and <img class="formulaInl" alt="$|I(p)|$" src="form_19.png"/> the absolute of the gradient magnitude at the voxel <img class="formulaInl" alt="$p$" src="form_20.png"/></p>
-<p>This boundary_function works as an edge indicator in the original image. In simpler words the weight (and therefore the energy) is obtained by summing the local contrast along the boundaries between two regions.</p>
-<dl class="note"><dt><b>Note:</b></dt><dd>This function requires the gradient magnitude image of the original image to be passed along. That means that <a class="el" href="">has to be called with boundary_term_args set to the gradient image.   label_image the label image  label_image numpy.ndarray  gradient_image The gradient magnitude image of the original image.  gradient_image numpy.ndarray   a dictionary with the edges as keys and the respective weight tuples as values  dict </a></dd></dl>
-
-<p>Definition at line <a class="el" href="graphcut_2energy_8py_source.html#l00072">72</a> of file <a class="el" href="graphcut_2energy_8py_source.html">energy.py</a>.</p>
-
-</div>
-</div>
-</div>
+</div></div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -161,7 +102,7 @@ Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:06 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Apr 11 2012 17:54:51 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

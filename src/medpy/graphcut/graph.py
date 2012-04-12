@@ -6,9 +6,9 @@ Classes:
     - class Graph: a class for holding graphs
 
 @author Oskar Maier
-@version d0.1.0
+@version r0.1.0
 @since 2012-02-06
-@status Development
+@status Release
 """
 
 # build-in module
@@ -16,7 +16,7 @@ Classes:
 # third-party modules
 
 # own modules
-
+from maxflow import GraphDouble
 
 # code
 class Graph(object):
@@ -29,14 +29,14 @@ class Graph(object):
     
     @note the node-ids used by the graph are assumed to start with 1 and be
     continuous. This is not actually checked, except when calling the
-    @link inconsistent() method, so be careful.
+    inconsistent() method, so be careful.
     
     Methods:
-        - set_nodes(nodes) -- Set the nodes.
-        - set_source_nodes(source_nodes) -- Set the source nodes.
-        - set_sink_nodes(sink_nodes) -- Set the sink nodes.
-        - set_nweights(nweights) -- Set the inter-node weights-
-        - add_tweights(nweights) -- Add some terminal-to-node weights.
+        - set_nodes() -- Set the nodes.
+        - set_source_nodes() -- Set the source nodes.
+        - set_sink_nodes() -- Set the sink nodes.
+        - set_nweights() -- Set the inter-node weights.
+        - add_tweights() -- Add some terminal-to-node weights.
         - get_node_count() -- Return the number of nodes
         - get_nodes() -- Return all nodes.
         - get_source_nodes() -- Return all nodes connected to the source.
@@ -44,7 +44,6 @@ class Graph(object):
         - get_edges() -- Return all edges.
         - get_nweights() -- Return all inter-node weights.
         - get_tweights() -- Return all terminal-node weights.
-        - get_tweights2() -- Unsave version of get_tweights()
         - inconsistent() -- Whether the contained graph is consistent or not.
     """
     
@@ -70,14 +69,14 @@ class Graph(object):
         @param nodes number of nodes
         @type nodes int
         """
-        self.__nodes = nodes
+        self.__nodes = int(nodes)
         
     def set_source_nodes(self, source_nodes):
         """
         Set the source nodes and compute their t-weights.
         
         @warning It does not get checked if one of the supplied source-nodes already has
-        a weight assigned (e.g. by passing it to @link set_sink_nodes()). This can
+        a weight assigned (e.g. by passing it to set_sink_nodes()). This can
         occur when the foreground- and background-markers cover the same region. In this
         case the order of setting the terminal nodes can affect the graph and therefore
         the graph-cut result.
@@ -113,7 +112,7 @@ class Graph(object):
     def set_nweights(self, nweights):
         """
         Sets all n-weights.
-        @param nweights a dictionary with (region-a-id, region-b-id) tuples as keys and
+        @param nweights a dictionary with (node-id, node-id) tuples as keys and
                          (weight-a-to-b, weight-b-to-a) as values.
         @type nweights dict
         """
@@ -134,7 +133,7 @@ class Graph(object):
         
     def get_node_count(self):
         """
-        @return the numnber of nodes (excluding sink and source).
+        @return the number of nodes (excluding sink and source).
         @rtype int
         """
         return self.__nodes
@@ -193,9 +192,9 @@ class Graph(object):
         messages = []
         for node in self.__tweights.iterkeys():
             if not node <= self.__nodes: messages.append("Node {} in t-weights but not in nodes.".format(node))
-        for node in self.__snodes.iterkeys():
+        for node in self.__snodes:
             if not node <= self.__nodes: messages.append("Node {} in s-nodes but not in nodes.".format(node))
-        for node in self.__tnodes.iterkeys():
+        for node in self.__tnodes:
             if not node <= self.__nodes: messages.append("Node {} in t-nodes but not in nodes.".format(node))
         for e in self.__nweights.iterkeys():
             if not e[0] <= self.__nodes: messages.append("Node {} in edge {} but not in nodes.".format(e[0], e))
@@ -205,3 +204,212 @@ class Graph(object):
             
         if 0 == len(messages): return False
         else: return messages
+        
+class GCGraph:
+    """
+    A graph representation that works directly with the maxflow.GraphDouble graph as
+    base. It is therefore less flexible as @link Graph, but leads to lower memory
+    requirements.
+    
+    The graph contains nodes, edges (directed) between the nodes (n-edges), edges
+    between two terminals (called source and sink) and the nodes (t-edges), and a
+    weight for each edge. 
+    
+    @note the node-ids used by the graph are assumed to start with 0 and be
+    continuous. This is not actually checked, so be careful.
+    
+    @note This wrapper tries to catch the most usual exception that can occur in the
+    underlying C++ implementation and to convert them into catchable and meaningful
+    error messages.
+    
+    Methods:
+        - set_source_nodes(source_nodes) -- Set multiple source nodes.
+        - set_sink_nodes(sink_nodes) -- Set multiple sink nodes.
+        - set_nweight(node_from, node_to, weight_there, weight_back) -- Set a single n-weight / edge-weight.
+        - set_nweights(nweights) -- Set multiple inter-node weights.
+        - set_tweight(node, weight_source, weight_sink) -- Set a single t-weight / terminal-weight.
+        - set_tweights(tweights) -- Set multiple terminal-to-node weights.
+        - get_nodes() -- Return all nodes.
+        - get_node_count() -- Return the number of nodes
+        - get_edge_count() -- Return the number of edges
+    """
+    # @var __INT_16_BIT The maximum value of signed int 16bit.
+    __INT_16_BIT = 32767
+    # @var __UINT_16_BIT: The maximum value of unsigned int 16bit.
+    __UINT_16_BIT = 65535
+    # @var MAX The maximum value a weight can take.
+    MAX = __UINT_16_BIT
+    
+    def __init__(self, nodes, edges):
+        """
+        @param nodes the number of nodes in the graph
+        @type nodes int
+        @param edges the number of edges in the graph
+        @type edges int
+        """
+        self.__graph = GraphDouble(nodes, edges)
+        self.__graph.add_node(nodes)
+        self.__nodes = nodes
+        self.__edges = edges
+        
+    def set_source_nodes(self, source_nodes):
+        """
+        Set multiple source nodes and compute their t-weights.
+        
+        @warning It does not get checked if one of the supplied source-nodes already has
+        a weight assigned (e.g. by passing it to @link set_sink_nodes()). This can
+        occur when the foreground- and background-markers cover the same region. In this
+        case the order of setting the terminal nodes can affect the graph and therefore
+        the graph-cut result.
+        
+        @param source_nodes a sequence of integers
+        @type source_nodes sequence
+        
+        @raise ValueError if a passed node id does not refer to any node of the graph
+                          (i.e. it is either higher than the initially set number of
+                          nodes or lower than zero).
+        """
+        if max(source_nodes) >= self.__nodes or min(source_nodes) < 0:
+            raise ValueError('Invalid node id of {} or {}. Valid values are 0 to {}.'.format(max(source_nodes), min(source_nodes), self.__nodes - 1))
+        # set the source-to-node weights (t-weights)
+        for snode in source_nodes:
+            self.__graph.add_tweights(int(snode), self.MAX, 0) # (weight-to-source, weight-to-sink)
+            
+    def set_sink_nodes(self, sink_nodes):
+        """
+        Set multiple sink nodes and compute their t-weights.
+        
+        @warning It does not get checked if one of the supplied sink-nodes already has
+        a weight assigned (e.g. by passing it to @link set_source_nodes()). This can
+        occur when the foreground- and background-markers cover the same region. In this
+        case the order of setting the terminal nodes can affect the graph and therefore
+        the graph-cut result.
+        
+        @param sink_nodes a sequence of integers
+        @type sink_nodes sequence
+        
+        @raise ValueError if a passed node id does not refer to any node of the graph
+                          (i.e. it is either higher than the initially set number of
+                          nodes or lower than zero).
+        """
+        if max(sink_nodes) >= self.__nodes or min(sink_nodes) < 0:
+            raise ValueError('Invalid node id of {} or {}. Valid values are 0 to {}.'.format(max(sink_nodes), min(sink_nodes), self.__nodes - 1))
+        # set the node-to-sink weights (t-weights)
+        for snode in sink_nodes:
+            self.__graph.add_tweights(int(snode), 0, self.MAX) # (weight-to-source, weight-to-sink)
+            
+    def set_nweight(self, node_from, node_to, weight_there, weight_back):
+        """
+        Set a single n-weight / edge-weight.
+        @param node_from node-id from the first node of the edge
+        @param node_to node-id from the second node of the edge
+        @param weight_there weight from first to second node (>0) 
+        @param weight_back weight from second to first node (>0)
+        
+        @note The object does not check if the number of supplied edges in total exceeds
+              the number passed to the init-method. If this is the case, the underlying
+              C++ implementation will double the memory, which is very unefficient.
+               
+        @note The underlying C++ implementation allows zero weights, but these are highly
+              undesirable for inter-node weights and therefore raise an error.
+              
+        @raise ValueError if a passed node id does not refer to any node of the graph
+                          (i.e. it is either higher than the initially set number of
+                          nodes or lower than zero).
+        @raise ValueError if the two node-ids of the edge are the same (graph cut does
+                          not allow self-edges).
+        @raise ValueError if one of the passed weights is <= 0.
+        """
+        if node_from >= self.__nodes or node_from < 0:
+            raise ValueError('Invalid node id (node_from) of {}. Valid values are 0 to {}.'.format(node_from, self.__nodes - 1))
+        elif node_to >= self.__nodes or node_to < 0:
+            raise ValueError('Invalid node id (node_to) of {}. Valid values are 0 to {}.'.format(node_to, self.__nodes - 1))
+        elif node_from == node_to:
+            raise ValueError('The node_from ({}) can not be equal to the node_to ({}) (self-connections are forbidden in graph cuts).'.format(node_from, node_to))
+        elif weight_there <= 0 or weight_back <= 0:
+            raise ValueError('Negative or zero weights are not allowed.')
+        self.__graph.add_edge(int(node_from), int(node_to), float(weight_there), float(weight_back))
+            
+    def set_nweights(self, nweights):
+        """
+        Set multiple n-weights / edge-weights.
+        @param nweights a dictionary with (node-id, node-id) tuples as keys and
+                        (weight-a-to-b, weight-b-to-a) as values.
+        @type nweights dict
+        
+        @note The object does not check if the number of supplied edges in total exceeds
+              the number passed to the init-method. If this is the case, the underlying
+              C++ implementation will double the memory, which is very inefficient.
+              
+        @note see @link set_nweight() for raise errors.
+        """
+        for edge, weight in nweights.iteritems():
+            self.set_nweight(edge[0], edge[1], weight[0], weight[1])
+            
+    def set_tweight(self, node, weight_source, weight_sink):
+        """
+        Set a single n-weight / edge-weight.
+        @param node the node whoch t-weights to set
+        @param weight_source weight from the source to the node
+        @param weight_sink weight from the node to the sink
+        
+        @note The object does not check if the number of supplied edges in total exceeds
+              the number passed to the init-method. If this is the case, the underlying
+              C++ implementation will double the memory, which is very inefficient.
+              
+        @note Terminal weights can be zero or negative.
+              
+        @raise ValueError if a passed node id does not refer to any node of the graph
+                          (i.e. it is either higher than the initially set number of
+                          nodes or lower than zero).
+        """
+        if node >= self.__nodes or node < 0:
+            raise ValueError('Invalid node id of {}. Valid values are 0 to {}.'.format(node, self.__nodes - 1))
+        self.__graph.add_tweights(int(node), float(weight_source), float(weight_sink)) # (weight-to-source, weight-to-sink)
+            
+    def set_tweights(self, tweights):
+        """
+        Set multiple t-weights to the current collection of t-weights, overwriting
+        already existing ones.
+        
+        @warning since this method overrides already existing t-weights, it is strongly
+        recommended to run @link set_source_nodes() and @link set_sink_nodes() after the
+        last call to this method.
+        
+        @note the weights for nodes directly connected to either the source or the sink
+        are best set using @link set_source_nodes() or @link set_sink_nodes() to ensure
+        consistency of their maximum values.
+        
+        @param tweights a dictionary with node_ids as keys and (weight-to-source, weight-to-sink) tuples as values.
+        @type tweights dict
+        
+        @raise ValueError if a passed node id does not refer to any node of the graph
+                          (i.e. it is either higher than the initially set number of
+                          nodes or lower than zero).
+        """        
+        for node, weight in tweights.iteritems():
+            self.set_tweight(node, weight[0], weight[1]) # (weight-to-source, weight-to-sink)
+        
+    def get_graph(self):
+        return self.__graph
+        
+    def get_node_count(self):
+        """
+        @return the number of nodes (excluding sink and source).
+        @rtype int
+        """
+        return self.__nodes
+        
+    def get_nodes(self):
+        """
+        @return all nodes as an ordered list (starting from 0).
+        @rtype list
+        """
+        return range(0, self.__nodes)
+    
+    def get_edge_count(self):
+        """
+        @return the number of edges
+        @rtype int
+        """
+        return self.__edges

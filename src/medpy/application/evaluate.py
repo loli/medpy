@@ -23,7 +23,7 @@ from medpy.core import ArgumentError
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2, 2011-12-12"
+__version__ = "r0.3, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -51,8 +51,7 @@ def main():
     elif args.verbose: logger.setLevel(logging.INFO)
     
     # build output file name
-    file_evaluation_name = args.folder + '/' + args.reference.split('/')[-1][:-4] + '_evaluation'
-    file_evaluation_name += '.csv'
+    file_evaluation_name = '{}.csv'.format(args.output)
     
     # check if output file exists
     if not args.force:
@@ -103,9 +102,11 @@ def main():
             
             # check if physical pixel spacing is coherent
             if not (spacing == numpy.array(image_mask.get_header().get_zooms()[0:3])).all():
-                f.write('Skipped: incoherent pixel spacing (reference={}/mask={})\n'.format(spacing, image_mask.get_header().get_zooms()[0:3]))
-                logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Skip evaluation.'.format(spacing, image_mask.get_header().get_zooms()))
-                continue
+                if not args.ignore:
+                    f.write('Skipped: incoherent pixel spacing (reference={}/mask={})\n'.format(spacing, image_mask.get_header().get_zooms()[0:3]))
+                    logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Skip evaluation.'.format(spacing, image_mask.get_header().get_zooms()))
+                    continue
+                logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Evaluation continued nevertheless, as ignore flag is set.'.format(spacing, image_mask.get_header().get_zooms()))
             
             # get and prepare mask data
             image_mask_data = numpy.squeeze(image_mask.get_data())
@@ -152,12 +153,13 @@ def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
 
-    parser.add_argument('folder', help='The place to store the result file in.')
+    parser.add_argument('output', help='Name of the resulting evaluation file (\wo suffix).')
     parser.add_argument('reference', help='The mask image that serves as reference.')
     parser.add_argument('masks', nargs='+', help='One or more mask images.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
+    parser.add_argument('-i', dest='ignore', action='store_true', help='Ignore a mismatch of the voxel spacing. A warnign will still be signaled.')
     
     return parser    
     

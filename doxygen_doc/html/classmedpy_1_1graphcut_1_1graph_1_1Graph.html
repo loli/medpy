@@ -127,7 +127,24 @@ Static Public Attributes</h2></td></tr>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Represents a graph suitable for further processing with the graphcut package. </p>
 <p>The graph contains nodes, edges (directed) between the nodes (n-edges), edges between two terminals (called source and sink) and the nodes (t-edges), and a weight for each edge.</p>
-<dl class="note"><dt><b>Note:</b></dt><dd>the node-ids used by the graph are assumed to start with 1 and be continuous. This is not actually checked, except when calling the <a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a0fbe2b59f746e726f8bcf6c3111d7860">method, so be careful.  Methods:set_nodes(nodes) -- Set the nodes.set_source_nodes(source_nodes) -- Set the source nodes.set_sink_nodes(sink_nodes) -- Set the sink nodes.set_nweights(nweights) -- Set the inter-node weights-add_tweights(nweights) -- Add some terminal-to-node weights.get_node_count() -- Return the number of nodesget_nodes() -- Return all nodes.get_source_nodes() -- Return all nodes connected to the source.get_sink_nodes() -- Return all nodes connected to the sink.get_edges() -- Return all edges.get_nweights() -- Return all inter-node weights.get_tweights() -- Return all terminal-node weights.get_tweights2() -- Unsave version of get_tweights()inconsistent() -- Whether the contained graph is consistent or not. </a></dd></dl>
+<dl class="note"><dt><b>Note:</b></dt><dd>the node-ids used by the graph are assumed to start with 1 and be continuous. This is not actually checked, except when calling the <a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a0fbe2b59f746e726f8bcf6c3111d7860" title="Perform some consistency tests on the graph represented by this object.">inconsistent()</a> method, so be careful.</dd></dl>
+<p>Methods:</p>
+<ul>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a41b5d54706b84e5a11523da1ba626848" title="Set the number of graph nodes (starting from node-id = 1), excluding sink and source.">set_nodes()</a> -- Set the nodes.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#af1726ca138ac2522b5fe98f5ae5b157f" title="Set the source nodes and compute their t-weights.">set_source_nodes()</a> -- Set the source nodes.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a54b1a1643e1eedda40c121f9b3e7577d" title="Set the sink nodes and compute their t-weights.">set_sink_nodes()</a> -- Set the sink nodes.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a197d5cca5684cebfbabb07f13c4c0175" title="Sets all n-weights.">set_nweights()</a> -- Set the inter-node weights-</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a5a99c76efac37bc31acf495873933122" title="Adds t-weights to the current collection of t-weights, overwriting already existing ones...">add_tweights()</a> -- Add some terminal-to-node weights.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a146e523cb0c30515b5d3a765205461da">get_node_count()</a> -- Return the number of nodes</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a1cf8f8077a620ae6fd90b327f689d5e5">get_nodes()</a> -- Return all nodes.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a4c8dbbd92c6b0e5534869890810f0c78">get_source_nodes()</a> -- Return all nodes connected to the source.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a988309a34486d834c65d87e83548b969">get_sink_nodes()</a> -- Return all nodes connected to the sink.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#aabbf310726d5af9bbd79c6492f683c11">get_edges()</a> -- Return all edges.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a1090dadcdad71f1d629425c917e32ba5">get_nweights()</a> -- Return all inter-node weights.</li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a4b033a8067128c8a222f6c466f1b606f">get_tweights()</a> -- Return all terminal-node weights.</li>
+<li>get_tweights2() -- Unsave version of <a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a4b033a8067128c8a222f6c466f1b606f">get_tweights()</a></li>
+<li><a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a0fbe2b59f746e726f8bcf6c3111d7860" title="Perform some consistency tests on the graph represented by this object.">inconsistent()</a> -- Whether the contained graph is consistent or not. </li>
+</ul>
 
 <p>Definition at line <a class="el" href="graphcut_2graph_8py_source.html#l00051">51</a> of file <a class="el" href="graphcut_2graph_8py_source.html">graph.py</a>.</p>
 </div><hr/><h2>Member Function Documentation</h2>
@@ -197,7 +214,7 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>the numnber of nodes (excluding sink and source).  int </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>the number of nodes (excluding sink and source).  int </dd></dl>
 
 <p>Definition at line <a class="el" href="graphcut_2graph_8py_source.html#l00147">147</a> of file <a class="el" href="graphcut_2graph_8py_source.html">graph.py</a>.</p>
 
@@ -392,7 +409,7 @@ Static Public Attributes</h2></td></tr>
 <p>Sets all n-weights. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">nweights</td><td>a dictionary with (region-a-id, region-b-id) tuples as keys and (weight-a-to-b, weight-b-to-a) as values.  nweights dict </td></tr>
+    <tr><td class="paramname">nweights</td><td>a dictionary with (node-id, node-id) tuples as keys and (weight-a-to-b, weight-b-to-a) as values.  nweights dict </td></tr>
   </table>
   </dd>
 </dl>
@@ -459,7 +476,13 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 
 <p>Set the source nodes and compute their t-weights. </p>
-<dl class="warning"><dt><b>Warning:</b></dt><dd>It does not get checked if one of the supplied source-nodes already has a weight assigned (e.g. by passing it to <a class="el" href="">This can occur when the foreground- and background-markers cover the same region. In this case the order of setting the terminal nodes can affect the graph and therefore the graph-cut result.   source_nodes a sequence of integers  source_nodes sequence </a></dd></dl>
+<dl class="warning"><dt><b>Warning:</b></dt><dd>It does not get checked if one of the supplied source-nodes already has a weight assigned (e.g. by passing it to <a class="el" href="classmedpy_1_1graphcut_1_1graph_1_1Graph.html#a54b1a1643e1eedda40c121f9b3e7577d" title="Set the sink nodes and compute their t-weights.">set_sink_nodes()</a>). This can occur when the foreground- and background-markers cover the same region. In this case the order of setting the terminal nodes can affect the graph and therefore the graph-cut result.</dd></dl>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">source_nodes</td><td>a sequence of integers  source_nodes sequence </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Definition at line <a class="el" href="graphcut_2graph_8py_source.html#l00091">91</a> of file <a class="el" href="graphcut_2graph_8py_source.html">graph.py</a>.</p>
 
@@ -483,7 +506,7 @@ Static Public Attributes</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Feb 27 2012 17:58:06 for MedPy by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Apr 11 2012 17:54:51 for MedPy by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

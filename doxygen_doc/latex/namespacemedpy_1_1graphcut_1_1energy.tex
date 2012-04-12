@@ -7,11 +7,6 @@
 Run-\/time optimized energy functions for graph-\/cut.  
 
 
-\subsection*{Functions}
-\begin{DoxyCompactItemize}
-\item 
-def \hyperlink{namespacemedpy_1_1graphcut_1_1energy_a2bf88e97c3a4d86bfa293ead5bdefb33}{boundary\_\-stawiaski}
-\begin{DoxyCompactList}\small\item\em An implementation of the boundary term in (1), suitable to be used with the \hyperlink{}{function. }\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -32,52 +27,5 @@ Oskar Maier
 d0.1.0 
 \end{DoxyVersion}
 \begin{DoxySince}{Since}
-2012-\/01-\/18  Development
-\end{DoxySince}
-Provides a number of standard energy functions for both, boundary and regional terms, that follow the signature required for building graphs using the graph module of this package. Additionally a number of convenience functions for re-\/occurring data processing are given.
-
-Functions:
-\begin{DoxyItemize}
-\item def boundary\_\-stawiaski(label\_\-image, (gradient\_\-image)): boundary term implementation in (1)
-\end{DoxyItemize}
-
-(1) Stawiaski J., Decenciere E., Bidlaut F. / \char`\"{}Interactive Liver Tumor Segmentation
- Using Graph-\/cuts and watershed\char`\"{} / MICCAI 2008 participation
-
-\begin{DoxyAuthor}{Author}
-Oskar Maier 
-\end{DoxyAuthor}
-\begin{DoxyVersion}{Version}
-d0.1.0 
-\end{DoxyVersion}
-\begin{DoxySince}{Since}
 2012-\/01-\/18  Development 
 \end{DoxySince}
-
-
-\subsection{Function Documentation}
-\hypertarget{namespacemedpy_1_1graphcut_1_1energy_a2bf88e97c3a4d86bfa293ead5bdefb33}{
-\index{medpy::graphcut::energy@{medpy::graphcut::energy}!boundary\_\-stawiaski@{boundary\_\-stawiaski}}
-\index{boundary\_\-stawiaski@{boundary\_\-stawiaski}!medpy::graphcut::energy@{medpy::graphcut::energy}}
-\subsubsection[{boundary\_\-stawiaski}]{\setlength{\rightskip}{0pt plus 5cm}def medpy.graphcut.energy.boundary\_\-stawiaski (
-\begin{DoxyParamCaption}
-\item[{}]{label\_\-image, }
-\item[{}]{gradient\_\-image}
-\end{DoxyParamCaption}
-)}}
-\label{namespacemedpy_1_1graphcut_1_1energy_a2bf88e97c3a4d86bfa293ead5bdefb33}
-
-
-An implementation of the boundary term in (1), suitable to be used with the \hyperlink{}{function. }
-
-Determines for each two supplied regions the voxels forming their border assuming ndim$\ast$2-\/connectedness (e.g. 3$\ast$2=6 for 3D). From the gradient magnitude values of each end-\/point voxel the border-\/voxel pairs, the highest one is selected and passed to a strictly positive and decreasing function g, which is defined as: \[ g(x) = \left(\frac{1}{1+|x|}\right)^k \] ,where $k=2$. The final weight $w_{i,j}$ between two regions $r_i$ and $r_j$ is then determined by the sum of all these neighbour values: \[ w = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|)) \] , where $F_{(r_i,r_j)}$ is the set of border voxel-\/pairs $e_{m,n}$ between the regions $r_i$ and $r_j$ and $|I(p)|$ the absolute of the gradient magnitude at the voxel $p$
-
-This boundary\_\-function works as an edge indicator in the original image. In simpler words the weight (and therefore the energy) is obtained by summing the local contrast along the boundaries between two regions.
-
-\begin{DoxyNote}{Note}
-This function requires the gradient magnitude image of the original image to be passed along. That means that \hyperlink{}{has to be called with boundary\_\-term\_\-args set to the gradient image.   label\_\-image the label image  label\_\-image numpy.ndarray  gradient\_\-image The gradient magnitude image of the original image.  gradient\_\-image numpy.ndarray   a dictionary with the edges as keys and the respective weight tuples as values  dict }
-\end{DoxyNote}
-
-
-Definition at line 72 of file energy.py.
-

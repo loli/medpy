@@ -23,7 +23,7 @@ from medpy.utilities.nibabel import image_like
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1, 2011-12-11"
+__version__ = "r0.2, 2011-12-11"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -58,6 +58,12 @@ def main():
     logger = Logger.getInstance()
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
+    
+    # check if output image exists
+    if not args.force:
+        if os.path.exists(args.output + args.image[-4:]):
+            logger.warning('The output file {} already exists. Breaking.'.format(args.output + args.image[-4:]))
+            exit(1)
     
     # load images
     logger.info('Loading {}...'.format(args.image))
@@ -114,11 +120,7 @@ def main():
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
-    args = parser.parse_args()    
-    # check output image exists if override not forced
-    if not args.force:
-        if os.path.exists(args.output):
-            raise ArgumentError('The supplied output file {} already exists.'.format(args.output))
+    args = parser.parse_args()
     # parse volume and adapt to zero-indexing
     try:
         def _to_int_or_none(string):
