@@ -8,10 +8,17 @@ package. Additionally a number of convenience functions for re-occurring data pr
 are given.
 
 Functions:
-    - def boundary_difference_of_means(graph, (original_image)): simple mean value base boundary term
+    - def boundary_maximum_linear(graph, (gradient_image))
+    - def boundary_difference_linear(graph, (original_image))
+    - def boundary_maximum_exponential(graph, (gradient_image))
+    - def boundary_difference_exponential(graph, (original_image))
+    - def boundary_maximum_division(graph, (gradient_image))
+    - def boundary_difference_division(graph, (original_image))
+    - def boundary_maximum_power(graph, (gradient_image))
+    - def boundary_difference_power(graph, (original_image))
 
 @author Oskar Maier
-@version d0.1.2
+@version d0.2.0
 @since 2012-03-23
 @status Development
 """
@@ -25,42 +32,63 @@ import math
 
 # own modules
 
+# constants
+__SIGMA = 1.0
+
 # code
-def boundary_difference_of_means(graph, (original_image)):
+def boundary_maximum_linear(graph, (gradient_image)):
+    """
+    The same as energy_voxel.boundary_difference_linear(), but working on the gradient
+    image instead of the original.
+    
+    @see energy_voxel.boundary_difference_linear() for details.
+    """
+    gradient_image = scipy.asarray(gradient_image)
+    
+    # compute maximum (possible) intensity difference
+    max_intensity_difference = float(abs(gradient_image.max() - gradient_image.min()))
+    
+    def boundary_term_linear(intensities):
+        """
+        Implementation of a linear boundary term computation over an array.
+        """
+        # normalize the intensity distances to the interval (0, 1]
+        intensities /= max_intensity_difference
+        #difference_to_neighbour[difference_to_neighbour > 1] = 1 # this line should not be required, but might be due to rounding errors
+        intensities = (1. - intensities) # reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge
+        intensities[intensities == 0.] = sys.float_info.min # required to avoid zero values
+        return intensities
+    
+    __skeleton_maximum(graph, gradient_image, boundary_term_linear)
+
+def boundary_difference_linear(graph, (original_image)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
     
-    The simple energy function finds all edges between all neighbours of the image and
-    uses their difference in mean values as edge weight.
+    Finds all edges between all neighbours of the image and uses their normalized
+    difference in intensity values as edge weight.
     
-    The graph weights generated have to be strictly positive and preferably in the
-    interval (0, 1].
+    The weights are linearly normalized using the maximum possible intensity difference
+    of the image.
     
-    To ensure this, the maximum possible difference in mean values is computed as
+    Formally this value is computed as
     \f[
-        \alpha = \|\min I - \max I\|
+        \sigma = |max I - \min I|
     \f]
     , where \f$\min I\f$ constitutes the lowest intensity value in the image, while
     \f$\max I\f$ constitutes the highest. 
     
-    With this value the weights between a voxel \f$x\f$ and its neighbour \f$y\f$ can be
-    computed
+    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
     \f[
-        w(x,y) = 1 - \frac{\|I_x - I_y\|}{\alpha + 1}
+        w(p,q) = 1 - \frac{|I_p - I_q|}{\sigma} + \epsilon
     \f]
-    for which \f$w(x,y) \in (0, 1]\f$ holds true.
+    , where \f$\epsilon\f$ is a infinitively small number and for which
+    \f$w(p, q) \in (0, 1]\f$ holds true.
     
     @note This function requires the original image to be passed along. That means that
     generate.graph_from_voxels() has to be called with boundary_term_args set to the
     original image.
-    
-    @note To achieve weights between in the interval \f$(0, 1]\f$, the intensity
-    differences between neighbouring voxels are scaled assuming \f$\|\min I - \max I\|\f$
-    as the maximum, and \f$0\f$ as the minimal possible intensity difference.
-    
-    @note This function is tested only 2D and 3D images but theoretically works for all
-    dimensions.
     
     @param graph An initialized graph.GCGraph object
     @type graph.GCGraph
@@ -68,93 +96,239 @@ def boundary_difference_of_means(graph, (original_image)):
     @type original_image numpy.ndarray
     """
     original_image = scipy.asarray(original_image)
-    original_image = original_image.astype(scipy.float_)
     
-    ####
-    # Notice:
-    # In the first version the max_intensity_difference was simply increased by a 1 to
-    # achieve strictly positive weights. While essentially keeping the order of the
-    # weights, this nevertheless led to a distortion of their relations and, subsequently
-    # to invalid graph cuts when the weights were summed up.
-    # The new version simply adds sys.float_info.min to the result weight array, but is
-    # computationally slightly more expensive. 
+    # compute maximum (possible) intensity difference
     max_intensity_difference = float(abs(original_image.max() - original_image.min()))
-
-    # iterate over the image dimensions and for each create the appropriate edges and compute the associated weights
-    for dim in range(original_image.ndim):
-        # construct slice-objects for the current dimension
-        slices_exclude_last = [slice(None)] * original_image.ndim
-        slices_exclude_last[dim] = slice(-1)
-        slices_exclude_first = [slice(None)] * original_image.ndim
-        slices_exclude_first[dim] = slice(1, None)
-        # compute difference between all layers in the current dimensions direction     
-        difference_to_neighbour = scipy.absolute(original_image[slices_exclude_last] - original_image[slices_exclude_first])
+    
+    def boundary_term_linear(intensities):
+        """
+        Implementation of a linear boundary term computation over an array.
+        """
         # normalize the intensity distances to the interval (0, 1]
-        difference_to_neighbour /= max_intensity_difference
+        intensities /= max_intensity_difference
         #difference_to_neighbour[difference_to_neighbour > 1] = 1 # this line should not be required, but might be due to rounding errors
-        difference_to_neighbour = (1. - difference_to_neighbour) # reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge
-        difference_to_neighbour[difference_to_neighbour == 0.] = sys.float_info.min # required to avoid zero values
-        # compute key offset for relative key difference
-        offset_key = [1 if i == dim else 0 for i in range(original_image.ndim)]
-        offset = __flatten_index(offset_key, original_image.shape)
-        # generate index offset function for index dependent offset
-        idx_offset_divider = (original_image.shape[dim] - 1) * offset
-        idx_offset = lambda x: int(x / idx_offset_divider) * offset
-        
-        for key, value in enumerate(difference_to_neighbour.ravel()):
-            # debug lines
-            #print dim, key, key + offset, value, value
-            #print '\tg -> add_edge( {}, {}, {}, {} );'.format(key, key + offset, value, value)
-            
-            # apply index dependent offset
-            key += idx_offset(key) 
-            
-            # add edges and set the weight
-            graph.set_nweight(key, key + offset, value, value)
+        intensities = (1. - intensities) # reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge
+        intensities[intensities == 0.] = sys.float_info.min # required to avoid zero values
+        return intensities
+    
+    __skeleton_difference(graph, original_image, boundary_term_linear)
 
-def boundary_difference_of_means2(graph, (original_image)):
-    original_image = scipy.asarray(original_image)
-    original_image = original_image.astype(scipy.float_)
-
-    max_intensity_difference = float(abs(original_image.max() - original_image.min()))
-    sigma = 25
-
-    # iterate over the image dimensions and for each create the appropriate edges and compute the associated weights
-    for dim in range(original_image.ndim):
-        # construct slice-objects for the current dimension
-        slices_exclude_last = [slice(None)] * original_image.ndim
-        slices_exclude_last[dim] = slice(-1)
-        slices_exclude_first = [slice(None)] * original_image.ndim
-        slices_exclude_first[dim] = slice(1, None)
-        # compute difference between all layers in the current dimensions direction     
-        difference_to_neighbour = scipy.absolute(original_image[slices_exclude_last] - original_image[slices_exclude_first])
-        
+def boundary_maximum_exponential(graph, (gradient_image)):
+    """
+    The same as energy_voxel.boundary_difference_exponential(), but working on the gradient
+    image instead of the original.
+    
+    @see energy_voxel.boundary_difference_exponential() for details.
+    """
+    gradient_image = scipy.asarray(gradient_image)
+    
+    # compute sigma
+    sigma = __SIGMA
+    
+    def boundary_term_exponential(intensities):
+        """
+        Implementation of a exponential boundary term computation over an array.
+        """
         # apply exp-(x**2/sigma**2)
-        difference_to_neighbour = scipy.power(difference_to_neighbour, 2)
-        difference_to_neighbour /= math.pow(sigma, 2)
-        difference_to_neighbour *= -1
-        difference_to_neighbour = scipy.exp(difference_to_neighbour)
-        difference_to_neighbour[difference_to_neighbour <= 0] = sys.float_info.min
-        
-        # compute key offset for relative key difference
-        offset_key = [1 if i == dim else 0 for i in range(original_image.ndim)]
-        offset = __flatten_index(offset_key, original_image.shape)
-        # generate index offset function for index dependent offset
-        idx_offset_divider = (original_image.shape[dim] - 1) * offset
-        idx_offset = lambda x: int(x / idx_offset_divider) * offset
-        
-        for key, value in enumerate(difference_to_neighbour.ravel()):
-            # debug lines
-            #print dim, key, key + offset, value, value
-            #print '\tg -> add_edge( {}, {}, {}, {} );'.format(key, key + offset, value, value)
-            
-            # apply index dependent offset
-            key += idx_offset(key) 
-            
-            # add edges and set the weight
-            graph.set_nweight(key, key + offset, value, value)    
+        intensities = scipy.power(intensities, 2)
+        intensities /= math.pow(sigma, 2)
+        intensities *= -1
+        intensities = scipy.exp(intensities)
+        intensities[intensities <= 0] = sys.float_info.min
+        return intensities
+    
+    __skeleton_maximum(graph, gradient_image, boundary_term_exponential)    
 
-def __skeleton_maximum(graph, image, function):
+def boundary_difference_exponential(graph, (original_image)):
+    """
+    An implementation of the boundary term, suitable to be used with the
+    generate.graph_from_voxels() function.
+    
+    Finds all edges between all neighbours of the image and uses their difference in
+    intensity values as edge weight.
+    
+    The weights are normalized using an exponential function and a smoothing factor
+    \f$\sigma\f$.
+    
+    The \f$\sigma\f$. value is computed as
+    !TODO: Find out a suitable computation of the sigma value. 
+    
+    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
+    \f[
+        w(p,q) = \exp^{-\frac{|I_p - I_q|^2}{\sigma^2}}
+    \f]
+    , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    @note This function requires the original image to be passed along. That means that
+    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    original image.
+    
+    @param graph An initialized graph.GCGraph object
+    @type graph.GCGraph
+    @param original_image The original image.
+    @type original_image numpy.ndarray
+    """
+    original_image = scipy.asarray(original_image)
+    
+    # compute sigma
+    sigma = __SIGMA
+    
+    def boundary_term_exponential(intensities):
+        """
+        Implementation of a exponential boundary term computation over an array.
+        """
+        # apply exp-(x**2/sigma**2)
+        intensities = scipy.power(intensities, 2)
+        intensities /= math.pow(sigma, 2)
+        intensities *= -1
+        intensities = scipy.exp(intensities)
+        intensities[intensities <= 0] = sys.float_info.min
+        return intensities
+    
+    __skeleton_difference(graph, original_image, boundary_term_exponential)
+    
+def boundary_maximum_division(graph, (gradient_image)):
+    """
+    The same as energy_voxel.boundary_difference_division(), but working on the gradient
+    image instead of the original.
+    
+    @see energy_voxel.boundary_difference_division() for details.
+    """
+    gradient_image = scipy.asarray(gradient_image)
+    
+    # compute sigma
+    sigma = __SIGMA
+    
+    def boundary_term_division(intensities):
+        """
+        Implementation of a exponential boundary term computation over an array.
+        """
+        # apply 1 / (1  + x/sigma)
+        intensities /= sigma
+        intensities = 1. / (intensities + 1)
+        intensities[intensities <= 0] = sys.float_info.min
+        return intensities
+    
+    __skeleton_difference(graph, gradient_image, boundary_term_division)
+    
+def boundary_difference_division(graph, (original_image)):
+    """
+    An implementation of the boundary term, suitable to be used with the
+    generate.graph_from_voxels() function.
+    
+    Finds all edges between all neighbours of the image and uses their difference in
+    intensity values as edge weight.
+    
+    The weights are normalized using an division function and a smoothing factor
+    \f$\sigma\f$.
+    
+    The \f$\sigma\f$. value is computed as
+    !TODO: Find out a suitable computation of the sigma value. 
+    
+    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
+    \f[
+        w(p,q) = \frac{1}{1 + \frac{|I_p - I_q|}{\sigma}}
+    \f]
+    , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    @note This function requires the original image to be passed along. That means that
+    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    original image.
+    
+    @param graph An initialized graph.GCGraph object
+    @type graph.GCGraph
+    @param original_image The original image.
+    @type original_image numpy.ndarray
+    """
+    original_image = scipy.asarray(original_image)
+    
+    # compute sigma
+    sigma = __SIGMA
+    
+    def boundary_term_division(intensities):
+        """
+        Implementation of a exponential boundary term computation over an array.
+        """
+        # apply 1 / (1  + x/sigma)
+        intensities /= sigma
+        intensities = 1. / (intensities + 1)
+        intensities[intensities <= 0] = sys.float_info.min
+        return intensities
+    
+    __skeleton_difference(graph, original_image, boundary_term_division)
+    
+def boundary_maximum_power(graph, (gradient_image)):
+    """
+    The same as energy_voxel.boundary_difference_power(), but working on the gradient
+    image instead of the original.
+    
+    @see energy_voxel.boundary_difference_power() for details.
+    """
+    gradient_image = scipy.asarray(gradient_image)
+    
+    # compute sigma
+    sigma = __SIGMA
+    
+    def boundary_term_division(intensities):
+        """
+        Implementation of a exponential boundary term computation over an array.
+        """
+        # apply (1 / (1  + x))^sigma
+        intensities = 1. / (intensities + 1)
+        intensities = scipy.power(intensities, sigma)
+        intensities[intensities <= 0] = sys.float_info.min
+        return intensities
+    
+    __skeleton_maximum(graph, gradient_image, boundary_term_division)       
+    
+    
+def boundary_difference_power(graph, (original_image)):
+    """
+    An implementation of the boundary term, suitable to be used with the
+    generate.graph_from_voxels() function.
+    
+    Finds all edges between all neighbours of the image and uses their difference in
+    intensity values as edge weight.
+    
+    The weights are normalized using an power function and a smoothing factor
+    \f$\sigma\f$.
+    
+    The \f$\sigma\f$. value is computed as
+    !TODO: Find out a suitable computation of the sigma value. 
+    
+    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
+    \f[
+        w(p,q) = \frac{1}{1 + |I_p - I_q|}^\sigma
+    \f]
+    , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    @note This function requires the original image to be passed along. That means that
+    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    original image.
+    
+    @param graph An initialized graph.GCGraph object
+    @type graph.GCGraph
+    @param original_image The original image.
+    @type original_image numpy.ndarray
+    """
+    original_image = scipy.asarray(original_image)
+    
+    # compute sigma
+    sigma = __SIGMA
+    
+    def boundary_term_division(intensities):
+        """
+        Implementation of a exponential boundary term computation over an array.
+        """
+        # apply (1 / (1  + x))^sigma
+        intensities = 1. / (intensities + 1)
+        intensities = scipy.power(intensities, sigma)
+        intensities[intensities <= 0] = sys.float_info.min
+        return intensities
+    
+    __skeleton_difference(graph, original_image, boundary_term_division)   
+
+def __skeleton_maximum(graph, image, boundary_term):
     """
     A skeleton for the calculation of maximum intensity based boundary terms.
     
@@ -173,16 +347,23 @@ def __skeleton_maximum(graph, image, function):
     @type graph.GCGraph
     @param image The image to compute on
     @type image numpy.ndarray
-    @param function A function to compute the boundary term over an array of
-                    maximum intensities
-    @type function function
+    @param boundary_term A function to compute the boundary term over an array of
+                         maximum intensities
+    @type boundary_term function
     
     @see energy_voxel.__skeleton_difference() for more details.
     """
-    pass
+    def intensity_maximum(neighbour_one, neighbour_two):
+        """
+        Takes two voxel arrays constituting neighbours and computes the maximum between
+        their intensities.
+        """
+        return scipy.maximum(neighbour_one, neighbour_two)
+        
+    __skeleton_base(graph, image, boundary_term, intensity_maximum)
     
 
-def __skeleton_difference(graph, image, function):
+def __skeleton_difference(graph, image, boundary_term):
     """
     A skeleton for the calculation of intensity difference based boundary terms.
     
@@ -211,11 +392,18 @@ def __skeleton_difference(graph, image, function):
     @type graph.GCGraph
     @param image The image to compute on
     @type image numpy.ndarray
-    @param function A function to compute the boundary term over an array of
-                    absolute intensity differences
-    @type function function
+    @param boundary_term A function to compute the boundary term over an array of
+                         absolute intensity differences
+    @type boundary_term function
     """
-    pass
+    def intensity_difference(neighbour_one, neighbour_two):
+        """
+        Takes two voxel arrays constituting neighbours and computes the absolute
+        intensity differences.
+        """
+        return scipy.absolute(neighbour_one - neighbour_two)
+        
+    __skeleton_base(graph, image, boundary_term, intensity_difference)
 
 def __skeleton_base(graph, image, boundary_term, neighbourhood_function):
     """
@@ -245,17 +433,10 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function):
         slices_exclude_last[dim] = slice(-1)
         slices_exclude_first = [slice(None)] * image.ndim
         slices_exclude_first[dim] = slice(1, None)
-        
         # compute difference between all layers in the current dimensions direction
         neighbourhood_intensity_term = neighbourhood_function(image[slices_exclude_last], image[slices_exclude_first])
-        
         # apply boundary term
-        neighbourhood_intensity_term = scipy.power(neighbourhood_intensity_term, 2)
-        neighbourhood_intensity_term /= math.pow(sigma, 2)
-        neighbourhood_intensity_term *= -1
-        neighbourhood_intensity_term = scipy.exp(neighbourhood_intensity_term)
-        neighbourhood_intensity_term[neighbourhood_intensity_term <= 0] = sys.float_info.min
-        
+        neighbourhood_intensity_term = boundary_term(neighbourhood_intensity_term)
         # compute key offset for relative key difference
         offset_key = [1 if i == dim else 0 for i in range(image.ndim)]
         offset = __flatten_index(offset_key, image.shape)
@@ -264,17 +445,11 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function):
         idx_offset = lambda x: int(x / idx_offset_divider) * offset
         
         for key, value in enumerate(neighbourhood_intensity_term.ravel()):
-            # debug lines
-            #print dim, key, key + offset, value, value
-            #print '\tg -> add_edge( {}, {}, {}, {} );'.format(key, key + offset, value, value)
-            
             # apply index dependent offset
             key += idx_offset(key) 
-            
             # add edges and set the weight
             graph.set_nweight(key, key + offset, value, value)    
     
-
 def __flatten_index(pos, shape):
     """
     Takes a three dimensional index (x,y,z) and computes the index required to access the

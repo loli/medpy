@@ -1,8 +1,13 @@
 """
 Unittest for the medpy.graphcut.energy_voxel methods.
 
+!TODO:
+- Write tests for the other boundary difference term
+- Write tests for the boundary maximum terms
+
+
 @author Oskar Maier
-@version r0.1.1
+@version r0.1.4
 @since 2011-04-11
 @status Release
 """
@@ -15,14 +20,40 @@ import unittest
 import scipy
 
 # own modules
-from medpy.graphcut import boundary_difference_of_means_voxel
 from medpy.graphcut.graph import GCGraph
+from medpy.graphcut.energy_voxel import (boundary_difference_linear, boundary_difference_division,
+                                         boundary_difference_exponential, boundary_difference_power)
+from medpy.graphcut.energy_voxel import (boundary_maximum_linear, boundary_maximum_division,
+                                         boundary_maximum_exponential, boundary_maximum_power)
 
 # code
 class TestEnergyVoxel(unittest.TestCase):
         
-    def test_boundary_difference_of_means_voxel_borders(self):
-        """Test the @link medpy.graphcut.boundary_difference_of_means_voxel() border conditions."""
+    def test_boundary_difference_linear(self):
+        self.__test_boundary_difference_2d(boundary_difference_linear)
+        self.__test_boundary_difference_3d(boundary_difference_linear)
+        self.__test_boundary_difference(boundary_difference_linear)
+        
+    def test_boundary_difference_division(self):
+#        self.__test_boundary_difference_2d(boundary_difference_division)
+#        self.__test_boundary_difference_3d(boundary_difference_division)
+#        self.__test_boundary_difference(boundary_difference_division)
+        pass
+        
+    def test_boundary_difference_exponential(self):
+#        self.__test_boundary_difference_2d(boundary_difference_exponential)
+#        self.__test_boundary_difference_3d(boundary_difference_exponential)
+#        self.__test_boundary_difference(boundary_difference_exponential)
+        pass
+        
+    def test_boundary_difference_power(self):
+#        self.__test_boundary_difference_2d(boundary_difference_power)
+#        self.__test_boundary_difference_3d(boundary_difference_power)
+#        self.__test_boundary_difference(boundary_difference_power)
+        pass
+        
+    def __test_boundary_difference(self, boundary_term):
+        """Test intensity difference based boundary terms for border conditions."""
         # TEST1: test for behavior on occurrence of empty dimensions
         original = [[[1,0,1,2,3],
                      [1,0,1,4,3],
@@ -30,7 +61,7 @@ class TestEnergyVoxel(unittest.TestCase):
         original = scipy.asarray(original)
         expected_result = {(8, 13): (0.66666666666666674, 0.66666666666666674), (5, 6): (0.83333333333333337, 0.83333333333333337), (8, 9): (0.83333333333333337, 0.83333333333333337), (1, 6): (1.0, 1.0), (10, 11): (0.83333333333333337, 0.83333333333333337), (1, 2): (0.83333333333333337, 0.83333333333333337), (4, 9): (1.0, 1.0), (12, 13): (0.16666666666666663, 0.16666666666666663), (7, 12): (1.0, 1.0), (0, 1): (0.83333333333333337, 0.83333333333333337), (9, 14): (0.83333333333333337, 0.83333333333333337), (6, 11): (0.83333333333333337, 0.83333333333333337), (2, 3): (0.83333333333333337, 0.83333333333333337), (6, 7): (0.83333333333333337, 0.83333333333333337), (11, 12): (1.0, 1.0), (2, 7): (1.0, 1.0), (5, 10): (0.83333333333333337, 0.83333333333333337), (13, 14): (0.66666666666666674, 0.66666666666666674), (7, 8): (0.5, 0.5), (3, 8): (0.66666666666666674, 0.66666666666666674), (0, 5): (1.0, 1.0), (3, 4): (0.83333333333333337, 0.83333333333333337)}
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         graph.validate_nweights(self, expected_result, "TEST1")
         
         # TEST2: test for behavior on occurrence of very small (~0) and 1 weights
@@ -40,7 +71,7 @@ class TestEnergyVoxel(unittest.TestCase):
         original = scipy.asarray(original)
         expected_result = {(8, 13): (1.0, 1.0), (5, 6): (1.0, 1.0), (8, 9): (sys.float_info.min, sys.float_info.min), (1, 6): (1.0, 1.0), (10, 11): (1.0, 1.0), (1, 2): (1.0, 1.0), (4, 9): (1.0, 1.0), (12, 13): (1.0, 1.0), (7, 12): (1.0, 1.0), (0, 1): (1.0, 1.0), (9, 14): (1.0, 1.0), (6, 11): (1.0, 1.0), (2, 3): (1.0, 1.0), (6, 7): (1.0, 1.0), (11, 12): (1.0, 1.0), (2, 7): (1.0, 1.0), (5, 10): (1.0, 1.0), (13, 14): (2.2250738585072014e-308, 2.2250738585072014e-308), (7, 8): (1.0, 1.0), (3, 8): (1.0, 1.0), (0, 5): (1.0, 1.0), (3, 4): (sys.float_info.min, sys.float_info.min)}
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         graph.validate_nweights(self, expected_result, "TEST2")
         
         # TEST3: test scale, i.e. that irregardless of the value the highest step should always yield the lowest weight
@@ -51,7 +82,7 @@ class TestEnergyVoxel(unittest.TestCase):
         original = scipy.asarray(original)
         expected_result = {(8, 13): (1.0, 1.0), (5, 6): (1.0, 1.0), (8, 9): (2.2250738585072014e-308, 2.2250738585072014e-308), (1, 6): (1.0, 1.0), (10, 11): (1.0, 1.0), (1, 2): (1.0, 1.0), (4, 9): (1.0, 1.0), (12, 13): (1.0, 1.0), (7, 12): (1.0, 1.0), (0, 1): (1.0, 1.0), (9, 14): (1.0, 1.0), (6, 11): (1.0, 1.0), (2, 3): (1.0, 1.0), (6, 7): (1.0, 1.0), (11, 12): (1.0, 1.0), (2, 7): (1.0, 1.0), (5, 10): (1.0, 1.0), (13, 14): (2.2250738585072014e-308, 2.2250738585072014e-308), (7, 8): (1.0, 1.0), (3, 8): (1.0, 1.0), (0, 5): (1.0, 1.0), (3, 4): (2.2250738585072014e-308, 2.2250738585072014e-308)}
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         graph.validate_nweights(self, expected_result, "TEST3")
        
         # TEST4: check behavior for float original image
@@ -61,7 +92,7 @@ class TestEnergyVoxel(unittest.TestCase):
         original = scipy.asarray(original)
         expected_result = {(8, 13): (0.66666666666666674, 0.66666666666666674), (5, 6): (0.83333333333333337, 0.83333333333333337), (8, 9): (0.83333333333333337, 0.83333333333333337), (1, 6): (1.0, 1.0), (10, 11): (0.83333333333333337, 0.83333333333333337), (1, 2): (0.83333333333333337, 0.83333333333333337), (4, 9): (1.0, 1.0), (12, 13): (0.16666666666666663, 0.16666666666666663), (7, 12): (1.0, 1.0), (0, 1): (0.83333333333333337, 0.83333333333333337), (9, 14): (0.83333333333333337, 0.83333333333333337), (6, 11): (0.83333333333333337, 0.83333333333333337), (2, 3): (0.83333333333333337, 0.83333333333333337), (6, 7): (0.83333333333333337, 0.83333333333333337), (11, 12): (1.0, 1.0), (2, 7): (1.0, 1.0), (5, 10): (0.83333333333333337, 0.83333333333333337), (13, 14): (0.66666666666666674, 0.66666666666666674), (7, 8): (0.5, 0.5), (3, 8): (0.66666666666666674, 0.66666666666666674), (0, 5): (1.0, 1.0), (3, 4): (0.83333333333333337, 0.83333333333333337)}
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         graph.validate_nweights(self, expected_result, "TEST4")
         
         # TEST5: reaction to different array orders
@@ -72,17 +103,17 @@ class TestEnergyVoxel(unittest.TestCase):
         
         original = scipy.asarray(original, order='C') # C-order
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))        
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         graph.validate_nweights(self, expected_result, "TEST5 (C)")
         
         original = scipy.asarray(original, order='F') # Fortran order
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         graph.validate_nweights(self, expected_result, "TEST5 (F)")
      
         
-    def test_boundary_difference_of_means_voxel_2d(self):
-        """Test the @link medpy.graphcut.boundary_difference_of_means_voxel() function for 2D."""
+    def __test_boundary_difference_2d(self, boundary_term):
+        """Test intensity difference based boundary terms for 2D case."""
         # the gradient magnitude image
         original = [[1,0,1,2,3],
                     [1,0,1,4,3],
@@ -93,12 +124,12 @@ class TestEnergyVoxel(unittest.TestCase):
         # initialize graph object
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
         # run the function
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         # check created graph for validity
         graph.validate_nweights(self, expected_result, "Voxels means 2D")        
         
-    def test_boundary_difference_of_means_voxel_3d(self):
-        """Test the @link medpy.graphcut.boundary_difference_of_means_voxel() function for 3D."""
+    def __test_boundary_difference_3d(self, boundary_term):
+        """Test intensity difference based boundary terms for 3D case."""
         # the gradient magnitude image
         original = [[[1,0,1,2,3],
                      [1,0,1,4,3],
@@ -112,13 +143,13 @@ class TestEnergyVoxel(unittest.TestCase):
         # initialize graph object
         graph = GCGraphTest(original.size, self.__voxel_4conectedness(original.shape))
         # run the function
-        boundary_difference_of_means_voxel(graph, (original))
+        boundary_term(graph, (original))
         # check created graph for validity
         graph.validate_nweights(self, expected_result, "Voxels means 3D")
 
     def __voxel_4conectedness(self, shape):
         """
-        Returns the number of edges for the supplied image shape assuming 4-conectedness.
+        Returns the number of edges for the supplied image shape assuming 4-connectedness.
         """
         shape = list(shape)
         while 1 in shape: shape.remove(1)

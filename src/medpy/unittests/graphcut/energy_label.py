@@ -1,5 +1,5 @@
 """
-Unittest for the medpy.graphcut.energy_label methods.
+Unittest for the medpy.graphcut.energy methods.
 
 @author Oskar Maier
 @version r0.2.1
@@ -15,26 +15,26 @@ import unittest
 import scipy
 
 # own modules
-from medpy.graphcut import boundary_stawiaski_label, boundary_difference_of_means_label
+from medpy.graphcut.energy_label import boundary_stawiaski, boundary_difference_of_means
 
 # code
 class TestEnergyLabel(unittest.TestCase):
     
-    def test_boundary_stawiaski_label_borders(self):
-        """Test the @link medpy.graphcut.test_boundary_stawiaski_label() border conditions.""" 
+    def test_boundary_stawiaski_borders(self):
+        """Test the @link medpy.graphcut.test_boundary_stawiaski() border conditions.""" 
         # TEST1: test for a label image with not continuous label ids not starting from 0
         label = [[1, 4, 8],
                  [1, 3, 10],
                  [1, 3, 10]]
         expected_result = {(1, 3): (2.0, 2.0), (1, 4): (1.0, 1.0), (4, 8): (1.0, 1.0), (3, 4): (1.0, 1.0), (3, 10): (2.0, 2.0), (8, 10): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros_like(label)))
+        result = boundary_stawiaski(label, (scipy.zeros_like(label)))
         self.__compare_dictionaries(result, expected_result, 'Test1')
         # TEST2: test for a label image with negative labels
         label = [[-1, 4, 8],
                  [-1, 3, 10],
                  [1, -3, 10]]
         expected_result = {(-1, 1): (1.0, 1.0), (4, 8): (1.0, 1.0), (-1, 3): (1.0, 1.0), (3, 10): (1.0, 1.0), (-3, 10): (1.0, 1.0), (8, 10): (1.0, 1.0), (-3, 1): (1.0, 1.0), (-3, 3): (1.0, 1.0), (-1, 4): (1.0, 1.0), (3, 4): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros_like(label)))
+        result = boundary_stawiaski(label, (scipy.zeros_like(label)))
         self.__compare_dictionaries(result, expected_result, 'Test2')
         # TEST3: test for behavior on occurrence of very small (~0) and 1 weights
         gradient = [[0., 0., 0.],
@@ -42,7 +42,7 @@ class TestEnergyLabel(unittest.TestCase):
         label = [[0, 1, 2],
                  [0, 1, 3]]
         expected_result = {(0, 1): (2.0, 2.0), (1, 2): (1.0, 1.0), (1, 3): (sys.float_info.min, sys.float_info.min), (2, 3): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_stawiaski_label(label, (gradient))
+        result = boundary_stawiaski(label, (gradient))
         self.__compare_dictionaries(result, expected_result, 'Test3')
         # TEST4: check behavior for integer gradient image
         label = [[1, 4, 8],
@@ -50,7 +50,7 @@ class TestEnergyLabel(unittest.TestCase):
                  [1, 3, 10]]
         label = scipy.asarray(label)
         expected_result = {(1, 3): (2.0, 2.0), (1, 4): (1.0, 1.0), (4, 8): (1.0, 1.0), (3, 4): (1.0, 1.0), (3, 10): (2.0, 2.0), (8, 10): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros(label.shape, scipy.int_)))
+        result = boundary_stawiaski(label, (scipy.zeros(label.shape, scipy.int_)))
         self.__compare_dictionaries(result, expected_result, 'Test4')
         # TEST5: reaction to different array orders
         label = [[1, 4, 8],
@@ -58,23 +58,23 @@ class TestEnergyLabel(unittest.TestCase):
                  [1, 3, 10]]
         label = scipy.asarray(label, order='C') # C-order, gradient same order
         expected_result = {(1, 3): (2.0, 2.0), (1, 4): (1.0, 1.0), (4, 8): (1.0, 1.0), (3, 4): (1.0, 1.0), (3, 10): (2.0, 2.0), (8, 10): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros_like(label)))
+        result = boundary_stawiaski(label, (scipy.zeros_like(label)))
         self.__compare_dictionaries(result, expected_result, 'Test5 (C,C)')
         label = scipy.asarray(label, order='F') # Fortran order, gradient same order
         expected_result = {(1, 3): (2.0, 2.0), (1, 4): (1.0, 1.0), (4, 8): (1.0, 1.0), (3, 4): (1.0, 1.0), (3, 10): (2.0, 2.0), (8, 10): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros_like(label)))
+        result = boundary_stawiaski(label, (scipy.zeros_like(label)))
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, F)')
         label = scipy.asarray(label, order='C') # C-order, gradient different order
         expected_result = {(1, 3): (2.0, 2.0), (1, 4): (1.0, 1.0), (4, 8): (1.0, 1.0), (3, 4): (1.0, 1.0), (3, 10): (2.0, 2.0), (8, 10): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros(label.shape, order='F')))
+        result = boundary_stawiaski(label, (scipy.zeros(label.shape, order='F')))
         self.__compare_dictionaries(result, expected_result, 'Test5 (C, F)')
         label = scipy.asarray(label, order='F') # F-order, gradient different order
         expected_result = {(1, 3): (2.0, 2.0), (1, 4): (1.0, 1.0), (4, 8): (1.0, 1.0), (3, 4): (1.0, 1.0), (3, 10): (2.0, 2.0), (8, 10): (1.0, 1.0)}
-        result = boundary_stawiaski_label(label, (scipy.zeros(label.shape, order='C')))
+        result = boundary_stawiaski(label, (scipy.zeros(label.shape, order='C')))
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')
         
-    def test_boundary_stawiaski_label_2d(self):
-        """Test the @link medpy.graphcut.test_boundary_stawiaski_label() function for 2D."""
+    def test_boundary_stawiaski_2d(self):
+        """Test the @link medpy.graphcut.test_boundary_stawiaski() function for 2D."""
         # the gradient magnitude image
         gradient = [[0., 0., 0., 0.1, 0.1, 0.5],
                     [0., 0., 0., 0.1, 0.1, 0.1],
@@ -96,12 +96,12 @@ class TestEnergyLabel(unittest.TestCase):
                            (2,4): 1.020408163}
         expected_result = self.__to_two_directed(expected_result)
         # run the function
-        result = boundary_stawiaski_label(label, (gradient))
+        result = boundary_stawiaski(label, (gradient))
         # check returned values
         self.__compare_dictionaries(result, expected_result)
         
-    def test_boundary_stawiaski_label_3d(self):
-        """Test the @link medpy.graphcut.test_boundary_stawiaski_label() function for 3D."""
+    def test_boundary_stawiaski_3d(self):
+        """Test the @link medpy.graphcut.test_boundary_stawiaski() function for 3D."""
         # the gradient magnitude image
         gradient = [[[0., 0., 0., 0.1, 0.1, 0.5],
                      [0., 0., 0., 0.1, 0.1, 0.1],
@@ -135,21 +135,21 @@ class TestEnergyLabel(unittest.TestCase):
                            (5,6): 0.390625} # only 3D edge
         expected_result = self.__to_two_directed(expected_result)
         # run the function
-        result = boundary_stawiaski_label(label, (gradient))
+        result = boundary_stawiaski(label, (gradient))
         # check returned values
         self.__compare_dictionaries(result, expected_result)
         
         
         
         
-    def test_boundary_difference_of_means_label_borders(self):
-        """Test the @link medpy.graphcut.boundary_difference_of_means_label() border conditions.""" 
+    def test_boundary_difference_of_means_borders(self):
+        """Test the @link medpy.graphcut.boundary_difference_of_means() border conditions.""" 
         # TEST1: test for a label image with not continuous label ids not starting from 0
         label = [[1, 4, 8],
                  [1, 3, 10],
                  [1, 3, 10]]
         expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
+        result = boundary_difference_of_means(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test1')
         # TEST2: test for a label image with negative labels
@@ -157,7 +157,7 @@ class TestEnergyLabel(unittest.TestCase):
                  [-1, 3, 10],
                  [1, -3, 10]]
         expected_result = {(-1, 1): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (-1, 3): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (-3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (-3, 1): (sys.float_info.min, sys.float_info.min), (-3, 3): (sys.float_info.min, sys.float_info.min), (-1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
+        result = boundary_difference_of_means(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test2')
         # TEST3: test for behavior on occurrence of very small (~0) and 1 weights
@@ -166,7 +166,7 @@ class TestEnergyLabel(unittest.TestCase):
         label = [[0, 1, 2],
                  [0, 1, 3]]
         expected_result = {(0, 1): (1.0, 1.0), (1, 2): (1.0, 1.0), (1, 3): (sys.float_info.min, sys.float_info.min), (2, 3): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (gradient))
+        result = boundary_difference_of_means(label, (gradient))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test3')
         # TEST4: check behavior for integer gradient image
@@ -175,7 +175,7 @@ class TestEnergyLabel(unittest.TestCase):
                  [1, 3, 10]]
         label = scipy.asarray(label)
         expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros(label.shape, scipy.int_)))
+        result = boundary_difference_of_means(label, (scipy.zeros(label.shape, scipy.int_)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test4')
         # TEST5: reaction to different array orders
@@ -184,27 +184,27 @@ class TestEnergyLabel(unittest.TestCase):
                  [1, 3, 10]]
         label = scipy.asarray(label, order='C') # C-order, gradient same order
         expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
+        result = boundary_difference_of_means(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (C,C)')
         label = scipy.asarray(label, order='F') # Fortran order, gradient same order
         expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
+        result = boundary_difference_of_means(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, F)')
         label = scipy.asarray(label, order='C') # C-order, gradient different order
         expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros(label.shape, order='F')))
+        result = boundary_difference_of_means(label, (scipy.zeros(label.shape, order='F')))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (C, F)')
         label = scipy.asarray(label, order='F') # F-order, gradient different order
         expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
-        result = boundary_difference_of_means_label(label, (scipy.zeros(label.shape, order='C')))
+        result = boundary_difference_of_means(label, (scipy.zeros(label.shape, order='C')))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')  
         
-    def test_boundary_difference_of_means_label_2d(self):
-        """Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 2D."""
+    def test_boundary_difference_of_means_2d(self):
+        """Test the @link medpy.graphcut.boundary_difference_of_means() function for 2D."""
         # the original image
         original = [[0., 0., 0., 0.1, 0.1, 0.5],
                     [0., 0., 0., 0.1, 0.1, 0.1],
@@ -226,13 +226,13 @@ class TestEnergyLabel(unittest.TestCase):
                            (2,4): 0.6}
         expected_result = self.__to_two_directed(expected_result)
         # run the function
-        result = boundary_difference_of_means_label(label, (original))
+        result = boundary_difference_of_means(label, (original))
         result = self._reorder_keys(result)
         # check returned values
         self.__compare_dictionaries(result, expected_result)
         
-    def test_boundary_difference_of_means_label_3d(self):
-        """Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 3D."""
+    def test_boundary_difference_of_means_3d(self):
+        """Test the @link medpy.graphcut.boundary_difference_of_means() function for 3D."""
         # 3D VERSION
         # the gradient magnitude image
         original = [[[0., 0., 0., 0.1, 0.1, 0.5],
@@ -267,7 +267,7 @@ class TestEnergyLabel(unittest.TestCase):
                            (5,6): 0.833333333} # only 3D edge
         expected_result = self.__to_two_directed(expected_result)
         # run the function
-        result = boundary_difference_of_means_label(label, (original))
+        result = boundary_difference_of_means(label, (original))
         result = self._reorder_keys(result)
         # check returned values
         self.__compare_dictionaries(result, expected_result)

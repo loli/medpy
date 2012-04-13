@@ -18,7 +18,8 @@ import unittest
 # third-party modules
 
 # own modules
-from medpy.graphcut import graph_from_labels, GraphDouble, Graph, boundary_difference_of_means_voxel, graph_from_voxels
+from medpy.graphcut import graph_from_labels, GraphDouble, Graph, graph_from_voxels
+from medpy.graphcut.energy_voxel import boundary_difference_linear
 from medpy import filter
 import scipy
 
@@ -80,7 +81,7 @@ class TestCut(unittest.TestCase):
         original_image = scipy.asarray(self.__voriginal_image)
         graph = graph_from_voxels(scipy.asarray(self.__vfg_markers),
                                   scipy.asarray(self.__vbg_markers),
-                                  boundary_term=boundary_difference_of_means_voxel,
+                                  boundary_term=boundary_difference_linear,
                                   boundary_term_args=original_image)
         
         # execute min-cut / executing BK_MFMC

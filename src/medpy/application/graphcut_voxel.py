@@ -25,7 +25,7 @@ from medpy import graphcut
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1, 2012-03-23"
+__version__ = "r0.2, 2012-03-23"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -70,10 +70,31 @@ def main():
             exit(1)
             
     # select boundary term
-    if args.boundary == 'means':
-        boundary_term = graphcut.boundary_difference_of_means_voxel
-        boundary_term = graphcut.energy_voxel.boundary_difference_of_means2
-        logger.info('Selected boundary term: difference of means')
+    ['diff_linear', 'diff_exp', 'diff_div', 'diff_pow', 'max_linear', 'max_exp', 'max_div', 'max_pow']
+    if 'diff_linear' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_difference_linear
+        logger.info('Selected boundary term: linear difference of intensities')
+    elif 'diff_exp' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_difference_exponential
+        logger.info('Selected boundary term: exponential difference of intensities')
+    elif 'diff_div' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_difference_division
+        logger.info('Selected boundary term: divided difference of intensities')
+    elif 'diff_pow' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_difference_power
+        logger.info('Selected boundary term: power based / raised difference of intensities')
+    elif 'max_linear' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_maximum_linear
+        logger.info('Selected boundary term: linear maximum of intensities')
+    elif 'max_exp' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_maximum_exponential
+        logger.info('Selected boundary term: exponential maximum of intensities')
+    elif 'max_div' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_maximum_division
+        logger.info('Selected boundary term: divided maximum of intensities')
+    elif 'max_pow' == args.boundary:
+        boundary_term = graphcut.energy_voxel.boundary_maximum_power
+        logger.info('Selected boundary term: power based / raised maximum of intensities')
 
     # load input images
     logger.info('Loading foreground markers {}...'.format(args.foreground))
@@ -141,7 +162,7 @@ def getParser():
     parser.add_argument('foreground', help='Binary image containing the foreground markers.')
     parser.add_argument('background', help='Binary image containing the background markers.')
     parser.add_argument('output', help='The output image containing the segmentation.')
-    parser.add_argument('--boundary', default='means', help='The boundary term to use. Note that difference of means (means) requires the original image.', choices=['means'])
+    parser.add_argument('--boundary', default='diff_exp', help='The boundary term to use. Note that the ones prefixed with diff_ require the original image, while the ones prefixed with max_ require the gradient image.', choices=['diff_linear', 'diff_exp', 'diff_div', 'diff_pow', 'max_linear', 'max_exp', 'max_div', 'max_pow'])
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

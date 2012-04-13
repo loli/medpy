@@ -74,10 +74,10 @@ def main():
             
     # select boundary term
     if args.boundary == 'stawiaski':
-        boundary_term = graphcut.boundary_stawiaski_label
+        boundary_term = graphcut.energy_label.boundary_stawiaski
         logger.info('Selected boundary term: stawiaski')
     else:
-        boundary_term = graphcut.boundary_difference_of_means_label
+        boundary_term = graphcut.energy_label.boundary_difference_of_means
         logger.info('Selected boundary term: difference of means')
 
     # load input images

@@ -309,7 +309,11 @@ def __boundary_term_label(label_image, boundary_term_args):
     
 def __voxel_4conectedness(shape):
     """
-    Returns the number of edges for the supplied image shape assuming 4-conectedness.
+    Returns the number of edges for the supplied image shape assuming 4-connectedness.
+    
+    The name of the function has historical reasons. Essentially it returns the number
+    of edges assuming 4-connectedness only for 2D. For 3D it assumes 6-connectedness,
+    etc.
     
     @param shape the shape of the image
     @type shape sequence
