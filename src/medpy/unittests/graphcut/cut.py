@@ -6,14 +6,10 @@ re-labelling of the original label image.
 One test if performed with the region bases, and one with the voxel based term.
 The test is conducted with an artificial boundary term.
 
-!TODO:
-- Update the test for the region based term to include boundary conditions
-- Implement the test for the voxel based term
-
 @author Oskar Maier
-@version d0.1.1
+@version r0.1.2
 @since 2011-01-29
-@status Development
+@status Release
 """
 
 # build-in modules
@@ -22,7 +18,7 @@ import unittest
 # third-party modules
 
 # own modules
-from medpy.graphcut import graph_from_labels, GraphDouble, Graph
+from medpy.graphcut import graph_from_labels, GraphDouble, Graph, boundary_difference_of_means_voxel, graph_from_voxels
 from medpy import filter
 import scipy
 
@@ -30,6 +26,36 @@ import scipy
 class TestCut(unittest.TestCase):
     """Executes the complete pipeline of the graph cut algorithm, checking the results."""
 
+    # data for voxel based test
+    __voriginal_image = [[[1,0,1,2,3],
+                         [1,0,1,4,3],
+                         [0,1,1,6,4]],
+                        [[1,0,1,2,3],
+                         [1,0,1,4,3],
+                         [0,1,1,6,4]]]
+
+    __vfg_markers = [[[0,0,0,0,0],
+                      [0,0,0,0,0],
+                      [1,0,0,0,0]],
+                    [[0,0,0,0,0],
+                     [0,0,0,0,0],
+                     [1,0,0,0,0]]]
+
+    __vbg_markers = [[[0,0,0,0,1],
+                      [0,0,0,0,0],
+                      [0,0,0,0,0]],
+                     [[0,0,0,0,1],
+                      [0,0,0,0,0],
+                      [0,0,0,0,0]]]
+    __vexpected = [[[1,1,1,0,0],
+                    [1,1,1,0,0],
+                    [1,1,1,0,0]],
+                   [[1,1,1,0,0],
+                    [1,1,1,0,0],
+                    [1,1,1,0,0]]]
+    __vmaxflow = 3
+
+    # data for region based test
     __label_image = [[ 1,  2,  3,  3, 10],
                      [ 1,  4,  3,  8, 10],
                      [ 5,  5,  6,  7, 10],
@@ -47,6 +73,32 @@ class TestCut(unittest.TestCase):
                 [1, 1, 1, 1, 0],
                 [1, 1, 1, 1, 0]]
     __maxflow = 16
+    
+    def test_voxel_based(self):
+        """Executes the complete pipeline of the graph cut algorithm."""
+        # create the graph from the image
+        original_image = scipy.asarray(self.__voriginal_image)
+        graph = graph_from_voxels(scipy.asarray(self.__vfg_markers),
+                                  scipy.asarray(self.__vbg_markers),
+                                  boundary_term=boundary_difference_of_means_voxel,
+                                  boundary_term_args=original_image)
+        
+        # execute min-cut / executing BK_MFMC
+        try:
+            maxflow = graph.maxflow()
+        except Exception as e:
+            self.fail('An error was thrown during the external executions: {}'.format(e.message))
+            
+        # reshape results to form a valid mask
+        result = scipy.zeros(original_image.size, dtype=scipy.bool_)
+        for idx in range(len(result)):
+            result[idx] = 0 if graph.termtype.SINK == graph.what_segment(idx) else 1
+        result = result.reshape(original_image.shape)
+            
+        # check results for validity
+        self.assertTrue((result == scipy.asarray(self.__vexpected)).all(), 'Resulting voxel-based cut is different than expected.')
+        self.assertEqual(maxflow, self.__vmaxflow, 'The resulting maxflow {} differs from the expected one {}.'.format(maxflow, self.__vmaxflow))
+        
     
     def test_region_based(self):
         """Executes the complete pipeline of the graph cut algorithm."""

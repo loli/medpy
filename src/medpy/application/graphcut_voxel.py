@@ -72,6 +72,7 @@ def main():
     # select boundary term
     if args.boundary == 'means':
         boundary_term = graphcut.boundary_difference_of_means_voxel
+        boundary_term = graphcut.energy_voxel.boundary_difference_of_means2
         logger.info('Selected boundary term: difference of means')
 
     # load input images
@@ -114,7 +115,7 @@ def main():
     maxflow = gcgraph.maxflow()
     logger.debug('Maxflow is {}'.format(maxflow))
     
-    # aplly results to the region image
+    # reshape results to form a valid mask
     logger.info('Applying results...')
     result_image_data = scipy.zeros(bgmarkers_image_data.size, dtype=scipy.bool_)
     for idx in range(len(result_image_data)):

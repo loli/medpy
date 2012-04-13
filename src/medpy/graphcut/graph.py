@@ -97,7 +97,7 @@ class Graph(object):
         Set the sink nodes and compute their t-weights.
         
         @warning It does not get checked if one of the supplied sink-nodes already has
-        a weight assigned (e.g. by passing it to @link set_source_nodes()). This can
+        a weight assigned (e.g. by passing it to set_source_nodes()). This can
         occur when the foreground- and background-markers cover the same region. In this
         case the order of setting the terminal nodes can affect the graph and therefore
         the graph-cut result.
@@ -125,7 +125,7 @@ class Graph(object):
         Adds t-weights to the current collection of t-weights, overwriting already
         existing ones.
         @note the weights for nodes directly connected to either the source or the sink
-        are best set using @link set_source_nodes() or @link set_sink_nodes() to ensure
+        are best set using set_source_nodes() or set_sink_nodes() to ensure
         consistency of their maximum values.
         
         @param tweights a dictionary with node_ids as keys and (weight-to-source, weight-to-sink) tuples as values.
@@ -210,7 +210,7 @@ class Graph(object):
 class GCGraph:
     """
     A graph representation that works directly with the maxflow.GraphDouble graph as
-    base. It is therefore less flexible as @link Graph, but leads to lower memory
+    base. It is therefore less flexible as graph.Graph, but leads to lower memory
     requirements.
     
     The graph contains nodes, edges (directed) between the nodes (n-edges), edges
@@ -260,7 +260,7 @@ class GCGraph:
         Set multiple source nodes and compute their t-weights.
         
         @warning It does not get checked if one of the supplied source-nodes already has
-        a weight assigned (e.g. by passing it to @link set_sink_nodes()). This can
+        a weight assigned (e.g. by passing it to set_sink_nodes()). This can
         occur when the foreground- and background-markers cover the same region. In this
         case the order of setting the terminal nodes can affect the graph and therefore
         the graph-cut result.
@@ -283,7 +283,7 @@ class GCGraph:
         Set multiple sink nodes and compute their t-weights.
         
         @warning It does not get checked if one of the supplied sink-nodes already has
-        a weight assigned (e.g. by passing it to @link set_source_nodes()). This can
+        a weight assigned (e.g. by passing it to set_source_nodes()). This can
         occur when the foreground- and background-markers cover the same region. In this
         case the order of setting the terminal nodes can affect the graph and therefore
         the graph-cut result.
@@ -344,7 +344,7 @@ class GCGraph:
               the number passed to the init-method. If this is the case, the underlying
               C++ implementation will double the memory, which is very inefficient.
               
-        @note see @link set_nweight() for raise errors.
+        @note see set_nweight() for raise errors.
         """
         for edge, weight in nweights.iteritems():
             self.set_nweight(edge[0], edge[1], weight[0], weight[1])
@@ -376,11 +376,11 @@ class GCGraph:
         already existing ones.
         
         @warning since this method overrides already existing t-weights, it is strongly
-        recommended to run @link set_source_nodes() and @link set_sink_nodes() after the
+        recommended to run set_source_nodes() and set_sink_nodes() after the
         last call to this method.
         
         @note the weights for nodes directly connected to either the source or the sink
-        are best set using @link set_source_nodes() or @link set_sink_nodes() to ensure
+        are best set using set_source_nodes() or set_sink_nodes() to ensure
         consistency of their maximum values.
         
         @param tweights a dictionary with node_ids as keys and (weight-to-source, weight-to-sink) tuples as values.

@@ -15,9 +15,9 @@ from medpy.unittests.graphcut import *
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "0.1, 2011-12-05"
+__version__ = "r0.1.4, 2011-12-05"
 __email__ = "oskar.maier@googlemail.com"
-__status__ = "Development"
+__status__ = "Release"
 __description__ = "Unittest executer."
 
 # code
@@ -33,6 +33,7 @@ def main():
     suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCut))
     suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestGenerate))
     suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestEnergyLabel))
+    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestEnergyVoxel))
     
     # execute tests
     unittest.TextTestRunner(verbosity=2).run(suite_metric)

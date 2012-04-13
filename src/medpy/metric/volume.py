@@ -1,9 +1,9 @@
 """
-@package medpy.metric.surface
+@package medpy.metric.volume
 Holds a metrics class computing volume metrics over two 3D-images contain each a binary object.
 
 Classes:
-    - Surface: Computes different surface metrics between two 3D-images contain each an object.
+    - VOlume: Computes different volume metrics between two 3D-images contain each an object.
 
 @author Oskar Maier
 @version r0.2.1

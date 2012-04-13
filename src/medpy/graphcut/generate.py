@@ -107,8 +107,7 @@ def graph_from_voxels(fg_markers,
     logger = Logger.getInstance()
     
     # prepare result graph
-    #graph = Graph()
-    graph = GCGraph(fg_markers.size, reduce(lambda x, y: x*y, [dim - 1 for dim in fg_markers.shape]) * 3)
+    graph = GCGraph(fg_markers.size, __voxel_4conectedness(fg_markers.shape))
     
     logger.info('Performing attribute tests...')
     
@@ -253,7 +252,7 @@ def graph_from_labels(label_image,
     if not hasattr(regional_term, '__call__') or not 4 == len(inspect.getargspec(regional_term)[0]):
         raise AttributeError('regional_term has to be a callable object which takes four parameters.')
     if not hasattr(boundary_term, '__call__') or not 2 == len(inspect.getargspec(boundary_term)[0]):
-        raise AttributeError('boundary_term has to be a callable object which takes two parameters.')
+        raise AttributeError('bounda__voxel_4conectednessry_term has to be a callable object which takes two parameters.')
 
     logger.info('Collecting nodes...')
 
@@ -308,3 +307,15 @@ def __boundary_term_label(label_image, boundary_term_args):
     # supplying no boundary term contradicts the whole graph cut idea.
     return {}
     
+def __voxel_4conectedness(shape):
+    """
+    Returns the number of edges for the supplied image shape assuming 4-conectedness.
+    
+    @param shape the shape of the image
+    @type shape sequence
+    @return the number of edges
+    @rtype int
+    """
+    shape = list(shape)
+    while 1 in shape: shape.remove(1) # empty resp. 1-sized dimensions have to be removed (equal to scipy.squeeze on the array)
+    return int(round(sum([(dim - 1)/float(dim) for dim in shape]) * scipy.prod(shape)))

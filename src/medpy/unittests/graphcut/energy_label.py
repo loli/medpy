@@ -41,7 +41,7 @@ class TestEnergyLabel(unittest.TestCase):
                     [0., 0., sys.float_info.max]]
         label = [[0, 1, 2],
                  [0, 1, 3]]
-        expected_result = {(0, 1): (2.0, 2.0), (1, 2): (1.0, 1.0), (1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (2, 3): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(0, 1): (2.0, 2.0), (1, 2): (1.0, 1.0), (1, 3): (sys.float_info.min, sys.float_info.min), (2, 3): (sys.float_info.min, sys.float_info.min)}
         result = boundary_stawiaski_label(label, (gradient))
         self.__compare_dictionaries(result, expected_result, 'Test3')
         # TEST4: check behavior for integer gradient image
@@ -148,7 +148,7 @@ class TestEnergyLabel(unittest.TestCase):
         label = [[1, 4, 8],
                  [1, 3, 10],
                  [1, 3, 10]]
-        expected_result = {(1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test1')
@@ -156,7 +156,7 @@ class TestEnergyLabel(unittest.TestCase):
         label = [[-1, 4, 8],
                  [-1, 3, 10],
                  [1, -3, 10]]
-        expected_result = {(-1, 1): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (-1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (-3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (-3, 1): (sys.float_info.epsilon, sys.float_info.epsilon), (-3, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (-1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(-1, 1): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (-1, 3): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (-3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (-3, 1): (sys.float_info.min, sys.float_info.min), (-3, 3): (sys.float_info.min, sys.float_info.min), (-1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test2')
@@ -165,7 +165,7 @@ class TestEnergyLabel(unittest.TestCase):
                     [0., 0., sys.float_info.max]]
         label = [[0, 1, 2],
                  [0, 1, 3]]
-        expected_result = {(0, 1): (1.0, 1.0), (1, 2): (1.0, 1.0), (1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (2, 3): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(0, 1): (1.0, 1.0), (1, 2): (1.0, 1.0), (1, 3): (sys.float_info.min, sys.float_info.min), (2, 3): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (gradient))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test3')
@@ -174,7 +174,7 @@ class TestEnergyLabel(unittest.TestCase):
                  [1, 3, 10],
                  [1, 3, 10]]
         label = scipy.asarray(label)
-        expected_result = {(1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros(label.shape, scipy.int_)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test4')
@@ -183,25 +183,25 @@ class TestEnergyLabel(unittest.TestCase):
                  [1, 3, 10],
                  [1, 3, 10]]
         label = scipy.asarray(label, order='C') # C-order, gradient same order
-        expected_result = {(1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (C,C)')
         label = scipy.asarray(label, order='F') # Fortran order, gradient same order
-        expected_result = {(1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros_like(label)))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (F, F)')
         label = scipy.asarray(label, order='C') # C-order, gradient different order
-        expected_result = {(1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros(label.shape, order='F')))
         result = self._reorder_keys(result)
         self.__compare_dictionaries(result, expected_result, 'Test5 (C, F)')
         label = scipy.asarray(label, order='F') # F-order, gradient different order
-        expected_result = {(1, 3): (sys.float_info.epsilon, sys.float_info.epsilon), (4, 8): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (8, 10): (sys.float_info.epsilon, sys.float_info.epsilon), (1, 4): (sys.float_info.epsilon, sys.float_info.epsilon), (3, 4): (sys.float_info.epsilon, sys.float_info.epsilon)}
+        expected_result = {(1, 3): (sys.float_info.min, sys.float_info.min), (4, 8): (sys.float_info.min, sys.float_info.min), (3, 10): (sys.float_info.min, sys.float_info.min), (8, 10): (sys.float_info.min, sys.float_info.min), (1, 4): (sys.float_info.min, sys.float_info.min), (3, 4): (sys.float_info.min, sys.float_info.min)}
         result = boundary_difference_of_means_label(label, (scipy.zeros(label.shape, order='C')))
         result = self._reorder_keys(result)
-        self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')        
+        self.__compare_dictionaries(result, expected_result, 'Test5 (F, C)')  
         
     def test_boundary_difference_of_means_label_2d(self):
         """Test the @link medpy.graphcut.boundary_difference_of_means_label() function for 2D."""
@@ -294,8 +294,8 @@ class TestEnergyLabel(unittest.TestCase):
         for key, value in result.iteritems():
             self.assertTrue(key in expected_result, '{}: Region border {} unexpectedly found in results.'.format(msg_base, key))
             if key in expected_result:
-                self.assertAlmostEqual(value[0], expected_result[key][0], msg='{}: Weight for region border {} is {}. Expected {}.'.format(msg_base, key, value, expected_result[key]))
-                self.assertAlmostEqual(value[1], expected_result[key][1], msg='{}: Weight for region border {} is {}. Expected {}.'.format(msg_base, key, value, expected_result[key]))
+                self.assertAlmostEqual(value[0], expected_result[key][0], msg='{}: Weight for region border {} is {}. Expected {}.'.format(msg_base, key, value, expected_result[key]), places=8)
+                self.assertAlmostEqual(value[1], expected_result[key][1], msg='{}: Weight for region border {} is {}. Expected {}.'.format(msg_base, key, value, expected_result[key]), places=8)
                 self.assertGreater(value[0], 0.0, '{}: Encountered a weight {} <= 0.0 for key {}.'.format(msg_base, value, key))
                 self.assertGreater(value[1], 0.0, '{}: Encountered a weight {} <= 0.0 for key {}.'.format(msg_base, value, key))
                 
