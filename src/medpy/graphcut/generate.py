@@ -107,6 +107,7 @@ def graph_from_voxels(fg_markers,
     logger = Logger.getInstance()
     
     # prepare result graph
+    print "Assuming {} nodes and {} edges for image of shape {}".format(fg_markers.size, __voxel_4conectedness(fg_markers.shape), fg_markers.shape) 
     graph = GCGraph(fg_markers.size, __voxel_4conectedness(fg_markers.shape))
     
     logger.info('Performing attribute tests...')

@@ -129,7 +129,7 @@ def main():
     gcgraph = graphcut.graph_from_voxels(fgmarkers_image_data,
                                          bgmarkers_image_data,
                                          boundary_term = boundary_term,
-                                         boundary_term_args = badditional_image_data)
+                                         boundary_term_args = (badditional_image_data, args.sigma))
     
     # execute min-cut
     logger.info('Executing min-cut...')
@@ -158,6 +158,7 @@ def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__, formatter_class=RawTextHelpFormatter)
     
+    parser.add_argument('sigma', type=float, help='The sigma required for the boundary terms.')
     parser.add_argument('badditional', help='The additional image required by the boundary term. See there for details.')
     parser.add_argument('foreground', help='Binary image containing the foreground markers.')
     parser.add_argument('background', help='Binary image containing the background markers.')

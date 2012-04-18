@@ -113,7 +113,7 @@ def boundary_difference_linear(graph, (original_image)):
     
     __skeleton_difference(graph, original_image, boundary_term_linear)
 
-def boundary_maximum_exponential(graph, (gradient_image)):
+def boundary_maximum_exponential(graph, (gradient_image, sigma)):
     """
     The same as energy_voxel.boundary_difference_exponential(), but working on the gradient
     image instead of the original.
@@ -121,9 +121,6 @@ def boundary_maximum_exponential(graph, (gradient_image)):
     @see energy_voxel.boundary_difference_exponential() for details.
     """
     gradient_image = scipy.asarray(gradient_image)
-    
-    # compute sigma
-    sigma = __SIGMA
     
     def boundary_term_exponential(intensities):
         """
@@ -139,7 +136,7 @@ def boundary_maximum_exponential(graph, (gradient_image)):
     
     __skeleton_maximum(graph, gradient_image, boundary_term_exponential)    
 
-def boundary_difference_exponential(graph, (original_image)):
+def boundary_difference_exponential(graph, (original_image, sigma)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -170,9 +167,6 @@ def boundary_difference_exponential(graph, (original_image)):
     """
     original_image = scipy.asarray(original_image)
     
-    # compute sigma
-    sigma = __SIGMA
-    
     def boundary_term_exponential(intensities):
         """
         Implementation of a exponential boundary term computation over an array.
@@ -187,7 +181,7 @@ def boundary_difference_exponential(graph, (original_image)):
     
     __skeleton_difference(graph, original_image, boundary_term_exponential)
     
-def boundary_maximum_division(graph, (gradient_image)):
+def boundary_maximum_division(graph, (gradient_image, sigma)):
     """
     The same as energy_voxel.boundary_difference_division(), but working on the gradient
     image instead of the original.
@@ -195,9 +189,6 @@ def boundary_maximum_division(graph, (gradient_image)):
     @see energy_voxel.boundary_difference_division() for details.
     """
     gradient_image = scipy.asarray(gradient_image)
-    
-    # compute sigma
-    sigma = __SIGMA
     
     def boundary_term_division(intensities):
         """
@@ -211,7 +202,7 @@ def boundary_maximum_division(graph, (gradient_image)):
     
     __skeleton_difference(graph, gradient_image, boundary_term_division)
     
-def boundary_difference_division(graph, (original_image)):
+def boundary_difference_division(graph, (original_image, sigma)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -242,9 +233,6 @@ def boundary_difference_division(graph, (original_image)):
     """
     original_image = scipy.asarray(original_image)
     
-    # compute sigma
-    sigma = __SIGMA
-    
     def boundary_term_division(intensities):
         """
         Implementation of a exponential boundary term computation over an array.
@@ -257,7 +245,7 @@ def boundary_difference_division(graph, (original_image)):
     
     __skeleton_difference(graph, original_image, boundary_term_division)
     
-def boundary_maximum_power(graph, (gradient_image)):
+def boundary_maximum_power(graph, (gradient_image, sigma)):
     """
     The same as energy_voxel.boundary_difference_power(), but working on the gradient
     image instead of the original.
@@ -265,9 +253,6 @@ def boundary_maximum_power(graph, (gradient_image)):
     @see energy_voxel.boundary_difference_power() for details.
     """
     gradient_image = scipy.asarray(gradient_image)
-    
-    # compute sigma
-    sigma = __SIGMA
     
     def boundary_term_division(intensities):
         """
@@ -282,7 +267,7 @@ def boundary_maximum_power(graph, (gradient_image)):
     __skeleton_maximum(graph, gradient_image, boundary_term_division)       
     
     
-def boundary_difference_power(graph, (original_image)):
+def boundary_difference_power(graph, (original_image, sigma)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -312,9 +297,6 @@ def boundary_difference_power(graph, (original_image)):
     @type original_image numpy.ndarray
     """
     original_image = scipy.asarray(original_image)
-    
-    # compute sigma
-    sigma = __SIGMA
     
     def boundary_term_division(intensities):
         """
