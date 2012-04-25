@@ -26,7 +26,7 @@ from medpy import filter
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2, 2012-03-16"
+__version__ = "r0.2.1, 2012-03-16"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -128,6 +128,11 @@ def main():
                                     boundary_term = boundary_term,
                                     boundary_term_args = badditional_image_data)
 
+    logger.info('Removing images that are not longer required from memory...')
+    del fgmarkers_image_data
+    del bgmarkers_image_data
+    del badditional_image_data
+
     # build graph cut graph from graph
     logger.info('Generating BK_MFMC C++ graph...')
     gcgraph = graphcut.GraphDouble(len(gr.get_nodes()), len(gr.get_nweights()))
@@ -135,7 +140,10 @@ def main():
     for node, weight in gr.get_tweights().iteritems():
         gcgraph.add_tweights(int(node - 1), weight[0], weight[1])
     for edge, weight in gr.get_nweights().iteritems():
-        gcgraph.add_edge(int(edge[0] - 1), int(edge[1] - 1), weight[0], weight[1])    
+        gcgraph.add_edge(int(edge[0] - 1), int(edge[1] - 1), weight[0], weight[1])
+        
+    logger.info('Deleting python graph object...')
+    del gr
     
     # execute min-cut
     logger.info('Executing min-cut...')
