@@ -19,7 +19,7 @@ import medpy.itkvtk.utilities.itku as itku
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1, 2011-12-12"
+__version__ = "r0.2, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -57,7 +57,7 @@ def main():
         
         # load image as float using ITK
         logger.info('Loading image {} as float using ITK...'.format(image))
-        image_type = itk.Image[itk.F, 3] # causes PyDev to complain -> ignore error warning
+        image_type = itk.Image[itk.F, args.dimensions] # causes PyDev to complain -> ignore error warning
         reader = itk.ImageFileReader[image_type].New()
         reader.SetFileName(image)
         reader.Update()
@@ -91,6 +91,7 @@ def getParser():
 
     parser.add_argument('folder', help='The place to store the created images in.')
     parser.add_argument('images', nargs='+', help='One or more input images.')
+    parser.add_argument('--dimensions', dest='dimensions', type=int, default=3, help='Indicate the number of image dimensions. Defaults to three.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')

@@ -8,9 +8,8 @@ import logging
 import os
 
 # third-party modules
-import scipy
 import scipy.ndimage
-from nibabel.loadsave import load, save
+from nibabel.loadsave import load
 from nibabel.spatialimages import ImageFileError
 
 # path changes
@@ -30,6 +29,7 @@ __description__ = """
                   Takes as input a binary image, extracts the surface of the contained
                   foreground object and saves them per-slice (in the supplied dimension)
                   in the supplied folder.
+                  Note: Also performs some morphological operations on the masks.
                   """
 
 # code
@@ -60,7 +60,7 @@ def main():
         # 2009: IM-0001-0027-icontour-manual
         file_name = '{}/IM-0001-{:04d}-{}contour-auto.txt'.format(args.target, slice_idx + args.offset, args.ctype)
         # 2012: P01-0080-icontour-manual.txt
-        #file_name = '{}/P01-{:04d}-{}contour-auto.txt'.format(args.target, slice_idx + args.offset, args.ctype)
+        file_name = '{}/P01-{:04d}-{}contour-auto.txt'.format(args.target, slice_idx + args.offset, args.ctype)
         
         # check if output file already exists
         if not args.force:
@@ -73,6 +73,9 @@ def main():
         
         # perform some additional morphological operations
         image_slice = scipy.ndimage.morphology.binary_fill_holes(image_slice)
+        footprint = scipy.ndimage.morphology.generate_binary_structure(image_slice.ndim, 3)
+        image_slice = scipy.ndimage.morphology.binary_closing(image_slice, footprint, iterations=7)
+        #image_slice = scipy.ndimage.morphology.binary_opening(image_slice, footprint, iterations=3)
             
         # erode contour in slice
         input_eroded = scipy.ndimage.morphology.binary_erosion(image_slice, border_value=1)
