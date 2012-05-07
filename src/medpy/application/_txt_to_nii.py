@@ -63,7 +63,7 @@ def main():
             for line in f.readlines():
                 line = line.strip()
                 if '#' == line[0]: continue
-                coordinates = map(int, map(float, line.split(' ')))
+                coordinates = map(int, map(round, map(float, line.split(' '))))
                 target_slice = scipy.squeeze(image_data[indices]) # hope this creates a view
                 target_slice[tuple(coordinates)] = contour_type
     

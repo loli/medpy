@@ -97,9 +97,9 @@ def main():
         #image_slice = scipy.ndimage.morphology.binary_opening(image_slice, footprint, iterations=3)
         
         # if type == o, perform a dilation to increase the size slightly
-        if 'o' == args.ctype:
-            footprint = scipy.ndimage.morphology.generate_binary_structure(image_slice.ndim, 3)
-            image_slice = scipy.ndimage.morphology.binary_dilation(image_slice, iterations=1)
+        #if 'o' == args.ctype:
+        #    footprint = scipy.ndimage.morphology.generate_binary_structure(image_slice.ndim, 3)
+        #    image_slice = scipy.ndimage.morphology.binary_dilation(image_slice, iterations=3)
             
         # erode contour in slice
         input_eroded = scipy.ndimage.morphology.binary_erosion(image_slice, border_value=1)
@@ -112,29 +112,29 @@ def main():
             for j in range(len(contour_tmp)):
                 contour[i].append(contour_tmp[j][i]) # x, y, z, ....
                 
+        if 0 == len(contour):
+            logger.warning('Empty contour for file {}. Skipping.'.format(file_name))
+            continue
+                
         # create final points following along the contour (incl. linear sub-voxel precision)
-        divider = 5
+        divider = 2
         point = contour[0]
         point_pos = 0
         processed = [point_pos]
         contour_final = []
         while point:
             nearest_pos = __find_nearest(point, contour, processed)
+            if False == nearest_pos: break
             contour_final.extend(__draw_line(point, contour[nearest_pos], divider))
             processed.append(nearest_pos)
             point = contour[nearest_pos]
-            if len(processed) == len(contour): break
         # make connection between last and first point
         contour_final.extend(__draw_line(point, contour[0], divider))
-        
-        if 0 == len(contour):
-            logger.warning('Empty contour for file {}. Skipping.'.format(file_name))
-            continue
         
         # save contour to file
         logger.debug('Creating file {}...'.format(file_name))
         with open(file_name, 'w') as f:
-            for line in contour:
+            for line in contour_final:
                 f.write('{}\n'.format(' '.join(map(str, line))))
                 
     logger.info('Successfully terminated.')
@@ -164,6 +164,8 @@ def __find_nearest(point, contour, processed):
         if dist < distance:
             nearest = pos
             distance = dist
+    if distance > math.sqrt(8): # do not allow distance more than 2 pixel diagonally; this avoids to include missed pixels in the end and to create artifacts
+        return False
     return nearest
         
 def __dist(p1, p2):
