@@ -9,14 +9,12 @@ import os
 
 # third-party modules
 import itk
-import vtk
 
 # path changes
 
 # own modules
 from medpy.core import Logger
 import medpy.itkvtk.utilities.itku as itku
-import medpy.itkvtk.utilities.vtku as vtku
 
 
 # information
@@ -26,7 +24,7 @@ __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
                   Applies the watershed segmentation to a number of images with a range
-                  of parameters..
+                  of parameters.
                   The resulting image is saved in the supplied folder with the same
                   name as the input image, but with a suffix '_watershed_[parameters]'
                   attached.
@@ -49,7 +47,7 @@ def main():
         
         # load image as float using ITK
         logger.info('Loading image {} as float using ITK...'.format(image))
-        image_type = itk.Image[itk.F, 3]
+        image_type = itk.Image[itk.F, 3] # causes Eclipse PyDev to complain -> ignore error warning
         reader = itk.ImageFileReader[image_type].New()
         reader.SetFileName(image)
         reader.Update()
@@ -96,42 +94,6 @@ def main():
                 writer.SetFileName(image_watershed_name)
                 writer.SetInput(image_watershed.GetOutput())
                 writer.Update()
-                
-                
-                ######## VTK CAST VERSION ########
-                # pro: more than 65000 labels possible
-                # con: only saves to metaIO file format
-#                logger.info('Cast to VTK...')
-#                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
-#                itk_vtk_converter = itk.ImageToVTKImageFilter[watershed_image_type].New()
-#                itk_vtk_converter.SetInput(image_watershed.GetOutput())
-#                itk_vtk_converter.Update()
-#                
-#                logger.debug(vtku.getInformation(itk_vtk_converter.GetOutput()))
-#                
-#                # save file
-#                logger.info('Saving watershed image as {}...'.format(image_watershed_name))
-#                vtku.saveImageMetaIO(itk_vtk_converter.GetOutput(), image_watershed_name)
-                
-                ######## RELABEL VERSION #######
-                # pro: output file format the same as input file format
-                # con: can't work with more than 65000 labels
-#                logger.info('Relabel components to be consecutive and cast to ushort...')
-#                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
-#                watershed_image_dimensions = itk.template(image_watershed.GetOutput())[1][1]
-#                image_type_out = itk.Image[itk.US, watershed_image_dimensions]
-#                image_relabeled = itk.RelabelComponentImageFilter[watershed_image_type, image_type_out].New()
-#                image_relabeled.SetInput(image_watershed.GetOutput())
-#                image_relabeled.Update()
-#                
-#                logger.debug(itku.getInformation(image_relabeled.GetOutput()))
-#
-#                # save file
-#                logger.info('Saving watershed image as {}...'.format(image_watershed_name))
-#                writer = itk.ImageFileWriter[image_type_out].New()
-#                writer.SetFileName(image_watershed_name)
-#                writer.SetInput(image_relabeled.GetOutput())
-#                writer.Update()
     
     logger.info('Successfully terminated.')
         
