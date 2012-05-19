@@ -126,7 +126,7 @@ def main():
                                     fgmarkers_image_data,
                                     bgmarkers_image_data,
                                     boundary_term = boundary_term,
-                                    boundary_term_args = badditional_image_data)
+                                    boundary_term_args = (badditional_image_data, 0)) # second is directedness of graph
 
     logger.info('Removing images that are not longer required from memory...')
     del fgmarkers_image_data

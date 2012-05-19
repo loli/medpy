@@ -107,7 +107,7 @@ def boundary_difference_of_means(label_image, (original_image)): # label image i
 
     return dic
 
-def boundary_stawiaski(label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_stawiaski(label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
     """
     An implementation of the boundary term in (1), suitable to be used with the
     graphcut.generate.graph_from_labels() function.
@@ -122,7 +122,7 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
     ,where \f$k=2\f$. The final weight \f$w_{i,j}\f$ between two regions \f$r_i\f$ and
     \f$r_j\f$ is then determined by the sum of all these neighbour values:
     \f[
-        w = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|))
+        w_{i,j} = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|))
     \f]
     , where \f$F_{(r_i,r_j)}\f$ is the set of border voxel-pairs \f$e_{m,n}\f$ between
     the regions \f$r_i\f$ and \f$r_j\f$ and \f$|I(p)|\f$ the absolute of the gradient
@@ -131,6 +131,30 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
     This boundary_function works as an edge indicator in the original image. In simpler
     words the weight (and therefore the energy) is obtained by summing the local contrast
     along the boundaries between two regions.
+    
+    When the directedness parameter is set to zero, the resulting graph will be undirected.
+    When it is set to a positive value, light-to-dark transitions are favored i.e. voxels
+    with a lower intensity (darker) than the objects tend to be assigned to the object.
+    The boundary term is thus changed to
+    \f[
+          g_{ltd}(x) = \left\{
+              \begin{array}{l l}
+                1 & \quad \textrm{if $I_i > I_j$}\\
+                g(x) & \quad \textrm{if $I_i \leq I_j$}\\
+              \end{array} \right.
+    \f]
+    With a negative value for directedness, the opposite effect can be achieved i.e.
+    voxels with a higher intensity (lighter) than the objects tend to be assigned to the
+    object. The boundary term is thus changed to
+    \f[
+      g_{dtl} = \left\{
+          \begin{array}{l l}
+            g(x) & \quad \textrm{if $I_i > I_j$}\\
+            1 & \quad \textrm{if $I_i \leq I_j$}\\
+          \end{array} \right.
+    \f]
+    Subsequently the \f$g(x)\f$ in the computation of \f$w_{i,j}\f$ is substituted by
+    \f$g_{ltd}\f$ resp. \f$g_{dtl}\f$.
     
     @note This function requires the gradient magnitude image of the original image to
     be passed along. That means that graphcut.generate.graph_from_labels() has to be called with
@@ -143,6 +167,10 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
     @type label_image numpy.ndarray
     @param gradient_image The gradient magnitude image of the original image.
     @type gradient_image numpy.ndarray
+    @param directedness Zero for undirected graph, a positive number to favour
+    light-to-dark and a negative to dark-to-light transitions. See function
+    description for more details.
+    @type directedness int
     
     @return a dictionary with the edges as keys and the respective weight tuples as
             values
@@ -153,17 +181,72 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
     gradient_image = scipy.asarray(gradient_image)
     
     if label_image.flags['F_CONTIGUOUS']: # strangely one this one is required to be ctype ordering
-        label_image = scipy.ascontiguousarray(label_image)        
-    
-    def addition(key1, key2, v1, v2, dic):
+        label_image = scipy.ascontiguousarray(label_image)
+        
+    def addition_directed_ltd(key1, key2, v1, v2, dic): # for light-to-dark # tested
         "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
-        if not key1 == key2:
+        if not key1 == key2: # do not process voxel pairs which belong to the same region
+            if key2 > key1: # build a sorted key, as we only want one entry for each adjunct region pair; also switch vs
+                tmp = v1
+                v1 = v2
+                v2 = tmp
+                key = (key2, key1)
+            else:
+                key = (key1, key2)
+            # The function used to compute the weight contribution of each voxel pair
+            value = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            # ensure that no value is zero; this can occur due to rounding errors
+            value = max(value, sys.float_info.min)
+            # add weighted values to already existing edge
+            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (1, value))]
+            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, 1))]
+            
+    def addition_directed_dtl(key1, key2, v1, v2, dic): # for dark-to-light # tested
+        "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
+        if not key1 == key2: # do not process voxel pairs which belong to the same region
+            if key2 > key1: # build a sorted key, as we only want one entry for each adjunct region pair; also switch vs
+                tmp = v1
+                v1 = v2
+                v2 = tmp
+                key = (key2, key1)
+            else:
+                key = (key1, key2)
+            # The function used to compute the weight contribution of each voxel pair
+            value = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            # ensure that no value is zero; this can occur due to rounding errors
+            value = max(value, sys.float_info.min)
+            # add weighted values to already existing edge
+            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, 1))]
+            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (1, value))]            
+            
+    def addition_undirected(key1, key2, v1, v2, dic): # for undirected graphs # tested
+        "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
+        if not key1 == key2: # do not process voxel airs which belong to the same region
+            # build a sorted key, as we only want one entry for each adjunct region pair
             key = (min(key1, key2), max(key1, key2))
             # The function used to compute the weight contribution of each voxel pair
-            dic[key] = dic.get(key, 0) + math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            # The function used to compute the weight contribution of each voxel pair
+            value = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            # ensure that no value is zero; this can occur due to rounding errors
+            value = max(value, sys.float_info.min)
+            # add values to already existing edge
+            dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, value))]
+    
+#    Old, but possibly faster version \wo directedness
+#    def addition(key1, key2, v1, v2, dic):
+#        "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
+#        if not key1 == key2:
+#            key = (min(key1, key2), max(key1, key2))
+#            # The function used to compute the weight contribution of each voxel pair
+#            dic[key] = dic.get(key, 0) + math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
                                                   
-    # vectorize the function to achieve a speedup
-    vaddition = scipy.vectorize(addition)
+    # pick and vectorize the function to achieve a speedup
+    if 0 < directedness:
+        vaddition = scipy.vectorize(addition_directed_ltd)
+    elif 0 > directedness:
+        vaddition = scipy.vectorize(addition_directed_dtl)
+    else:
+        vaddition = scipy.vectorize(addition_undirected)
     
     # iterate over each dimension
     dic = {}
@@ -179,10 +262,11 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
                   gradient_image[slices_y].flat,
                   dic)
     
-    # modify the dict to contain tuples (undirected graph)
-    for key, value in dic.iteritems():
-        value = max(value, sys.float_info.min) # ensure that no value is zero; this can occure due to rounding errors
-        dic[key] = (value, value)
+#    Required for old version of addition function as post-processing step
+#    # modify the dict to contain tuples (undirected graph)
+#    for key, value in dic.iteritems():
+#        value = max(value, sys.float_info.min) # ensure that no value is zero; this can occure due to rounding errors
+#        dic[key] = (value, value)
 
     return dic
 

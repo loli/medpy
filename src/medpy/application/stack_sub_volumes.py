@@ -64,6 +64,8 @@ def main():
     
     # reduce the image dimensions (nibabel Analyze always assumes 4)
     result_data = numpy.squeeze(result_image.get_data())
+    if args.zero and result_data.all():
+            result_data = numpy.zeros(result_data.shape, result_data.dtype)
     
     # iterate over remaining images and concatenate
     for image_name in args.images[1:]:
@@ -73,8 +75,9 @@ def main():
             logger.critical('The input image does not exist or its file type is unknown.')
             raise ArgumentError('The input image does not exist or its file type is unknown.', e)  
         
+        
         # change to zero matrix if requested
-        if args.zero:
+        if args.zero and image_data.all():
             image_data = numpy.zeros(image_data.shape, image_data.dtype)
         
         #concatenate
@@ -91,7 +94,6 @@ def main():
     save(image_like(result_data, result_image, [0] * result_data.ndim), result_name)
     
     logger.info('Successfully terminated.')
-
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
@@ -107,7 +109,7 @@ def getParser():
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
-    parser.add_argument('-z', dest='zero', action='store_true', help='Add all exept the fist image as empty images.')
+    parser.add_argument('-z', dest='zero', action='store_true', help='If supplied, all images containing only 1s are treated as empty image.')
     parser.add_argument('-r', dest='reversed', action='store_true', help='Stack in resversed order as how the files are supplied.')
     
     return parser    
