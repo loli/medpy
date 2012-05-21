@@ -198,8 +198,8 @@ def boundary_stawiaski(label_image, (gradient_image, directedness)): # label ima
             # ensure that no value is zero; this can occur due to rounding errors
             value = max(value, sys.float_info.min)
             # add weighted values to already existing edge
-            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (1, value))]
-            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, 1))]
+            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (min(1, value + 0.0001), value))]
+            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, min(1, value + 0.0001)))]
             
     def addition_directed_dtl(key1, key2, v1, v2, dic): # for dark-to-light # tested
         "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
@@ -216,8 +216,8 @@ def boundary_stawiaski(label_image, (gradient_image, directedness)): # label ima
             # ensure that no value is zero; this can occur due to rounding errors
             value = max(value, sys.float_info.min)
             # add weighted values to already existing edge
-            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, 1))]
-            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (1, value))]            
+            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, min(1, value + 0.0001)))]
+            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (min(1, value + 0.0001), value))]            
             
     def addition_undirected(key1, key2, v1, v2, dic): # for undirected graphs # tested
         "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
