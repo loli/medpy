@@ -65,7 +65,8 @@ def main():
         footprint = scipy.ndimage.morphology.generate_binary_structure(image_smoothed_data.ndim, args.size)
         if 'opening' == args.type:
             logger.info('Applying opening...')
-            image_smoothed_data = scipy.ndimage.morphology.binary_opening(image_smoothed_data, footprint, iterations=args.iterations)
+            #image_smoothed_data = scipy.ndimage.morphology.binary_opening(image_smoothed_data, footprint, iterations=args.iterations)
+            image_smoothed_data = scipy.ndimage.morphology.binary_erosion(image_smoothed_data, footprint, iterations=args.iterations)
         else: # closing
             logger.info('Applying closing...')
             image_smoothed_data = scipy.ndimage.morphology.binary_closing(image_smoothed_data, footprint, iterations=args.iterations)

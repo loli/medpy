@@ -9,6 +9,7 @@ import os
 
 # third-party modules
 import itk
+import scipy
 
 # path changes
 
@@ -83,6 +84,11 @@ def main():
                 
                 logger.debug(itku.getInformation(image_watershed.GetOutput()))
                 
+                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
+                itk_py_converter = itk.PyBuffer[watershed_image_type]
+                image_array = itk_py_converter.GetArrayFromImage(image_watershed.GetOutput())
+                print len(scipy.unique(image_array))
+                
                 ######## UL ENABLED VERSION #######
                 # pro: everything
                 # contra: none
@@ -91,6 +97,7 @@ def main():
                 logger.info('Saving watershed image as {}...'.format(image_watershed_name))
                 watershed_image_type = itku.getImageType(image_watershed.GetOutput())
                 writer = itk.ImageFileWriter[watershed_image_type].New()
+                print writer
                 writer.SetFileName(image_watershed_name)
                 writer.SetInput(image_watershed.GetOutput())
                 writer.Update()
