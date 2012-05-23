@@ -84,20 +84,18 @@ def main():
                 
                 logger.debug(itku.getInformation(image_watershed.GetOutput()))
                 
-                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
-                itk_py_converter = itk.PyBuffer[watershed_image_type]
-                image_array = itk_py_converter.GetArrayFromImage(image_watershed.GetOutput())
-                print len(scipy.unique(image_array))
-                
                 ######## UL ENABLED VERSION #######
                 # pro: everything
                 # contra: none
+                # note: saving as *.nii does not work, why I do not now, probably the
+                # required pixel type (UL) is not supported? In any case, the saving
+                # should only be done in *.mhd, as long as not repaired and tested
 
                 # save file
                 logger.info('Saving watershed image as {}...'.format(image_watershed_name))
                 watershed_image_type = itku.getImageType(image_watershed.GetOutput())
+                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
                 writer = itk.ImageFileWriter[watershed_image_type].New()
-                print writer
                 writer.SetFileName(image_watershed_name)
                 writer.SetInput(image_watershed.GetOutput())
                 writer.Update()

@@ -36,7 +36,7 @@ __all__ = []
 
 # if __all__ is not set, only the following, explicit import statements are executed
 from graph import Graph, GCGraph
-from maxflow import GraphDouble # this always triggers an error in Eclipse, but is right
+from maxflow import GraphDouble, GraphFloat, GraphInt # this always triggers an error in Eclipse, but is right
 from write import graph_to_dimacs
 from generate import graph_from_labels, graph_from_voxels
 import energy_label

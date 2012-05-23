@@ -10,6 +10,7 @@ are given.
 Functions:
     - def boundary_difference_of_means(label_image, (original_image)): simple mean value base boundary term
     - def boundary_stawiaski(label_image, (gradient_image)): boundary term implementation in (1)
+    - def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): boundary term implementation in (1) with directed edges
 
 (1) Stawiaski J., Decenciere E., Bidlaut F. / "Interactive Liver Tumor Segmentation
 Using Graph-cuts and watershed" / MICCAI 2008 participation
@@ -107,6 +108,8 @@ def boundary_difference_of_means(label_image, (original_image)): # label image i
 
     return dic
 
+
+
 def boundary_stawiaski(label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
     """
     An implementation of the boundary term in (1), suitable to be used with the
@@ -185,6 +188,8 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
         dic[key] = (value, value)
 
     return dic
+
+
 
 def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
     """
