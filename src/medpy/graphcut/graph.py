@@ -8,7 +8,7 @@ Classes:
                      implementation graph maxflow.GraphDouble
     
 @author Oskar Maier
-@version r0.1.1
+@version r0.1.2
 @since 2012-02-06
 @status Release
 """
@@ -18,7 +18,7 @@ Classes:
 # third-party modules
 
 # own modules
-from maxflow import GraphDouble
+from maxflow import GraphDouble, GraphFloat
 
 # code
 class Graph(object):
@@ -240,7 +240,7 @@ class GCGraph:
     __INT_16_BIT = 32767
     # @var __UINT_16_BIT: The maximum value of unsigned int 16bit.
     __UINT_16_BIT = 65535
-    # @var MAX The maximum value a weight can take.
+    # @var MAX The maximum value a terminal weight can take.
     MAX = __UINT_16_BIT
     
     def __init__(self, nodes, edges):
@@ -250,7 +250,7 @@ class GCGraph:
         @param edges the number of edges in the graph
         @type edges int
         """
-        self.__graph = GraphDouble(nodes, edges)
+        self.__graph = GraphFloat(nodes, edges)
         self.__graph.add_node(nodes)
         self.__nodes = nodes
         self.__edges = edges
@@ -331,7 +331,7 @@ class GCGraph:
             raise ValueError('The node_from ({}) can not be equal to the node_to ({}) (self-connections are forbidden in graph cuts).'.format(node_from, node_to))
         elif weight_there <= 0 or weight_back <= 0:
             raise ValueError('Negative or zero weights are not allowed.')
-        self.__graph.add_edge(int(node_from), int(node_to), float(weight_there), float(weight_back))
+        self.__graph.sum_edge(int(node_from), int(node_to), float(weight_there), float(weight_back))
             
     def set_nweights(self, nweights):
         """
@@ -344,7 +344,7 @@ class GCGraph:
               the number passed to the init-method. If this is the case, the underlying
               C++ implementation will double the memory, which is very inefficient.
               
-        @note see set_nweight() for raise errors.
+        @note see set_nweight() for raised errors.
         """
         for edge, weight in nweights.iteritems():
             self.set_nweight(edge[0], edge[1], weight[0], weight[1])

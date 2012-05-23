@@ -17,7 +17,7 @@ Functions:
                       regional_term_args = False,
                       boundary_term_args = False): Creates a Graph object from the voxels of an image.
 @author Oskar Maier
-@version r0.2.0
+@version r0.3.0
 @since 2012-01-18
 @status Release
 """
@@ -27,11 +27,11 @@ import inspect
 
 # third-party modules
 import scipy
-from scipy.ndimage.measurements import find_objects
 
 # own modules
 from ..core.Logger import Logger
-from ..graphcut import Graph, GCGraph
+from ..graphcut import GCGraph
+from energy_label import __compute_edges
 
 def graph_from_voxels(fg_markers,
                       bg_markers,
@@ -40,8 +40,8 @@ def graph_from_voxels(fg_markers,
                       regional_term_args = False,
                       boundary_term_args = False):
     """
-    Create a graphcut.graph.Graph object for all voxels of an image with a ndim * 2
-    neighbourhood.
+    Create a graphcut.maxflow.GraphDouble object for all voxels of an image with a
+    ndim * 2 neighbourhood.
     
     Every voxel of the image is regarded as a node. They are connected to their immediate
     neighbours via arcs. If to voxels are neighbours is determined using
@@ -54,7 +54,7 @@ def graph_from_voxels(fg_markers,
     All voxels that are under the foreground markers are considered to be tightly bound
     to the source: The t-weight of the arc from source to these nodes is set to a maximum
     value. The same goes for the background markers: The covered voxels receive a maximum
-    (graphcut.graph.Graph.MAX) t-weight for their arc towards the sink.
+    (graphcut.graph.GCGraph.MAX) t-weight for their arc towards the sink.
     
     @note If a voxel is marked as both, foreground and background, the background marker
     is given higher priority.
@@ -72,12 +72,12 @@ def graph_from_voxels(fg_markers,
                          , or a function - 
                          The supplied function is used to compute the t_edges. It has to
                          have the following signature
-                         regional_term(regional_term_args),
-                         and is supposed to return a dictionary with flattened voxel ids
-                         as keys and a tuple (source_t_weight, sink_t_weight) as values.
-                         The returned dictionary does only need to contain entries for
-                         nodes where one of the t-weights is not zero. Additional
-                         parameters can be passed via the regional_term_args argument.
+                         regional_term(graph, regional_term_args),
+                         and is supposed to compute (source_t_weight, sink_t_weight) for
+                         all voxels of the image and add these to the passed graph.GCGraph
+                         object. The weights have only to be computed for nodes where
+                         they do not equal zero. Additional parameters can be passed via
+                         the regional_term_args argument.
     @type regional_term function
     @param boundary_term This can be either
                          False - 
@@ -86,10 +86,9 @@ def graph_from_voxels(fg_markers,
                          , or a function -
                          In which case it is used to compute the edges weights. The
                          supplied function has to have the following signature
-                         fun(boundary_term_args), and is supposed to return
-                         a dictionary with the graphs edges as keys and their n-weights
-                         as values. These weights are tuples of numbers assigning the
-                         weights in both directions of the edge. Additional parameters
+                         fun(graph, boundary_term_args), and is supposed to compute the
+                         edges between the graphs node and to add them to the supplied
+                         graph.GCGraph object. Additional parameters
                          can be passed via the boundary_term_args argument.
     @type boundary_term function
     @param regional_term_args Use this to pass some additional parameters to the
@@ -98,7 +97,7 @@ def graph_from_voxels(fg_markers,
                               boundary_term function.
     
     @return the created graph
-    @rtype graphcut.graph.Graph
+    @rtype graphcut.maxflow.GraphDouble
     
     @raise AttributeError If an argument is maleformed.
     @raise FunctionError If one of the supplied functions returns unexpected results.
@@ -107,7 +106,7 @@ def graph_from_voxels(fg_markers,
     logger = Logger.getInstance()
     
     # prepare result graph
-    print "Assuming {} nodes and {} edges for image of shape {}".format(fg_markers.size, __voxel_4conectedness(fg_markers.shape), fg_markers.shape) 
+    logger.debug('Assuming {} nodes and {} edges for image of shape {}'.format(fg_markers.size, __voxel_4conectedness(fg_markers.shape), fg_markers.shape)) 
     graph = GCGraph(fg_markers.size, __voxel_4conectedness(fg_markers.shape))
     
     logger.info('Performing attribute tests...')
@@ -121,30 +120,24 @@ def graph_from_voxels(fg_markers,
     if not boundary_term: boundary_term = __boundary_term_voxel
     
     # check supplied functions and their signature
-    if not hasattr(regional_term, '__call__') or not 1 == len(inspect.getargspec(regional_term)[0]):
-        raise AttributeError('regional_term has to be a callable object which takes one parameter.')
+    if not hasattr(regional_term, '__call__') or not 2 == len(inspect.getargspec(regional_term)[0]):
+        raise AttributeError('regional_term has to be a callable object which takes two parameter.')
     if not hasattr(boundary_term, '__call__') or not 2 == len(inspect.getargspec(boundary_term)[0]):
         raise AttributeError('boundary_term has to be a callable object which takes two parameters.')
 
-    # collect all voxels i.e.
-    # collect all nodes Vr of the graph
-    #graph.set_nodes(fg_markers.size)
-    
     logger.debug('#nodes={}, #hardwired-nodes source/sink={}/{}'.format(fg_markers.size,
                                                                         len(fg_markers.ravel().nonzero()[0]),
                                                                         len(bg_markers.ravel().nonzero()[0])))
     
     # compute the weights of all edges from the source and to the sink i.e.
     # compute the weights of the t_edges Wt
-    logger.info('Computing terminal edge weights...')
-    Wt = regional_term(regional_term_args)
-    graph.set_tweights(Wt)
+    logger.info('Computing and adding terminal edge weights...')
+    regional_term(graph, regional_term_args)
 
     # compute the weights of the edges between the neighbouring nodes i.e.
     # compute the weights of the n_edges Wr
     logger.info('Computing and adding inter-node edge weights...')
     boundary_term(graph, boundary_term_args)
-    #graph.set_nweights(Wr)
     
     # collect all voxels that are under the foreground resp. background markers i.e.
     # collect all nodes that are connected to the source resp. sink
@@ -162,7 +155,7 @@ def graph_from_labels(label_image,
                       regional_term_args = False,
                       boundary_term_args = False):
     """
-    Create a graphcut.graph.Graph object from a nD label image.
+    Create a graphcut.maxflow.GraphDouble object from a nD label image.
     
     Every region of the label image is regarded as a node. They are connected to their
     immediate neighbours by arcs. If to regions are neighbours is determined using
@@ -176,7 +169,7 @@ def graph_from_labels(label_image,
     All regions that are under the foreground markers are considered to be tightly bound
     to the source: The t-weight of the arc from source to these nodes is set to a maximum 
     value. The same goes for the background markers: The covered regions receive a
-    maximum (graphcut.graph.Graph.MAX) t-weight for their arc towards the sink.
+    maximum (graphcut.graph.GCGraph.MAX) t-weight for their arc towards the sink.
     
     @note If a region is marked as both, foreground and background, the background marker
     is given higher priority.
@@ -197,12 +190,12 @@ def graph_from_labels(label_image,
                          , or a function - 
                          The supplied function is used to compute the t_edges. It has to
                          have the following signature
-                         regional_term(label_image, regions, bounding_boxes, regional_term_args),
-                         and is supposed to return a dictionary with region-ids as keys
-                         and a tuple (source_t_weight, sink_t_weight) as values. The
-                         returned dictionary does only need to contain entries for nodes
-                         where one of the t-weights is not zero. Additional parameters
-                         can be passed via the regional_term_args argument.
+                         regional_term(graph, label_image, regional_term_args), and is
+                         supposed to compute the weights between the regions of the
+                         label_image and the sink resp. source. The computed values it
+                         should add directly to the supplied graph.GCGraph object.
+                         Additional parameters can be passed via the regional_term_args
+                         argument.
     @type regional_term function
     @param boundary_term This can be either
                          False - 
@@ -211,11 +204,11 @@ def graph_from_labels(label_image,
                          , or a function -
                          In which case it is used to compute the edges weights. The
                          supplied function has to have the following signature
-                         fun(label_image, boundary_term_args), and is supposed to return
-                         a dictionary with the graphs edges as keys and their n-weights
-                         as values. These weights are tuples of numbers assigning the
-                         weights in both directions of the edge. Additional parameters
-                         can be passed via the boundary_term_args argument.
+                         fun(graph, label_image, boundary_term_args), and is supposed to
+                         compute the (directed or undirected) edges between any two
+                         adjunct regions of the label image. These computed weights it
+                         adds directly to the supplied graph.GCGraph object. Additional
+                         parameters can be passed via the boundary_term_args argument.
     @type boundary_term function
     @param regional_term_args Use this to pass some additional parameters to the
                               regional_term function.
@@ -223,16 +216,13 @@ def graph_from_labels(label_image,
                               boundary_term function.
     
     @return the created graph
-    @rtype graphcut.graph.Graph
+    @rtype graphcut.maxflow.GraphDouble
     
     @raise AttributeError If an argument is maleformed.
     @raise FunctionError If one of the supplied functions returns unexpected results.
-    """
+    """    
     # prepare logger
     logger = Logger.getInstance()
-    
-    # prepare result graph
-    graph = Graph()
     
     logger.info('Performing attribute tests...')
     
@@ -250,60 +240,65 @@ def graph_from_labels(label_image,
     if not boundary_term: boundary_term = __boundary_term_label
     
     # check supplied functions and their signature
-    if not hasattr(regional_term, '__call__') or not 4 == len(inspect.getargspec(regional_term)[0]):
-        raise AttributeError('regional_term has to be a callable object which takes four parameters.')
-    if not hasattr(boundary_term, '__call__') or not 2 == len(inspect.getargspec(boundary_term)[0]):
-        raise AttributeError('bounda__voxel_4conectednessry_term has to be a callable object which takes two parameters.')
-
-    logger.info('Collecting nodes...')
-
-    # collect all labels i.e.
-    # collect all nodes Vr of the graph
-    graph.set_nodes(len(scipy.unique(label_image)))
+    if not hasattr(regional_term, '__call__') or not 3 == len(inspect.getargspec(regional_term)[0]):
+        raise AttributeError('regional_term has to be a callable object which takes three parameters.')
+    if not hasattr(boundary_term, '__call__') or not 3 == len(inspect.getargspec(boundary_term)[0]):
+        raise AttributeError('boundary_term has to be a callable object which takes three parameters.')    
     
-    # collect all regions that are under the foreground resp. background markers i.e.
-    # collect all nodes that are connected to the source resp. sink
-    graph.set_source_nodes(scipy.unique(label_image[fg_markers]))
-    graph.set_sink_nodes(scipy.unique(label_image[bg_markers]))
+    logger.info('Determining number of nodes and edges.')
     
-    logger.debug('#nodes={}, #hardwired-nodes source/sink={}/{}'.format(len(graph.get_nodes()),
-                                                                        len(graph.get_source_nodes()),
-                                                                        len(graph.get_sink_nodes())))
-    
-    logger.info('Extracting the regions bounding boxes...')
-    
+    # compute number of nodes and edges
+    nodes = len(scipy.unique(label_image))
+    # POSSIBILITY 1: guess the number of edges (in the best situation is faster but requires a little bit more memory. In the worst is slower.)
+    edges = 10 * nodes
+    logger.debug('guessed: #nodes={} nodes / #edges={}'.format(nodes, edges))
+    # POSSIBILITY 2: compute the edges (slow)
+    #edges = len(__compute_edges(label_image))
+    #logger.debug('computed: #nodes={} nodes / #edges={}'.format(nodes, edges))
+        
+    # prepare result graph
+    graph = GCGraph(nodes, edges)
+                                        
+    logger.debug('#hardwired-nodes source/sink={}/{}'.format(len(scipy.unique(label_image[fg_markers])),
+                                                             len(scipy.unique(label_image[bg_markers]))))
+                 
+    #logger.info('Extracting the regions bounding boxes...')
     # extract the bounding boxes
-    bounding_boxes = find_objects(label_image)
+    #bounding_boxes = find_objects(label_image)
         
     # compute the weights of all edges from the source and to the sink i.e.
     # compute the weights of the t_edges Wt
-    logger.info('Computing terminal edge weights...')
-    regions = set(graph.get_nodes()) - set(graph.get_source_nodes()) - set(graph.get_sink_nodes())
-    Wt = regional_term(label_image, regions, bounding_boxes, regional_term_args) # bounding boxes indexed from 0
-    graph.add_tweights(Wt)
+    logger.info('Computing and adding terminal edge weights...')
+    #regions = set(graph.get_nodes()) - set(graph.get_source_nodes()) - set(graph.get_sink_nodes())
+    regional_term(graph, label_image, regional_term_args) # bounding boxes indexed from 0 # old version: regional_term(graph, label_image, regions, bounding_boxes, regional_term_args)
 
     # compute the weights of the edges between the neighbouring nodes i.e.
     # compute the weights of the n_edges Wr
-    logger.info('Computing inter-node edge weights...')
-    Wr = boundary_term(label_image, boundary_term_args)
-    graph.set_nweights(Wr)
+    logger.info('Computing and adding inter-node edge weights...')
+    boundary_term(graph, label_image, boundary_term_args)
     
-    return graph
+    # collect all regions that are under the foreground resp. background markers i.e.
+    # collect all nodes that are connected to the source resp. sink
+    logger.info('Setting terminal weights for the markers...')
+    graph.set_source_nodes(scipy.unique(label_image[fg_markers] - 1)) # requires -1 to adapt to node id system
+    graph.set_sink_nodes(scipy.unique(label_image[bg_markers] - 1))
+    
+    return graph.get_graph()
 
-def __regional_term_voxel(regional_term_args):
+def __regional_term_voxel(graph, regional_term_args):
     """Fake regional_term function with the appropriate signature."""
     return {}
 
-def __regional_term_label(label_image, regions, bounding_boxes, regional_term_args):
+def __regional_term_label(graph, label_image, regional_term_args):
     """Fake regional_term function with the appropriate signature."""
     return {}
 
-def __boundary_term_voxel(boundary_term_args):
+def __boundary_term_voxel(graph, boundary_term_args):
     """Fake regional_term function with the appropriate signature."""
     # supplying no boundary term contradicts the whole graph cut idea.
     return {}
 
-def __boundary_term_label(label_image, boundary_term_args):
+def __boundary_term_label(graph, label_image, boundary_term_args):
     """Fake regional_term function with the appropriate signature."""
     # supplying no boundary term contradicts the whole graph cut idea.
     return {}

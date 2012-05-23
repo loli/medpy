@@ -16,7 +16,7 @@ Functions:
 Using Graph-cuts and watershed" / MICCAI 2008 participation
 
 @author Oskar Maier
-@version r0.2.1
+@version r0.3.0
 @since 2012-01-18
 @status Release
 """
@@ -31,7 +31,7 @@ import sys
 # own modules
 
 # code
-def boundary_difference_of_means(label_image, (original_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_difference_of_means(graph, label_image, (original_image)): # label image is not required to hold continuous ids or to start from 1
     """
     An implementation of the boundary term, suitable to be used with the
     graphcut.generate.graph_from_labels() function.
@@ -64,14 +64,12 @@ def boundary_difference_of_means(label_image, (original_image)): # label image i
     @note This function is tested on 2D and 3D images and theoretically works on all
     dimensions. 
     
+    @param graph the graph to add the weights to
+    @type graph graphcut.graph.GCGraph    
     @param label_image the label image
     @type label_image numpy.ndarray
     @param original_image The original image.
     @type original_image numpy.ndarray
-    
-    @return a dictionary with the edges as keys and the respective weight tuples as
-            values
-    @rtype dict
     """
     # convert to arrays if necessary
     label_image = scipy.asarray(label_image)
@@ -95,22 +93,19 @@ def boundary_difference_of_means(label_image, (original_image)): # label image i
 
     # get the adjuncancy of the labels
     edges = __compute_edges(label_image)
-    dic = dict.fromkeys(edges)
     
     # compute the difference of means for each adjunct region and add it as a tuple to the dictionary
     if 0. == max_difference: # special case when the divider is zero and therefore all values can be assured to equal zero
-        dic = dict.fromkeys(edges, (sys.float_info.min, sys.float_info.min))
+        for edge in edges:
+            graph.add_nweight(edge[0] - 1, edge[1] - 1, sys.float_info.min, sys.float_info.min)
     else:    
         # compute the difference of means for each adjunct region and add it as a tuple to the dictionary
-        for key in dic.iterkeys():
-            value = max(1. - abs(means[key[0]] - means[key[1]]) / max_difference, sys.float_info.min)
-            dic[key] = (value, value)
-
-    return dic
+        for edge in edges:
+            value = max(1. - abs(means[edge[0]] - means[edge[1]]) / max_difference, sys.float_info.min)
+            graph.add_nweight(edge[0] - 1, edge[1] - 1, value, value)
 
 
-
-def boundary_stawiaski(label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
     """
     An implementation of the boundary term in (1), suitable to be used with the
     graphcut.generate.graph_from_labels() function.
@@ -142,14 +137,12 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
     @note This function is tested on 2D and 3D images and theoretically works on all
     dimensions.
     
+    @param graph the graph to add the weights to
+    @type graph graphcut.graph.GCGraph
     @param label_image the label image
     @type label_image numpy.ndarray
     @param gradient_image The gradient magnitude image of the original image.
     @type gradient_image numpy.ndarray
-    
-    @return a dictionary with the edges as keys and the respective weight tuples as
-    values
-    @rtype dict
     """
     # convert to arrays if necessary
     label_image = scipy.asarray(label_image)
@@ -158,40 +151,29 @@ def boundary_stawiaski(label_image, (gradient_image)): # label image is not requ
     if label_image.flags['F_CONTIGUOUS']: # strangely one this one is required to be ctype ordering
         label_image = scipy.ascontiguousarray(label_image)
     
-    def addition(key1, key2, v1, v2, dic):
-        "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
+    def addition(key1, key2, v1, v2):
+        "Takes a key defined by two uints, two voxel intensities and adds to the function wide graph a new nweight."
         if not key1 == key2:
-            key = (min(key1, key2), max(key1, key2))
-            # The function used to compute the weight contribution of each voxel pair
-            dic[key] = dic.get(key, 0) + math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            weight = math.pow(1./(1. + max(abs(v1), abs(v2))), 2) # weight contribution of a single pixel
+            graph.set_nweight(min(key1, key2) - 1, max(key1, key2) - 1, weight, weight)
                                                   
     # vectorize the function to achieve a speedup
     vaddition = scipy.vectorize(addition)
     
     # iterate over each dimension
-    dic = {}
     for dim in range(label_image.ndim):
         slices_x = []
         slices_y = []
         for di in range(label_image.ndim):
             slices_x.append(slice(None, -1 if di == dim else None))
             slices_y.append(slice(1 if di == dim else None, None))
-        vaddition(label_image[slices_x].flat,
-                  label_image[slices_y].flat,
-                  gradient_image[slices_x].flat,
-                  gradient_image[slices_y].flat,
-                  dic)
-    
-    # modify the dict to contain tuples (undirected graph)
-    for key, value in dic.iteritems():
-        value = max(value, sys.float_info.min) # ensure that no value is zero; this can occure due to rounding errors
-        dic[key] = (value, value)
-
-    return dic
+        vaddition(label_image[slices_x],
+                  label_image[slices_y],
+                  gradient_image[slices_x],
+                  gradient_image[slices_y])
 
 
-
-def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
+def boundary_stawiaski_directed(graph, label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
     """
     An implementation of the boundary term in (1), suitable to be used with the
     graphcut.generate.graph_from_labels() function.
@@ -249,6 +231,8 @@ def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): # 
     @note This function is tested on 2D and 3D images and theoretically works on all
     dimensions. 
     
+    @param graph the graph to add the weights to
+    @type graph graphcut.graph.GCGraph    
     @param label_image the label image
     @type label_image numpy.ndarray
     @param gradient_image The gradient magnitude image of the original image.
@@ -257,10 +241,6 @@ def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): # 
     light-to-dark and a negative to dark-to-light transitions. See function
     description for more details.
     @type directedness int
-    
-    @return a dictionary with the edges as keys and the respective weight tuples as
-            values
-    @rtype dict
     """
     # convert to arrays if necessary
     label_image = scipy.asarray(label_image)
@@ -274,38 +254,24 @@ def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): # 
     def addition_directed_ltd(key1, key2, v1, v2, dic): # for light-to-dark # tested
         "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
         if not key1 == key2: # do not process voxel pairs which belong to the same region
-            if key2 > key1: # build a sorted key, as we only want one entry for each adjunct region pair; also switch vs
-                tmp = v1
-                v1 = v2
-                v2 = tmp
-                key = (key2, key1)
-            else:
-                key = (key1, key2)
             # The function used to compute the weight contribution of each voxel pair
-            value = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            weight = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
             # ensure that no value is zero; this can occur due to rounding errors
-            value = max(value, sys.float_info.min)
+            weight = max(weight, sys.float_info.min)
             # add weighted values to already existing edge
-            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (min(1, value + beta), value))]
-            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, min(1, value + beta)))]
+            if v1 > v2: graph.set_nweight(key1 - 1, key2 - 1, min(1, weight + beta), weight)
+            else: graph.set_nweight(key1 - 1, key2 - 1, weight, min(1, weight + beta))
             
-    def addition_directed_dtl(key1, key2, v1, v2, dic): # for dark-to-light # tested
+    def addition_directed_dtl(key1, key2, v1, v2): # for dark-to-light # tested
         "Takes a key defined by two uints, two voxel intensities and a dict to which it adds g(v1, v2)."
         if not key1 == key2: # do not process voxel pairs which belong to the same region
-            if key2 > key1: # build a sorted key, as we only want one entry for each adjunct region pair; also switch vs
-                tmp = v1
-                v1 = v2
-                v2 = tmp
-                key = (key2, key1)
-            else:
-                key = (key1, key2)
             # The function used to compute the weight contribution of each voxel pair
-            value = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
+            weight = math.pow(1./(1. + max(abs(v1), abs(v2))), 2)
             # ensure that no value is zero; this can occur due to rounding errors
-            value = max(value, sys.float_info.min)
+            weight = max(weight, sys.float_info.min)
             # add weighted values to already existing edge
-            if v1 > v2: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (value, min(1, value + beta)))]
-            else: dic[key] = [sum(x) for x in zip(dic.get(key, (0, 0)), (min(1, value + beta), value))]            
+            if v1 > v2: graph.set_nweight(key1 - 1, key2 - 1, weight, min(1, weight + beta))
+            else: graph.set_nweight(key1 - 1, key2 - 1, min(1, weight + beta), weight)
                                                   
     # pick and vectorize the function to achieve a speedup
     if 0 > directedness:
@@ -314,20 +280,16 @@ def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): # 
         vaddition = scipy.vectorize(addition_directed_ltd)
     
     # iterate over each dimension
-    dic = {}
     for dim in range(label_image.ndim):
         slices_x = []
         slices_y = []
         for di in range(label_image.ndim):
             slices_x.append(slice(None, -1 if di == dim else None))
             slices_y.append(slice(1 if di == dim else None, None))
-        vaddition(label_image[slices_x].flat,
-                  label_image[slices_y].flat,
-                  gradient_image[slices_x].flat,
-                  gradient_image[slices_y].flat,
-                  dic)
-
-    return dic
+        vaddition(label_image[slices_x],
+                  label_image[slices_y],
+                  gradient_image[slices_x],
+                  gradient_image[slices_y])
 
 def __compute_edges(label_image):
     """
@@ -340,36 +302,33 @@ def __compute_edges(label_image):
     @param label_image An image with labeled regions (nD).
     @param return A set with tuples denoting the edge neighbourhood.
     """
-    # compute the neighbours
-    Er = __compute_edges_nd(label_image)
-    
-    # remove reversed neighbours and self-references
-    for edge in list(Er):
-        if (edge[1], edge[0]) in Er:
-            Er.remove(edge)
-    return Er
-    
+    return __compute_edges_nd(label_image)
     
 def __compute_edges_nd(label_image):
     """
     Computes the region neighbourhood defined by a star shaped n-dimensional structuring
     element (as returned by scipy.ndimage.generate_binary_structure(ndim, 1)) for the
     supplied region/label image.
-    @note The returned set can contain self references (i.e. (id_1, id_1)) as well as
-    reversed references (e.g. (id_1, id_2) and (id_2, id_1).
-    @see __compute_edges_nd2 alternative implementation (slighty slower)
-    @see __compute_edges_3d faster implementation for three dimensions only
+    Note The returned set contains neither duplicates, nor self-references
+    (i.e. (id_1, id_1)), nor reversed references (e.g. (id_1, id_2) and (id_2, id_1).
     
     @param label_image An image with labeled regions (nD).
     @param return A set with tuples denoting the edge neighbourhood.
     """
     Er = set()
+   
+    def append(v1, v2):
+        if v1 != v2:
+            Er.update([(min(v1, v2), max(v1, v2))])
+        
+    vappend = scipy.vectorize(append)
+   
     for dim in range(label_image.ndim):
         slices_x = []
         slices_y = []
         for di in range(label_image.ndim):
             slices_x.append(slice(None, -1 if di == dim else None))
             slices_y.append(slice(1 if di == dim else None, None))
-        Er = Er.union(set(zip(label_image[slices_x].flat,
-                              label_image[slices_y].flat)))
+        vappend(label_image[slices_x], label_image[slices_y])
+        
     return Er
