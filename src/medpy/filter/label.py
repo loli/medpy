@@ -10,7 +10,7 @@ Functions:
     - def relabel_map(label_image, mapping, key): Relabel a label image according to a mapping.
 
 @author Oskar Maier
-@version d0.1.0
+@version d0.1.1
 @since 2012-02-07
 @status Development
 """
@@ -42,15 +42,18 @@ def relabel_map(label_image, mapping, key=lambda x, y: x[y]):
     @rtype numpy.ndarray
     
     @raise ArgumentError If a region id is missing in the supplied mapping
-    """
+    """    
     label_image = scipy.array(label_image)
-    rav = label_image.ravel()
-    for i in range(len(rav)):
+    
+    def _map(x):
         try:
-            rav[i] = key(mapping, rav[i])
+            return key(mapping, x)
         except Exception as e:
-            raise ArgumentError('No conversion for region id {} found in the supplied mapping. Error: {}'.format(rav[i], e))
-    return rav.reshape(label_image.shape).astype(scipy.bool_)
+            raise ArgumentError('No conversion for region id {} found in the supplied mapping. Error: {}'.format(x, e))
+    
+    vmap = scipy.vectorize(_map)
+         
+    return vmap(label_image)
 
 def relabel(label_image, start = 1):
     """ 

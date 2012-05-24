@@ -26,7 +26,7 @@ from medpy import filter
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.2, 2012-03-16"
+__version__ = "r0.2.3, 2012-03-16"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -138,11 +138,12 @@ def main():
     maxflow = gcgraph.maxflow()
     logger.debug('Maxflow is {}'.format(maxflow))
     
-    # aplly results to the region image
+    # apply results to the region image
     logger.info('Applying results...')
-    region_image_data = filter.relabel_map(region_image_data,
-                                           gcgraph.what_segment,
-                                           lambda fun, rid: 0 if gcgraph.termtype.SINK == fun(int(rid) - 1) else 1)
+    mapping = [0] # no regions with id 1 exists in mapping, entry used as padding
+    mapping.extend(map(lambda x: 0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1,
+                       scipy.unique(region_image_data)))
+    region_image_data = filter.relabel_map(region_image_data, mapping)
     
     # save resulting mask as int8            
     logger.info('Saving resulting segmentation...')
