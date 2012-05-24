@@ -20,7 +20,7 @@ import medpy.itkvtk.utilities.itku as itku
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.4, 2011-12-12"
+__version__ = "r0.4.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -48,7 +48,7 @@ def main():
         
         # load image as float using ITK
         logger.info('Loading image {} as float using ITK...'.format(image))
-        image_type = itk.Image[itk.F, 3] # causes Eclipse PyDev to complain -> ignore error warning
+        image_type = itk.Image[itk.F, args.dimensions] # causes Eclipse PyDev to complain -> ignore error warning
         reader = itk.ImageFileReader[image_type].New()
         reader.SetFileName(image)
         reader.Update()
@@ -117,6 +117,7 @@ def getParser():
     parser.add_argument('levels', help='A colon separated list of values to be passed to the levels attribute (e.g. 0.1,0.2).')
     parser.add_argument('thresholds', help='A colon separated list of values to be passed to the threshold attribute (e.g. 0.01,0.05).')
     parser.add_argument('images', nargs='+', help='One or more input images (best in .mhd format).')
+    parser.add_argument('--dimensions', dest='dimensions', type=int, default=3, help='Indicate the number of image dimensions. Defaults to three.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')

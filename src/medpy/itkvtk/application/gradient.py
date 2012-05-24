@@ -19,7 +19,7 @@ import medpy.itkvtk.utilities.itku as itku
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2, 2011-12-12"
+__version__ = "r0.2.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """

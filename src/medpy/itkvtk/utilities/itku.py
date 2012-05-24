@@ -14,7 +14,7 @@ import vtk
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.3, 2011-11-25"
+__version__ = "r0.3.1, 2011-11-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release" # tested functions marked with tested keyword
 __description__ = "ITK image utility functions."
@@ -34,15 +34,14 @@ def getInformation(image): # tested
     
     # request information and format string
     s = 'itkImageData info:\n'
-    s += '\tscalar-type: ' + str(itk.template(image)[1][0]) + '\n'
+    s += '\tscalar-type: {}\n'.format(str(itk.template(image)[1][0]))
     rs = image.GetLargestPossibleRegion().GetSize()
-    s += '\tdimensions: ' + str(rs.GetElement(0)) + ', ' + str(rs.GetElement(1)) +  ', ' + str(rs.GetElement(2)) + '\n'
+    s += '\tdimensions: {}\n'.format([rs.GetElement(x) for x in range(rs.GetSizeDimension())])
     sp = image.GetSpacing()
-    s += '\tspacing: ' + str(sp.GetElement(0)) + ', ' + str(sp.GetElement(1)) +  ', ' + str(sp.GetElement(2)) + '\n'
-    o = image.GetOrigin() 
-    s += '\torigin: ' + str(o.GetElement(0)) + ', ' + str(o.GetElement(1)) +  ', ' + str(o.GetElement(2)) + '\n'
-    #s += '\tdata dim.:' + str(image.GetImageDimension()) # fails sometimes due to unknown reasons
-    s += '\tdata dim.: ' + str(itk.template(image)[1][1]) # alternative impl. for when GetImageDimension() fails 
+    s += '\tspacing: {}\n'.format([sp.GetElement(x) for x in range(rs.GetSizeDimension())])
+    o = image.GetOrigin()
+    s += '\torigin: {}\n'.format([o.GetElement(x) for x in range(rs.GetSizeDimension())]) 
+    s += '\tdata dim.: {}'.format(str(itk.template(image)[1][1])) # alternative impl. for when GetImageDimension() fails 
     
     return s
 

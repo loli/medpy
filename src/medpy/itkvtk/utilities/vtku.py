@@ -13,7 +13,7 @@ import vtk
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1, 2011-11-25"
+__version__ = "r0.1.1, 2011-11-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"  # tested functions marked with tested keyword
 __description__ = "VTK image utility functions."
