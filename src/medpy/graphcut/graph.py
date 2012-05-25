@@ -250,7 +250,7 @@ class GCGraph:
         @param edges the number of edges in the graph
         @type edges int
         """
-        self.__graph = GraphFloat(nodes, edges)
+        self.__graph = GraphDouble(nodes, edges)
         self.__graph.add_node(nodes)
         self.__nodes = nodes
         self.__edges = edges

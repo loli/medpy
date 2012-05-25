@@ -126,10 +126,11 @@ def main():
 
     # generate graph
     logger.info('Preparing BK_MFMC C++ graph...')
+    pixel_spacing = bgmarkers_image.get_header().get_zooms()
     gcgraph = graphcut.graph_from_voxels(fgmarkers_image_data,
                                          bgmarkers_image_data,
                                          boundary_term = boundary_term,
-                                         boundary_term_args = (badditional_image_data, args.sigma))
+                                         boundary_term_args = (badditional_image_data, args.sigma, pixel_spacing))
     
     # execute min-cut
     logger.info('Executing min-cut...')

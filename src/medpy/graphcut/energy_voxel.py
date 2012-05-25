@@ -32,9 +32,6 @@ import math
 
 # own modules
 
-# constants
-__SIGMA = 1.0
-
 # code
 def boundary_maximum_linear(graph, (gradient_image)):
     """
@@ -136,7 +133,7 @@ def boundary_maximum_exponential(graph, (gradient_image, sigma)):
     
     __skeleton_maximum(graph, gradient_image, boundary_term_exponential)    
 
-def boundary_difference_exponential(graph, (original_image, sigma)):
+def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -179,7 +176,7 @@ def boundary_difference_exponential(graph, (original_image, sigma)):
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
     
-    __skeleton_difference(graph, original_image, boundary_term_exponential)
+    __skeleton_difference(graph, original_image, boundary_term_exponential, spacing)
     
 def boundary_maximum_division(graph, (gradient_image, sigma)):
     """
@@ -345,7 +342,7 @@ def __skeleton_maximum(graph, image, boundary_term):
     __skeleton_base(graph, image, boundary_term, intensity_maximum)
     
 
-def __skeleton_difference(graph, image, boundary_term):
+def __skeleton_difference(graph, image, boundary_term, spacing):
     """
     A skeleton for the calculation of intensity difference based boundary terms.
     
@@ -385,9 +382,9 @@ def __skeleton_difference(graph, image, boundary_term):
         """
         return scipy.absolute(neighbour_one - neighbour_two)
         
-    __skeleton_base(graph, image, boundary_term, intensity_difference)
+    __skeleton_base(graph, image, boundary_term, intensity_difference, spacing)
 
-def __skeleton_base(graph, image, boundary_term, neighbourhood_function):
+def __skeleton_base(graph, image, boundary_term, neighbourhood_function, spacing):
     """
     Base of the skeleton for voxel based boundary term calculation.
     
@@ -425,6 +422,9 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function):
         # generate index offset function for index dependent offset
         idx_offset_divider = (image.shape[dim] - 1) * offset
         idx_offset = lambda x: int(x / idx_offset_divider) * offset
+        
+        # apply distance weighting through slice spacing
+        neighbourhood_intensity_term /= spacing[dim]
         
         for key, value in enumerate(neighbourhood_intensity_term.ravel()):
             # apply index dependent offset
