@@ -8,17 +8,17 @@ package. Additionally a number of convenience functions for re-occurring data pr
 are given.
 
 Functions:
-    - def boundary_maximum_linear(graph, (gradient_image))
-    - def boundary_difference_linear(graph, (original_image))
-    - def boundary_maximum_exponential(graph, (gradient_image))
-    - def boundary_difference_exponential(graph, (original_image))
-    - def boundary_maximum_division(graph, (gradient_image))
-    - def boundary_difference_division(graph, (original_image))
-    - def boundary_maximum_power(graph, (gradient_image))
-    - def boundary_difference_power(graph, (original_image))
+    - def boundary_maximum_linear(graph, (gradient_image, spacing))
+    - def boundary_difference_linear(graph, (original_image, spacing))
+    - def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing))
+    - def boundary_difference_exponential(graph, (original_image, sigma, spacing))
+    - def boundary_maximum_division(graph, (gradient_image, sigma, spacing))
+    - def boundary_difference_division(graph, (original_image, sigma, spacing))
+    - def boundary_maximum_power(graph, (gradient_image, sigma, spacing))
+    - def boundary_difference_power(graph, (original_image, sigma, spacing))
 
 @author Oskar Maier
-@version d0.2.0
+@version d0.3.0
 @since 2012-03-23
 @status Development
 """
@@ -33,7 +33,7 @@ import math
 # own modules
 
 # code
-def boundary_maximum_linear(graph, (gradient_image)):
+def boundary_maximum_linear(graph, (gradient_image, spacing)):
     """
     The same as energy_voxel.boundary_difference_linear(), but working on the gradient
     image instead of the original.
@@ -58,7 +58,7 @@ def boundary_maximum_linear(graph, (gradient_image)):
     
     __skeleton_maximum(graph, gradient_image, boundary_term_linear)
 
-def boundary_difference_linear(graph, (original_image)):
+def boundary_difference_linear(graph, (original_image, spacing)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -83,6 +83,11 @@ def boundary_difference_linear(graph, (original_image)):
     , where \f$\epsilon\f$ is a infinitively small number and for which
     \f$w(p, q) \in (0, 1]\f$ holds true.
     
+    When the created edge weights should be weighted according to the slice distance,
+    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    computed for the corresponding direction are divided by the respective slice
+    thickness. Set this parameter to False for equally weighted edges.     
+    
     @note This function requires the original image to be passed along. That means that
     generate.graph_from_voxels() has to be called with boundary_term_args set to the
     original image.
@@ -91,6 +96,10 @@ def boundary_difference_linear(graph, (original_image)):
     @type graph.GCGraph
     @param original_image The original image.
     @type original_image numpy.ndarray
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False        
     """
     original_image = scipy.asarray(original_image)
     
@@ -110,7 +119,7 @@ def boundary_difference_linear(graph, (original_image)):
     
     __skeleton_difference(graph, original_image, boundary_term_linear)
 
-def boundary_maximum_exponential(graph, (gradient_image, sigma)):
+def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing)):
     """
     The same as energy_voxel.boundary_difference_exponential(), but working on the gradient
     image instead of the original.
@@ -144,14 +153,19 @@ def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
     The weights are normalized using an exponential function and a smoothing factor
     \f$\sigma\f$.
     
-    The \f$\sigma\f$. value is computed as
-    !TODO: Find out a suitable computation of the sigma value. 
+    The \f$\sigma\f$. value has to be supplied manually, since its ideal settings
+    differ greatly from application to application.
     
     The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
     \f[
         w(p,q) = \exp^{-\frac{|I_p - I_q|^2}{\sigma^2}}
     \f]
     , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    When the created edge weights should be weighted according to the slice distance,
+    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    computed for the corresponding direction are divided by the respective slice
+    thickness. Set this parameter to False for equally weighted edges.     
     
     @note This function requires the original image to be passed along. That means that
     generate.graph_from_voxels() has to be called with boundary_term_args set to the
@@ -161,6 +175,12 @@ def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
     @type graph.GCGraph
     @param original_image The original image.
     @type original_image numpy.ndarray
+    @param sigma The sigma to use in the boundary term
+    @type sigma float
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False        
     """
     original_image = scipy.asarray(original_image)
     
@@ -178,7 +198,7 @@ def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
     
     __skeleton_difference(graph, original_image, boundary_term_exponential, spacing)
     
-def boundary_maximum_division(graph, (gradient_image, sigma)):
+def boundary_maximum_division(graph, (gradient_image, sigma, spacing)):
     """
     The same as energy_voxel.boundary_difference_division(), but working on the gradient
     image instead of the original.
@@ -199,7 +219,7 @@ def boundary_maximum_division(graph, (gradient_image, sigma)):
     
     __skeleton_difference(graph, gradient_image, boundary_term_division)
     
-def boundary_difference_division(graph, (original_image, sigma)):
+def boundary_difference_division(graph, (original_image, sigma, spacing)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -210,14 +230,19 @@ def boundary_difference_division(graph, (original_image, sigma)):
     The weights are normalized using an division function and a smoothing factor
     \f$\sigma\f$.
     
-    The \f$\sigma\f$. value is computed as
-    !TODO: Find out a suitable computation of the sigma value. 
+    The \f$\sigma\f$. value has to be supplied manually, since its ideal settings
+    differ greatly from application to application.
     
     The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
     \f[
         w(p,q) = \frac{1}{1 + \frac{|I_p - I_q|}{\sigma}}
     \f]
     , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    When the created edge weights should be weighted according to the slice distance,
+    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    computed for the corresponding direction are divided by the respective slice
+    thickness. Set this parameter to False for equally weighted edges.     
     
     @note This function requires the original image to be passed along. That means that
     generate.graph_from_voxels() has to be called with boundary_term_args set to the
@@ -227,6 +252,12 @@ def boundary_difference_division(graph, (original_image, sigma)):
     @type graph.GCGraph
     @param original_image The original image.
     @type original_image numpy.ndarray
+    @param sigma The sigma to use in the boundary term
+    @type sigma float
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False        
     """
     original_image = scipy.asarray(original_image)
     
@@ -242,7 +273,7 @@ def boundary_difference_division(graph, (original_image, sigma)):
     
     __skeleton_difference(graph, original_image, boundary_term_division)
     
-def boundary_maximum_power(graph, (gradient_image, sigma)):
+def boundary_maximum_power(graph, (gradient_image, sigma, spacing)):
     """
     The same as energy_voxel.boundary_difference_power(), but working on the gradient
     image instead of the original.
@@ -264,7 +295,7 @@ def boundary_maximum_power(graph, (gradient_image, sigma)):
     __skeleton_maximum(graph, gradient_image, boundary_term_division)       
     
     
-def boundary_difference_power(graph, (original_image, sigma)):
+def boundary_difference_power(graph, (original_image, sigma, spacing)):
     """
     An implementation of the boundary term, suitable to be used with the
     generate.graph_from_voxels() function.
@@ -275,14 +306,19 @@ def boundary_difference_power(graph, (original_image, sigma)):
     The weights are normalized using an power function and a smoothing factor
     \f$\sigma\f$.
     
-    The \f$\sigma\f$. value is computed as
-    !TODO: Find out a suitable computation of the sigma value. 
+    The \f$\sigma\f$. value has to be supplied manually, since its ideal settings
+    differ greatly from application to application.
     
     The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
     \f[
         w(p,q) = \frac{1}{1 + |I_p - I_q|}^\sigma
     \f]
     , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    When the created edge weights should be weighted according to the slice distance,
+    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    computed for the corresponding direction are divided by the respective slice
+    thickness. Set this parameter to False for equally weighted edges. 
     
     @note This function requires the original image to be passed along. That means that
     generate.graph_from_voxels() has to be called with boundary_term_args set to the
@@ -292,6 +328,12 @@ def boundary_difference_power(graph, (original_image, sigma)):
     @type graph.GCGraph
     @param original_image The original image.
     @type original_image numpy.ndarray
+    @param sigma The sigma to use in the boundary term
+    @type sigma float
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False    
     """
     original_image = scipy.asarray(original_image)
     
@@ -307,7 +349,7 @@ def boundary_difference_power(graph, (original_image, sigma)):
     
     __skeleton_difference(graph, original_image, boundary_term_division)   
 
-def __skeleton_maximum(graph, image, boundary_term):
+def __skeleton_maximum(graph, image, boundary_term, spacing):
     """
     A skeleton for the calculation of maximum intensity based boundary terms.
     
@@ -329,6 +371,10 @@ def __skeleton_maximum(graph, image, boundary_term):
     @param boundary_term A function to compute the boundary term over an array of
                          maximum intensities
     @type boundary_term function
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False    
     
     @see energy_voxel.__skeleton_difference() for more details.
     """
@@ -339,7 +385,7 @@ def __skeleton_maximum(graph, image, boundary_term):
         """
         return scipy.maximum(neighbour_one, neighbour_two)
         
-    __skeleton_base(graph, image, boundary_term, intensity_maximum)
+    __skeleton_base(graph, image, boundary_term, intensity_maximum, spacing)
     
 
 def __skeleton_difference(graph, image, boundary_term, spacing):
@@ -374,6 +420,10 @@ def __skeleton_difference(graph, image, boundary_term, spacing):
     @param boundary_term A function to compute the boundary term over an array of
                          absolute intensity differences
     @type boundary_term function
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False    
     """
     def intensity_difference(neighbour_one, neighbour_two):
         """
@@ -401,6 +451,10 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function, spacing
                                   and computes an intensity term from them that is
                                   returned as a single array of the same shape
     @type neighbourhood_function function
+    @param spacing A sequence containing the slice spacing used for weighting the
+                   computed neighbourhood weight value for different dimensions. If
+                   False, no distance based weighting of the graph edges is performed.
+    @param spacing sequence | False
     """
     image = scipy.asarray(image)
     image = image.astype(scipy.float_)
@@ -423,8 +477,8 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function, spacing
         idx_offset_divider = (image.shape[dim] - 1) * offset
         idx_offset = lambda x: int(x / idx_offset_divider) * offset
         
-        # apply distance weighting through slice spacing
-        neighbourhood_intensity_term /= spacing[dim]
+        # weight the computed distanced in dimension dim by the corresponding slice spacing provided
+        if spacing: neighbourhood_intensity_term /= spacing[dim]
         
         for key, value in enumerate(neighbourhood_intensity_term.ravel()):
             # apply index dependent offset
