@@ -7,6 +7,8 @@
 # third-party modules
 import itk
 import vtk
+from medpy.core.exceptions import ImageLoadingError
+from medpy.core.Logger import Logger
 
 # path changes
 
@@ -14,7 +16,7 @@ import vtk
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.3.1, 2011-11-25"
+__version__ = "r0.4.0, 2011-11-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release" # tested functions marked with tested keyword
 __description__ = "ITK image utility functions."
@@ -95,6 +97,9 @@ def getImageType(image): # tested
     """
     Returns the image type of the supplied image as itk.Image template.
     @param image: an instance of itk.Image
+    
+    @return a template of itk.Image
+    @rtype itk.Image
     """
     try:
         return itk.Image[itk.template(image)[1][0],
@@ -108,6 +113,9 @@ def getImageTypeFromVtk(image): # tested
     Note: Performs Update() and UpdateInformation() on the image, therefore
           triggering pipeline processing if necessary
     @param image: an instance of vtk.vtkImageData
+    
+    @return a template of itk.Image
+    @rtype itk.Image
     """
     assert isinstance(image, vtk.vtkImageData)
     
@@ -131,3 +139,82 @@ def getImageTypeFromVtk(image): # tested
     return itk.Image[mapping[image.GetScalarType()],
                      image.GetDataDimension()]
     
+def getImageTypeFromFile(image):
+    """
+    Inconvenient but necessary implementation to load image with ITK whose component type
+    and number of dimensions are unknown.
+    
+    Holds functionalities to determine the voxel data type and dimensions of an unknown
+    image.
+    
+    @param image path to an image
+    @type image string
+    
+    @return either the correct image type (itk.Image template) or False if loading failed
+    @rtype itk.Image
+    
+    @raise ImageLoadingError if the header of the supplied image could be recognized but
+                             is on an unsupported type
+    """
+    logger = Logger.getInstance()
+    
+    # list of component type strings (as returned by ImageIOBase.GetComponentTypeAsString() to itk component types
+    string_to_component = {'char': itk.UC,
+                           'unsigned_char': itk.UC,
+                           'short': itk.SS,
+                           'unsigned_short': itk.US,
+                           'int': itk.SI,
+                           'unsigned_int': itk.UI,
+                           'long': itk.SL,
+                           'unsigned_long': itk.UL,
+                           'float': itk.F,
+                           'double': itk.D}
+
+    # List of all current itk image loaders
+    image_loaders = [itk.GE4ImageIO,
+                     itk.BMPImageIO,
+                     itk.NiftiImageIO,
+                     itk.PNGImageIO,
+                     itk.BioRadImageIO,
+                     itk.LSMImageIO,
+                     itk.NrrdImageIO,
+                     itk.SiemensVisionImageIO,
+                     itk.IPLCommonImageIO,
+                     itk.JPEGImageIO,
+                     itk.GEAdwImageIO,
+                     itk.AnalyzeImageIO,
+                     itk.Brains2MaskImageIO,
+                     itk.TIFFImageIO,
+                     itk.VTKImageIO,
+                     itk.GDCMImageIO,
+                     itk.GE5ImageIO,
+                     itk.GiplImageIO,
+                     itk.MetaImageIO,
+                     itk.StimulateImageIO,
+                     itk.DICOMImageIO2]
+    
+    # try to find an image loader who feels responsible for the image
+    # Note: All used methods are based on the common parent class ImageIOBase
+    for loader_class in image_loaders:
+        loader = loader_class.New()
+        if loader.CanReadFile(image):
+            
+            # load image header
+            loader.SetFileName(image)
+            loader.ReadImageInformation()
+            
+            # request information about the image
+            pixel_type = loader.GetPixelTypeAsString(loader.GetPixelType())
+            component_type = loader.GetComponentTypeAsString(loader.GetComponentType())
+            dimensions = loader.GetNumberOfDimensions()
+            components = loader.GetNumberOfComponents()
+            if not 'scalar' == pixel_type and not 1 == components:
+                logger.error('Can only open scalar image with one component. Found type {} with {} components.'.format(pixel_type, components))
+                raise ImageLoadingError('Can only open scalar image with one component. Found type {} with {} components.'.format(pixel_type, components))
+            
+            # return image type object
+            logger.debug('Determined image type as {} with pixel type {} and {} dimensions.'.format(loader, component_type, dimensions))
+            return itk.Image[string_to_component[component_type], dimensions]
+        
+    # no suitable loader found
+    return False    

@@ -40,4 +40,22 @@ class SubprocessError(Exception):
     """
     pass
 
+class ImageTypeError(Exception):
+    """
+    Thrown when trying to load or save an image of unknown type.
+    """
+    pass
+
+class DependencyError(Exception):
+    """
+    Thrown when a required module could not be loaded.
+    """
+    pass
+
+class ImageLoadingError(Exception):
+    """
+    Thrown when a image could not be loaded.
+    """
+    pass
+
         
