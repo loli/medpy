@@ -3,12 +3,12 @@
 """@file Holds a number of utility function to process ITK images."""
 
 # build-in modules
+from ...core import ImageLoadingError
+from ...core import Logger
 
 # third-party modules
 import itk
 import vtk
-from medpy.core.exceptions import ImageLoadingError
-from medpy.core.Logger import Logger
 
 # path changes
 
@@ -159,7 +159,7 @@ def getImageTypeFromFile(image):
     logger = Logger.getInstance()
     
     # list of component type strings (as returned by ImageIOBase.GetComponentTypeAsString() to itk component types
-    string_to_component = {'char': itk.UC,
+    string_to_component = {'char': itk.SC,
                            'unsigned_char': itk.UC,
                            'short': itk.SS,
                            'unsigned_short': itk.US,

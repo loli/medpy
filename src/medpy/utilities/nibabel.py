@@ -33,7 +33,7 @@ def image_like(data, reference, origin = None):
     # information that is not used.
     header = reference.get_header().copy()
     affine = reference.get_affine()
-    # !TODO: This is not working correct: SOmehow ItkSnap shows x/y origins to be negative. Why?
+    # !TODO: This is not working correct: Somehow ItkSnap shows x/y origins to be negative. Why?
     if None != origin: affine[:len(origin),-1] = origin
     image = reference.__class__(data, affine, header=header)
     image.update_header()

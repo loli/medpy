@@ -58,4 +58,9 @@ class ImageLoadingError(Exception):
     """
     pass
 
+class ImageSavingError(Exception):
+    """
+    Thrown when a image could not be loaded.
+    """
+    pass
         
