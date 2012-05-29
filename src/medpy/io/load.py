@@ -97,6 +97,7 @@ def load(image):
     except ImportError as e:
         err = DependencyError('Loading images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
     except Exception as e:
+        raise
         err = ImageLoadingError('Failes to load image {} as {}. Reason signaled by third-party module: {}'.format(image, type_to_string[image_type], e))
         
     # Try brute force
@@ -169,11 +170,22 @@ def __load_itk(image):
     itk_py_converter = itk.PyBuffer[image_type]
     arr = itk_py_converter.GetArrayFromImage(img)
     
-    ##########
-    # !BUG: Here we encounter a very strange bug. Image data arrays produced by
-    # conversion from itk seem to change their contents more or less randomly.
-    # Copying the array before resolves this problem.
-    ##########
+    ############
+    # !BUG: WarpITK is a very critical itk wrapper. Everything returned / created by it
+    # seems to exist only inside the scope of the current function (at least for 
+    # ImageFileReader's image and PyBuffers's scipy array. The returned objects have
+    # therefore to be copied once, to survive outside the current scope.
+    ############
+    ############
+    # !BUG: WrapITK returns a itk.SS,3 image as pointer, while a itk.US, 4 image is
+    # returned as intelligent pointer - what is this?
+    ############
     arr = arr.copy()
-    
-    return arr, img
+    try:
+        img_copy = img.New()
+        img_copy.Graft(img)
+    except Exception:
+        img_copy = img.GetPointer().New()
+        img_copy.Graft(img.GetPointer())
+
+    return arr, img_copy

@@ -14,6 +14,7 @@ The supplied methods hide more complex usage of a number of third party modules.
 import os
 
 # third-party modules
+import scipy
 
 # own modules
 from ..core import Logger
@@ -64,11 +65,11 @@ def save(arr, filename, hdr = False, force = True):
     
     type_to_function = {'nifti': __save_nibabel, # mapping from type string to responsible loader function
                         'analyze': __save_nibabel,
-                        'dicom': __save_pydicom,
+                        'dicom': __save_itk,
                         'meta': __save_itk,
                         'png': __save_itk}
     
-    save_fallback_order = {__save_nibabel, __save_pydicom, __save_itk} # list and order of loader function to use in case of fallback to brute-force
+    save_fallback_order = {__save_nibabel, __save_itk} # list and order of loader function to use in case of fallback to brute-force
     
     ########
     # code #
@@ -91,7 +92,6 @@ def save(arr, filename, hdr = False, force = True):
     except KeyError:
         err = ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(filename.split('.')[-1], filename, type_to_string.values()))
     except ImportError as e:
-        raise
         err = DependencyError('Saving images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
     except Exception as e:
         err = ImageSavingError('Failed to save image {} as type {}. Reason signaled by third-party module: {}'.format(filename, type_to_string[image_type], e))
@@ -104,31 +104,7 @@ def save(arr, filename, hdr = False, force = True):
         except Exception as e:
             logger.debug('Module {} signaled error: {}.'.format(saver, e))
     
-    raise err    
-
-def __save_pydicom(arr, hdr, filename):
-    """
-    Image saver using third-party module pydicom.
-    @param arr the image data
-    @param hdr the image header with met-information
-    @param filename the target location
-    """    
-    raise Exception()
-    import dicom
-    
-    logger = Logger.getInstance()
-    logger.debug('Saving image as {} with PyDicom...'.format(filename))
-
-# if original image object was provided with hdr, try to use it for creating the image object
-    if hdr and dicom.dataset.FileDataset == type(hdr):
-        hdr.PixelData = arr.tostring()
-        image = hdr
-    # if not, create new image object
-    else:
-        image = __create_dataset_pydicom(arr, filename)
-        
-    # save image
-    image.save_as(filename, False)
+    raise err
         
 def __create_dataset_pydicom(arr, filename):
     from dicom.dataset import Dataset, FileDataset
@@ -156,22 +132,41 @@ def __save_itk(arr, hdr, filename):
     @param filename the target location
     """
     import itk
+    from medpy.itkvtk.utilities import itku
 
     logger = Logger.getInstance()
     logger.debug('Saving image as {} with Itk...'.format(filename))
         
+    # determine image type from array
+    image_type = itku.getImageTypeFromArray(arr)
+    # convert array to itk image
+    try:
+        itk_py_converter = itk.PyBuffer[image_type]
+        img = itk_py_converter.GetImageFromArray(arr)
+    except KeyError:
+        raise DependencyError('The itk python PyBuffer transition object was compiled without support for image of type {}.'.format(image_type))
+        
     # if original image object was provided with hdr, try to use it for creating the image object
     if __is_header_itk(hdr):
-        print "ES ITK HEADER"
-    else: print "NO ES ITK HEADER"
-
-def __is_header_itk(hdr):
-    """
-    """
-    import itk
-    for cl in itk.Image.__template__.itervalues():
-        if cl in type(hdr).__bases__: return True
-    return False 
+        # save original image shape / largest possible region
+        shape = []
+        for i in range(img.GetLargestPossibleRegion().GetImageDimension()):
+            shape.append(img.GetLargestPossibleRegion().GetSize().GetElement(i))
+        # copy meta data
+        try:
+            img.CopyInformation(hdr)
+            # reset largest possible region / shape to original value
+            for i in range(len(shape)):
+                img.GetLargestPossibleRegion().GetSize().SetElement(i, shape[i])
+        except RuntimeError as e: # raised when the meta data information could not be copied (e.g. when the two images ndims differ)
+            logger.debug('The meta-information could not be copied formt he old header. CopyInfromation signaled: {}.'.format(e))
+            pass
+    
+    # save the image
+    writer = itk.ImageFileWriter[image_type].New()
+    writer.SetFileName(filename)
+    writer.SetInput(img.GetPointer())
+    writer.Update()
     
 def __save_nibabel(arr, hdr, filename):
     """
@@ -204,3 +199,12 @@ def __update_header_from_array_nibabel(hdr, arr):
     """
     hdr.set_data_shape(arr.shape)
     hdr.set_data_dtype(arr.dtype)
+    
+def __is_header_itk(hdr):
+    """
+    Returns true is the supplied object is a valid itk image, otherwise False.
+    """
+    import itk
+    for cl in itk.Image.__template__.itervalues():
+        if cl in type(hdr).__bases__: return True
+    return False 
