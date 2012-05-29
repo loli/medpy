@@ -17,7 +17,6 @@ import os
 import scipy
 
 # own modules
-from imageheader import ImageHeader # why does from ..io not work
 from ..core import Logger
 from ..core import ImageTypeError, DependencyError,\
     ImageLoadingError
@@ -25,9 +24,11 @@ from ..core import ImageTypeError, DependencyError,\
 # code
 def load(image):
     """
-    Tries to load the image found under the supplied path and returns a tuple of image
-    data and image header. The returned header can be used for manipulation of some
-    simple image characteristics and as template for saving the same or another image.
+    Tries to load the image found under the supplied path and returns a scipy ndarray
+    with its data. Additionally a image specific header object object is returned that
+    can be used to save the image with @link io.save_like , keeping the relevant
+    meta-data. This works only reliable, when the type in which the image is saved is the
+    same as its original type.
     
     Internally first tries to figure out the image type and the associated loader to use.
     If this fails due to some reason, a brute-force approach is chosen. In some cases a
@@ -38,7 +39,7 @@ def load(image):
     @type image string
     
     @return (image_data, image_header) tuple
-    @rtype (scipy.ndarray, ImageHeader)
+    @rtype (scipy.ndarray, *)
     
     @raise ImageLoadingError if the image could not be loaded.
     @raise ImageTypeError if the image type is unknown.
@@ -96,7 +97,6 @@ def load(image):
     except ImportError as e:
         err = DependencyError('Loading images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
     except Exception as e:
-        raise
         err = ImageLoadingError('Failes to load image {} as {}. Reason signaled by third-party module: {}'.format(image, type_to_string[image_type], e))
         
     # Try brute force
@@ -122,10 +122,8 @@ def __load_nibabel(image):
     
     img = nibabel.load(image)
     arr = scipy.squeeze(img.get_data())
-    
-    hdr = ImageHeader(img)
-    hdr.set_slice_spacing(img.get_header().get_zooms())
-    return arr, hdr
+
+    return arr, img
 
 def __load_pydicom(image):
     """
@@ -141,10 +139,7 @@ def __load_pydicom(image):
     img = dicom.ReadFile(image)
     arr = img.PixelArray
     
-    hdr = ImageHeader(img)
-    hdr.set_slice_spacing(img.PixelSpacing)
-    
-    return arr, hdr
+    return arr, img
 
 def __load_itk(image):
     """
@@ -181,9 +176,4 @@ def __load_itk(image):
     ##########
     arr = arr.copy()
     
-    hdr = ImageHeader(img)
-    hdr.set_slice_spacing([img.GetSpacing().GetElement(x) for x in range(img.GetSpacing().GetNumberOfComponents())])
-    hdr.set_origin([img.GetOrigin().GetElement(x) for x in range(img.GetOrigin().GetPointDimension())])
-    
-    return arr, hdr
-
+    return arr, img

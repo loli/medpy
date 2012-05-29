@@ -1,1 +1,1 @@
-from nibabel import image_like
+import nibabelu

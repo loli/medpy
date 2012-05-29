@@ -16,4 +16,3 @@ __all__ = []
 # if __all__ is not set, only the following, explicit import statements are executed
 from load import load
 from save import save
-from imageheader import ImageHeader
