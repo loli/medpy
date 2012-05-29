@@ -1,0 +1,73 @@
+#!/usr/bin/python
+
+"""Loads an image and saves it with two dimensions swapped."""
+
+# build-in modules
+import argparse
+import logging
+
+# third-party modules
+import scipy
+
+# path changes
+
+# own modules
+from medpy.core import Logger
+from medpy.io import load, save
+from medpy.core.exceptions import ArgumentError
+
+
+# information
+__author__ = "Oskar Maier"
+__version__ = "r0.1.0, 2012-05-25"
+__email__ = "oskar.maier@googlemail.com"
+__status__ = "Release"
+__description__ = """
+                  Two of the input images dimensions are swapped. A (200,100,10) image
+                  can such be turned into a (200,10,100) one.
+                  """
+
+# code
+def main():
+    args = getArguments(getParser())
+
+    # prepare logger
+    logger = Logger.getInstance()
+    if args.debug: logger.setLevel(logging.DEBUG)
+    elif args.verbose: logger.setLevel(logging.INFO)
+    
+    # load input image
+    data_input, header_input = load(args.input)
+    
+    # check if supplied dimension parameters is inside the images dimensions
+    if args.dimension1 >= data_input.ndim or args.dimension1 < 0:
+        raise ArgumentError('The first swap-dimension {} exceeds the number of input volume dimensions {}.'.format(args.dimension1, data_input.ndim))
+    elif args.dimension2 >= data_input.ndim or args.dimension2 < 0:
+        raise ArgumentError('The second swap-dimension {} exceeds the number of input volume dimensions {}.'.format(args.dimension2, data_input.ndim))
+    
+    # swap axes
+    data_output = scipy.swapaxes(data_input, args.dimension1, args.dimension2)
+    
+    # save resulting volume
+    save(data_output, args.output, header_input, args.force)
+    
+    logger.info("Successfully terminated.")    
+    
+def getArguments(parser):
+    "Provides additional validation of the arguments collected by argparse."
+    return parser.parse_args()
+
+def getParser():
+    "Creates and returns the argparse parser object."
+    parser = argparse.ArgumentParser(description=__description__)
+    parser.add_argument('input', help='Source volume.')
+    parser.add_argument('output', help='Target volume.')
+    parser.add_argument('dimension1', type=int, help='First dimension to swap (starting from 0).')
+    parser.add_argument('dimension2', type=int, help='Second dimension to swap (starting from 0).')
+    parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
+    parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
+    parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
+    return parser    
+
+if __name__ == "__main__":
+    main()        
