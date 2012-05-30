@@ -7,19 +7,17 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
 
 # path changes
 
 # own modules
 from medpy.core import Logger
 from medpy.io import load, save
-from medpy.core.exceptions import ArgumentError
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2012-05-25"
+__version__ = "r0.1.1, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -38,6 +36,9 @@ def main():
     
     # load input image
     data_input, header_input = load(args.input)
+    
+    # eventually empty data
+    if args.empty: data_input.fill(False)
 
     # save resulting volume
     save(data_input, args.output, header_input, args.force)
@@ -53,6 +54,7 @@ def getParser():
     parser = argparse.ArgumentParser(description=__description__)
     parser.add_argument('input', help='Source volume.')
     parser.add_argument('output', help='Target volume.')
+    parser.add_argument('-e', dest='empty', action='store_true', help='Instead of copying the voxel data, create an empty copy conserving all meta-data if possible.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
