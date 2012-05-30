@@ -10,6 +10,7 @@ import sys
 import os
 
 # third-party modules
+import scipy
 
 # path changes
 
@@ -75,6 +76,9 @@ def main():
     if 0 == len(volume):
         logger.exception('The extracted sub-volume is of zero-size. This usual means that the supplied volume coordinates and the image coordinates do not intersect. Exiting the application.')
         sys.exit(-1)
+    
+    # squeeze extracted sub-volume for the case in which one dimensions has been eliminated
+    volume = scipy.squeeze(volume)
     
     logger.debug('Extracted volume is of shape {}.'.format(volume.shape))
     

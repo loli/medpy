@@ -39,6 +39,8 @@ def main():
     # load input image
     data_input, header_input = load(args.input)
     
+    logger.debug('Original shape = {}.'.format(data_input.shape))
+    
     # check if supplied dimension parameters is inside the images dimensions
     if args.dimension1 >= data_input.ndim or args.dimension1 < 0:
         raise ArgumentError('The first swap-dimension {} exceeds the number of input volume dimensions {}.'.format(args.dimension1, data_input.ndim))
@@ -47,6 +49,8 @@ def main():
     
     # swap axes
     data_output = scipy.swapaxes(data_input, args.dimension1, args.dimension2)
+    
+    logger.debug('Resulting shape = {}.'.format(data_output.shape))
     
     # save resulting volume
     save(data_output, args.output, header_input, args.force)
