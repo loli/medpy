@@ -97,7 +97,6 @@ def load(image):
     except ImportError as e:
         err = DependencyError('Loading images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
     except Exception as e:
-        raise
         err = ImageLoadingError('Failes to load image {} as {}. Reason signaled by third-party module: {}'.format(image, type_to_string[image_type], e))
         
     # Try brute force

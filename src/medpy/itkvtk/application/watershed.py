@@ -9,18 +9,18 @@ import os
 
 # third-party modules
 import itk
-import scipy
 
 # path changes
 
 # own modules
-from medpy.core import Logger
-import medpy.itkvtk.utilities.itku as itku
+from medpy.io import load, save
+from medpy.core import Logger, ArgumentError
+from medpy.itkvtk.utilities import itku
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.4.1, 2011-12-12"
+__version__ = "r0.5.0, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -43,81 +43,53 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # iterate over input images
-    for image in args.images:
-        
-        # load image as float using ITK
-        logger.info('Loading image {} as float using ITK...'.format(image))
-        image_type = itk.Image[itk.F, args.dimensions] # causes Eclipse PyDev to complain -> ignore error warning
-        reader = itk.ImageFileReader[image_type].New()
-        reader.SetFileName(image)
-        reader.Update()
-        
-        logger.debug(itku.getInformation(reader.GetOutput()))
-        
-        # apply the watershed
-        logger.info('Applying watershed...')
-        for threshold in args.thresholds:
-            # initialize the watershed filter object
-            # this is only done once for all level values, as a repeated execution
-            # with a lower level value is significantly faster than a complete
-            # new execution
-            image_watershed = itk.WatershedImageFilter[image_type].New()
-            image_watershed.SetInput(reader.GetOutput())
-            image_watershed.SetThreshold(threshold)
-            
-            for level in reversed(sorted(args.levels)): # make sure to start with highest first
-                # build output image name
-                image_watershed_name = args.folder + '/' + image.split('/')[-1][:-4] + '_watershed'
-                image_watershed_name += '_thr{}_lvl{}'.format(threshold, level)
-                image_watershed_name += image.split('/')[-1][-4:]
-                
-                # check if output image exists
-                if not args.force:
-                    if os.path.exists(image_watershed_name):
-                        logger.warning('The output image {} already exists. Skipping this step.'.format(image_watershed_name))
-                        continue
-                
-                logger.info('Watershedding with settings: thr={} / level={}...'.format(threshold, level))
-                image_watershed.SetLevel(level)
-                image_watershed.Update()
-                
-                logger.debug(itku.getInformation(image_watershed.GetOutput()))
-                
-                ######## UL ENABLED VERSION #######
-                # pro: everything
-                # contra: none
-                # note: saving as *.nii does not work, why I do not now, probably the
-                # required pixel type (UL) is not supported? In any case, the saving
-                # should only be done in *.mhd, as long as not repaired and tested
+    # check if output image exists (will also be performed before saving, but as the watershed might be very time intensity, a initial check can save frustration)
+    if not args.force:
+        if os.path.exists(args.output):
+            raise ArgumentError('The output image {} already exists.'.format(args.output))
+    
+    # loading image
+    data_input, header_input = load(args.input)
+    
+    # convert to itk image
+    input_image_type = itku.getImageTypeFromArray(data_input)
+    itk_py_converter_in = itk.PyBuffer[input_image_type]
+    image_input = itk_py_converter_in.GetImageFromArray(data_input)
 
-                # save file
-                logger.info('Saving watershed image as {}...'.format(image_watershed_name))
-                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
-                watershed_image_type = itku.getImageType(image_watershed.GetOutput())
-                writer = itk.ImageFileWriter[watershed_image_type].New()
-                writer.SetFileName(image_watershed_name)
-                writer.SetInput(image_watershed.GetOutput())
-                writer.Update()
+    logger.debug(itku.getInformation(image_input))
+    
+    # apply the watershed
+    logger.info('Watershedding with settings: thr={} / level={}...'.format(args.threshold, args.level))
+    image_watershed = itk.WatershedImageFilter[input_image_type].New()
+    image_watershed.SetInput(image_input)
+    image_watershed.SetThreshold(args.threshold)
+    image_watershed.SetLevel(args.level)
+                
+    logger.debug(itku.getInformation(image_watershed.GetOutput()))
+    
+    # convert itk image to scipy array
+    output_image_type = itku.getImageType(image_watershed.GetOutput())
+    itk_py_converter_out = itk.PyBuffer[output_image_type]
+    data_output = itk_py_converter_out.GetArrayFromImage(image_watershed.GetOutput())
+    
+    print data_output.dtype, data_output.shape
+                
+    # save file
+    save(data_output, args.output, header_input, args.force)
     
     logger.info('Successfully terminated.')
         
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
-    args = parser.parse_args()
-    args.thresholds = map(float, args.thresholds.split(','))
-    args.levels = map(float, args.levels.split(','))
-    return args
+    return parser.parse_args()
 
 def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
-
-    parser.add_argument('folder', help='The place to store the created images in.')
-    parser.add_argument('levels', help='A colon separated list of values to be passed to the levels attribute (e.g. 0.1,0.2).')
-    parser.add_argument('thresholds', help='A colon separated list of values to be passed to the threshold attribute (e.g. 0.01,0.05).')
-    parser.add_argument('images', nargs='+', help='One or more input images (best in .mhd format).')
-    parser.add_argument('--dimensions', dest='dimensions', type=int, default=3, help='Indicate the number of image dimensions. Defaults to three.')
+    parser.add_argument('input', help='Source volume.')
+    parser.add_argument('output', help='Target volume.')
+    parser.add_argument('level', type=float, help='The level parameter of the ITK watershed filter.')
+    parser.add_argument('threshold', type=float, help='The threshold parameter of the ITK watershed filter.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
