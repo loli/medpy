@@ -29,7 +29,7 @@ import inspect
 import scipy
 
 # own modules
-from ..core.Logger import Logger
+from ..core import Logger
 from ..graphcut import GCGraph
 from energy_label import __compute_edges
 

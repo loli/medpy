@@ -5,7 +5,7 @@ Provides functionality connected with image saving.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version d0.1.0
+@version d0.1.1
 @since 2012-05-28
 @status Development
 """
@@ -14,7 +14,6 @@ The supplied methods hide more complex usage of a number of third party modules.
 import os
 
 # third-party modules
-import scipy
 
 # own modules
 from ..core import Logger
@@ -23,16 +22,49 @@ from ..core import ImageTypeError, DependencyError,\
 
 def save(arr, filename, hdr = False, force = True):
     """
-    Tries to save the supplied image data array as filename. If a header object
-    (see @link io.load) is supplied, the function will try to use it to obtain meta
-    information about the image.
+    Save the image arr as filename using information encoded in hdr. The target image
+    format is determined by the filename suffix. If the force parameter is set to true,
+    an already existing image is overwritten silently. Otherwise an error is thrown.
     
-    The order of the meta-data priority, i.e. which information are used to save the
-    image, are as follows:
-        filename: the ending determines the image type in which to save
-        array: used to extract image shape and dtype
-        header: if possible, some additional information are extracted from the image
-                header created during the load procedure
+    The header (hdr) object is the one returned by @link io.load.load() and is only used
+    if the source and target image formats are the same.
+    
+    Generally this function does not guarantee, that metadata other than the image shape
+    and pixel data type are kept.
+    
+    
+    The supported file formats depend on the installed third party modules. This method
+    includes support for the NiBabel package and for ITK python wrappers created with
+    WrapITK. Note that for the later it is import how it has been compiled.
+    
+    NiBabel enables support for:
+        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
+        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
+        and some others (http://nipy.sourceforge.net/nibabel/)
+    WrapITK enables support for:
+        - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
+        - Itk/Vtk MetaImage (.mhd, .mha/.raw)
+        - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)
+        and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
+        
+    For informations about which image formats, dimensionalities and pixel data types
+    your current configuration supports, see @link unittest.io.loadsave . There you can
+    find an automated test method.
+                
+    Some known restrictions are explicit, independent of the third party modules or how
+    they were compiled:
+        - DICOM does not support images of 4 or more dimensions.
+        - DICOM does not support pixel data of uint32/64 and float32/64/128
+        - ITK does not support images with less than 2 dimensions.
+        - ITK does not support pixel data of uint64, int64 and float128
+    
+    Further information:
+    - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
+    - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
+    - http://code.google.com/p/pydicom/ : The PyDicom python module
+    
+    Generally we advise to use the nibabel third party tool, whose support for Nifti
+    (.nii) and Analyze 7.5 (.hdr/.img) is excellent and comprehensive.
     
     @param arr the image data
     @type arr scipy.ndarray
@@ -50,24 +82,42 @@ def save(arr, filename, hdr = False, force = True):
     # image type. For extending the loaders functionality, just create the required
     # private loader functions (__save_<name>) and register them here.
     suffix_to_type = {'nii': 'nifti', # mapping from file suffix to type string
-                      'gz': 'nifti',
+                      'nii.gz': 'nifti',
                       'hdr': 'analyze',
                       'img': 'analyze',
+                      'img.gz': 'analyze',
                       'dcm': 'dicom',
+                      'dicom': 'dicom',
                       'mhd': 'meta',
-                      'png': 'png'}
+                      'mha': 'meta',
+                      'nrrd': 'nrrd',
+                      'nhdr': 'nrrd',
+                      'png': 'png',
+                      'bmp': 'bmp',
+                      'tif': 'tif',
+                      'tiff': 'tif',
+                      'jpg': 'jpg',
+                      'jpeg': 'jpg'}
     
-    type_to_string = {'nifti': 'NifTi - Neuroimaging Informatics Technology Initiative (.nii)', # mapping from type string to description string
-                      'analyze': 'Analyze (plain, SPM99, SPM2) (.hdr/.img)',
-                      'dicom': 'Dicom - Digital Imaging and Communications in Medicine (.dcm)',
-                      'meta': 'Itk/Vtk MetaImage (.mhd/.raw)',
-                      'png': 'Portable Network Graphics (.png)'}
+    type_to_string = {'nifti': 'NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)', # mapping from type string to description string
+                      'analyze': 'Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)',
+                      'dicom': 'Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)',
+                      'meta': 'Itk/Vtk MetaImage (.mhd, .mha/.raw)',
+                      'nrrd': 'Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)',
+                      'png': 'Portable Network Graphics (.png)',
+                      'bmp': 'Bitmap Image File (.bmp)',
+                      'tif': 'Tagged Image File Format (.tif,.tiff)',
+                      'jpg': 'Joint Photographic Experts Group (.jpg, .jpeg)'}
     
     type_to_function = {'nifti': __save_nibabel, # mapping from type string to responsible loader function
                         'analyze': __save_nibabel,
                         'dicom': __save_itk,
                         'meta': __save_itk,
-                        'png': __save_itk}
+                        'nrrd': __save_itk,
+                        'png': __save_itk,
+                        'bmp': __save_itk,
+                        'tif': __save_itk,
+                        'jpg': __save_itk}
     
     save_fallback_order = {__save_nibabel, __save_itk} # list and order of loader function to use in case of fallback to brute-force
     
@@ -83,18 +133,25 @@ def save(arr, filename, hdr = False, force = True):
     
     # Try normal saving
     try:
+        # determine two suffixes (the second one of the compound of the two last elements)
+        suffix = filename.split('.')[-1].lower()
+        if not suffix in suffix_to_type:
+            suffix = '.'.join(map(lambda x: x.lower(), filename.split('.')[-2:]))
+            if not suffix in suffix_to_type: # otherwise throw an Exception that will be caught later on
+                raise KeyError()
         # determine image type by ending
-        image_type = suffix_to_type[filename.split('.')[-1]]
+        image_type = suffix_to_type[suffix]
         # determine responsible function
         saver = type_to_function[image_type]
-        # load the image
-        return saver(arr, hdr, filename)
+        try:
+            # load the image
+            return saver(arr, hdr, filename)
+        except ImportError as e:
+            err = DependencyError('Saving images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
+        except Exception as e:
+            err = ImageSavingError('Failed to save image {} as type {}. Reason signaled by third-party module: {}'.format(filename, type_to_string[image_type], e))
     except KeyError:
         err = ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(filename.split('.')[-1], filename, type_to_string.values()))
-    except ImportError as e:
-        err = DependencyError('Saving images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
-    except Exception as e:
-        err = ImageSavingError('Failed to save image {} as type {}. Reason signaled by third-party module: {}'.format(filename, type_to_string[image_type], e))
         
     # Try brute force
     logger.debug('Normal saving failed. Entering brute force mode.')
@@ -139,6 +196,7 @@ def __save_itk(arr, hdr, filename):
         
     # determine image type from array
     image_type = itku.getImageTypeFromArray(arr)
+    
     # convert array to itk image
     try:
         itk_py_converter = itk.PyBuffer[image_type]
@@ -159,7 +217,7 @@ def __save_itk(arr, hdr, filename):
             for i in range(len(shape)):
                 img.GetLargestPossibleRegion().GetSize().SetElement(i, shape[i])
         except RuntimeError as e: # raised when the meta data information could not be copied (e.g. when the two images ndims differ)
-            logger.debug('The meta-information could not be copied formt he old header. CopyInfromation signaled: {}.'.format(e))
+            logger.debug('The meta-information could not be copied form the old header. CopyInfromation signaled: {}.'.format(e))
             pass
     
     # save the image

@@ -14,10 +14,11 @@ import vtk
 # path changes
 
 # own modules
+from ...core.exceptions import DependencyError, ImageTypeError
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.4.0, 2011-11-25"
+__version__ = "r0.4.1, 2011-11-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release" # tested functions marked with tested keyword
 __description__ = "ITK image utility functions."
@@ -119,30 +120,45 @@ def getImageTypeFromArray(arr): # tested
     @raise DependencyError if the itk wrapper do not support the target image type
     @raise ImageTypeError if the array dtype is unsupported
     """
-    # mapping from scipy to the possible itk types, in order from most to least suitable 
-    scipy_to_itk_types = {scipy.uint8: (itk.UC, itk.US, itk.SS, itk.UL, itk.SL),
-                          scipy.uint16: (itk.US, itk.UL, itk.SL),
-                          scipy.uint32: (itk.UL, itk.SL),
-                          scipy.uint64: (itk.UL),
-                          scipy.int8: (itk.SC, itk.SS, itk.SL),
-                          scipy.int16: (itk.SS, itk.SL),
-                          scipy.int32: (itk.SL),
-                          scipy.int64: (itk.SL),
-                          scipy.float32: (itk.F, itk.D),
-                          scipy.float64: (itk.D)}
+    # mapping from scipy to the possible itk types, in order from most to least suitable
+    # ! this assumes char=8bit, short=16bit and long=32bit (minimal values)
+    scipy_to_itk_types = {scipy.uint8: [itk.UC, itk.US, itk.SS, itk.UL, itk.SL],
+                          scipy.uint16: [itk.US, itk.UL, itk.SL],
+                          scipy.uint32: [itk.UL],
+                          scipy.uint64: [],
+                          scipy.int8: [itk.SC, itk.SS, itk.SL],
+                          scipy.int16: [itk.SS, itk.SL],
+                          scipy.int32: [itk.SL],
+                          scipy.int64: [],
+                          scipy.float32: [itk.F, itk.D],
+                          scipy.float64: [itk.D],
+                          scipy.float128: []}
     
-    try:
-        for itk_type in scipy_to_itk_types[arr.dtype.type]:
-            try:                
-                return itk.Image[itk_type, arr.ndim]
-            except Exception: # pass raised exception, as a list of ordered possible itk pixel types is processed and some of them might not be compiled with the current itk wrapper module
-                pass
-    except KeyError as e:
-        pass
-        if str == type(e.message) and 'itkTemplate' in e.message:
-            raise DependencyError('The itk python wrappers were compiled without support for images with ndim {} and one of the types {}..'.format(arr.ndim, scipy_to_itk_types[arr.dtype.type]))
-        else: 
-            raise ImageTypeError('The array dtype {} could not be mapped to any itk image type.'.format(arr.dtype))    
+    if arr.ndim <= 1:
+        raise DependencyError('Itk does not support images with less than 2 dimensions.')
+    
+    # chek for unknown array data type
+    if not arr.dtype.type in scipy_to_itk_types:
+        raise ImageTypeError('The array dtype {} could not be mapped to any itk image type.'.format(arr.dtype))
+    
+    # check if any valid conversion exists
+    if 0 == len(scipy_to_itk_types[arr.dtype.type]):
+        raise ImageTypeError('No valid itk type for the pixel data dtype {}.'.format(arr.dtype))
+    
+    # iterate and try out candidate templates
+    ex = None
+    for itk_type in scipy_to_itk_types[arr.dtype.type]:
+        try:                
+            return itk.Image[itk_type, arr.ndim]
+        except Exception as e: # pass raised exception, as a list of ordered possible itk pixel types is processed and some of them might not be compiled with the current itk wrapper module
+            ex = e
+            pass
+    # if none fitted, examine error and eventually translate, otherwise rethrow
+    if type(ex) == KeyError:
+        raise DependencyError('The itk python wrappers were compiled without support the combination of {} dimensions and at least one of the following pixel data types (which are compatible with dtype {}): {}.'.format(arr.ndim, arr.dtype, scipy_to_itk_types[arr.dtype.type]))
+    else:
+        raise
+            
     
 def getImageTypeFromVtk(image): # tested
     """

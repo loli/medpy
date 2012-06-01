@@ -52,24 +52,42 @@ def load(image):
     # image type. For extending the loaders functionality, just create the required
     # private loader functions (__load_<name>) and register them here.
     suffix_to_type = {'nii': 'nifti', # mapping from file suffix to type string
-                      'gz': 'nifti',
+                      'nii.gz': 'nifti',
                       'hdr': 'analyze',
                       'img': 'analyze',
+                      'img.gz': 'analyze',
                       'dcm': 'dicom',
+                      'dicom': 'dicom',
                       'mhd': 'meta',
-                      'png': 'png'}
+                      'mha': 'meta',
+                      'nrrd': 'nrrd',
+                      'nhdr': 'nrrd',
+                      'png': 'png',
+                      'bmp': 'bmp',
+                      'tif': 'tif',
+                      'tiff': 'tif',
+                      'jpg': 'jpg',
+                      'jpeg': 'jpg'}
     
-    type_to_string = {'nifti': 'NifTi - Neuroimaging Informatics Technology Initiative (.nii)', # mapping from type string to description string
-                      'analyze': 'Analyze (plain, SPM99, SPM2) (.hdr/.img)',
-                      'dicom': 'Dicom - Digital Imaging and Communications in Medicine (.dcm)',
-                      'meta': 'Itk/Vtk MetaImage (.mhd/.raw)',
-                      'png': 'Portable Network Graphics (.png)'}
+    type_to_string = {'nifti': 'NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)', # mapping from type string to description string
+                      'analyze': 'Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)',
+                      'dicom': 'Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)',
+                      'meta': 'Itk/Vtk MetaImage (.mhd, .mha/.raw)',
+                      'nrrd': 'Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)',
+                      'png': 'Portable Network Graphics (.png)',
+                      'bmp': 'Bitmap Image File (.bmp)',
+                      'tif': 'Tagged Image File Format (.tif,.tiff)',
+                      'jpg': 'Joint Photographic Experts Group (.jpg, .jpeg)'}
     
     type_to_function = {'nifti': __load_nibabel, # mapping from type string to responsible loader function
                         'analyze': __load_nibabel,
                         'dicom': __load_pydicom,
                         'meta': __load_itk,
-                        'png': __load_itk}
+                        'nrrd': __load_itk,
+                        'png': __load_itk,
+                        'bmp': __load_itk,
+                        'tif': __load_itk,
+                        'jpg': __load_itk}
     
     load_fallback_order = {__load_nibabel, __load_pydicom, __load_itk} # list and order of loader function to use in case of fallback to brute-force
     
@@ -86,8 +104,14 @@ def load(image):
     
     # Try normal loading
     try:
+        # determine two suffixes (the second one of the compound of the two last elements)
+        suffix = image.split('.')[-1].lower()
+        if not suffix in suffix_to_type:
+            suffix = '.'.join(map(lambda x: x.lower(), image.split('.')[-2:]))
+            if not suffix in suffix_to_type: # otherwise throw an Exception that will be caught later on
+                raise KeyError()
         # determine image type by ending
-        image_type = suffix_to_type[image.split('.')[-1]]
+        image_type = suffix_to_type[suffix]
         # determine responsible function
         loader = type_to_function[image_type]
         # load the image
