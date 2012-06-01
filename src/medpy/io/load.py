@@ -151,15 +151,16 @@ def load(image):
         image_type = suffix_to_type[suffix]
         # determine responsible function
         loader = type_to_function[image_type]
-        # load the image
-        return loader(image)
+        try:
+            # load the image
+            return loader(image)
+        except ImportError as e:
+            err = DependencyError('Loading images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
+        except Exception as e:
+            err = ImageLoadingError('Failes to load image {} as {}. Reason signaled by third-party module: {}'.format(image, type_to_string[image_type], e))
     except KeyError:
         err = ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(image.split('.')[-1], image, type_to_string.values()))
-    except ImportError as e:
-        err = DependencyError('Loading images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
-    except Exception as e:
-        err = ImageLoadingError('Failes to load image {} as {}. Reason signaled by third-party module: {}'.format(image, type_to_string[image_type], e))
-        
+
     # Try brute force
     logger.debug('Normal loading failed. Entering brute force mode.')
     for loader in load_fallback_order:
@@ -200,7 +201,8 @@ def __load_pydicom(image):
     img = dicom.ReadFile(image)
     arr = img.PixelArray
     
-    return arr, img
+    # pydicom loads the images in the revers direction as expected, therefore we transpose the array before returning
+    return scipy.transpose(arr), img
 
 def __load_itk(image):
     """
@@ -227,20 +229,12 @@ def __load_itk(image):
     img = reader.GetOutput()
     
     # convert to scipy
-    itk_py_converter = itk.PyBuffer[image_type]
-    arr = itk_py_converter.GetArrayFromImage(img)
+    arr = itku.getArrayFromImage(img)
     
-    ############
-    # !BUG: WarpITK is a very critical itk wrapper. Everything returned / created by it
-    # seems to exist only inside the scope of the current function (at least for 
-    # ImageFileReader's image and PyBuffers's scipy array. The returned objects have
-    # therefore to be copied once, to survive outside the current scope.
-    ############
     ############
     # !BUG: WrapITK returns a itk.SS,3 image as pointer, while a itk.US, 4 image is
     # returned as intelligent pointer - what is this?
     ############
-    #arr = arr.copy() #!TODO: See if this might still be necessary, even after copying the header
     try:
         img_copy = img.New()
         img_copy.Graft(img)

@@ -95,6 +95,62 @@ def saveImage(image, file_name): # tested
     writer.SetFileName(file_name)
     writer.Write()
     
+def getImageFromArray(arr, image_type = False):
+    """
+    Returns an itk Image created from the supplied scipy ndarray.
+    If the image_type is supported, will be automatically transformed to that type,
+    otherwise the most suitable is selected.
+    
+    @note always use this instead of directly the itk.PyBuffer, as that object transposes
+          the image axes.
+    
+    @param arr an array
+    @type arr scipy.ndarray
+    @param image_type an itk image type
+    @type image_type itk.Image (template)
+    
+    @return an instance of itk.Image holding the array's data
+    @rtype itk.Image (instance)
+    """
+    # The itk_py_converter transposes the image dimensions. This has to be countered.
+    arr = scipy.transpose(arr)
+
+    # determine image type if not supplied
+    if not image_type:
+        image_type = getImageTypeFromArray(arr)
+
+    # convert
+    itk_py_converter = itk.PyBuffer[image_type]
+    return itk_py_converter.GetImageFromArray(arr)
+    
+def getArrayFromImage(image):
+    """
+    Returns a scipy array created from the supplied itk image.
+    
+    @note always use this instead of directly the itk.PyBuffer, as that object transposes
+          the image axes.
+    
+    @param image an instance of itk.Image holding the array's data
+    @type itk.Image (instance)
+    
+    @return an array
+    @rtype scipy.ndarray
+    """
+    #convert
+    itk_py_converter = itk.PyBuffer[getImageType(image)]
+    arr = itk_py_converter.GetArrayFromImage(image)
+    
+    ############
+    # !BUG: WarpITK is a very critical itk wrapper. Everything returned / created by it
+    # seems to exist only inside the scope of the current function (at least for 
+    # ImageFileReader's image and PyBuffers's scipy array. The returned objects have
+    # therefore to be copied once, to survive outside the current scope.
+    ############
+    arr = arr.copy()
+    
+    # The itk_py_converter transposes the image dimensions. This has to be countered.
+    return scipy.squeeze(scipy.transpose(arr))
+    
 def getImageType(image): # tested
     """
     Returns the image type of the supplied image as itk.Image template.
@@ -192,7 +248,7 @@ def getImageTypeFromVtk(image): # tested
     return itk.Image[mapping[image.GetScalarType()],
                      image.GetDataDimension()]
     
-def getImageTypeFromFile(image):
+def getImageTypeFromFile(image): # tested
     """
     Inconvenient but necessary implementation to load image with ITK whose component type
     and number of dimensions are unknown.
@@ -270,4 +326,4 @@ def getImageTypeFromFile(image):
             return itk.Image[string_to_component[component_type], dimensions]
         
     # no suitable loader found
-    return False    
+    return False

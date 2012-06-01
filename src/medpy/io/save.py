@@ -195,8 +195,7 @@ def __save_itk(arr, hdr, filename):
     
     # convert array to itk image
     try:
-        itk_py_converter = itk.PyBuffer[image_type]
-        img = itk_py_converter.GetImageFromArray(arr)
+        img = itku.getImageFromArray(arr)
     except KeyError:
         raise DependencyError('The itk python PyBuffer transition object was compiled without support for image of type {}.'.format(image_type))
         
