@@ -5,9 +5,9 @@ Provides functionality connected with image loading.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version d0.1.0
+@version r0.1.0
 @since 2012-05-28
-@status Development
+@status Release
 """
 
 # build-in modules
@@ -24,11 +24,47 @@ from ..core import ImageTypeError, DependencyError,\
 # code
 def load(image):
     """
-    Tries to load the image found under the supplied path and returns a scipy ndarray
-    with its data. Additionally a image specific header object object is returned that
-    can be used to save the image with @link io.save_like , keeping the relevant
-    meta-data. This works only reliable, when the type in which the image is saved is the
-    same as its original type.
+    Loads the image and returns a scipt array with the image's pixel content as well as
+    an image format specific header object.
+    
+    The type of the returned header object depends on the third party module used to load
+    the image. It can, with restrictions, be used to extract additional meta-information
+    about the image. Additionally it serves as meta-data container that can be passes to
+    @link io.save.save() when the altered image is saved to the hard drive again. Note
+    that the transfer of meta-data is only possible, and even then not guaranteed, when
+    the source and target image formats are the same.
+    
+    The supported file formats depend on the installed third party modules. This method
+    includes support for the NiBabel package and for ITK python wrappers created with
+    WrapITK. Note that for the later it is import how it has been compiled.
+    
+    NiBabel enables support for:
+        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
+        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
+        and some others (http://nipy.sourceforge.net/nibabel/)
+    PyDicom:
+        - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
+    WrapITK enables support for:
+        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
+        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
+        - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
+        - Itk/Vtk MetaImage (.mhd, .mha/.raw)
+        - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)
+        and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
+        
+    Generally we advise to use the nibabel third party tool, which is implemented in pure
+    python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
+    and comprehensive.
+        
+    For informations about which image formats, dimensionalities and pixel data types
+    your current configuration supports, see @link unittest.io.loadsave . There you can
+    find an automated test method.    
+    
+    Further information:
+    - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
+    - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
+    - http://code.google.com/p/pydicom/ : The PyDicom python module
+    
     
     Internally first tries to figure out the image type and the associated loader to use.
     If this fails due to some reason, a brute-force approach is chosen. In some cases a
@@ -39,11 +75,12 @@ def load(image):
     @type image string
     
     @return (image_data, image_header) tuple
-    @rtype (scipy.ndarray, *)
+    @rtype (scipy.ndarray, object)
     
-    @raise ImageLoadingError if the image could not be loaded.
-    @raise ImageTypeError if the image type is unknown.
-    @raise DependencyError if a required third-party module is missing.
+    @raise ImageLoadingError if the image could not be loaded due to some reason
+    @raise ImageTypeError if the image type is not supported
+    @raise DependencyError if a required third-party module is missing or has been
+                           compiled without the required support
     """
     ###############################
     # responsibility dictionaries #
@@ -203,7 +240,7 @@ def __load_itk(image):
     # !BUG: WrapITK returns a itk.SS,3 image as pointer, while a itk.US, 4 image is
     # returned as intelligent pointer - what is this?
     ############
-    arr = arr.copy()
+    #arr = arr.copy() #!TODO: See if this might still be necessary, even after copying the header
     try:
         img_copy = img.New()
         img_copy.Graft(img)

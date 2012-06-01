@@ -5,9 +5,9 @@ Provides functionality connected with image saving.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version d0.1.1
+@version r0.1.0
 @since 2012-05-28
-@status Development
+@status Release
 """
 
 # build-in modules
@@ -42,10 +42,16 @@ def save(arr, filename, hdr = False, force = True):
         - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
         and some others (http://nipy.sourceforge.net/nibabel/)
     WrapITK enables support for:
+        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
+        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
         - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
         - Itk/Vtk MetaImage (.mhd, .mha/.raw)
         - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)
         and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
+        
+    Generally we advise to use the nibabel third party tool, which is implemented in pure
+    python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
+    and comprehensive.
         
     For informations about which image formats, dimensionalities and pixel data types
     your current configuration supports, see @link unittest.io.loadsave . There you can
@@ -53,27 +59,35 @@ def save(arr, filename, hdr = False, force = True):
                 
     Some known restrictions are explicit, independent of the third party modules or how
     they were compiled:
-        - DICOM does not support images of 4 or more dimensions.
-        - DICOM does not support pixel data of uint32/64 and float32/64/128
+        - DICOM does not support images of 4 or more dimensions (Danger: ITK actually
+          saves the image without signaling an error. But the dimensionality is reduced
+          to 3 dimensions).
+        - DICOM does not support pixel data of uint32/64 and float32/64/128.
         - ITK does not support images with less than 2 dimensions.
-        - ITK does not support pixel data of uint64, int64 and float128
+        - ITK does not support pixel data of uint64, int64 and float128.
+        - JPEG, PIC are unstable in the sense, that differences between the saved and the
+          loaded data can occure.
+        - GIPL images are always loaded as 3D, even if they have been saved as 2D images.
+        - PNG images are always loaded as 2D, even if they have been saved as 3D images.
     
     Further information:
     - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
     - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
     - http://code.google.com/p/pydicom/ : The PyDicom python module
     
-    Generally we advise to use the nibabel third party tool, whose support for Nifti
-    (.nii) and Analyze 7.5 (.hdr/.img) is excellent and comprehensive.
-    
     @param arr the image data
     @type arr scipy.ndarray
     @param filename where to save the image, path and filename including the image suffix
     @type filename string
     @param hdr the image header
-    @type hdr ImageHeader
+    @type hdr object
     @param force set to True to overwrite already exiting image silently
     @type force bool
+    
+    @throws ImageTypeError if attempting to save as an unsupported image type
+    @throws DependencyError if an required third party module is not existent or has been
+                            compiled without support for the target image format
+    @throws ImageSavingError if the image could not be saved dure to various reasons
     """
     ###############################
     # responsibility dictionaries #
@@ -162,24 +176,6 @@ def save(arr, filename, hdr = False, force = True):
             logger.debug('Module {} signaled error: {}.'.format(saver, e))
     
     raise err
-        
-def __create_dataset_pydicom(arr, filename):
-    from dicom.dataset import Dataset, FileDataset
-    
-    # Populate required values for file meta information
-    file_meta = Dataset()
-    file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.2' # CT Image Storage
-    file_meta.MediaStorageSOPInstanceUID = "1.2.3" # !! Need valid UID here for real work
-    file_meta.ImplementationClassUID = "1.2.3.4" # !!! Need valid UIDs here
-
-    
-    # Create the FileDataset instance (initially no data elements, but file_meta supplied)
-    ds = FileDataset(filename, {}, file_meta=file_meta, preamble="\0"*128)
-    
-    # set data
-    ds.PixelData = arr.tostring()
-    
-    return ds
 
 def __save_itk(arr, hdr, filename):
     """
