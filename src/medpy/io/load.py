@@ -29,10 +29,11 @@ def load(image):
     
     The type of the returned header object depends on the third party module used to load
     the image. It can, with restrictions, be used to extract additional meta-information
-    about the image. Additionally it serves as meta-data container that can be passes to
-    @link io.save.save() when the altered image is saved to the hard drive again. Note
-    that the transfer of meta-data is only possible, and even then not guaranteed, when
-    the source and target image formats are the same.
+    about the image (e.g. using the methods in @link io.header). Additionally it serves
+    as meta-data container that can be passes to @link io.save.save() when the altered
+    image is saved to the hard drive again. Note that the transfer of meta-data is only
+    possible, and even then not guaranteed, when the source and target image formats are
+    the same.
     
     The supported file formats depend on the installed third party modules. This method
     includes support for the NiBabel package and for ITK python wrappers created with

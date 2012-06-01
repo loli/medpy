@@ -56,7 +56,7 @@ def main():
     if not 0 == voxel_difference:
         print 'Voxel differ: {} of {} total voxels'.format(voxel_difference, voxel_total)
         print 'Max difference: {}'.format(scipy.absolute(data_input1 - data_input2).max())
-    else: 'No difference between image voxels.'
+    else: print 'No difference.'
     
     logger.info("Successfully terminated.")    
     

@@ -19,6 +19,7 @@ import os
 from ..core import Logger
 from ..core import ImageTypeError, DependencyError,\
     ImageSavingError
+from header import __update_header_from_array_nibabel, __is_header_itk
 
 def save(arr, filename, hdr = False, force = True):
     """
@@ -244,20 +245,3 @@ def __save_nibabel(arr, hdr, filename):
         
     # save image
     nibabel.save(image, filename)
-
-
-def __update_header_from_array_nibabel(hdr, arr):
-    """
-    Update an original nibabel header with the data extracted from a scipy.ndarray.
-    """
-    hdr.set_data_shape(arr.shape)
-    hdr.set_data_dtype(arr.dtype)
-    
-def __is_header_itk(hdr):
-    """
-    Returns true is the supplied object is a valid itk image, otherwise False.
-    """
-    import itk
-    for cl in itk.Image.__template__.itervalues():
-        if cl in type(hdr).__bases__: return True
-    return False 

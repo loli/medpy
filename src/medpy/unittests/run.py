@@ -7,6 +7,7 @@ import unittest
 from metric import *
 from graphcut import *
 from io import *
+from itkvtk import *
 
 # third-party modules
 
@@ -40,9 +41,15 @@ def main():
     suite_io = unittest.TestSuite()
     suite_io.addTests(unittest.TestLoader().loadTestsFromTestCase(TestIOFacilities))
     
+    # laod itkvtk tests
+    suite_itkvtk = unittest.TestSuite()
+    suite_itkvtk.addTests(unittest.TestLoader().loadTestsFromTestCase(TestItkVtkGradient))
+    
     # execute tests
     unittest.TextTestRunner(verbosity=2).run(suite_metric)
     unittest.TextTestRunner(verbosity=2).run(suite_graphcut)
+    unittest.TextTestRunner(verbosity=2).run(suite_io)
+    unittest.TextTestRunner(verbosity=2).run(suite_itkvtk)
 
 if __name__ == '__main__':
     main()
