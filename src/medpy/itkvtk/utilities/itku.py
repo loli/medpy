@@ -178,7 +178,8 @@ def getImageTypeFromArray(arr): # tested
     """
     # mapping from scipy to the possible itk types, in order from most to least suitable
     # ! this assumes char=8bit, short=16bit and long=32bit (minimal values)
-    scipy_to_itk_types = {scipy.uint8: [itk.UC, itk.US, itk.SS, itk.UL, itk.SL],
+    scipy_to_itk_types = {scipy.bool_: [itk.SS, itk.UC, itk.US, itk.SS, itk.UL, itk.SL],
+                          scipy.uint8: [itk.UC, itk.US, itk.SS, itk.UL, itk.SL],
                           scipy.uint16: [itk.US, itk.UL, itk.SL],
                           scipy.uint32: [itk.UL],
                           scipy.uint64: [],

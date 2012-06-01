@@ -10,15 +10,12 @@ import os
 
 # third-party modules
 import scipy
-import numpy
-from nibabel.loadsave import load, save
-from nibabel.spatialimages import ImageFileError 
 
 # path changes
 
 # own modules
 from medpy.core import ArgumentError, Logger
-from medpy.utilities.nibabel import image_like
+from medpy.io import load, save
 from medpy import graphcut
 from medpy import filter
 
@@ -26,7 +23,7 @@ from medpy import filter
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.3, 2012-03-16"
+__version__ = "r0.2.4, 2012-03-16"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -70,7 +67,7 @@ def main():
     if not args.force:
         if os.path.exists(args.output):
             logger.warning('The output image {} already exists. Exiting.'.format(args.output))
-            exit(1)
+            exit(-1)
             
     # select boundary term
     if args.boundary == 'stawiaski':
@@ -81,34 +78,15 @@ def main():
         logger.info('Selected boundary term: difference of means')
 
     # load input images
-    logger.info('Loading region image {}...'.format(args.region))
-    try: 
-        region_image_data = numpy.squeeze(load(args.region).get_data())
-    except ImageFileError as e:
-        logger.critical('The region image does not exist or its file type is unknown.')
-        raise ArgumentError('The region image does not exist or its file type is unknown.', e)
+    region_image_data, reference_header = load(args.region)
     
-    logger.info('Loading foreground markers {}...'.format(args.foreground))
-    try: 
-        fgmarkers_image_data = numpy.squeeze(load(args.foreground).get_data()).astype(scipy.bool_)
-    except ImageFileError as e:
-        logger.critical('The foreground marker image does not exist or its file type is unknown.')
-        raise ArgumentError('The foreground marker image does not exist or its file type is unknown.', e)
+    fgmarkers_image_data, _ = load(args.foreground)
+    fgmarkers_image_data = fgmarkers_image_data.astype(scipy.bool_)
     
-    logger.info('Loading background markers {}...'.format(args.background))
-    try:
-        bgmarkers_image = load(args.background) # keep loaded image as prototype for saving the result
-        bgmarkers_image_data = numpy.squeeze(bgmarkers_image.get_data()).astype(scipy.bool_)
-    except ImageFileError as e:
-        logger.critical('The background marker image does not exist or its file type is unknown.')
-        raise ArgumentError('The background marker image does not exist or its file type is unknown.', e)
-       
-    logger.info('Loading additional image for the boundary term {}...'.format(args.badditional))
-    try: 
-        badditional_image_data = numpy.squeeze(load(args.badditional).get_data())
-    except ImageFileError as e:
-        logger.critical('The badditional image does not exist or its file type is unknown.')
-        raise ArgumentError('The badditional image does not exist or its file type is unknown.', e)
+    bgmarkers_image_data, _ = load(args.background)
+    bgmarkers_image_data = bgmarkers_image_data.astype(scipy.bool_)
+    
+    badditional_image_data, _ = load(args.badditional)
     
        
     # check if all images dimensions are the same
@@ -145,11 +123,8 @@ def main():
                        scipy.unique(region_image_data)))
     region_image_data = filter.relabel_map(region_image_data, mapping)
     
-    # save resulting mask as int8            
-    logger.info('Saving resulting segmentation...')
-    bgmarkers_image.get_header().set_data_dtype(scipy.int8)
-    region_image_data = region_image_data.astype(scipy.bool_)
-    save(image_like(region_image_data, bgmarkers_image), args.output)
+    # save resulting mask as int8
+    save(region_image_data.astype(scipy.bool_), args.output, reference_header, args.force)
 
     logger.info('Successfully terminated.')
 

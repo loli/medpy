@@ -56,8 +56,24 @@ def __update_header_from_array_nibabel(hdr, arr):
     """
     Update an original nibabel header with the data extracted from a scipy.ndarray.
     """
-    hdr.set_data_shape(arr.shape)
-    hdr.set_data_dtype(arr.dtype)
+    hdr.get_header().set_data_shape(arr.shape)
+    hdr.get_header().set_data_dtype(arr.dtype)
+
+def __is_header_pydicom(hdr):
+    """
+    """
+    import dicom
+    return (type(hdr) == dicom.dataset.FileDataset)
+
+def __is_header_nibabel(hdr):
+    """
+    Returns true is the supplied object is a valid itk image, otherwise False.
+    """
+    try:
+        hdr.get_header()
+        return True
+    except Exception:
+        return False
 
 def __is_header_itk(hdr):
     """

@@ -13,3 +13,4 @@ __all__ = []
 
 # if __all__ is not set, only the following, explicit import statements are executed
 from gradient import gradient_magnitude
+from watershed import watershed 

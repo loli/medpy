@@ -19,7 +19,7 @@ import os
 from ..core import Logger
 from ..core import ImageTypeError, DependencyError,\
     ImageSavingError
-from header import __update_header_from_array_nibabel, __is_header_itk
+from header import __update_header_from_array_nibabel, __is_header_itk, __is_header_nibabel
 
 def save(arr, filename, hdr = False, force = True):
     """
@@ -200,12 +200,22 @@ def __save_itk(arr, hdr, filename):
     except KeyError:
         raise DependencyError('The itk python PyBuffer transition object was compiled without support for image of type {}.'.format(image_type))
         
+    # convert pointer from smart pointer to normal pointer
+    try:
+        hdr = hdr.GetPointer()
+    except Exception:
+        pass
+        
     # if original image object was provided with hdr, try to use it for creating the image object
     if __is_header_itk(hdr):
         # save original image shape / largest possible region
         shape = []
-        for i in range(img.GetLargestPossibleRegion().GetImageDimension()):
-            shape.append(img.GetLargestPossibleRegion().GetSize().GetElement(i))
+        try:
+            for i in range(img.GetLargestPossibleRegion().GetImageDimension()):
+                shape.append(img.GetLargestPossibleRegion().GetSize().GetElement(i))
+        except Exception as e:
+            print e
+        
         # copy meta data
         try:
             img.CopyInformation(hdr)
@@ -236,7 +246,7 @@ def __save_nibabel(arr, hdr, filename):
     logger.debug('Saving image as {} with NiBabel...'.format(filename))
     
     # if original image object was provided with hdr, try to use it for creating the image object
-    if hdr and nibabel.spatialimages.SpatialImage == type(hdr):
+    if hdr and __is_header_nibabel(hdr):
         __update_header_from_array_nibabel(hdr, arr)
         image = nibabelu.image_like(arr, hdr)
     # if not, create new image object

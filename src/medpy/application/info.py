@@ -11,8 +11,9 @@ import logging
 # path changes
 
 # own modules
-from medpy.io import load
+from medpy.io import load, get_pixel_spacing
 from medpy.core import Logger
+from medpy.core.exceptions import ArgumentError
 
 
 # information
@@ -48,6 +49,10 @@ def printInfo(data, header):
     # print image information
     print '\nInformations obtained from image header:'
     print 'header type={}'.format(type(header))
+    try:
+        print 'voxel spacing={}'.format(get_pixel_spacing(header))
+    except ArgumentError:
+        print 'Failes to retrieve voxel spacing.'
     
     print '\nInformations obtained from image array:'
     print 'datatype={},dimensions={},shape={}'.format(data.dtype, data.ndim, data.shape)
