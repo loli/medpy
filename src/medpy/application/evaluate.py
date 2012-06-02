@@ -10,20 +10,19 @@ import os
 
 # third-party modules
 import numpy
-import nibabel
-from nibabel.loadsave import load
 
 # path changes
 
 # own modules
 from medpy.core import Logger
 from medpy.metric import Volume, Surface
-from medpy.core import ArgumentError
+from medpy.io import get_pixel_spacing
+from medpy import io
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.3, 2011-12-12"
+__version__ = "r0.3.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -60,16 +59,9 @@ def main():
             sys.exit(0)
     
     # load reference image
-    logger.info('Loading reference mask {} using NiBabel...'.format(args.reference))
-    image_reference = load(args.reference)
+    image_reference_data, image_reference_header = io.load(args.reference)
     
-    # check if image is of type nifti (currently only supported format)
-    # !TODO: Add support for other formats. Problem: getting the physical spacing.
-    if not isinstance(image_reference, nibabel.nifti1.Nifti1Image):
-        raise ArgumentError('The reference mask is of type {}. Currently only Nifti1 images are supported.'.format(image_reference.__class__.__name__))
-    
-    # get and prepare reference image data
-    image_reference_data = numpy.squeeze(image_reference.get_data())
+    # prepare reference image data
     image_reference_data = (0 != image_reference_data) # ensures that the reference mask is of type bool
     image_reference_size = len(image_reference_data.nonzero()[0])
     
@@ -78,7 +70,7 @@ def main():
         raise Exception('The reference mask if of size <= 0.')
     
     # extract pyhsical pixel spacing
-    spacing = numpy.array(image_reference.get_header().get_zooms()[0:3])
+    spacing = numpy.array(get_pixel_spacing(image_reference_header))
     
     # open output file
     with open(file_evaluation_name, 'w') as f:
@@ -91,25 +83,18 @@ def main():
         for mask in args.masks:
             
             # load mask using nibabel
-            logger.info('Loading mask {} using NiBabel...'.format(mask))
-            image_mask = load(mask)
-            
-            if not (isinstance(image_mask, nibabel.nifti1.Nifti1Image) or \
-                    isinstance(image_mask, nibabel.nifti1.Nifti1Pair)):
-                f.write('Skipped: unsupported image type ({})\n'.format(image_mask.__class__.__name__))
-                logger.warning('The mask is of type {}. Currently only Nifti1 and Nifti1Pair images are supported.'.format(image_mask.__class__.__name__))
-                continue
+            image_mask_data, image_mask_header = io.load(mask)
             
             # check if physical pixel spacing is coherent
-            if not (spacing == numpy.array(image_mask.get_header().get_zooms()[0:3])).all():
+            mask_spacing = numpy.array(get_pixel_spacing(image_mask_header))
+            if not (spacing == mask_spacing).all():
                 if not args.ignore:
-                    f.write('Skipped: incoherent pixel spacing (reference={}/mask={})\n'.format(spacing, image_mask.get_header().get_zooms()[0:3]))
-                    logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Skip evaluation.'.format(spacing, image_mask.get_header().get_zooms()))
+                    f.write('Skipped: incoherent pixel spacing (reference={}/mask={})\n'.format(spacing, mask_spacing))
+                    logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Skip evaluation.'.format(spacing, mask_spacing))
                     continue
-                logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Evaluation continued nevertheless, as ignore flag is set.'.format(spacing, image_mask.get_header().get_zooms()))
+                logger.warning('The physical pixel spacings of reference ({}) and mask ({}) do not comply. Evaluation continued nevertheless, as ignore flag is set.'.format(spacing, mask_spacing))
             
-            # get and prepare mask data
-            image_mask_data = numpy.squeeze(image_mask.get_data())
+            # prepare mask data
             image_mask_data = (0 != image_mask_data) # ensures that the mask is of type bool
             image_mask_size = len(image_mask_data.nonzero()[0])
             
