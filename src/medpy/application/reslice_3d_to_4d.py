@@ -15,6 +15,7 @@ import scipy
 from medpy.core import Logger
 from medpy.io import load, save
 from medpy.core.exceptions import ArgumentError
+from medpy.io.header import set_pixel_spacing
 
 
 # information
@@ -77,6 +78,8 @@ def main():
         
     # flip dimensions such that the newly created is the last
     data_4d = scipy.swapaxes(data_4d, 0, 3)
+        
+    #set_pixel_spacing(header_3d, [0.91666668653488, 4, 0.91666668653488, 0.26])
         
     # save resulting 4D volume
     save(data_4d, args.output, header_3d, args.force)
