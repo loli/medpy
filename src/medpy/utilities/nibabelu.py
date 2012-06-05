@@ -45,10 +45,10 @@ def image_like(data, reference):
     # !TODO: Check if this covers all know cases i.e. if the data can contain
     # information that is not used.
     header = reference.get_header().copy()
-    affine = reference.get_affine()
+    #affine = reference.get_affine()
     # !TODO: This is not working correct: Somehow ItkSnap shows x/y origins to be negative. Why?
     #if None != origin: affine[:len(origin),-1] = origin
-    image = reference.__class__(data, affine, header=header)
+    image = reference.__class__(data, None, header=header)
     image.update_header()
     # !TODO: Is the following required? Works only for Nifty1. See the Nifty1 documentation/definition.
     #image.get_header()['qoffset_x'] = origin[0]

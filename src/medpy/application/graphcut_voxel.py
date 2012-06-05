@@ -10,22 +10,19 @@ import os
 
 # third-party modules
 import scipy
-import numpy
-from nibabel.loadsave import load, save
-from nibabel.spatialimages import ImageFileError 
 
 # path changes
 
 # own modules
 from medpy.core import ArgumentError, Logger
-from medpy.utilities.nibabel import image_like
+from medpy.io import load, save, header
 from medpy import graphcut
 
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2, 2012-03-23"
+__version__ = "r0.2.1, 2012-03-23"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -67,7 +64,7 @@ def main():
     if not args.force:
         if os.path.exists(args.output):
             logger.warning('The output image {} already exists. Exiting.'.format(args.output))
-            exit(1)
+            exit(-1)
             
     # select boundary term
     ['diff_linear', 'diff_exp', 'diff_div', 'diff_pow', 'max_linear', 'max_exp', 'max_div', 'max_pow']
@@ -97,39 +94,32 @@ def main():
         logger.info('Selected boundary term: power based / raised maximum of intensities')
 
     # load input images
-    logger.info('Loading foreground markers {}...'.format(args.foreground))
-    try: 
-        fgmarkers_image_data = numpy.squeeze(load(args.foreground).get_data()).astype(scipy.bool_)
-    except ImageFileError as e:
-        logger.critical('The foreground marker image does not exist or its file type is unknown.')
-        raise ArgumentError('The foreground marker image does not exist or its file type is unknown.', e)
+    fgmarkers_image_data, _ = load(args.foreground)
+    fgmarkers_image_data = fgmarkers_image_data.astype(scipy.bool_)
+        
+    bgmarkers_image_data, _ = load(args.background)
+    bgmarkers_image_data = bgmarkers_image_data.astype(scipy.bool_)
     
-    logger.info('Loading background markers {}...'.format(args.background))
-    try:
-        bgmarkers_image = load(args.background) # keep loaded image as prototype for saving the result
-        bgmarkers_image_data = numpy.squeeze(bgmarkers_image.get_data()).astype(scipy.bool_)
-    except ImageFileError as e:
-        logger.critical('The background marker image does not exist or its file type is unknown.')
-        raise ArgumentError('The background marker image does not exist or its file type is unknown.', e)
-       
-    logger.info('Loading additional image for the boundary term {}...'.format(args.badditional))
-    try: 
-        badditional_image_data = numpy.squeeze(load(args.badditional).get_data())
-    except ImageFileError as e:
-        logger.critical('The badditional image does not exist or its file type is unknown.')
-        raise ArgumentError('The badditional image does not exist or its file type is unknown.', e)
+    badditional_image_data, reference_header = load(args.badditional)
        
     # check if all images dimensions are the same
     if not (badditional_image_data.shape == fgmarkers_image_data.shape == bgmarkers_image_data.shape):
         logger.critical('Not all of the supplied images are of the same shape.')
         raise ArgumentError('Not all of the supplied images are of the same shape.')
 
+    # extract spacing if required
+    if args.spacing:
+        spacing = header.get_pixel_spacing(reference_header)
+        logger.info('Taking spacing of {} into account.'.format(spacing))
+    else:
+        spacing = False
+
     # generate graph
     logger.info('Preparing BK_MFMC C++ graph...')
     gcgraph = graphcut.graph_from_voxels(fgmarkers_image_data,
                                          bgmarkers_image_data,
                                          boundary_term = boundary_term,
-                                         boundary_term_args = (badditional_image_data, args.sigma, False))
+                                         boundary_term_args = (badditional_image_data, args.sigma, spacing))
     
     # execute min-cut
     logger.info('Executing min-cut...')
@@ -143,10 +133,8 @@ def main():
         result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1
     result_image_data = result_image_data.reshape(bgmarkers_image_data.shape)
     
-    # save resulting mask as int8            
-    logger.info('Saving resulting segmentation...')
-    bgmarkers_image.get_header().set_data_dtype(scipy.int8)
-    save(image_like(result_image_data, bgmarkers_image), args.output)
+    # save resulting mask    
+    save(result_image_data.astype(scipy.bool_), args.output, reference_header, args.force)
 
     logger.info('Successfully terminated.')
 
@@ -164,6 +152,7 @@ def getParser():
     parser.add_argument('background', help='Binary image containing the background markers.')
     parser.add_argument('output', help='The output image containing the segmentation.')
     parser.add_argument('--boundary', default='diff_exp', help='The boundary term to use. Note that the ones prefixed with diff_ require the original image, while the ones prefixed with max_ require the gradient image.', choices=['diff_linear', 'diff_exp', 'diff_div', 'diff_pow', 'max_linear', 'max_exp', 'max_div', 'max_pow'])
+    parser.add_argument('-s', dest='spacing', action='store_true', help='Set this flag to take the pixel spacing of the image into account. The spacing data will be extracted from the baddtional image.')
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

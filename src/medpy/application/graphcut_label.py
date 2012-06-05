@@ -123,7 +123,7 @@ def main():
                        scipy.unique(region_image_data)))
     region_image_data = filter.relabel_map(region_image_data, mapping)
     
-    # save resulting mask as int8
+    # save resulting mask
     save(region_image_data.astype(scipy.bool_), args.output, reference_header, args.force)
 
     logger.info('Successfully terminated.')
