@@ -14,11 +14,13 @@ import logging
 from medpy.io import load, save, header
 from medpy.core import Logger
 from medpy.itkvtk import filter
+import os
+from medpy.core.exceptions import ArgumentError
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.4.0, 2011-12-12"
+__version__ = "r0.4.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -38,6 +40,11 @@ def main():
     logger = Logger.getInstance()
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
+        
+    # check if output image exists (will also be performed before saving, but as the gradient might be time intensity, a initial check can save frustration)
+    if not args.force:
+        if os.path.exists(args.output):
+            raise ArgumentError('The output image {} already exists.'.format(args.output))        
         
     # loading image
     data_input, header_input = load(args.input)
