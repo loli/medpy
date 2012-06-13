@@ -143,4 +143,4 @@ def __is_header_itk(hdr):
     import itk
     for cl in itk.Image.__template__.itervalues():
         if cl in type(hdr).__bases__: return True
-    return False 
+    return False
