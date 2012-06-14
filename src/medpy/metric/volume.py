@@ -3,7 +3,7 @@
 Holds a metrics class computing volume metrics over two 3D-images contain each a binary object.
 
 Classes:
-    - VOlume: Computes different volume metrics between two 3D-images contain each an object.
+    - Volume: Computes different volume metrics between two 3D-images contain each an object.
 
 @author Oskar Maier
 @version r0.2.1
