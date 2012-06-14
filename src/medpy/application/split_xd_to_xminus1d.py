@@ -61,7 +61,7 @@ def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
     if not '{}' in args.output:
-        raise argparse.ArgumentError(args.output, 'The output argument string must contain the seqeunce "{}".')
+        raise argparse.ArgumentError(args.output, 'The output argument string must contain the sequence "{}".')
     return args
 
 def getParser():

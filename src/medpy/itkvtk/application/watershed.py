@@ -23,9 +23,9 @@ __version__ = "r0.6.0, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
-                  Applies the watershed segmentation an image using the supplied
-                  parameters.
-                  """
+Applies the watershed segmentation an image using the supplied
+parameters.
+"""
 
 # code
 def main():
@@ -66,7 +66,7 @@ def getParser():
     parser.add_argument('input', help='Source volume (usually a gradient image).')
     parser.add_argument('output', help='Target volume.')
     parser.add_argument('--level', type=float, default=0.0, help='The level parameter of the ITK watershed filter.')
-    parser.add_argument('--threshold', type=float, default=0.0, help='The threshold parameter of the ITK watershed filter.')    
+    parser.add_argument('--threshold', type=float, default=0.0, help='The threshold parameter of the ITK watershed filter.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
@@ -74,4 +74,4 @@ def getParser():
     return parser
     
 if __name__ == "__main__":
-    main()        
+    main()

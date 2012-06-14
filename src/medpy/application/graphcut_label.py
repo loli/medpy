@@ -81,10 +81,18 @@ def main():
     region_image_data, reference_header = load(args.region)
     
     fgmarkers_image_data, _ = load(args.foreground)
+    # !removed
+    #fgmarkers_image_data = fgmarkers_image_data.astype(scipy.bool_)
+    
+    # !added 
+    bgmarkers_image_data = scipy.zeros(fgmarkers_image_data.shape, scipy.bool_)
+    bgmarkers_image_data[fgmarkers_image_data == 2] = True
+    fgmarkers_image_data[fgmarkers_image_data != 1] = 0
     fgmarkers_image_data = fgmarkers_image_data.astype(scipy.bool_)
     
-    bgmarkers_image_data, _ = load(args.background)
-    bgmarkers_image_data = bgmarkers_image_data.astype(scipy.bool_)
+    # removed
+    #bgmarkers_image_data, _ = load(args.background)
+    #bgmarkers_image_data = bgmarkers_image_data.astype(scipy.bool_)
     
     badditional_image_data, _ = load(args.badditional)
     
@@ -139,7 +147,7 @@ def getParser():
     parser.add_argument('badditional', help='The additional image required by the boundary term. See there for details.')
     parser.add_argument('region', help='The region image of the image to segment.')
     parser.add_argument('foreground', help='Binary image containing the foreground markers.')
-    parser.add_argument('background', help='Binary image containing the background markers.')
+    #parser.add_argument('background', help='Binary image containing the background markers.')
     parser.add_argument('output', help='The output image containing the segmentation.')
     parser.add_argument('--boundary', default='stawiaski', help='The boundary term to use. Note that difference of means (means) requires the original image, while stawiaski requires the gradient image of the original image to be passed to badditional.', choices=['means', 'stawiaski'])
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')

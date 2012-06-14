@@ -51,7 +51,7 @@ def relabel_map(label_image, mapping, key=lambda x, y: x[y]):
         except Exception as e:
             raise ArgumentError('No conversion for region id {} found in the supplied mapping. Error: {}'.format(x, e))
     
-    vmap = scipy.vectorize(_map)
+    vmap = scipy.vectorize(_map, otypes=[label_image.dtype])
          
     return vmap(label_image)
 
@@ -76,6 +76,31 @@ def relabel(label_image, start = 1):
             start += 1
         rav[i] = mapping[rav[i]]
     return rav.reshape(label_image.shape)
+
+def relabel_non_zero(label_image, start = 1):
+    """ 
+    Relabel the regions of a label image.
+    Re-processes the labels to make them consecutively and starting from start.
+    Keeps all zero (0) labels, as they are considered background.
+    
+    @param label_image a label image
+    @type label_image sequence
+    @param start the id of the first label to assign
+    @type start int
+    @return The relabeled image.
+    @rtype numpy.ndarray
+    """
+    if start <= 0: raise ArgumentError('The starting value can not be 0 or lower.')
+    
+    l = list(scipy.unique(label_image))
+    if 0 in l: l.remove(0)
+    mapping = dict()
+    mapping[0] = 0
+    for key, item in zip(l, range(start, len(l) + start)):
+        mapping[key] = item
+    
+    return relabel_map(label_image, mapping)
+
 
 def fit_labels_to_mask(image_labels, image_mask):
     """

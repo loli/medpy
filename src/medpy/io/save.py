@@ -163,14 +163,11 @@ def save(arr, filename, hdr = False, force = True):
             # load the image
             return saver(arr, hdr, filename)
         except ImportError as e:
-            raise
-            err = DependencyError('Saving images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
+            raise DependencyError('Saving images of type {} requires a third-party module that could not be encountered. Reason: {}.'.format(type_to_string[image_type], e))
         except Exception as e:
-            raise
-            err = ImageSavingError('Failed to save image {} as type {}. Reason signaled by third-party module: {}'.format(filename, type_to_string[image_type], e))
+            raise ImageSavingError('Failed to save image {} as type {}. Reason signaled by third-party module: {}'.format(filename, type_to_string[image_type], e))
     except KeyError:
-        raise
-        err = ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(filename.split('.')[-1], filename, type_to_string.values()))
+        raise ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(filename.split('.')[-1], filename, type_to_string.values()))
         
     # Try brute force
     logger.debug('Normal saving failed. Entering brute force mode.')
