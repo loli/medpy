@@ -90,19 +90,34 @@ def main():
         
     # Second step: Normalize and determine type of markers
     result_data[result_data >= 10] = 0 # remove markers with indices higher than 10
-    result_data = relabel_non_zero(result_data) # relabel starting from 1, 0's are kept where encountered
+    #result_data = relabel_non_zero(result_data) # relabel starting from 1, 0's are kept where encountered
     marker_count = len(scipy.unique(result_data))
     
     if 3 > marker_count: # less than two markers
         raise ArgumentError('A minimum of two markers must be contained in the conjunction of all markers files (excluding the neutral markers of index 0).')
     
-    for marker in scipy.unique(result_data)[1:-1]: # first is neutral marker (0) and last overall background marker
-        output = args.output.format(marker)
-        _data = scipy.zeros_like(result_data)
-        _data += 2 # set all as BG markers
-        _data[result_data == marker] = 1
-        _data[result_data == 0] = 0
-        save(_data, output, original_header, args.force)
+    # assuming here that 1 == inner marker, 2 = border marker and 3 = background marker
+    inner_name = args.output.format('i')
+    inner_data = scipy.zeros_like(result_data)
+    inner_data[result_data == 1] = 1
+    inner_data[result_data == 2] = 2
+    inner_data[result_data == 3] = 2
+    save(inner_data, inner_name, original_header, args.force)
+    
+    outer_name = args.output.format('o')
+    outer_data = scipy.zeros_like(result_data)
+    outer_data[result_data == 1] = 1
+    outer_data[result_data == 2] = 1
+    outer_data[result_data == 3] = 2
+    save(outer_data, outer_name, original_header, args.force)    
+    
+#    for marker in scipy.unique(result_data)[1:-1]: # first is neutral marker (0) and last overall background marker
+#        output = args.output.format(marker)
+#        _data = scipy.zeros_like(result_data)
+#        _data += 2 # set all as BG markers
+#        _data[result_data == marker] = 1
+#        _data[result_data == 0] = 0
+#        save(_data, output, original_header, args.force)
         
     logger.info("Successfully terminated.")
     
