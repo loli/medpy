@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-"""Prepares manual-marker ready volumes from a 4D volume."""
+"""Joins a number of 3D manual markers into a 4D marker volume."""
 
 # build-in modules
 import argparse
