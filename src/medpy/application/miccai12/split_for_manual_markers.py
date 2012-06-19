@@ -69,7 +69,7 @@ def main():
     input_data, input_header = load(args.input)
     
     # determine type of extraction and eventuelly load contour file
-    if args.paintc or args.type in ['ed', 'es']:
+    if args.paintc or args.type in ['es']:
         contour_data, _ = load(args.contour)
     
     # select dimension and set variable parameter
@@ -100,7 +100,7 @@ def main():
             data_marker += scipy.squeeze(contour_data[slices])
             
         # check if contour data is empty in ed and es case; if yes, skip this volume
-        if args.type in ['ed', 'es'] and 0 == len(scipy.squeeze(contour_data[slices]).nonzero()[0]):
+        if args.type in ['es'] and 0 == len(scipy.squeeze(contour_data[slices]).nonzero()[0]):
             continue
         
         # check if first volume in case of type = es, then skip
@@ -122,8 +122,8 @@ def getArguments(parser):
     args = parser.parse_args()
     if args.paintc and None == args.contour:
         raise ArgumentError('If the "-p" switch is set, a contour file must be provide.')
-    elif args.type in ['ed', 'es'] and None == args.contour:
-        raise ArgumentError('If the type is set to "ed" or "es, a contour file must be provide.')
+    elif args.type in ['es'] and None == args.contour:
+        raise ArgumentError('If the type is set to "es", a contour file must be provide.')
     return args
 
 def getParser():
@@ -133,7 +133,7 @@ def getParser():
     parser.add_argument('output', help='Target folder.')
     # Note: diastole = widest, systole = narrowest
     parser.add_argument('type', choices=['ed', 'es', 'spatial', 'temporal'], help='The type of volumes to extract. "ed" and "es" implies "spatial".')
-    parser.add_argument('--contour', help='Contour volume. Required for "ed" and "es" types or if "-p" switch is set.')
+    parser.add_argument('--contour', help='Contour volume. Required for "es" types or if "-p" switch is set.')
     parser.add_argument('-p', dest='paintc', action='store_true', help='Paint original contours into the volumes.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
