@@ -25,12 +25,12 @@ import itertools
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.4, 2012-03-16"
+__version__ = "r0.3.4, 2012-03-16"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
                   !Modified version of original GC label, as splits the volumes into
-                  more handy sizes before processing them.
+                  more handy sizes before processing them. Also uses multiple subprocesses.
                   
                   Perform a binary graph cut using Boykov's max-flow/min-cut algorithm.
                   
@@ -77,6 +77,8 @@ def main():
     # constants
     # the minimal edge length of a subvolume-cube ! has to be of type int!
     minimal_edge_length = 100
+    overlap = 20
+    if overlap >= minimal_edge_length: logger.warning('The overlap should not exceed the minimal edge length.')
 
     # load input images
     region_image_data, reference_header = load(args.region)
@@ -94,10 +96,6 @@ def main():
     if not (gradient_image_data.shape == region_image_data.shape == fgmarkers_image_data.shape == bgmarkers_image_data.shape):
         logger.critical('Not all of the supplied images are of the same shape.')
         raise ArgumentError('Not all of the supplied images are of the same shape.')
-       
-    # recompute the label ids to start from id = 1
-    logger.info('Relabel input image...')
-    region_image_data = filter.relabel(region_image_data)
     
     # compute how to split the volumes into subvolumes i.e. determine stepsize for each image dimension
     shape = list(region_image_data.shape)
@@ -112,33 +110,55 @@ def main():
         if c < o: raise Exception("The computed subvolume cubes do not cover the complete image!")
             
     # iterate over the steps and extract subvolumes according to the stepsizes
-    mapping = dict() # will be extended by the gc function acording to the appearing regions
     slicer_steps = [range(0, int(step * stepsize), int(stepsize)) for step, stepsize in zip(steps, stepsizes)]
-    for slicer_step in itertools.product(*slicer_steps):
-        slicer = [slice(_from, _from + _offset) for _from, _offset in zip(slicer_step, stepsizes)]
-        logger.debug('Slicer = {}'.format(slicer))
-        _before = region_image_data[slicer].copy()
-        __gc_volume(region_image_data[slicer],
-                    gradient_image_data[slicer],
-                    fgmarkers_image_data[slicer],
-                    bgmarkers_image_data[slicer],
-                    mapping)
-        if (_before == region_image_data[slicer]).all():
-            print "Original region image did not get changed!"
+    slicers = [[slice(_from, _from + _offset + overlap) for _from, _offset in zip(slicer_step, stepsizes)] for slicer_step in itertools.product(*slicer_steps)]
+    subvolumes = [(region_image_data[slicer],
+                   gradient_image_data[slicer],
+                   fgmarkers_image_data[slicer],
+                   bgmarkers_image_data[slicer]) for slicer in slicers]
+    subvolumes = __gc_pool(subvolumes)
     
+    
+    # put data together
+    output_volume = scipy.zeros(region_image_data.shape, dtype=scipy.bool_)
+    for slicer, subvolume in zip(slicers, subvolumes):
+        sslicer_antioverlap = [slice(None)] * output_volume.ndim
+        
+        # treat overlap area using logical and (&)
+        for dim in range(output_volume.ndim):
+            if 0 == slicer[dim].start: continue
+            sslicer_antioverlap[dim] = slice(overlap, None)
+            sslicer_overlap = [slice(None)] * output_volume.ndim
+            sslicer_overlap[dim] = slice(0, overlap)
+            output_volume[slicer][sslicer_overlap] = scipy.logical_and(output_volume[slicer][sslicer_overlap], subvolume[sslicer_overlap])
+            
+        # treat remainder through assignment
+        output_volume[slicer][sslicer_antioverlap] = subvolume[sslicer_antioverlap]
     
     # save resulting mask
-    save(region_image_data.astype(scipy.bool_), args.output, reference_header, args.force)
+    save(output_volume, args.output, reference_header, args.force)
 
     logger.info('Successfully terminated.')
 
-def __gc_volume(img_region, img_gradient, img_fg, img_bg, mapping):
-    "Excutes a stawiaski graph cut over a volume."
+def __gc_pool(arguments, processes = None):
+    "Executes multiple GC's in parallel"
+    from multiprocessing import Pool, cpu_count
+    logger = Logger.getInstance()
+    logger.debug('Executing GC in {} subprocesses...'.format(cpu_count()))
+    
+    pool = Pool(processes)
+    region_image_chunks = pool.map(__gc_volume, arguments)
+    return region_image_chunks
+
+def __gc_volume(images):
+    "Executes a stawiaski graph cut over a volume."
+    img_region, img_gradient, img_fg, img_bg = images
+    
     logger = Logger.getInstance()
     
-    # map occurring regions to a zero-based list
-    unique_rids = scipy.unique(img_region)
-    zero_based_list = dict(itertools.izip(unique_rids, range(0, len(unique_rids))))
+    # recompute the label ids to start from id = 1
+    logger.info('Relabel input image...')
+    img_region = filter.relabel(img_region)
     
     # generate graph
     logger.info('Preparing graph...')
@@ -155,11 +175,12 @@ def __gc_volume(img_region, img_gradient, img_fg, img_bg, mapping):
     
     # apply results to the region image
     logger.info('Applying results...')
-    for rid in unique_rids: # note: this treatment can lead to additional cuts through regions -> but not necessarily bad
-        mapping[rid] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(zero_based_list[rid]) else 1
+    mapping = [0] # no regions with id 1 exists in mapping, entry used as padding
+    mapping.extend(map(lambda x: 0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1,
+                       scipy.unique(img_region)))
     img_region = filter.relabel_map(img_region, mapping)
     
-    # return img_region # eventually this will be required
+    return img_region
     
 
 def getArguments(parser):
