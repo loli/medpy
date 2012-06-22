@@ -17,11 +17,12 @@ from medpy.core import Logger
 from medpy.io import load, save
 from medpy.core.exceptions import ArgumentError
 import os
+import itertools
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.1.0, 2012-06-15"
+__version__ = "d0.1.3, 2012-06-15"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
@@ -59,12 +60,6 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # check if output image exists
-    if not args.force:
-        if os.path.exists(args.output):
-            logger.warning('The output image {} already exists. Exiting.'.format(args.output))
-            exit(-1)
-    
     # load original example volume
     original_data, original_header = load(args.original)
     
@@ -93,7 +88,7 @@ def main():
         marker_data, _ = load(marker_image)
         marker_data[marker_data >= 10] = 0
         # create markers from sparse marker data
-        marker_data_inner, marker_data_outer = __create_markers(marker_data.astype(scipy.bool_), slice_dimension)
+        marker_data_inner, marker_data_outer = __create_markers(marker_data.astype(scipy.bool_), slice_dimension, args.di, args.do)
         # add to resulting final marker images
         inner_data[slicer] += marker_data_inner
         outer_data[slicer] += marker_data_outer
@@ -104,10 +99,16 @@ def main():
     if 0 == len(outer_data.nonzero()[0]):
         raise ArgumentError('No markers for the outer wall could be created.')
     
-    # Second step: Enhance marker information by propagating it over time
+    # Second step: Thin out marker information by emptying every second slice
+    if args.thinning:
+        logger.info('Thinning out every second slice...')
+        inner_data = __thin_out_markers(inner_data)
+        outer_data = __thin_out_markers(outer_data)
+    
+    # Third step: Enhance marker information by propagating it over time
     logger.info('Enhancing marker information...')
-    inner_data = __enhance_markers(inner_data)
-    outer_data = __enhance_markers(outer_data)
+    inner_data = __enhance_markers(inner_data, args.efg, args.ebg)
+    outer_data = __enhance_markers(outer_data, args.di, args.do)
     
     # saving
     inner_name = args.output.format('i')
@@ -118,8 +119,42 @@ def main():
         
     logger.info("Successfully terminated.")
 
+def __thin_out_markers(marker_data):
+    """
+    Thins out marker data by removing every second slide.
+    """
+    # constants
+    xdim = 1
+    ydim = 2
     
-def __enhance_markers(marker_data):
+    # parameters
+    view = (xdim, ydim)
+    arr = marker_data
+    odd = True
+    
+    # function
+    def fun(_arr, odd):
+        """
+        Returns the original array if odd = True, otherwise an empty copy of it.
+        Also returns the inverse of odd.
+        """
+        if odd:
+            return _arr, not odd
+        else:
+            return scipy.zeros_like(_arr), not odd
+    
+    # create list of iterations
+    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+     
+    # iterate, create slicer, execute function and collect results
+    for indices in itertools.product(*iterations):
+        slicer = [slice(None) if idx is None else slice(idx, idx + 1) for idx in indices]
+        results, odd = fun(scipy.squeeze(arr[slicer]), odd)
+        arr[slicer] = results.reshape(arr[slicer].shape)
+        
+    return arr 
+    
+def __enhance_markers(marker_data, efg, ebg):
     """
     Takes an marker image (incl. fg and bg markers) and enhance the encoded
     information by propagating the markers through time.
@@ -130,8 +165,8 @@ def __enhance_markers(marker_data):
     # constants
     contour_dimension = 0
     time_dimension = 3
-    erosions_per_step_fg = 5 # all take a 5 here as sufficient, all except no. 3 take also a 3
-    erosions_per_step_bg = 2 # all take a 2 here as sufficient, all except no. 3 also take a 1
+    erosions_per_step_fg = efg # all take a 5 here as sufficient, all except no. 3 take also a 3
+    erosions_per_step_bg = ebg # all take a 2 here as sufficient, all except no. 3 also take a 1
     
     # prepare slicer
     slicer = [slice(None)] * marker_data.ndim
@@ -176,7 +211,7 @@ def __enhance_markers(marker_data):
     
      
     
-def __create_markers(marker_data, marker_dim):
+def __create_markers(marker_data, marker_dim, di, do):
     """
     Takes an image with markers inside the RV wall and returns two images with the inner
     repectively outer BG and FG markers.
@@ -184,8 +219,8 @@ def __create_markers(marker_data, marker_dim):
     # constants
     contour_dimension = 0
     time_dimension = 3
-    distance_inner = 5 # within the images 01-05 takes values down to 5, standard is 9 to leave some space
-    distance_outer = 6 # within the images 01-05 takes values down to 6, standard is 10 to leave some space
+    distance_inner = di # within the images 01-05 takes values down to 5, standard is 9 to leave some space
+    distance_outer = do # within the images 01-05 takes values down to 6, standard is 10 to leave some space
     
     # prepare output volumes
     inner_data = scipy.zeros(marker_data.shape, scipy.uint8)
@@ -248,6 +283,11 @@ def getParser():
     parser.add_argument('original', help='Original volume.')
     parser.add_argument('output', help='Target volume(s). Has to include the sequence "{}" in the place where the marker number should be placed.')
     parser.add_argument('input', nargs='+', help='The manual marker volumes to combine.')
+    parser.add_argument('--di', dest='di', default=5, type=int, help='In which distance to the manual markers to place the inner wall background markers.')
+    parser.add_argument('--do', dest='do', default=6, type=int, help='In which distance to the manual markers to place the outer wall background markers.')
+    parser.add_argument('--efg', dest='efg', default=5, type=int, help='The foreground markers are eroded by this value before being propagated to the next slide.')
+    parser.add_argument('--ebg', dest='ebg', default=2, type=int, help='The background markers are eroded by this value before being propagated to the next slide.')
+    parser.add_argument('-t', dest='thinning', action='store_true', help='Thin out markers by removing every second slice.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')

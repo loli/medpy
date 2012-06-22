@@ -20,7 +20,7 @@ from medpy.io import load
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r1.1, 2012-04-25"
+__version__ = "r2.1, 2012-04-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -30,6 +30,7 @@ __description__ = """
                   in the supplied folder.
                   Note: Also performs some morphological operations on the masks.
                   Note: Update to work with 4D volumes.
+                  Note: Updated to only extract the required contours.
                   """
 
 # code
@@ -47,6 +48,9 @@ def main():
     # load input image
     input_data, _ = load(args.input)
     
+    # get required contours
+    rcontours = __get_required_contours(args.contourlist)
+    
     # prepare slicer
     slicer = [slice(None)] * input_data.ndim
     
@@ -59,6 +63,10 @@ def main():
             
             # compute if of current slice and prepare contour file name
             slice_id = idx1 * input_data.shape[args.dimension2] + idx2
+            
+            # skip contours that are not required
+            if not slice_id in rcontours[args.ctype]: continue
+            
             # 2009: IM-0001-0027-icontour-manual
             file_name = '{}/IM-0001-{:04d}-{}contour-auto.txt'.format(args.target, slice_id, args.ctype)
             # 2012: P01-0080-icontour-manual.txt
@@ -173,6 +181,21 @@ def __find_nearest(point, contour, processed):
 def __dist(p1, p2):
     """Returns the euclidean distance between two points."""
     return math.sqrt(math.pow(p1[0]- p2[0], 2) + math.pow(p1[1]- p2[1], 2))
+
+def __get_required_contours(clist):
+    """
+    Returns a dict (o and i) containing the ids of all required contours.
+    """
+    slices = {'o': [], 'i': []}
+    with open(clist, 'r') as f:
+        for line in f.readlines():
+            line = line.strip()
+            if 0 == len(line): continue
+            
+            contour_file = line.split('\\')[-1]
+            slices[contour_file.split('-')[2][0]].append(int(contour_file.split('-')[1]))
+            
+    return slices
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
@@ -182,6 +205,7 @@ def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
     
+    parser.add_argument('contourlist', help='The text file listing the contour files.')
     parser.add_argument('input', help='The input binary image containing a single connected object.')
     parser.add_argument('dimension1', type=int, help='The first dimension over which to extract the per-slice contours.')
     parser.add_argument('dimension2', type=int, help='The second dimension over which to extract the per-slice contours.')
