@@ -126,11 +126,13 @@ def __thin_out_markers(marker_data):
     # constants
     xdim = 1
     ydim = 2
+    tdim = 3
     
     # parameters
-    view = (xdim, ydim)
+    view = (xdim, ydim, tdim)
     arr = marker_data
     odd = True
+    counter = 0
     
     # function
     def fun(_arr, odd):
@@ -149,10 +151,15 @@ def __thin_out_markers(marker_data):
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):
         slicer = [slice(None) if idx is None else slice(idx, idx + 1) for idx in indices]
+        if not 0 == len(scipy.nonzero(arr[slicer])[0]) and odd:
+            counter += 1
         results, odd = fun(scipy.squeeze(arr[slicer]), odd)
         arr[slicer] = results.reshape(arr[slicer].shape)
         
-    return arr 
+    logger = Logger.getInstance()
+    logger.debug('Kept {} slices after thinning.'.format(counter))
+        
+    return arr
     
 def __enhance_markers(marker_data, efg, ebg):
     """

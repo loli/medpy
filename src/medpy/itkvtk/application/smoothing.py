@@ -47,7 +47,7 @@ def main():
         
         # load image as float using ITK
         logger.info('Loading image {} as float using ITK...'.format(image))
-        image_type = itk.Image[itk.F, 3] # causes PyDev to complain -> ignore error warning
+        image_type = itk.Image[itk.F, 4] # causes PyDev to complain -> ignore error warning
         reader = itk.ImageFileReader[image_type].New()
         reader.SetFileName(image)
         reader.Update()

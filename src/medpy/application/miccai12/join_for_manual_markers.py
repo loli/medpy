@@ -74,7 +74,7 @@ def main():
         slice_number = int(slice_number)
         # check basenames
         if basename_old and not basename_old == basename:
-            logger.warning('The marker seem to come from different sources. Encountered basenames {} and {}. Continuing anyway.'.fromat(basename, basename_old))
+            logger.warning('The marker seem to come from different sources. Encountered basenames {} and {}. Continuing anyway.'.format(basename, basename_old))
         basename_old = basename
         # prepare slicer
         slicer = [slice(None)] * result_data.ndim
