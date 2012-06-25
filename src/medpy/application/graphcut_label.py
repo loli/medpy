@@ -23,7 +23,7 @@ from medpy import filter
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.4, 2012-03-16"
+__version__ = "r0.3.4, 2012-03-16"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -38,8 +38,7 @@ __description__ = """
                   In the case of the difference of means, it is the original image.
                   
                   Furthermore the algorithm requires the region map of the original
-                  image, a binary image with foreground markers and a binary
-                  image with background markers.
+                  image and an integer image with foreground and background markers.
                   
                   Additionally a filename for the created binary mask marking foreground
                   and background has to be supplied.

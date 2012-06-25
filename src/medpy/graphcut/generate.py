@@ -31,7 +31,6 @@ import scipy
 # own modules
 from ..core import Logger
 from ..graphcut import GCGraph
-from energy_label import __compute_edges
 
 def graph_from_voxels(fg_markers,
                       bg_markers,
