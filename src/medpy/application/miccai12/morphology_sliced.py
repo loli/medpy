@@ -59,21 +59,25 @@ def main():
     if 'erosion' == args.type:
         logger.info('Applying erosion...')
         def fun(arr):
+            if 0 == args.iterations: return arr
             footprint = scipy.ndimage.morphology.generate_binary_structure(arr.ndim, args.size)
             return scipy.ndimage.morphology.binary_erosion(arr, footprint, iterations=args.iterations)
     elif 'dilation' == args.type:
         logger.info('Applying dilation...')
         def fun(arr):
+            if 0 == args.iterations: return arr
             footprint = scipy.ndimage.morphology.generate_binary_structure(arr.ndim, args.size)
             return scipy.ndimage.morphology.binary_dilation(arr, footprint, iterations=args.iterations)
     elif 'opening' == args.type:
         logger.info('Applying opening...')
         def fun(arr):
+            if 0 == args.iterations: return arr
             footprint = scipy.ndimage.morphology.generate_binary_structure(arr.ndim, args.size)
             return scipy.ndimage.morphology.binary_opening(arr, footprint, iterations=args.iterations)
     else: # closing
         logger.info('Applying closing...')
         def fun(arr):
+            if 0 == args.iterations: return arr
             footprint = scipy.ndimage.morphology.generate_binary_structure(arr.ndim, args.size)
             return scipy.ndimage.morphology.binary_closing(arr, footprint, iterations=args.iterations)
 

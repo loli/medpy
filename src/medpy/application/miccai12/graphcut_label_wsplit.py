@@ -9,17 +9,14 @@ import logging
 import os
 
 # third-party modules
-import scipy
 
 # path changes
 
 # own modules
-from medpy.core import ArgumentError, Logger
+from medpy.core import Logger
 from medpy.io import load, save
-from medpy import graphcut
-from medpy import filter
-import math
-import itertools
+from medpy.graphcut.wrapper import split_marker, graphcut_split,\
+    graphcut_stawiaski
 
 
 
@@ -78,110 +75,28 @@ def main():
     # the minimal edge length of a subvolume-cube ! has to be of type int!
     minimal_edge_length = 100
     overlap = 20
-    if overlap >= minimal_edge_length: logger.warning('The overlap should not exceed the minimal edge length.')
-
+    
     # load input images
     region_image_data, reference_header = load(args.region)
     markers_image_data, _ = load(args.markers)
     gradient_image_data, _ = load(args.gradient)
     
     # split marker image into fg and bg images
-    logger.info('Extracting foreground and background markers...')
-    bgmarkers_image_data = scipy.zeros(markers_image_data.shape, scipy.bool_)
-    bgmarkers_image_data[markers_image_data == 2] = True
-    markers_image_data[markers_image_data != 1] = 0
-    fgmarkers_image_data = markers_image_data.astype(scipy.bool_)
+    fgmarkers_image_data, bgmarkers_image_data = split_marker(markers_image_data)
        
-    # check if all images dimensions are the same
-    if not (gradient_image_data.shape == region_image_data.shape == fgmarkers_image_data.shape == bgmarkers_image_data.shape):
-        logger.critical('Not all of the supplied images are of the same shape.')
-        raise ArgumentError('Not all of the supplied images are of the same shape.')
-    
-    # compute how to split the volumes into subvolumes i.e. determine stepsize for each image dimension
-    shape = list(region_image_data.shape)
-    steps = map(lambda x: x / int(minimal_edge_length), shape) # we want integer division
-    steps = [1 if 0 == x else x for x in steps] # replace zeros by ones
-    stepsizes = [math.ceil(x / float(y)) for x, y in zip(shape, steps)]
-    logger.debug('Using a minimal edge length of {}, a subcube-size of {} was determined from the shape {}, which means {} subcubes.'.format(minimal_edge_length, stepsizes, shape, reduce(lambda x, y: x*y, steps)))
-    
-    # controll stepsizes to definitely cover the whole image
-    covered_shape = [x * y for x, y in zip(steps, stepsizes)]
-    for c, o in zip(covered_shape, shape):
-        if c < o: raise Exception("The computed subvolume cubes do not cover the complete image!")
-            
-    # iterate over the steps and extract subvolumes according to the stepsizes
-    slicer_steps = [range(0, int(step * stepsize), int(stepsize)) for step, stepsize in zip(steps, stepsizes)]
-    slicers = [[slice(_from, _from + _offset + overlap) for _from, _offset in zip(slicer_step, stepsizes)] for slicer_step in itertools.product(*slicer_steps)]
-    subvolumes = [(region_image_data[slicer],
-                   gradient_image_data[slicer],
-                   fgmarkers_image_data[slicer],
-                   bgmarkers_image_data[slicer]) for slicer in slicers]
-    subvolumes = __gc_pool(subvolumes)
-    
-    
-    # put data together
-    output_volume = scipy.zeros(region_image_data.shape, dtype=scipy.bool_)
-    for slicer, subvolume in zip(slicers, subvolumes):
-        sslicer_antioverlap = [slice(None)] * output_volume.ndim
-        
-        # treat overlap area using logical and (&)
-        for dim in range(output_volume.ndim):
-            if 0 == slicer[dim].start: continue
-            sslicer_antioverlap[dim] = slice(overlap, None)
-            sslicer_overlap = [slice(None)] * output_volume.ndim
-            sslicer_overlap[dim] = slice(0, overlap)
-            output_volume[slicer][sslicer_overlap] = scipy.logical_and(output_volume[slicer][sslicer_overlap], subvolume[sslicer_overlap])
-            
-        # treat remainder through assignment
-        output_volume[slicer][sslicer_antioverlap] = subvolume[sslicer_antioverlap]
+    # execute distributed graph cut
+    output_volume = graphcut_split(graphcut_stawiaski,
+                                   region_image_data,
+                                   gradient_image_data,
+                                   fgmarkers_image_data,
+                                   bgmarkers_image_data,
+                                   minimal_edge_length,
+                                   overlap)
     
     # save resulting mask
     save(output_volume, args.output, reference_header, args.force)
 
     logger.info('Successfully terminated.')
-
-def __gc_pool(arguments, processes = None):
-    "Executes multiple GC's in parallel"
-    from multiprocessing import Pool, cpu_count
-    logger = Logger.getInstance()
-    logger.debug('Executing GC in {} subprocesses...'.format(cpu_count()))
-    
-    pool = Pool(processes)
-    region_image_chunks = pool.map(__gc_volume, arguments)
-    return region_image_chunks
-
-def __gc_volume(images):
-    "Executes a stawiaski graph cut over a volume."
-    img_region, img_gradient, img_fg, img_bg = images
-    
-    logger = Logger.getInstance()
-    
-    # recompute the label ids to start from id = 1
-    logger.info('Relabel input image...')
-    img_region = filter.relabel(img_region)
-    
-    # generate graph
-    logger.info('Preparing graph...')
-    gcgraph = graphcut.graph_from_labels(img_region,
-                                         img_fg,
-                                         img_bg,
-                                         boundary_term = graphcut.energy_label.boundary_stawiaski,
-                                         boundary_term_args = (img_gradient)) # second is directedness of graph , 0)
-    
-    # execute min-cut
-    logger.info('Executing min-cut...')
-    maxflow = gcgraph.maxflow()
-    logger.debug('Maxflow is {}'.format(maxflow))
-    
-    # apply results to the region image
-    logger.info('Applying results...')
-    mapping = [0] # no regions with id 1 exists in mapping, entry used as padding
-    mapping.extend(map(lambda x: 0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1,
-                       scipy.unique(img_region)))
-    img_region = filter.relabel_map(img_region, mapping)
-    
-    return img_region
-    
 
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."

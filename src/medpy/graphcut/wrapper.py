@@ -24,6 +24,8 @@ from energy_label import boundary_stawiaski
 from generate import graph_from_labels
 from ..core.exceptions import ArgumentError
 from ..core.logger import Logger
+from medpy.filter.label import relabel, relabel_map
+import os
 
 # code
 def split_marker(marker, fg_id = 1, bg_id = 2):
@@ -166,18 +168,16 @@ def graphcut_subprocesses(graphcut_function, graphcut_arguments, processes = Non
     if not processes: processes = multiprocessing.cpu_count()
     if not int == type(processes) or processes <= 0: raise ArgumentError('The number processes can not be zero or negative.')
     
-    # wrap provided function to be executable with the subprocesses pool
-    graphcut = lambda(arguments): graphcut_function(*arguments)
-    
     logger.debug('Executing graph cuts in {} subprocesses.'.format(multiprocessing.cpu_count()))
     
     # creates subprocess pool and execute
     pool = multiprocessing.Pool(processes)
-    results = pool.map(graphcut, graphcut_arguments)
+    results = pool.map(graphcut_function, graphcut_arguments)
     
     return results
 
-def graphcut_stawiaski(regions, gradient, foreground, background):
+
+def graphcut_stawiaski(regions, gradient = False, foreground = False, background = False):
     """
     Executes a Stawiaski label graph cut.
     
@@ -198,6 +198,12 @@ def graphcut_stawiaski(regions, gradient, foreground, background):
     # initialize logger
     logger = Logger.getInstance()
     
+    # unpack images if required
+    # !TODO: This is an ugly hack, especially since it can be seen inside the function definition
+    # How to overcome this, since I can not use a wrapper function as the whole thing must be pickable
+    if not gradient and not foreground and not background: 
+        regions, gradient, foreground, background = regions
+    
     # ensure that input images are scipy arrays
     img_region = scipy.asarray(regions)
     img_gradient = scipy.asarray(gradient)
@@ -208,7 +214,7 @@ def graphcut_stawiaski(regions, gradient, foreground, background):
     if not (img_region.shape == img_gradient.shape == img_fg.shape == img_bg.shape): raise ArgumentError('All supplied images must be of the same shape.')
 
     # recompute the label ids to start from id = 1
-    img_region = filter.relabel(img_region)
+    img_region = relabel(img_region)
     
     # generate graph
     gcgraph = graph_from_labels(img_region, img_fg, img_bg, boundary_term = boundary_stawiaski, boundary_term_args = (img_gradient))
@@ -222,6 +228,6 @@ def graphcut_stawiaski(regions, gradient, foreground, background):
     mapping = [0] # no regions with id 1 exists in mapping, entry used as padding
     mapping.extend(map(lambda x: 0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1,
                        scipy.unique(img_region)))
-    img_results = filter.relabel_map(img_region, mapping)
+    img_results = relabel_map(img_region, mapping)
     
-    return img_results.asdtype(scipy.bool_)
+    return img_results.astype(scipy.bool_)
