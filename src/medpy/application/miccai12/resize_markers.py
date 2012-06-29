@@ -56,7 +56,7 @@ def main():
     # copy data    
     for idx in range(input_data.shape[contour_dimension]):
         slicer_from[contour_dimension] = slice(idx, idx + 1)
-        slicer_to[contour_dimension] = slice(idx + (idx - 1) * args.enhancement, idx + (idx - 1) * args.enhancement + 1)
+        slicer_to[contour_dimension] = slice(idx * (args.enhancement + 1), idx * (args.enhancement + 1) + 1)
         
         output_data[slicer_to] = input_data[slicer_from]
         
