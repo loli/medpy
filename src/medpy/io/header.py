@@ -5,7 +5,7 @@ Provides functionality to access the image headers.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version r0.1.0
+@version r0.1.1
 @since 2012-06-01
 @status Release
 """
@@ -48,15 +48,24 @@ def set_pixel_spacing(hdr, spacing):
     @param spacing the desired pixel spacing
     @type spacing sequence
     """
+    exception = False
     try:
         return __set_pixel_spacing_nibabel(hdr, spacing)
+    except AttributeError as e:
+        if not exception: exception = e
     except Exception: pass
     try:
         return __set_pixel_spacing_pydicom(hdr, spacing)
+    except AttributeError as e:
+        if not exception: exception = e
     except Exception: pass
     try:
         return __set_pixel_spacing_itk(hdr, spacing)
+    except AttributeError as e:
+        if not exception: exception = e
     except Exception: pass
+        
+    if exception: raise exception
     
     raise AttributeError('The provided header {} is of unknown type or does not support setting of pixel spacing.'.format(type(hdr)))    
 

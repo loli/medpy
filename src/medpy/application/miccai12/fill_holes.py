@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-"""Fill the wholes in the contour files. Creates two output  files for each input file."""
+"""Fill the wholes in the contour files. Creates two output files for each input file."""
 
 # build-in modules
 import argparse
@@ -8,8 +8,7 @@ import logging
 import os
 
 # third-party modules
-from scipy.ndimage.morphology import binary_fill_holes, binary_closing,\
-    binary_dilation, binary_erosion, generate_binary_structure
+from scipy.ndimage.morphology import binary_fill_holes
 import scipy
 
 # path changes
@@ -66,7 +65,7 @@ def main():
                 voxel_before = len(inner_data_volume.nonzero()[0])
                 inner_data_volume = binary_fill_holes(inner_data_volume)
                 voxel_after = len(inner_data_volume.nonzero()[0])
-                if voxel_before >= voxel_after: logger.warning('Whole of inner contour in slice space={}, time={} has not been filled.'.format(slice_id, time_id))
+                if voxel_before >= voxel_after: logger.warning('Hole of inner contour in slice space={}, time={} has not been filled.'.format(slice_id, time_id))
                 tmp = scipy.squeeze(inner_data[slicer])
                 tmp += inner_data_volume
             # process outer contour
@@ -78,7 +77,7 @@ def main():
                 voxel_before = len(outer_data_volume.nonzero()[0])
                 outer_data_volume = binary_fill_holes(outer_data_volume)
                 voxel_after = len(outer_data_volume.nonzero()[0])
-                if voxel_before >= voxel_after: logger.warning('Whole of outer contour in slice space={}, time={} has not been filled.'.format(slice_id, time_id))
+                if voxel_before >= voxel_after: logger.warning('Hole of outer contour in slice space={}, time={} has not been filled.'.format(slice_id, time_id))
                 tmp = scipy.squeeze(outer_data[slicer])
                 tmp += outer_data_volume
     

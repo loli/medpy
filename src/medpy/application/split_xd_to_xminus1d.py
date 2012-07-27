@@ -12,13 +12,15 @@ import scipy
 # path changes
 
 # own modules
-from medpy.io import load, save
+from medpy.io import load, save, header
 from medpy.core import Logger
+from medpy.core.exceptions import ArgumentError
+from medpy.io.header import __update_header_from_array_nibabel
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2012-05-25"
+__version__ = "r0.1.1, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -45,14 +47,27 @@ def main():
     # load input image
     data_input, header_input = load(args.input)
     
+    # check if the supplied dimension is valid
+    if args.dimension >= data_input.ndim or args.dimension < 0:
+        raise ArgumentError('The supplied cut-dimension {} exceeds the image dimensionality of 0 to {}.'.format(args.dimension, data_input.ndim - 1))
+    
     # preapre output file string
     name_output = args.output.replace('{}', '{:03d}')
     
-    # split and save images
+    # compute the new the voxel spacing
+    spacing = list(header.get_pixel_spacing(header_input))
+    del spacing[args.dimension]
+    
+    # iterate over the cut dimension
     slices = data_input.ndim * [slice(None)]
     for idx in range(data_input.shape[args.dimension]):
+        # cut the current slice from the original image 
         slices[args.dimension] = slice(idx, idx + 1)
         data_output = scipy.squeeze(data_input[slices])
+        # update the header and set the voxel spacing
+        __update_header_from_array_nibabel(header_input, data_output)
+        header.set_pixel_spacing(header_input, spacing)
+        # save current slice
         save(data_output, name_output.format(idx), header_input, args.force)
         
     logger.info("Successfully terminated.")
