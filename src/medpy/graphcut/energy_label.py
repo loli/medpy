@@ -291,6 +291,42 @@ def boundary_stawiaski_directed(graph, label_image, (gradient_image, directednes
                   gradient_image[slices_x],
                   gradient_image[slices_y])
 
+def regional_atlas(graph, label_image, (atlas_image, alpha)): # label image is required to hold continuous ids starting from 1
+    """
+    An implementation of a regions term using a statistical atlas, suitable to be used
+    with the graphcut.generate.graph_from_labels() function.
+    
+    Computes the sum of all statistical atlas voxels under each region and uses this
+    value as node weight for the graph cut.
+    
+    This regional term introduces statistical probability of a voxel to belong to the
+    object to segment. 
+    
+    @note This function requires an atlas image of the same shape as the original image
+    to be passed along. That means that graphcut.generate.graph_from_labels() has to be
+    called with boundary_term_args set to the atlas image.
+    
+    @note This function is tested on 2D and 3D images and theoretically works on all
+    dimensions.
+    
+    @param graph the graph to add the weights to
+    @type graph graphcut.graph.GCGraph
+    @param label_image the label image
+    @type label_image numpy.ndarray
+    @param atlas_image The atlas image associated with the object to segment.
+    @type atlas_image numpy.ndarray
+    """
+    # finding the objects in the label image (bounding boxes around regions)
+    objects = scipy.ndimage.find_objects(label_image)
+    
+    # iterate over regions and compute the respective sums of atlas values
+    for rid in range(1, len(objects) + 1):
+        weight = scipy.sum(atlas_image[objects[rid - 1]][label_image[objects[rid - 1]] == rid])
+        graph.set_tweight(rid - 1, alpha * weight, -1. * alpha * weight) # !TODO: rid's inside the graph start from 0 or 1? => seems to start from 0
+        # !TODO: I can exclude source and sink nodes from this!
+        # !TODO: I only have to do this in the range of the atlas objects!
+
+
 def __compute_edges(label_image):
     """
     Computes the region neighbourhood defined by a star shaped n-dimensional structuring

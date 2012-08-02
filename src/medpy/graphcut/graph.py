@@ -352,7 +352,7 @@ class GCGraph:
     def set_tweight(self, node, weight_source, weight_sink):
         """
         Set a single n-weight / edge-weight.
-        @param node the node whoch t-weights to set
+        @param node the node which t-weights to set
         @param weight_source weight from the source to the node
         @param weight_sink weight from the node to the sink
         

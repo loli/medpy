@@ -6,22 +6,19 @@
 from argparse import RawTextHelpFormatter
 import argparse
 import logging
-import os
 
 # third-party modules
 import numpy
-from nibabel.loadsave import load, save
-from nibabel.spatialimages import ImageFileError 
 
 # path changes
 
 # own modules
-from medpy.core import ArgumentError, Logger
-from medpy.utilities.nibabel import image_like
+from medpy.core import Logger
+from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2, 2011-03-29"
+__version__ = "r0.3, 2011-03-29"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -46,35 +43,18 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # prepare result file name
-    result_name = args.output + args.images[0][-4:]
-    
-    # check if output image exists
-    if not args.force:
-        if os.path.exists(result_name):
-            logger.warning('The output file {} already exists. Breaking.'.format(result_name))
-            exit(1)
-    
     # load first image as result image
     logger.info('Loading {}...'.format(args.images[0]))
-    try: result_image = load(args.images[0])
-    except ImageFileError as e:
-        logger.critical('The input image does not exist or its file type is unknown.')
-        raise ArgumentError('The input image does not exist or its file type is unknown.', e)
+    result_data, result_header = load(args.images[0])
     
     # reduce the image dimensions (nibabel Analyze always assumes 4)
-    result_data = numpy.squeeze(result_image.get_data())
     if args.zero and result_data.all():
-            result_data = numpy.zeros(result_data.shape, result_data.dtype)
+        result_data = numpy.zeros(result_data.shape, result_data.dtype)
     
     # iterate over remaining images and concatenate
     for image_name in args.images[1:]:
         logger.info('Loading {}...'.format(image_name))
-        try: image_data = numpy.squeeze(load(image_name).get_data())
-        except ImageFileError as e:
-            logger.critical('The input image does not exist or its file type is unknown.')
-            raise ArgumentError('The input image does not exist or its file type is unknown.', e)  
-        
+        image_data, _ = load(image_name)
         
         # change to zero matrix if requested
         if args.zero and image_data.all():
@@ -89,9 +69,9 @@ def main():
     logger.debug('Final image is of shape {}.'.format(result_data.shape))
 
     # save results in same format as input image
-    logger.info('Saving concatenated image as {}...'.format(result_name))
+    logger.info('Saving concatenated image as {}...'.format(args.output))
     
-    save(image_like(result_data, result_image, [0] * result_data.ndim), result_name)
+    save(result_data, args.output, result_header, args.force)
     
     logger.info('Successfully terminated.')
     
@@ -104,7 +84,7 @@ def getParser():
     parser = argparse.ArgumentParser(description=__description__, formatter_class=RawTextHelpFormatter)
     
     parser.add_argument('dimension', type=int, help='The dimension in which direction to stack (starting from 0:x).')
-    parser.add_argument('output', help='The name (+location) of the output image. Will be of the same file-type as the input images.')
+    parser.add_argument('output', help='The output image.')
     parser.add_argument('images', nargs='+', help='The images to concatenate/stack.')
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
