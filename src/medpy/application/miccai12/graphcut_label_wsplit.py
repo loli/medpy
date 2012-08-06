@@ -73,7 +73,7 @@ def main():
             
     # constants
     # the minimal edge length of a subvolume-cube ! has to be of type int!
-    minimal_edge_length = 100
+    minimal_edge_length = 200
     overlap = 20
     
     # load input images

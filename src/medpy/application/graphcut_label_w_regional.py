@@ -120,7 +120,7 @@ def main():
                                     bgmarkers_image_data,
                                     regional_term = regional_term,
                                     boundary_term = boundary_term,
-                                    regional_term_args = (radditional_image_data),
+                                    regional_term_args = (radditional_image_data, args.alpha),
                                     boundary_term_args = (badditional_image_data)) # second (optional) parameter is directedness of graph , 0)
 
     logger.info('Removing images that are not longer required from memory...')
