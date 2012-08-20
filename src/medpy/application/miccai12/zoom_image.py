@@ -9,24 +9,27 @@ import os
 
 # third-party modules
 import scipy
+from scipy.ndimage import interpolation
 
 # path changes
 
 # own modules
 from medpy.core import Logger
 from medpy.io import load, save, header
-from scipy.ndimage import interpolation
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.1.0, 2012-06-13"
+__version__ = "r0.1.1, 2012-06-13"
 __email__ = "oskar.maier@googlemail.com"
-__status__ = "Development"
+__status__ = "Release"
 __description__ = """
                   Zoom into an image by adding new slices in the z-direction and filling
                   them with interpolated data. Overall "enhancement" new slices will be
                   created between every two original slices.
+                  
+                  If you want to zoom multiple binary objects in an image without
+                  interpolating between their values, use the -o switch.
                   """
 
 # code
@@ -39,10 +42,9 @@ def main():
     elif args.verbose: logger.setLevel(logging.INFO)
     
     # check if output image exists
-    if not args.force:
-        if os.path.exists(args.output):
-            logger.warning('The output image {} already exists. Exiting.'.format(args.output))
-            exit(-1)
+    if not args.force and os.path.exists(args.output):
+        logger.warning('The output image {} already exists. Exiting.'.format(args.output))
+        exit(-1)
     
     # constants
     contour_dimension = 0
@@ -50,22 +52,41 @@ def main():
     # load input data
     input_data, input_header = load(args.input)
     
-    logger.debug('Old shape = {}.'.format(input_data.shape))
+    # if normal mode, perform the zoom
+    logger.info('Performing normal zoom...')
+    output_data, output_header = zoom(input_data, args.enhancement, contour_dimension, hdr=input_header)
     
+    # saving results
+    save(output_data, args.output, output_header, args.force)
+    
+def zoom(image, factor, dimension, hdr = False, order = 3):
+    """
+    Zooms the provided image by the supplied factor in the supplied dimension.
+    The factor is an integer determining how many slices should be put between each
+    existing pair.
+    If an image header (hdr) is supplied, its voxel spacing gets updated.
+    Returns the image and the updated header or false.
+    """
+    # get logger
+    logger = Logger.getInstance()
+
+    logger.debug('Old shape = {}.'.format(image.shape))
+
     # perform the zoom
-    zoom = [1] * input_data.ndim
-    zoom[contour_dimension] = (input_data.shape[contour_dimension] + (input_data.shape[contour_dimension] - 1) * args.enhancement) / float(input_data.shape[contour_dimension])
+    zoom = [1] * image.ndim
+    zoom[dimension] = (image.shape[dimension] + (image.shape[dimension] - 1) * factor) / float(image.shape[dimension])
     logger.debug('Reshaping with = {}.'.format(zoom))
-    output_data = interpolation.zoom(input_data, zoom)
+    image = interpolation.zoom(image, zoom, order=order)
         
-    logger.debug('New shape = {}.'.format(output_data.shape))
+    logger.debug('New shape = {}.'.format(image.shape))
     
-    new_spacing = list(header.get_pixel_spacing(input_header))
-    new_spacing[contour_dimension] = new_spacing[contour_dimension] / float(args.enhancement + 1)
-    logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(input_header), new_spacing))
-    header.set_pixel_spacing(input_header, tuple(new_spacing))
+    if hdr:
+        new_spacing = list(header.get_pixel_spacing(hdr))
+        new_spacing[dimension] = new_spacing[dimension] / float(factor + 1)
+        logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(hdr), new_spacing))
+        header.set_pixel_spacing(hdr, tuple(new_spacing))
     
-    save(output_data, args.output, input_header, args.force)
+    return image, header
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
@@ -77,6 +98,7 @@ def getParser():
     parser.add_argument('input', help='Source volume.')
     parser.add_argument('output', help='Target volume.')
     parser.add_argument('enhancement', type=int, help='How many slices to put between each original slice.')
+    #parser.add_argument('-o', dest='objects', action='store_true', help='Activate this flag to perform the zoom for any binary object in the image separatly.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
