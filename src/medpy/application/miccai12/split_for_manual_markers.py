@@ -90,12 +90,12 @@ def main():
         slices[cut_dimension] = slice(idx, idx + 1)
         
         # skip if output image already exists
-        #if not args.force and os.path.exists(name_output_data.format(args.output, basename, cut_dimension, idx)):
-        #    logger.warning('The output image {} already exists, skipping this step.'.format(name_output_data.format(args.output, basename, cut_dimension, idx)))
-        #    continue
-        #elif not args.force and os.path.exists(name_output_marker.format(args.output, basename, cut_dimension, idx)):
-        #    logger.warning('The output marker image {} already exists, skipping this step.'.format(name_output_marker.format(args.output, basename, cut_dimension, idx)))
-        #    continue
+        if not args.force and os.path.exists(name_output_data.format(args.output, basename, cut_dimension, idx)):
+            logger.warning('The output image {} already exists, skipping this step.'.format(name_output_data.format(args.output, basename, cut_dimension, idx)))
+            continue
+        elif not args.force and os.path.exists(name_output_marker.format(args.output, basename, cut_dimension, idx)):
+            logger.warning('The output marker image {} already exists, skipping this step.'.format(name_output_marker.format(args.output, basename, cut_dimension, idx)))
+            continue
         
         # extract original sub-volume
         data_output = scipy.squeeze(input_data[slices])
