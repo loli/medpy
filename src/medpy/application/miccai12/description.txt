@@ -1,1 +1,1 @@
-COntains scripts that were specially developed for the MICCAI12 RV Challenge.
+Contains scripts that were specially developed for the MICCAI12 RV Challenge.
