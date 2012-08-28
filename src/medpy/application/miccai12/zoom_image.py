@@ -20,7 +20,7 @@ from medpy.io import load, save, header
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.1, 2012-06-13"
+__version__ = "r0.1.2, 2012-06-13"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -55,7 +55,7 @@ def main():
     # if normal mode, perform the zoom
     logger.info('Performing normal zoom...')
     output_data, output_header = zoom(input_data, args.enhancement, contour_dimension, hdr=input_header)
-    
+
     # saving results
     save(output_data, args.output, output_header, args.force)
     
@@ -86,7 +86,7 @@ def zoom(image, factor, dimension, hdr = False, order = 3):
         logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(hdr), new_spacing))
         header.set_pixel_spacing(hdr, tuple(new_spacing))
     
-    return image, header
+    return image, hdr
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
