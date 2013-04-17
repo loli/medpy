@@ -18,7 +18,7 @@ from nibabel.spatialimages import ImageFileError
 
 # own modules
 from medpy.core import ArgumentError, Logger
-from medpy.utilities.nibabel import image_like
+from medpy.utilities.nibabelu import image_like
 from scipy import ndimage
 
 # information

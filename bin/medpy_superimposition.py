@@ -16,7 +16,7 @@ from nibabel.loadsave import load, save
 
 # own modules
 from medpy.core import Logger
-from medpy.utilities import image_like
+from medpy.utilities.nibabelu import image_like
 
 # information
 __author__ = "Oskar Maier"

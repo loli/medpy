@@ -6,10 +6,13 @@
 
 # DOC dirs #
 ############
-epydoc_doc/
-pydoctor_doc/
-sphinx_doc/
-doxygen_doc/
+doc/
+
+# BUILD dirs #
+##############
+build/
+dist/
+MedPy.egg-info/
 
 # Only locally used, temporary .py scripts. #
 #############################################
@@ -69,7 +72,6 @@ dist
 build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs

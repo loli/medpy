@@ -23,16 +23,19 @@ from medpy import filter
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.1.0, 2012-07-31"
+__version__ = "d0.1.1, 2012-07-31"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
                   Perform a binary graph cut using Boykov's max-flow/min-cut algorithm.
                   
-                  This implementation does only compute a boundary term and does not use
-                  any regional term. The desired boundary term can be selected via the
-                  --boundary argument. Depending on the selected term, an additional
-                  image has to be supplied as badditional.
+                  This implementation does not only compute a boundary term but also a
+		  regional term which. The only available implementation up till now is
+		  the use of an atalas (i.e. a probability image of float values). The
+		  pixel values have to lie between 0 and 1, whereas 1 denounces a sure
+		  probability that the object is situated at this position.  The desired
+		  boundary term can be selected via the --boundary argument. Depending on
+		  the selected term, an additional image has to be supplied as badditional.
                   
                   In the case of the stawiaski boundary term, this is the gradient image.
                   In the case of the difference of means, it is the original image.

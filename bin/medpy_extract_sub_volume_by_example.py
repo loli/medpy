@@ -19,7 +19,7 @@ from nibabel.nifti1 import Nifti1Image
 
 # own modules
 from medpy.core import ArgumentError, Logger
-from medpy.utilities.nibabel import image_like
+from medpy.utilities.nibabelu import image_like
 
 # information
 __author__ = "Oskar Maier"

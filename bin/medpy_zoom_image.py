@@ -20,7 +20,7 @@ from medpy.io import load, save, header
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.2, 2012-06-13"
+__version__ = "r0.2.0, 2012-06-13"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -46,15 +46,12 @@ def main():
         logger.warning('The output image {} already exists. Exiting.'.format(args.output))
         exit(-1)
     
-    # constants
-    contour_dimension = 0
-    
     # load input data
     input_data, input_header = load(args.input)
     
     # if normal mode, perform the zoom
     logger.info('Performing normal zoom...')
-    output_data, output_header = zoom(input_data, args.enhancement, contour_dimension, hdr=input_header)
+    output_data, output_header = zoom(input_data, args.enhancement, args.dimension, hdr=input_header)
 
     # saving results
     save(output_data, args.output, output_header, args.force)
@@ -97,6 +94,7 @@ def getParser():
     parser = argparse.ArgumentParser(description=__description__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('input', help='Source volume.')
     parser.add_argument('output', help='Target volume.')
+    parser.add_argument('dimension', type=int, help='The dimension along which to zoom.')
     parser.add_argument('enhancement', type=int, help='How many slices to put between each original slice.')
     #parser.add_argument('-o', dest='objects', action='store_true', help='Activate this flag to perform the zoom for any binary object in the image separatly.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')

@@ -18,7 +18,7 @@ from medpy.io import load, save, header
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.1.0, 2012-06-13"
+__version__ = "d0.2.0, 2012-06-13"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
@@ -36,9 +36,6 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # constants
-    contour_dimension = 0
-    
     # load input data
     input_data, input_header = load(args.input)
     
@@ -46,7 +43,7 @@ def main():
     
     # compute new shape
     new_shape = list(input_data.shape)
-    new_shape[contour_dimension] = 1 + (new_shape[contour_dimension] - 1) / (args.discard + 1)
+    new_shape[args.dimension] = 1 + (new_shape[args.dimension] - 1) / (args.discard + 1)
     
     # prepare output image
     output_data = scipy.zeros(new_shape, dtype=input_data.dtype)
@@ -60,12 +57,12 @@ def main():
     slicec = 0
     
     logger.debug('Shrinking from {} to {}...'.format(input_data.shape, new_shape))
-    for idx in range(input_data.shape[contour_dimension]):
+    for idx in range(input_data.shape[args.dimension]):
         
         if 0 == skipc:
             # transfer slice
-            slicer_in[contour_dimension] = slice(idx, idx + 1)
-            slicer_out[contour_dimension]  = slice(slicec, slicec + 1)
+            slicer_in[args.dimension] = slice(idx, idx + 1)
+            slicer_out[args.dimension]  = slice(slicec, slicec + 1)
             output_data[slicer_out] = input_data[slicer_in]
             
             # resert resp. increase counter
@@ -79,7 +76,7 @@ def main():
     
     # set new pixel spacing
     new_spacing = list(header.get_pixel_spacing(input_header))
-    new_spacing[contour_dimension] = new_spacing[contour_dimension] * float(args.discard + 1)
+    new_spacing[args.dimension] = new_spacing[args.dimension] * float(args.discard + 1)
     logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(input_header), new_spacing))
     header.set_pixel_spacing(input_header, tuple(new_spacing))
     
@@ -94,6 +91,7 @@ def getParser():
     parser = argparse.ArgumentParser(description=__description__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('input', help='Source volume.')
     parser.add_argument('output', help='Target volume.')
+    parser.add_argument('dimension', type=int, help='The dimension along which to discard the slices.')
     parser.add_argument('discard', type=int, help='How many slices to discard between each two slices which are kept.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

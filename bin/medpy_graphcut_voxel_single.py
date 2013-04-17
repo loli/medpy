@@ -26,6 +26,9 @@ __version__ = "r0.2.1, 2012-03-23"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
+		  !Varies from the original version in the sense, that only one image
+		  containing both, fg and bg markers, is required.
+
                   Perform a binary graph cut using Boykov's max-flow/min-cut algorithm.
                   
                   This implementation does only compute a boundary term and does not use
