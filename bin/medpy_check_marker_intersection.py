@@ -1,6 +1,23 @@
 #!/usr/bin/python
 
-"""Checks whether the markers of a given marker volume and the original contours intersect."""
+"""
+Checks whether the markers of a given marker volume and the original contours intersect.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 # build-in modules
 import argparse
@@ -22,10 +39,15 @@ __version__ = "d0.1.0, 2012-06-15"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
-    Checks whether the markers of a given marker volume and the original contours intersect.
-    
-    Takes the marker volume as first and the contour volume as second argument.
-    """
+                  Checks whether the markers of a given marker volume and the original contours intersect.
+                    
+                  Takes the marker volume as first and the contour volume as second argument.
+                    
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.    
+                  """
 
 # code
 def main():

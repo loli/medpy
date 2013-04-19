@@ -1,6 +1,23 @@
 #!/usr/bin/python
 
-"""Execute a graph cut on a voxel image based on some foreground and background markers."""
+"""
+Execute a graph cut on a voxel image based on some foreground and background markers.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 # build-in modules
 from argparse import RawTextHelpFormatter
@@ -17,17 +34,18 @@ import scipy
 from medpy.core import ArgumentError, Logger
 from medpy.io import load, save, header
 from medpy import graphcut
+from medpy.graphcut.wrapper import split_marker
 
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.1, 2012-03-23"
+__version__ = "r0.2.2, 2012-03-23"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
-		  !Varies from the original version in the sense, that only one image
-		  containing both, fg and bg markers, is required.
+		  		  !Varies from the original version in the sense, that only one image
+		  		  containing both, fg and bg markers, is required.
 
                   Perform a binary graph cut using Boykov's max-flow/min-cut algorithm.
                   
@@ -49,6 +67,11 @@ __description__ = """
                   Note to take into account the input images orientation.
                   Note that the quality of the resulting segmentations depends also on
                   the quality of the supplied markers.
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code
@@ -99,10 +122,7 @@ def main():
     # split marker image into fg and bg images
     markers_image_data, _ = load(args.markers)
     logger.info('Extracting foreground and background markers...')
-    bgmarkers_image_data = scipy.zeros(markers_image_data.shape, scipy.bool_)
-    bgmarkers_image_data[markers_image_data == 2] = True
-    markers_image_data[markers_image_data != 1] = 0
-    fgmarkers_image_data = markers_image_data.astype(scipy.bool_)
+    fgmarkers_image_data, bgmarkers_image_data = split_marker(markers_image_data)
     
     badditional_image_data, reference_header = load(args.badditional)
        

@@ -1,6 +1,23 @@
 #!/usr/bin/python
 
-"""Execute a graph cut on a voxel image based on some foreground and background markers."""
+"""
+Execute a graph cut on a voxel image based on some foreground and background markers.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 # build-in modules
 from argparse import RawTextHelpFormatter
@@ -17,12 +34,13 @@ import scipy
 from medpy.core import ArgumentError, Logger
 from medpy.io import load, save, header
 from medpy import graphcut
+from medpy.graphcut.wrapper import split_marker
 
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.1, 2012-03-23"
+__version__ = "r0.3.1, 2012-03-23"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -46,6 +64,11 @@ __description__ = """
                   Note to take into account the input images orientation.
                   Note that the quality of the resulting segmentations depends also on
                   the quality of the supplied markers.
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code
@@ -94,13 +117,11 @@ def main():
         logger.info('Selected boundary term: power based / raised maximum of intensities')
 
     # load input images
-    fgmarkers_image_data, _ = load(args.foreground)
-    fgmarkers_image_data = fgmarkers_image_data.astype(scipy.bool_)
-        
-    bgmarkers_image_data, _ = load(args.background)
-    bgmarkers_image_data = bgmarkers_image_data.astype(scipy.bool_)
-    
     badditional_image_data, reference_header = load(args.badditional)
+    markers_image_data, _ = load(args.markers)
+    
+    # split marker image into fg and bg images
+    fgmarkers_image_data, bgmarkers_image_data = split_marker(markers_image_data)
        
     # check if all images dimensions are the same
     if not (badditional_image_data.shape == fgmarkers_image_data.shape == bgmarkers_image_data.shape):
@@ -148,8 +169,7 @@ def getParser():
     
     parser.add_argument('sigma', type=float, help='The sigma required for the boundary terms.')
     parser.add_argument('badditional', help='The additional image required by the boundary term. See there for details.')
-    parser.add_argument('foreground', help='Binary image containing the foreground markers.')
-    parser.add_argument('background', help='Binary image containing the background markers.')
+    parser.add_argument('markers', help='Image containing the foreground (=1) and background (=2) markers.')
     parser.add_argument('output', help='The output image containing the segmentation.')
     parser.add_argument('--boundary', default='diff_exp', help='The boundary term to use. Note that the ones prefixed with diff_ require the original image, while the ones prefixed with max_ require the gradient image.', choices=['diff_linear', 'diff_exp', 'diff_div', 'diff_pow', 'max_linear', 'max_exp', 'max_div', 'max_pow'])
     parser.add_argument('-s', dest='spacing', action='store_true', help='Set this flag to take the pixel spacing of the image into account. The spacing data will be extracted from the baddtional image.')

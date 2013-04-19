@@ -1,6 +1,22 @@
 #!/usr/bin/python
 
-"""Takes a dicom folder, loads the contained slices and saves them as a proper 4D volume."""
+"""
+Takes a dicom folder, loads the contained slices and saves them as a proper 4D volume.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>."""
 
 # build-in modules
 import argparse
@@ -13,7 +29,7 @@ import scipy
 
 # own modules
 from medpy.core import Logger
-from medpy.io import save, header
+from medpy.io import save
 from medpy.core.exceptions import ArgumentError
 from dicom.contrib import pydicom_series
 
@@ -24,26 +40,31 @@ __version__ = "d0.1.0, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
-                Takes a dicom folder, loads the contained slices and saves them as a proper 4D volume.
-                The supplied target dimension parameter determines the dimension along which to split the
-                original image and the consecutive slices parameter determines the offset after which to
-                split.
+                  Takes a dicom folder, loads the contained slices and saves them as a proper 4D volume.
+                  The supplied target dimension parameter determines the dimension along which to split the
+                  original image and the consecutive slices parameter determines the offset after which to
+                  split.
                 
-                A typical use-case are DICOM images, which often come with the temporal and third spatial
-                dimension stacked on top of each other.
-                Let us assume a (5000, 200, 190) 3D image. In reality this file contains a number of 50
-                volume of 100x200x190, which each represent a point in time. More concretely, always 50
-                slices of the first dimension show the transformation of a 2D image in time. Then occurs
-                a visible jump, when the view changes in space from the 50th to the 51th slice. The
-                following 50 slices are the temporal transformation of this new spatial slice and then
-                occur another jump, and so on. 
+                  A typical use-case are DICOM images, which often come with the temporal and third spatial
+                  dimension stacked on top of each other.
+                  Let us assume a (5000, 200, 190) 3D image. In reality this file contains a number of 50
+                  volume of 100x200x190, which each represent a point in time. More concretely, always 50
+                  slices of the first dimension show the transformation of a 2D image in time. Then occurs
+                  a visible jump, when the view changes in space from the 50th to the 51th slice. The
+                  following 50 slices are the temporal transformation of this new spatial slice and then
+                  occur another jump, and so on. 
                 
-                Calling this script with a target dimension of 0 (meaning the first dimension of the
-                image containing the 5000 slices) and a consecutive slices parameter of 50 (which is used
-                to tell how many consecutive slices belong together), will result in a 4D image of the
-                shape (100, 50, 200, 190) containing the spatial volumes separated by an additional time
-                dimension.
-                """
+                  Calling this script with a target dimension of 0 (meaning the first dimension of the
+                  image containing the 5000 slices) and a consecutive slices parameter of 50 (which is used
+                  to tell how many consecutive slices belong together), will result in a 4D image of the
+                  shape (100, 50, 200, 190) containing the spatial volumes separated by an additional time
+                  dimension.
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  """
 
 # code
 def main():

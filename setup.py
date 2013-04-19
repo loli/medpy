@@ -1,17 +1,40 @@
 #!/usr/bin/env python
 
 #from distutils.core import setup, Extension
+import os
 from setuptools import setup, Extension
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='MedPy',
       version='0.1.0', # major.minor.micro
       description='Medical image processing in Python',
-      long_description=open('README.txt').read(),
       author='Oskar Maier',
       author_email='oskar.maier@googlemail.com',
       url='https://github.com/loli/medpy',
       license='LICENSE.txt',
       keywords='medical image processing dicom itk insight tool kit MRI CT US graph cut max-flow min-cut',
+      long_description=read('README.txt'),
+
+      classifiers=[
+          'Development Status :: 4 - Beta',
+          'Environment :: Console',
+          'Environment :: Other Environment',
+          'Intended Audience :: End Users/Desktop',
+          'Intended Audience :: Developers',
+          'Intended Audience :: Healthcare Industry',
+          'Intended Audience :: Science/Research',
+          'License :: OSI Approved :: GNU General Public License (GPL)',
+          #'Operating System :: MacOS :: MacOS X',
+          #'Operating System :: Microsoft :: Windows',
+          'Operating System :: POSIX',
+	  'Operating System :: Unix',
+          'Programming Language :: Python',
+          'Programming Language :: C++',
+          'Topic :: Scientific/Engineering :: Medical Science Apps.',
+          'Topic :: Scientific/Engineering :: Image Recognition'
+          ],
 
       install_requires=[
        	"scipy >= 0.9.0",
@@ -21,7 +44,7 @@ setup(name='MedPy',
       extras_require = {
 	'Nifti/Analyze':  ["nibabel >= 1.3.0", "RXP"],
 	'Dicom': ["pydicom >= 0.9.7"],
-	'Additional formats' : ["itk > 1.0.0"] # !TODO: Is it at all possible to give a version here? Which one do I have?
+	'Additional image formats' : ["itk >= 3.16.0"]
       },
 
       packages = [
@@ -33,7 +56,9 @@ setup(name='MedPy',
 	'medpy.graphcut',
 	'medpy.core',
 	'medpy.filter',
-	'medpy.itkvtk'
+	'medpy.itkvtk',
+	'medpy.itkvtk.filter',
+	'medpy.itkvtk.utilities'
       ],
       
       scripts=[

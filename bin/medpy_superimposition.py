@@ -1,6 +1,23 @@
 #!/usr/bin/python
 
-"""Creates the superimposition image of two label images."""
+"""
+Creates the superimposition image of two label images.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 # build-in modules
 from argparse import ArgumentError
@@ -10,17 +27,17 @@ import os
 
 # third-party modules
 import scipy
-from nibabel.loadsave import load, save
 
 # path changes
 
 # own modules
+from medpy.io import load, save
 from medpy.core import Logger
 from medpy.utilities.nibabelu import image_like
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1, 2011-01-04"
+__version__ = "r0.2.0, 2011-01-04"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -30,6 +47,11 @@ __description__ = """
                   
                   The resulting image has the same name as the first input image, just
                   with a '_superimp' suffix.
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code
@@ -54,21 +76,17 @@ def main():
             raise ArgumentError('The output image {} already exists. Please provide the -f/force flag, if you wish to override it.'.format(image_superimposition_name))
     
     # load image1 using nibabel
-    logger.info('Loading gradient image {} using NiBabel...'.format(args.image1))
-    image1 = load(args.image1)
+    logger.info('Loading image {}...'.format(args.image1))
+    image1_data, image1_header = load(args.image1)
     
     # load image2 using nibabel
-    logger.info('Loading gradient image {} using NiBabel...'.format(args.image2))
-    image2 = load(args.image2)
-    
-    # extract and prepare data of input images
-    image1_data = scipy.squeeze(image1.get_data())
-    image2_data = scipy.squeeze(image2.get_data())
+    logger.info('Loading image {}...'.format(args.image2))
+    image2_data, _ = load(args.image2)
         
     # check input images to be valid
     logger.info('Checking input images for correctness...')
     if image1_data.shape != image2_data.shape:
-        raise ArgumentError('The two input images shape do not match with 1:{} and 2:{}'.format(image1.shape, image2.shape))
+        raise ArgumentError('The two input images shape do not match with 1:{} and 2:{}'.format(image1_data.shape, image2_data.shape))
     int_types = (scipy.uint, scipy.uint0, scipy.uint8, scipy.uint16, scipy.uint32, scipy.uint64, scipy.uintc, scipy.uintp,
                  scipy.int_, scipy.int0, scipy.int8, scipy.int16, scipy.int32, scipy.int64, scipy.intc, scipy.intp)
     if image1_data.dtype not in int_types:
@@ -94,10 +112,8 @@ def main():
                 image_superimposition_data[x,y,z] = translation[(label1, label2)]
     
     # save resulting superimposition image
-    logger.info('Saving superimposition image as {} in the same format as input image 1, only with data-type uint32...'.format(image_superimposition_name))
-    image_superimposition = image_like(image_superimposition_data, image1)
-    image_superimposition.get_header().set_data_dtype(scipy.uint32) # save as uint32
-    save(image_superimposition, image_superimposition_name)
+    logger.info('Saving superimposition image as {} in the same format as input image...'.format(image_superimposition_name))
+    save(image_superimposition_data, args.output, image1_header, args.force)
     
     logger.info('Successfully terminated.')
         
@@ -108,10 +124,9 @@ def getArguments(parser):
 def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
-
-    parser.add_argument('folder', help='The place to store the created superimposition image in.')
     parser.add_argument('image1', help='The first input label image.')
     parser.add_argument('image2', help='The second input label image.')
+    parser.add_argument('output', help='The output image.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')

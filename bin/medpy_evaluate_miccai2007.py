@@ -1,12 +1,28 @@
 #!/usr/bin/python
 
-"""Evaluates a number of masks against a reference mask."""
+"""
+Evaluates a number of masks against a reference mask.
+
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>."""
 
 # build-in modules
 import argparse
 import logging
 import sys
-import os
 
 # third-party modules
 import numpy
@@ -33,6 +49,11 @@ __description__ = """
                   and the MICCAI07 Challenge Paper "Comparison and Evaluation of Methods
                   for Liver Segmentation From CT Datasets", Heiman, T. et al., IEEE
                   Transactions on Medical Imaging, Vol.28, No.8, Aug. 2009
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code

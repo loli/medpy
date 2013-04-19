@@ -1,6 +1,23 @@
 #!/usr/bin/python
 
-"""Execute a graph cut on a region image based on some foreground and background markers."""
+"""
+Execute a graph cut on a region image based on some foreground and background markers.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 # build-in modules
 from argparse import RawTextHelpFormatter
@@ -18,24 +35,25 @@ from medpy.core import ArgumentError, Logger
 from medpy.io import load, save
 from medpy import graphcut
 from medpy import filter
+from medpy.graphcut.wrapper import split_marker
 
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.1.1, 2012-07-31"
+__version__ = "d0.2.1, 2012-07-31"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
                   Perform a binary graph cut using Boykov's max-flow/min-cut algorithm.
                   
                   This implementation does not only compute a boundary term but also a
-		  regional term which. The only available implementation up till now is
-		  the use of an atalas (i.e. a probability image of float values). The
-		  pixel values have to lie between 0 and 1, whereas 1 denounces a sure
-		  probability that the object is situated at this position.  The desired
-		  boundary term can be selected via the --boundary argument. Depending on
-		  the selected term, an additional image has to be supplied as badditional.
+        		  regional term which. The only available implementation up till now is
+        		  the use of an atalas (i.e. a probability image of float values). The
+        		  pixel values have to lie between 0 and 1, whereas 1 denounces a sure
+        		  probability that the object is situated at this position.  The desired
+        		  boundary term can be selected via the --boundary argument. Depending on
+        		  the selected term, an additional image has to be supplied as badditional.
                   
                   In the case of the stawiaski boundary term, this is the gradient image.
                   In the case of the difference of means, it is the original image.
@@ -51,6 +69,11 @@ __description__ = """
                   Note to take into account the input images orientation.
                   Note that the quality of the resulting segmentations depends also on
                   the quality of the supplied markers.
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code
@@ -87,13 +110,10 @@ def main():
 
     # load input images
     region_image_data, reference_header = load(args.region)
+    markers_image_data, _ = load(args.markers)
     
     # loading and splitting the marker image
-    fgmarkers_image_data, _ = load(args.foreground)
-    bgmarkers_image_data = scipy.zeros(fgmarkers_image_data.shape, scipy.bool_)
-    bgmarkers_image_data[fgmarkers_image_data == 2] = True
-    fgmarkers_image_data[fgmarkers_image_data != 1] = 0
-    fgmarkers_image_data = fgmarkers_image_data.astype(scipy.bool_)
+    fgmarkers_image_data, bgmarkers_image_data = split_marker(markers_image_data)
     
     badditional_image_data, _ = load(args.badditional)
     
@@ -159,8 +179,7 @@ def getParser():
     
     parser.add_argument('badditional', help='The additional image required by the boundary term. See there for details.')
     parser.add_argument('region', help='The region image of the image to segment.')
-    parser.add_argument('foreground', help='Binary image containing the foreground markers.')
-    #parser.add_argument('background', help='Binary image containing the background markers.')
+    parser.add_argument('markers', help='Binary image containing the foreground (=1) and background (=2) markers.')
     parser.add_argument('output', help='The output image containing the segmentation.')
     parser.add_argument('--boundary', default='stawiaski', help='The boundary term to use. Note that difference of means (means) requires the original image, while stawiaski requires the gradient image of the original image to be passed to badditional.', choices=['means', 'stawiaski'])
     parser.add_argument('--regional', default='none', help='The regional term to use. Note that the atlas requires to provide an atlas image.', choices=['none', 'atlas'])

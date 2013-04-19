@@ -1,6 +1,23 @@
 #!/usr/bin/python
 
-"""Extracts a sub-volume from a medical image by an example image."""
+"""
+Extracts a sub-volume from a medical image by an example image.
+
+Copyright (C) 2013 Oskar Maier
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 # build-in modules
 from argparse import RawTextHelpFormatter
@@ -11,19 +28,16 @@ import os
 
 # third-party modules
 import numpy
-from nibabel.loadsave import load, save
-from nibabel.spatialimages import ImageFileError 
-from nibabel.nifti1 import Nifti1Image
 
 # path changes
 
 # own modules
 from medpy.core import ArgumentError, Logger
-from medpy.utilities.nibabelu import image_like
+from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1, 2011-12-11"
+__version__ = "r0.2.0, 2011-12-11"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -35,11 +49,16 @@ __description__ = """
                   Extracts the sub-volume from the supplied image and saves it.
                   
                   Note that both images must be of the same dimensionality, otherwise an exception is thrown.
-                  Note that the input images offset is not taken into account except for Nifti images.
+                  Note that the input images offset is not taken into account.
                   Note to take into account the input images orientation.
                   
                   This is a convenience script, combining the functionalities of
                   extract_mask_position and extract_sub_volume.
+                  
+                  Copyright (C) 2013 Oskar Maier
+                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+                  and you are welcome to redistribute it under certain conditions; see
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code
@@ -56,10 +75,7 @@ def main():
     
     # load mask
     logger.info('Loading mask {}...'.format(args.mask))
-    try: mask_image = numpy.squeeze(load(args.mask).get_data())
-    except ImageFileError as e:
-        logger.critical('The mask image does not exist or its file type is unknown.')
-        raise ArgumentError('The mask image does not exist or its file type is unknown.', e)
+    mask_image, _ = load(args.mask)
     
     # store mask images shape for later check against the input image
     mask_image_shape = mask_image.shape 
@@ -79,13 +95,7 @@ def main():
 
     # load image
     logger.info('Loading image {}...'.format(args.image))
-    try: image = load(args.image)
-    except ImageFileError as e:
-        logger.critical('The input image does not exist or its file type is unknown.')
-        raise ArgumentError('The input image does not exist or its file type is unknown.', e)
-    
-    # reduce the image dimensions (nibabel Analyze always assumes 4)
-    image_data = numpy.squeeze(image.get_data())
+    image_data, image_header = load(args.image)
     
     # check if the mask image and the input image are of the same shape
     if mask_image_shape != image_data.shape:
@@ -104,11 +114,7 @@ def main():
     logger.debug('Extracted volume is of shape {}.'.format(volume.shape))
     
     # get base origin of the image
-    if image.__class__ == Nifti1Image:
-        origin_base = image.get_affine()[:,3][:image_data.ndim]
-    else:
-        logger.warning('Images in the {} format carry no reliable information about the origin. Assuming and origin of (0,0,0).'.format(image.__class__.__name__))
-        origin_base = numpy.array([0] * image_data.ndim)
+    origin_base = numpy.array([0] * image_data.ndim) # for backwards compatibility
         
     # modify the volume offset to imitate numpy behavior (e.g. wrap negative values)
     offset = numpy.array([x[0] for x in position])
@@ -124,7 +130,7 @@ def main():
     
     # save results in same format as input image
     logger.info('Saving extracted volume...')
-    save(image_like(volume, image, origin), args.output + args.image[-4:])
+    save(volume, args.output, image_header, args.force)
     
     logger.info('Successfully terminated.')
 
@@ -143,8 +149,8 @@ def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__, formatter_class=RawTextHelpFormatter)
     
-    parser.add_argument('output', help='The name (+location) of the output image \wo suffix. Will be of the same file-type as the input image.')
-    parser.add_argument('image', help='A medical image of arbitrary dimensions.')
+    parser.add_argument('image', help='The input image.')
+    parser.add_argument('output', help='The resulting sub-volume.')
     parser.add_argument('mask', help='A mask image containing a single foreground object (non-zero).')
     parser.add_argument('-o', '--offset', dest='offset', default=0, type=int, help='Set an offset by which the extracted sub-volume size should be increased in all directions.')
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')
