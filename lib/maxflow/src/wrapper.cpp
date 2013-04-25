@@ -121,7 +121,7 @@ void wrap_scopegraphint()
 }
 
 
-// Warap classes
+// Wrap classes
 BOOST_PYTHON_MODULE(maxflow)
 {
 	using namespace boost::python;

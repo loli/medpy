@@ -16,6 +16,7 @@ setup(name='MedPy',
       url='https://github.com/loli/medpy',
       license='LICENSE.txt',
       keywords='medical image processing dicom itk insight tool kit MRI CT US graph cut max-flow min-cut',
+      requires='boost.python',
       long_description=read('README.txt'),
 
       classifiers=[
@@ -94,10 +95,13 @@ setup(name='MedPy',
 	'bin/medpy_extract_sub_volume.py',
 	'bin/medpy_graphcut_voxel.py',         
 	'bin/medpy_reduce.py',         
-	'bin/medpy_superimposition.py'
+	'bin/medpy_superimposition.py',
+	'bin/medpy_itk_gradient.py',
+	'bin/medpy_itk_smoothing.py',
+	'bin/medpy_itk_watershed.py'
       ],
 
       ext_modules=[Extension('medpy.graphcut.maxflow',
 			     sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
-			     libraries = ['boost_python', 'python2.7'])] # eventually still requires to include -I/usr/include/python2.7 (include_dirs = ['/usr/include/python2.7'],)
+			     libraries = ['boost_python'])] # eventually still requires to include 'python2.7' (or -I/usr/include/python2.7 (include_dirs = ['/usr/include/python2.7'],))
      )

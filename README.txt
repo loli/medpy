@@ -22,7 +22,8 @@ You can find our sources and single-click downloads:
 
 Installation
 ============
-Simply run::
+Note that MedPy requires *boost.python* (http://www.boost.org/doc/libs/1_53_0/libs/python/doc/index.html) to be installed. All major Linux distributions have this in their repositories. Then
+simply run::
 
 	easy_install medpy
 

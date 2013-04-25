@@ -1,5 +1,5 @@
 /* pythongraph.h */
-/*
+/**
 	Extention of the Graph class that is shipped with the min-cut/max-flow algorithm by
 	Yuri Boykov and Vladimir Kolmogorov. Simply wraps the constructor in a version not
 	taking an exception class pointer to avoid problems with the boost:python wrapper.
