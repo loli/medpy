@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import os
-from distribute_setup import use_setuptools
-use_setuptools()
+#from distribute_setup import use_setuptools
+#use_setuptools('0.6.23')
 from setuptools import setup, Extension
 
 def read(fname):
