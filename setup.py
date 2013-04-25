@@ -16,7 +16,6 @@ setup(name='MedPy',
       url='https://github.com/loli/medpy',
       license='LICENSE.txt',
       keywords='medical image processing dicom itk insight tool kit MRI CT US graph cut max-flow min-cut',
-      requires='boost.python',
       long_description=read('README.txt'),
 
       classifiers=[
