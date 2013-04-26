@@ -151,7 +151,7 @@ def main():
     logger.info('Applying results...')
     result_image_data = scipy.zeros(bgmarkers_image_data.size, dtype=scipy.bool_)
     for idx in range(len(result_image_data)):
-        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1
+        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1    
     result_image_data = result_image_data.reshape(bgmarkers_image_data.shape)
     
     # save resulting mask    

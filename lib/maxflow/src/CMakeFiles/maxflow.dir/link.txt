@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC    -shared -Wl,-soname,maxflow.so -o maxflow.so CMakeFiles/maxflow.dir/maxflow.cpp.o CMakeFiles/maxflow.dir/graph.cpp.o CMakeFiles/maxflow.dir/wrapper.cpp.o -lboost_python -lpython2.7 

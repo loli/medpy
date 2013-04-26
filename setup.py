@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 
 import os
-#from distribute_setup import use_setuptools
-#use_setuptools('0.6.23')
+# uncomment these two line if you (1) want to use the power of distribute or (2) plan to run 'python setup.py develop'
+from distribute_setup import use_setuptools
+use_setuptools('0.6.23')
 from setuptools import setup, Extension
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+# The maxflow graphcut wrapper using boost.python
+maxflow = Extension('medpy.graphcut.maxflow',
+                    define_macros = [('MAJOR_VERSION', '1'),
+                                     ('MINOR_VERSION', '0')],
+		    sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
+                    libraries = ['boost_python'],
+                    extra_compile_args = ['-O0'])
 
 setup(name='MedPy',
       version='0.1.0', # major.minor.micro
@@ -66,7 +75,6 @@ setup(name='MedPy',
 	'bin/medpy_check_marker_intersection.py',
 	'bin/medpy_diff.py',
 	'bin/medpy_gradient.py',
-	'bin/medpy_graphcut_voxel_single.py',
 	'bin/medpy_reslice_3d_to_4d.py',      
 	'bin/medpy_swap_dimensions.py',
 	'bin/medpy_convert.py',                       
@@ -100,7 +108,5 @@ setup(name='MedPy',
 	'bin/medpy_itk_watershed.py'
       ],
 
-      ext_modules=[Extension('medpy.graphcut.maxflow',
-			     sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
-			     libraries = ['boost_python'])] # eventually still requires to include 'python2.7' (or -I/usr/include/python2.7 (include_dirs = ['/usr/include/python2.7'],))
+      ext_modules = [maxflow],
      )
