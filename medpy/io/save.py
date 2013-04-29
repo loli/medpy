@@ -135,7 +135,7 @@ def save(arr, filename, hdr = False, force = True):
                         'tif': __save_itk,
                         'jpg': __save_itk}
     
-    save_fallback_order = {__save_nibabel, __save_itk} # list and order of loader function to use in case of fallback to brute-force
+    save_fallback_order = [__save_nibabel, __save_itk] # list and order of loader function to use in case of fallback to brute-force
     
     ########
     # code #

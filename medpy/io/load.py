@@ -5,7 +5,7 @@ Provides functionality connected with image loading.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version r0.1.0
+@version r0.2.0
 @since 2012-05-28
 @status Release
 """
@@ -127,8 +127,7 @@ def load(image):
                         'tif': __load_itk,
                         'jpg': __load_itk}
     
-    load_fallback_order = {__load_nibabel, __load_pydicom, __load_itk} # list and order of loader function to use in case of fallback to brute-force
-    
+    load_fallback_order = [__load_nibabel, __load_pydicom, __load_itk] # list and order of loader function to use in case of fallback to brute-force
     
     ########
     # code #
@@ -164,6 +163,7 @@ def load(image):
 
     # Try brute force
     logger.debug('Normal loading failed. Entering brute force mode.')
+    
     for loader in load_fallback_order:
         try:
             return loader(image)
@@ -199,8 +199,12 @@ def __load_pydicom(image):
     logger = Logger.getInstance()
     logger.debug('Loading image {} with PyDicom...'.format(image))
     
-    img = dicom.ReadFile(image)
-    arr = img.PixelArray
+    try:
+        img = dicom.read_file(image)
+    except dicom.filereader.InvalidDicomError as e:
+        logger.debug('Module pydicom signaled error: {}. Attempting to force loading nevertheless'.format(e))
+        img = dicom.read_file(image, force=True)
+    arr = img.pixel_array
     
     # pydicom loads the images in the revers direction as expected, therefore we transpose the array before returning
     return scipy.transpose(arr), img
