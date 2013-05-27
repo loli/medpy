@@ -5,7 +5,7 @@ Provides functionality connected with image loading.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version r0.2.0
+@version r0.2.1
 @since 2012-05-28
 @status Release
 """
@@ -17,9 +17,12 @@ import os
 import scipy
 
 # own modules
+from . import header
 from ..core import Logger
 from ..core import ImageTypeError, DependencyError,\
     ImageLoadingError
+
+# !TODO: Change to not work with the Exceptions anymore, as these hides bugs!
 
 # code
 def load(image):
@@ -206,7 +209,22 @@ def __load_pydicom(image):
         img = dicom.read_file(image, force=True)
     arr = img.pixel_array
     
-    # pydicom loads the images in the revers direction as expected, therefore we transpose the array before returning
+    # Dicom images are difficult and require special treatment:
+    # (1) Usually, when saved as DICOM image, row and solumn direction as exchanged as
+    #     compared to other image modailites.
+    # (2) Furthermore PyDicom loads DICOM images with the 3rd dimension (Frames/Slices)
+    #     in the first numpy ndarray position.
+    # Thus, to ensure consistency between the loaded data independent of the 3rd party
+    # tool or image format used, we have to
+    # (a) transpose the data array, which counters both, point (1) and point (2) in one go
+    # (b) flip the first and second (column and row) element of the pixel spacing
+    # Note: Strangely the offset i.e. PatientPosition does not have do be flipped... why?  
+    pixel_spacing = scipy.asarray(header.get_pixel_spacing(img))
+    tmp = float(pixel_spacing[1])
+    pixel_spacing[1] = pixel_spacing[0]
+    pixel_spacing[0] = tmp
+    header.set_pixel_spacing(img, pixel_spacing)
+    
     return scipy.transpose(arr), img
 
 def __load_itk(image):

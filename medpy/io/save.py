@@ -5,7 +5,7 @@ Provides functionality connected with image saving.
 The supplied methods hide more complex usage of a number of third party modules.
 
 @author Oskar Maier
-@version r0.1.0
+@version r0.1.1
 @since 2012-05-28
 @status Release
 """
@@ -20,8 +20,11 @@ import scipy
 from ..core import Logger
 from ..core import ImageTypeError, DependencyError,\
     ImageSavingError
-from header import __update_header_from_array_nibabel, __is_header_itk, __is_header_nibabel
+from header import __update_header_from_array_nibabel, __is_header_itk, __is_header_nibabel, copy_meta_data, get_pixel_spacing
 
+# !TODO: Change to not work with the Exceptions anymore, as these hides bugs!
+
+# code
 def save(arr, filename, hdr = False, force = True):
     """
     Save the image arr as filename using information encoded in hdr. The target image
@@ -191,41 +194,35 @@ def __save_itk(arr, hdr, filename):
 
     logger = Logger.getInstance()
     logger.debug('Saving image as {} with Itk...'.format(filename))
-        
+
     # determine image type from array
     image_type = itku.getImageTypeFromArray(arr)
-    
+
     # convert array to itk image
     try:
         img = itku.getImageFromArray(arr)
     except KeyError:
         raise DependencyError('The itk python PyBuffer transition object was compiled without support for image of type {}.'.format(image_type))
-        
-    # convert pointer from smart pointer to normal pointer
-    try:
-        hdr = hdr.GetPointer()
-    except Exception:
-        pass
-        
+
     # if original image object was provided with hdr, try to use it for creating the image object
     if __is_header_itk(hdr):
         # save original image shape / largest possible region
         shape = []
-        try:
-            for i in range(img.GetLargestPossibleRegion().GetImageDimension()):
-                shape.append(img.GetLargestPossibleRegion().GetSize().GetElement(i))
-        except Exception as e:
-            print e
-        
+        for i in range(img.GetLargestPossibleRegion().GetImageDimension()):
+            shape.append(img.GetLargestPossibleRegion().GetSize().GetElement(i))
+
         # copy meta data
         try:
-            img.CopyInformation(hdr)
+            img.CopyInformation(hdr.GetPointer())
             # reset largest possible region / shape to original value
             for i in range(len(shape)):
                 img.GetLargestPossibleRegion().GetSize().SetElement(i, shape[i])
         except RuntimeError as e: # raised when the meta data information could not be copied (e.g. when the two images ndims differ)
-            logger.debug('The meta-information could not be copied form the old header. CopyInfromation signaled: {}.'.format(e))
+            logger.debug('The meta-information could not be copied form the old header. CopyInformation signaled: {}.'.format(e))
             pass
+        
+    elif hdr: # otherwise copy meta-data information as far as possible
+        copy_meta_data(img, hdr)
     
     # save the image
     writer = itk.ImageFileWriter[image_type].New()
@@ -254,9 +251,10 @@ def __save_nibabel(arr, hdr, filename):
     if hdr and __is_header_nibabel(hdr):        
         __update_header_from_array_nibabel(hdr, arr)
         image = nibabelu.image_like(arr, hdr)
-    # if not, create new image object
+    # if not, create new image object and copy meta data as far as possible
     else:
-        image = nibabelu.image(arr)
+        image = nibabelu.image_new(arr, filename)
+        if hdr: copy_meta_data(image, hdr)
         
     # save image
     nibabel.save(image, filename)

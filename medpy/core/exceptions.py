@@ -63,4 +63,9 @@ class ImageSavingError(Exception):
     Thrown when a image could not be loaded.
     """
     pass
-        
+
+class MetaDataError(Exception):
+    """
+    Thrown when an image meta data failure occurred.
+    """
+    pass

@@ -5,7 +5,8 @@
 # build-in modules
 
 # third-party modules
-from nibabel.spatialimages import SpatialImage 
+from nibabel.spatialimages import SpatialImage
+from nibabel import Nifti1Image, Nifti1Pair
 
 # path changes
 
@@ -13,21 +14,48 @@ from nibabel.spatialimages import SpatialImage
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.2.0, 2011-12-12"
+__version__ = "d0.2.1, 2011-12-12"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development" # tested functions marked with tested keyword
 __description__ = "NiBabel image utility functions."
+
+# variables
+__suffix_to_type = {'nii': Nifti1Image, # mapping from file suffix to type string
+                    'nii.gz': Nifti1Image,
+                    'hdr': Nifti1Pair,
+                    'img': Nifti1Pair,
+                    'img.gz': Nifti1Pair}
 
 # code
 def image(data):
     """
     Creates a NiBabel image for the supplied data. The image object will be of a generic
     type and only made concrete during the saving process (nibabel.loadsave.save() takes
-    care of this).
+    care of this). No special meta-data can be associated with the image.
     @param data: a numpy array of arbitrary type
     @return: a NiBabel image for data of generic type SpatialImage
     """
     image = SpatialImage(data, None)
+    image.update_header()
+    return image
+
+def image_new(data, filename):
+    """
+    Creates a NiBabel image for the supplied data. The function intends to directly
+    create the apropriate image type, depending on the image header.
+    @param data: a numpy array of arbitrary type
+    @param filename the intended filename with the file ending telling the image type
+    @return: a NiBabel image for data of any nibabel image type
+    """
+    # extract suffix and return apropriate image
+    suffix = filename.split('.')[-1].lower()
+    if not suffix in __suffix_to_type:
+        suffix = '.'.join(map(lambda x: x.lower(), filename.split('.')[-2:]))
+        if not suffix in __suffix_to_type:
+            image = SpatialImage(data, None)
+            image.update_header()
+            return image
+    image = __suffix_to_type[suffix](data, None)
     image.update_header()
     return image
 

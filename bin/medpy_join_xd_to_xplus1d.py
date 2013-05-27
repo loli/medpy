@@ -96,6 +96,7 @@ def main():
     if not 1 == args.spacing:
         spacing = list(header.get_pixel_spacing(example_header))
         spacing = tuple(spacing[:args.position] + [args.spacing] + spacing[args.position:])
+	# !TODO: BUG: This statement assumes that the example_header, extracted from the first input image, is of type nibabel, which is not guaranteed!
         __update_header_from_array_nibabel(example_header, output_data)
         header.set_pixel_spacing(example_header, spacing)
     
