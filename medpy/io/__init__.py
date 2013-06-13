@@ -16,4 +16,4 @@ __all__ = []
 # if __all__ is not set, only the following, explicit import statements are executed
 from load import load
 from save import save
-from header import get_pixel_spacing
+from header import get_pixel_spacing, get_offset, set_pixel_spacing, set_offset
