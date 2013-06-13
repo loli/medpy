@@ -28,13 +28,13 @@ import logging
 # path changes
 
 # own modules
-from medpy.io import load, get_pixel_spacing
+from medpy.io import load, get_pixel_spacing, get_offset
 from medpy.core import Logger
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.0, 2012-05-24"
+__version__ = "r0.2.1, 2012-05-24"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -74,6 +74,10 @@ def printInfo(data, header):
         print 'voxel spacing={}'.format(get_pixel_spacing(header))
     except AttributeError:
         print 'Failed to retrieve voxel spacing.'
+    try:
+        print 'offset={}'.format(get_offset(header))
+    except AttributeError:
+        print 'Failed to retrieve offset.'    
     
     print '\nInformations obtained from image array:'
     print 'datatype={},dimensions={},shape={}'.format(data.dtype, data.ndim, data.shape)

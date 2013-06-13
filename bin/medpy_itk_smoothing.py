@@ -81,7 +81,7 @@ def main():
             for timestep in args.timesteps:
                 # build output image name
                 image_smoothed_name = '.'.join(args.output.split('.')[:-1]) # remove file ending
-                image_smoothed_name += '_i{}_c{}_t{}'.format(iteration, conductance, timestep) # add parameter suffix
+                image_smoothed_name += '_i{}_c{}_t{}.'.format(iteration, conductance, timestep) # add parameter suffix
                 image_smoothed_name += args.output.split('.')[-1]
                 
                 # check if output image exists
@@ -122,7 +122,7 @@ def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
 
-    parser.add_argument('images', help='The input images.')
+    parser.add_argument('image', help='The input image.')
     parser.add_argument('output', help='The output image.')
     parser.add_argument('iterations', help='A colon separated list of values to be passed to the iteration attribute.')
     parser.add_argument('conductances', help='A colon separated list of values to be passed to the conductances attribute.')

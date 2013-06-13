@@ -30,7 +30,7 @@ import scipy
 
 # own modules
 from medpy.core import Logger
-from medpy.io import load, save
+from medpy.io import load, save, header
 from medpy.core.exceptions import ArgumentError
 
 
@@ -71,6 +71,13 @@ def main():
     
     # swap axes
     data_output = scipy.swapaxes(data_input, args.dimension1, args.dimension2)
+    # swap pixel spacing and offset
+    ps = list(header.get_pixel_spacing(header_input))
+    ps[args.dimension1], ps[args.dimension2] = ps[args.dimension2], ps[args.dimension1]
+    header.set_pixel_spacing(header_input, ps)
+    os = list(header.get_offset(header_input))
+    os[args.dimension1], os[args.dimension2] = os[args.dimension2], os[args.dimension1]
+    header.set_offset(header_input, os)
     
     logger.debug('Resulting shape = {}.'.format(data_output.shape))
     
