@@ -31,6 +31,7 @@ import scipy
 # own modules
 from medpy.core import Logger
 from medpy.io import load, save, header
+from medpy.filter.otsu import otsu
 from medpy.core.exceptions import ArgumentError
 
 
@@ -40,42 +41,42 @@ __version__ = "r0.1.0, 2013-07-18"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
-                  Computes the apparent diffusion coefficient from two diffusion weighted
-                  MRI images.
-                  
-                  Normally diffusion weight (DW) MRI images are acquired once with a
-                  b-value of 0 (called b0) and once with another b-value (called bx) such
-                  as 500, 800 or 1000. The latter is typical for brain MRIs. This results
-                  in a single b0 DW image and three bx DW images, one for each direction.
-                
-                  Usually the three bx DW images are already combined into an isotropic
-                  average image (called abx).
-                  
-                  The formula presented in [1] is applied to the b0 and abx images to
-                  compute the apparent diffusion coefficient (ADC):
-                  
-                  ADC = -bx-value * ln(abx-image / b0-image)
-                  
-                  To cope with zero-values in the images, we apply a-priori a
-                  thresholding to the b0 DW image, set all lower values to 0 and apply
-                  the formula only to the remaining intensities. Note that the default
-                  threshold is chosen carefully and is good for most cases.
-                  (Thanks to Nils at the UKE in Hamburg, Germany for this hint!)
-                  
-                  We restrain from implementing a method working on more DW images, that
-                  were acquired with multiple b-values, as [2] observed that this might
-                  lead to worse results.
-                  
-                  [1] "Understanding Diffusion MR Imaging Techniques: From Scalar
-                  Diffusion-weighted Imaging to Diffusion Tensor Imaging and Beyond" by
-                  Patric Hagmann et al.
-                  [2] "Understanding the Mathematics Involved in Calculating Apparent
-                  Diffusion Coefficient Maps" by Michael Yong Park and Jae Young Byun
-                  
-                  Copyright (C) 2013 Oskar Maier
-                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
-                  and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+Computes the apparent diffusion coefficient from two diffusion weighted
+MRI images.
+
+Normally diffusion weight (DW) MRI images are acquired once with a
+b-value of 0 (called b0) and once with another b-value (called bx) such
+as 500, 800 or 1000. The latter is typical for brain MRIs. This results
+in a single b0 DW image and three bx DW images, one for each direction.
+
+Usually the three bx DW images are already combined into an isotropic
+average image (called abx).
+
+The formula presented in [1] is applied to the b0 and abx images to
+compute the apparent diffusion coefficient (ADC):
+
+ADC = -bx-value * ln(abx-image / b0-image)
+
+To cope with zero-values in the images, we apply a-priori a
+thresholding to the b0 + bx DW image, set all lower values to 0 and
+apply the formula only to the remaining intensities. Note that the
+default threshold is chosen using Otsu's and is good for most cases.
+(Thanks to Nils at the UKE in Hamburg, Germany for this hint!)
+
+We restrain from implementing a method working on more DW images, that
+were acquired with multiple b-values, as [2] observed that this might
+lead to worse results.
+
+[1] "Understanding Diffusion MR Imaging Techniques: From Scalar
+Diffusion-weighted Imaging to Diffusion Tensor Imaging and Beyond" by
+Patric Hagmann et al.
+[2] "Understanding the Mathematics Involved in Calculating Apparent
+Diffusion Coefficient Maps" by Michael Yong Park and Jae Young Byun
+
+Copyright (C) 2013 Oskar Maier
+This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+and you are welcome to redistribute it under certain conditions; see
+the LICENSE file or <http://www.gnu.org/licenses/> for details.   
                   """
 
 # code
@@ -98,15 +99,27 @@ def main():
         raise ArgumentError('The input images voxel spacing differs i.e. {} != {}.'.format(header.get_pixel_spacing(b0hdr), header.get_pixel_spacing(bxhdr)))
     
     # check if supplied threshold value as well as the b value is above 0
-    if not args.threshold > 0:
+    if args.threshold is not None and not args.threshold >= 0:
         raise ArgumentError('The supplied threshold value must be greater than 0, otherwise a division through 0 might occur.')
     if not args.b > 0:
         raise ArgumentError('The supplied b-value must be greater than 0.')
     
-    logger.debug('threshold={}, b-value={}'.format(args.threshold, args.b))
+    # compute threshold value if not supplied
+    if args.threshold is None:
+        b0thr = otsu(b0img, 32) / 2. # divide by 2 to decrease impact
+        bxthr = otsu(bximg, 32) / 2.
+        if 0 >= b0thr:
+            raise ArgumentError('The supplied b0image seems to contain negative values.')
+        if 0 >= bxthr:
+            raise ArgumentError('The supplied bximage seems to contain negative values.')
+    else:
+        b0thr = bxthr = args.threshold
     
-    # threshold b0 DW image to obtain a mask
-    mask = (b0img > args.threshold)
+    logger.debug('thresholds={}/{}, b-value={}'.format(b0thr, bxthr, args.b))
+    
+    # threshold b0 + bx DW image to obtain a mask
+    # b0 mask avoid division through 0, bx mask avoids a zero in the ln(x) computation
+    mask = (b0img > b0thr) & (bximg > bxthr)
     
     logger.debug('excluding {} of {} voxels from the computation and setting them to zero'.format(scipy.count_nonzero(mask), scipy.prod(mask.shape)))
     
@@ -124,13 +137,13 @@ def getArguments(parser):
 
 def getParser():
     "Creates and returns the argparse parser object."
-    parser = argparse.ArgumentParser(description=__description__)
+    parser = argparse.ArgumentParser(description=__description__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('b0image', help='the diffusion weighted image required with b=0')
     parser.add_argument('bximage', help='the diffusion weighted image required with b=x')
     parser.add_argument('b', type=int, help='the b-value used to acquire the bx-image (i.e. x)')
     parser.add_argument('output', help='the computed apparent diffusion coefficient image')
     
-    parser.add_argument('-t', '--threshold', type=int, dest='threshold', default=100, help='the b0image threshold used to mask the computation')
+    parser.add_argument('-t', '--threshold', type=int, dest='threshold', help='set a fixed threshold for the input images to mask the computation')
     
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='verbose output')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

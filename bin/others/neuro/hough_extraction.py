@@ -29,7 +29,7 @@ import scipy
 # path changes
 
 # own modules
-from medpy.filter.houghtransform import template_sphere, ght, template_ellipsoid
+from medpy.filter.houghtransform import template_sphere, ght
 from medpy.core import Logger
 from medpy.io import load, save
 
