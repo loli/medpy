@@ -4,7 +4,9 @@ g++ -shared -fPIC maxflow.cpp graph.cpp wrapper.cpp -I/usr/include/python2.7 -lb
 
 Or, using cmake and the CMakeList.txt in this directory:
 
-cmake .
+mkdir build
+cd build
+cmake ../.
 make
 
 
