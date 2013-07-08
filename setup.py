@@ -105,7 +105,8 @@ setup(name='MedPy',
 	'bin/medpy_superimposition.py',
 	'bin/medpy_itk_gradient.py',
 	'bin/medpy_itk_smoothing.py',
-	'bin/medpy_itk_watershed.py'
+	'bin/medpy_itk_watershed.py',
+	'bin/medpy_resample.py'
       ],
 
       ext_modules = [maxflow],
