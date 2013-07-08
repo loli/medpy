@@ -143,23 +143,23 @@ def sequenceOfFloatsLe(string):
 def __sequenceGt(l):
     "Test a sequences values for being greater than 0."
     for e in l:
-        if 0 >= e: argparse.ArgumentTypeError('All values have to be greater than 0.')
+        if 0 >= e: raise argparse.ArgumentTypeError('All values have to be greater than 0.')
     return l
 
 def __sequenceGe(l):
     "Test a sequences values for being greater than or equal to 0."
     for e in l:
-        if 0 > e: argparse.ArgumentTypeError('All values have to be greater than or equal to 0.')
+        if 0 > e: raise argparse.ArgumentTypeError('All values have to be greater than or equal to 0.')
     return l
 
 def __sequenceLt(l):
     "Test a sequences values for being less than 0."
     for e in l:
-        if 0 <= e: argparse.ArgumentTypeError('All values have to be less than 0.')
+        if 0 <= e: raise argparse.ArgumentTypeError('All values have to be less than 0.')
     return l
 
 def __sequenceLe(l):
     "Test a sequences values for being less than or equal to 0."
     for e in l:
-        if 0 < e: argparse.ArgumentTypeError('All values have to be less than or equal to 0.')
+        if 0 < e: raise argparse.ArgumentTypeError('All values have to be less than or equal to 0.')
     return l
