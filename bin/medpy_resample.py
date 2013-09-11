@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # build-in modules
+import os
 import argparse
 import logging
 
@@ -42,7 +43,13 @@ __status__ = "Release"
 __description__ = """
           Resamples an image according to a supplied voxel spacing.
 
-          BSpline is used for interpolation. A order between 1 and 5 can be choosen.
+          BSpline is used for interpolation. A order between 1 and 5 can be selected.
+          
+          Note that the pixel data type of the input image is respected, i.e. a integer
+          input image leads to an integer output image etc. Use the --binary flag, if a
+          binary input image is supplied that does is not marked as binary pixel data
+          types. Similar, the --float flag can be used to enforce a floating point output
+          image. 
 
           Copyright (C) 2013 Oskar Maier
           This program comes with ABSOLUTELY NO WARRANTY; This is free software,
@@ -65,7 +72,12 @@ def main():
 
     # check spacing values
     if not len(args.spacing) == img.ndim:
-        parser.error('The image has {} dimensions, but {} spacing parameters hvae been supplied.'.format(img.ndim, len(args.spacing)))
+        parser.error('The image has {} dimensions, but {} spacing parameters have been supplied.'.format(img.ndim, len(args.spacing)))
+        
+    # check if output image exists
+    if not args.force:
+        if os.path.exists(args.output):
+            parser.error('The output image {} already exists.'.format(args.output)) 
         
     logger.debug('target voxel spacing: {}'.format(args.spacing))
 
@@ -98,6 +110,10 @@ def getParser():
     parser.add_argument('output', help='the output image')
     parser.add_argument('spacing', type=argparseu.sequenceOfFloatsGt, help='the desired voxel spacing in colon-separated values, e.g. 1.2,1.2,5.0')
     parser.add_argument('-o', '--order', type=int, default=2, dest='order', help='the bspline order, default is 2')
+    
+    #group = parser.add_mutually_exclusive_group(required=False)
+    #group.add_argument('--binary', action='store_true', dest='binary', help='enforce binary output image')
+    #group.add_argument('--float', action='store_true', dest='float', help='enforce floating point output image')
     
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='verbose output')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

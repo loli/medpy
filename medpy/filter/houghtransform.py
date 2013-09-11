@@ -26,7 +26,7 @@ def ght_alternative (img, template, indices):
     indices rather than broadcasting rules like @see ght().
     
     It is therefore considerably slower, especially for large, multi-dimensional arrays.
-    The only applycation are cases, where the hough transform should only be computed for
+    The only application are cases, where the hough transform should only be computed for
     a small number of points (=template centers) in the image. In this case the indices
     of interest can be provided as a list.
     
@@ -200,9 +200,9 @@ def template_ellipsoid (shape):
     return template
 
 # private methods
-def __pad_image (img, template):
+def __pad_image (img, template, cval = 0):
     """
-    Pads the supplied image with zeros such that the template can be applied to it.
+    Pads the supplied image with cval such that the template can be applied to it.
     The center of the template is the decisive value here.
     Note that the returned array is a copy of the input array.
     
@@ -227,9 +227,10 @@ def __pad_image (img, template):
     # create new array of larger size
     padded_shape = tuple(a + sum(pad_width[i]) for i, a in enumerate(img.shape)) 
     padded_img = scipy.zeros(padded_shape, img.dtype)
+    padded_img += cval
     
     # copy values from input array to new array
     slicers = tuple(slice(x, -1 * y) for x, y in pad_width)
-    padded_img[slicers] += img
+    padded_img[slicers] = img
         
     return padded_img

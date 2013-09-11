@@ -170,7 +170,7 @@ def __enhance_markers(marker_data, efg, ebg):
     the first phase (time-slice).
     """
     # constants
-    contour_dimension = 0
+    contour_dimension = 2
     time_dimension = 3
     erosions_per_step_fg = efg # all take a 5 here as sufficient, all except no. 3 take also a 3
     erosions_per_step_bg = ebg # all take a 2 here as sufficient, all except no. 3 also take a 1
@@ -224,7 +224,7 @@ def __create_markers(marker_data, marker_dim, di, do):
     repectively outer BG and FG markers.
     """ 
     # constants
-    contour_dimension = 0
+    contour_dimension = 2
     time_dimension = 3
     distance_inner = di # within the images 01-05 takes values down to 5, standard is 9 to leave some space
     distance_outer = do # within the images 01-05 takes values down to 6, standard is 10 to leave some space

@@ -80,7 +80,6 @@ def main():
     if not args.force:
         if os.path.exists(args.output):
             logger.warning('The output image {} already exists. Skipping this image.'.format(args.output))
-            continue
     
     # create a mask from the label image
     logger.info('Reducing the label image...')

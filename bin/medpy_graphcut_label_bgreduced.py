@@ -161,13 +161,17 @@ def main():
 
 def __get_bg_bounding_pipe(bgmarkers):
     # constants
-    xdim = 1
-    ydim = 2
+    xdim = 0
+    ydim = 1
     
     # compute biggest bb in direction
     bb = __xd_iterator_pass_on(bgmarkers, (xdim, ydim), __extract_bbox)
     
-    return (slice(None), bb[0], bb[1], slice(None))
+    slicer = [slice(None)] * bgmarkers.ndim
+    slicer[xdim] = bb[0]
+    slicer[ydim] = bb[1]
+    
+    return slicer
     
     
 def __xd_iterator_pass_on(arr, view, fun):

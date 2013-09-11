@@ -37,7 +37,7 @@ def main():
     elif args.verbose: logger.setLevel(logging.INFO)
     
     # constants
-    contour_dimension = 0
+    contour_dimension = 2
     
     # load input data
     input_data, input_header = load(args.input)

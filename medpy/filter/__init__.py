@@ -13,3 +13,5 @@ __all__ = []
 
 # if __all__ is not set, only the following, explicit import statements are executed
 from label import relabel, fit_labels_to_mask, relabel_map, relabel_non_zero
+from smoothing import anisotropic_diffusion
+from IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
