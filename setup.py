@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import os
-# uncomment these two line if you (1) want to use the power of distribute or (2) plan to run 'python setup.py develop'
-from distribute_setup import use_setuptools
-use_setuptools('0.6.23')
+# setuptools >= 0.7 supports 'python setup.py develop'
+from ez_setup import use_setuptools
+use_setuptools()
 from setuptools import setup, Extension
 
 def read(fname):
