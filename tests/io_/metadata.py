@@ -155,7 +155,7 @@ class TestMetadataConsistency(unittest.TestCase):
                     scipy.int8, scipy.int16, scipy.int32, scipy.int64,
                     scipy.uint8, scipy.uint16, scipy.uint32, scipy.uint64,
                     scipy.float32, scipy.float64, #scipy.float128, # last one removed, as not present on every machine
-                    scipy.complex64, scipy.complex128, scipy.complex256]
+                    scipy.complex64, scipy.complex128, ] #scipy.complex256 ## removed, as not present on every machine
         
         # prepare struct to save settings that passed the test
         consistent_types = dict.fromkeys(__suffixes)
