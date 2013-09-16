@@ -23,7 +23,7 @@ __description__ = "Check supported image formats."
 def main():
     # load io tests
     suite_io = unittest.TestSuite()
-    #suite_io.addTests(unittest.TestLoader().loadTestsFromTestCase(io.TestIOFacilities))
+    suite_io.addTests(unittest.TestLoader().loadTestsFromTestCase(io_.TestIOFacilities))
     suite_io.addTests(unittest.TestLoader().loadTestsFromTestCase(io_.TestMetadataConsistency))
     
     # execute tests
