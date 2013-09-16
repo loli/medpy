@@ -4,10 +4,7 @@
 
 # build-in modules
 import unittest
-from metric import *
-from graphcut import *
-from io import *
-from itkvtk import *
+import metric_, graphcut_, itkvtk_, features_, filter_
 
 # third-party modules
 
@@ -26,30 +23,41 @@ __description__ = "Unittest executer."
 def main():
     # load metric tests
     suite_metric = unittest.TestSuite()
-    suite_metric.addTests(unittest.TestLoader().loadTestsFromTestCase(TestSurfaceClass))
-    suite_metric.addTests(unittest.TestLoader().loadTestsFromTestCase(TestVolumeClass))
+    suite_metric.addTests(unittest.TestLoader().loadTestsFromTestCase(metric_.TestSurfaceClass))
+    suite_metric.addTests(unittest.TestLoader().loadTestsFromTestCase(metric_.TestVolumeClass))
     
     # load graphcut tests
     suite_graphcut = unittest.TestSuite()
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestGraph))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCut))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestGenerate))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestEnergyLabel))
-    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(TestEnergyVoxel))
+    suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(graphcut_.TestGraph))
+    # !TODO: Fix tests for graphcut functionality
+    #suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(graphcut.TestCut))
+    #suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(graphcut.TestGenerate))
+    #suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(graphcut.TestEnergyLabel))
+    #suite_graphcut.addTests(unittest.TestLoader().loadTestsFromTestCase(graphcut.TestEnergyVoxel))
     
-    # load io tests
-    suite_io = unittest.TestSuite()
-    suite_io.addTests(unittest.TestLoader().loadTestsFromTestCase(TestIOFacilities))
-    
-    # laod itkvtk tests
+    # load itkvtk tests
     suite_itkvtk = unittest.TestSuite()
-    suite_itkvtk.addTests(unittest.TestLoader().loadTestsFromTestCase(TestItkVtkGradient))
+    suite_itkvtk.addTests(unittest.TestLoader().loadTestsFromTestCase(itkvtk_.TestItkVtkGradient))
+    
+    # load filter tests
+    suite_filter = unittest.TestSuite()
+    # !TODO: Fix tests for LabelImageStatistic functionality
+    #suite_filter.addTests(unittest.TestLoader().loadTestsFromTestCase(filter_.TestLabelImageStatistics))
+    suite_filter.addTests(unittest.TestLoader().loadTestsFromTestCase(filter_.TestIntensityRangeStandardization))
+    suite_filter.addTests(unittest.TestLoader().loadTestsFromTestCase(filter_.TestHoughTransform))
+    
+    # load feature tests
+    suite_features = unittest.TestSuite()
+    suite_features.addTests(unittest.TestLoader().loadTestsFromTestCase(features_.TestHistogramFeatures))
+    suite_features.addTests(unittest.TestLoader().loadTestsFromTestCase(features_.TestIntensityFeatures))
+    suite_features.addTests(unittest.TestLoader().loadTestsFromTestCase(features_.TestTextureFeatures))
     
     # execute tests
     unittest.TextTestRunner(verbosity=2).run(suite_metric)
     unittest.TextTestRunner(verbosity=2).run(suite_graphcut)
-    unittest.TextTestRunner(verbosity=2).run(suite_io)
     unittest.TextTestRunner(verbosity=2).run(suite_itkvtk)
+    unittest.TextTestRunner(verbosity=2).run(suite_filter)
+    unittest.TextTestRunner(verbosity=2).run(suite_features)
 
 if __name__ == '__main__':
     main()

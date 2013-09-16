@@ -82,7 +82,7 @@ def set_pixel_spacing(hdr, spacing):
     """
     try:
         if __is_header_nibabel(hdr):
-            __set_pixel_spacing_nibabel(hdr, spacing)
+            __set_pixel_spacing_nibabel(hdr, spacing)    
         elif __is_header_pydicom(hdr):
             __set_pixel_spacing_pydicom(hdr, spacing)
         elif __is_header_itk(hdr):
