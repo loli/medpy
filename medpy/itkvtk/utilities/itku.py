@@ -9,7 +9,6 @@ from ...core import Logger
 # third-party modules
 import scipy
 import itk
-import vtk
 
 # path changes
 
@@ -18,7 +17,7 @@ from ...core.exceptions import DependencyError, ImageTypeError
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.4.1, 2011-11-25"
+__version__ = "r0.5.1, 2011-11-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release" # tested functions marked with tested keyword
 __description__ = "ITK image utility functions."
@@ -162,7 +161,7 @@ def getImageType(image): # tested
     try:
         return itk.Image[itk.template(image)[1][0],
                          itk.template(image)[1][1]]
-    except IndexError as e:
+    except IndexError as _:
         raise NotImplementedError, 'The python wrappers of ITK define no template class for this data type.'
     
 def getImageTypeFromArray(arr): # tested
@@ -215,39 +214,7 @@ def getImageTypeFromArray(arr): # tested
         raise DependencyError('The itk python wrappers were compiled without support the combination of {} dimensions and at least one of the following pixel data types (which are compatible with dtype {}): {}.'.format(arr.ndim, arr.dtype, scipy_to_itk_types[arr.dtype.type]))
     else:
         raise
-            
-    
-def getImageTypeFromVtk(image): # tested
-    """
-    Returns the image type of the supplied image as itk.Image template.
-    Note: Performs Update() and UpdateInformation() on the image, therefore
-          triggering pipeline processing if necessary
-    @param image: an instance of vtk.vtkImageData
-    
-    @return a template of itk.Image
-    @rtype itk.Image
-    """
-    assert isinstance(image, vtk.vtkImageData)
-    
-    # refresh information
-    image.Update()
-    image.UpdateInformation()    
-    
-    # Mapping informations taken from vtkSetGet.h
-    mapping = {1: itk.B,
-               2: itk.SC,
-               3: itk.UC,
-               4: itk.SS,
-               5: itk.UC,
-               6: itk.SI,
-               7: itk.UI,
-               8: itk.SL,
-               9: itk.UL,
-               10: itk.F,
-               11: itk.D}
-    
-    return itk.Image[mapping[image.GetScalarType()],
-                     image.GetDataDimension()]
+
     
 def getImageTypeFromFile(image): # tested
     """

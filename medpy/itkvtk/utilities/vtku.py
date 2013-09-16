@@ -5,6 +5,7 @@
 # build-in modules
 
 # third-party modules
+import itk
 import vtk
 
 # path changes
@@ -43,6 +44,38 @@ def getInformation(image): #tested
     s += '\tdata dim.: ' + str(image.GetDataDimension())
     
     return s
+
+def getImageTypeFromVtk(image): # tested
+    """
+    Returns the image type of the supplied image as itk.Image template.
+    Note: Performs Update() and UpdateInformation() on the image, therefore
+          triggering pipeline processing if necessary
+    @param image: an instance of vtk.vtkImageData
+    
+    @return a template of itk.Image
+    @rtype itk.Image
+    """
+    assert isinstance(image, vtk.vtkImageData)
+    
+    # refresh information
+    image.Update()
+    image.UpdateInformation()    
+    
+    # Mapping informations taken from vtkSetGet.h
+    mapping = {1: itk.B,
+               2: itk.SC,
+               3: itk.UC,
+               4: itk.SS,
+               5: itk.UC,
+               6: itk.SI,
+               7: itk.UI,
+               8: itk.SL,
+               9: itk.UL,
+               10: itk.F,
+               11: itk.D}
+    
+    return itk.Image[mapping[image.GetScalarType()],
+                     image.GetDataDimension()]
 
 def saveImageMetaIO(image, file_name): #tested
     """
