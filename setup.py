@@ -75,11 +75,11 @@ setup(name='MedPy',
       
       scripts=[
 	'bin/medpy_anisotropic_diffusion.py',
+	'bin/medpy_apparent_diffusion_coefficient.py',
 	'bin/medpy_check_marker_intersection.py',
 	'bin/medpy_convert.py',       
 	'bin/medpy_count_labels.py',   
-	'bin/medpy_create_empty_volume_by_example.py',            
-	'bin/medpy_create_empty_volume_by_example.py',    
+	'bin/medpy_create_empty_volume_by_example.py',
 	'bin/medpy_dicom_slices_to_volume.py',    
 	'bin/medpy_dicom_to_4D.py',             
 	'bin/medpy_diff.py',
