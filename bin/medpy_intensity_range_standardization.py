@@ -59,8 +59,6 @@ The application requires the supplied images to be stripped of their background.
 either be done by setting a threshold value or by supplying a foreground-mask for each
 image.
 
-For more details, see the medpy.filter.IntensityRangeStandardization class.
-
 The script provide two mutually exclusive functionalities:
     (1) the training of a new model and an optional application to the training images
     (2) the application of a stored model to a number of images
@@ -71,6 +69,8 @@ The implementation is based on:
 [1] Nyul, L.G.; Udupa, J.K.; Xuan Zhang, "New variants of a method of MRI scale
     standardization," Medical Imaging, IEEE Transactions on , vol.19, no.2, pp.143-150,
     Feb. 2000
+    
+For more details on the algorithm, see the medpy.filter.IntensityRangeStandardization class.
 
 Copyright (C) 2013 Oskar Maier
 This program comes with ABSOLUTELY NO WARRANTY; This is free software,
