@@ -35,12 +35,12 @@ def normalize(vector, cutoffp = (0, 100), model = False):
     
     Therefore a supplied vector
         s1    s2    s3
-    f1    1    1    2
+    f1   1.5    1    2
     f2    -1    0    1
     
     . would result in the returned vector
         s1    s2    s3
-    f1 0.25  0.25  0.50
+    f1 0.50  0.00  1.00
     f2 0.00  0.50  1.00
     
     @param vector a vector of feature vectors
@@ -50,6 +50,10 @@ def normalize(vector, cutoffp = (0, 100), model = False):
     @rtype ndarray
     """
     vector = numpy.array(vector, dtype=numpy.float)
+    
+    # add a singleton dimension if required
+    if 1 == vector.ndim:
+        vector = vector[:, None]
     
     # compute lower and upper range border of each row using the supplied percentiles
     minp, maxp = numpy.percentile(vector, cutoffp, 0)
@@ -76,7 +80,14 @@ def normalize_with_model(vector, model):
     vector, but rather on a learned model created with @see normalize(). Thus formerly
     unseen query data can be normalized according to the training data.
     """
+    vector = numpy.array(vector, dtype=numpy.float)
+    
+    # unpack model
     minp, maxp, minv, maxv = model
+    
+    # add a singleton dimension if required
+    if 1 == vector.ndim:
+        vector = vector[:, None]
     
     # shift outliers to fit range
     for i in xrange(vector.shape[1]):
