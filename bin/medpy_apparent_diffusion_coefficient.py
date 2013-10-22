@@ -98,8 +98,8 @@ def main():
     bximg, bxhdr = load(args.bximage)
     
     # convert to float
-    b0img = b0img.astype(numpy.float32)
-    bximg = bximg.astype(numpy.float32)
+    b0img = b0img.astype(numpy.float)
+    bximg = bximg.astype(numpy.float)
 
     # check if image are compatible
     if not b0img.shape == bximg.shape:

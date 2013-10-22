@@ -45,8 +45,8 @@ class IntensityRangeStandardization (object):
         We have a number of similar images with varying intensity ranges. To make them
         comparable, we would like to transform them to a common intensity space. Thus we
         run:
-            !TODO: Correct import in next line
-            from medpy.x import IntensityRangeStandardization
+        
+            from medpy.filter import IntensityRangeStandardization
             irs = IntensityRangeStandardization()
             trained_model, transformed_images = irs.train_transform(images)
             
@@ -100,7 +100,7 @@ class IntensityRangeStandardization (object):
         Setting the training parameters:
         The method comes with a set of default parameters, that are suitable for most
         cases. But for some special cases, it might be better to set them on your own. Ti
-        undesrstand the working of the parameters, it is recommended to read the detailed
+        understand the working of the parameters, it is recommended to read the detailed
         method description first.
         
         The method depends of three parameters:
@@ -303,7 +303,7 @@ class IntensityRangeStandardization (object):
         
         if not surpress_mapping_check and not self.__check_mapping(li):
             raise InformationLossException('Image can not be transformed to the learned standard intensity space without loss of information. Please re-train.')
-            
+        
         return output
     
     def train_transform(self, images, surpress_mapping_check = False):

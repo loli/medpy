@@ -3,19 +3,31 @@
 Holds additional functionality for the argparse commandline parser package.
 
 @author Oskar Maier
-@version r0.1.0
+@version r0.1.1
 @since 2013-07-02
 @status Release
 """
 
 # build-in modules
 import argparse
+import itertools
 
 # third-party modules
 
 # own modules
 
 # code
+def sequenceOfIntegersGeAscendingStrict(string):
+    """
+    A custom type for the argparse commandline parser.
+    Accepts only colon-separated lists of valid integer values that are greater than or
+    equal to 0 and in ascending order.
+    
+    Usage:
+    parser.add_argument('argname', type=sequenceOfIntegersGeAscending, help='help')
+    """
+    return __sequenceAscendingStrict(__sequenceGe(sequenceOfIntegers(string)))
+
 def sequenceOfIntegers(string):
     """
     A custom type for the argparse commandline parser.
@@ -162,4 +174,20 @@ def __sequenceLe(l):
     "Test a sequences values for being less than or equal to 0."
     for e in l:
         if 0 < e: raise argparse.ArgumentTypeError('All values have to be less than or equal to 0.')
+    return l
+
+def __sequenceAscendingStrict(l):
+    "Test a sequences values to be in strictly ascending order."
+    it = iter(l)
+    it.next()
+    if not all(b > a for a, b in itertools.izip(l, it)):
+        raise argparse.ArgumentTypeError('All values must be given in strictly ascending order.')
+    return l
+
+def __sequenceDescendingStrict(l):
+    "Test a sequences values to be in strictly descending order."
+    it = iter(l)
+    it.next()
+    if not all(b < a for a, b in itertools.izip(l, it)):
+        raise argparse.ArgumentTypeError('All values must be given in strictly descending order.')
     return l
