@@ -130,7 +130,7 @@ def append(*vectors):
         vectors[i] = numpy.asarray(vectors[i])
         if vectors[i].ndim == 1:
             vectors[i] = numpy.asarray([vectors[i]]).T
-            
+
     return numpy.squeeze(numpy.concatenate(vectors, 0))
     
 def join(*vectors):
