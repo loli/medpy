@@ -25,25 +25,25 @@ supplied with list/tuple of images instead of an image. in which case they are c
 co-registered and the feature is extracted from all of them independently.
 
 @author Oskar Maier
-@version r0.1.3
+@version r0.2.3
 @since 2013-08-24
 @status Release
 """
 
 # build-in module
-import itertools
 
 # third-party modules
 import numpy
 from scipy.ndimage.filters import gaussian_filter, gaussian_gradient_magnitude,\
     median_filter
 from scipy.interpolate.interpolate import interp1d
+from scipy.ndimage._ni_support import _get_output
 
 # own modules
 from medpy.features import utilities
 from medpy.core.exceptions import ArgumentError
 from medpy.features.utilities import join
-from medpy.filter.houghtransform import __pad_image
+from medpy.filter.image import sum_filter
 
 # constants
 
@@ -260,24 +260,30 @@ def median(image, size = 5, voxelspacing = None, mask = slice(None)):
     """
     return __extract_feature(__extract_median, image, mask, size = size, voxelspacing = voxelspacing)
 
-def local_histogram(image, size = 11, bins = 19, rang = 'image', cutoffp = (0.1, 99.9), cval = 0, mask = slice(None)):
+def local_histogram(image, bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0, mask=slice(None)):
     """
+    Computes multi-dimensional histograms over a region around each voxel.
+    
     Supply an image and (optionally) a mask and get the local histogram of local
     neighbourhoods around each voxel. These neighbourhoods are cubic with a sidelength of
     size in voxels or, when a shape instead of an integer is passed to size, of this
     shape.
     
-    Voxels along the image border are treated as being filled with cval. 
+    If not argument is passed to output, the returned array will be of dtype float.
+    
+    Voxels along the image border are treated as defined by mode. The possible values are
+    the same as for scipy.ndimage filter without the ''constant'' mode. Instead "ignore"
+    is the default and additional mode, which sets that the area outside of the image are
+    ignored when computing the histogram.
     
     When a mask is supplied, the local histogram is extracted only for the voxels where
     the mask is True. But voxels from outside the mask can be incorporated in the
     compuation of the histograms.
     
-    The range of the histograms can be set via the rang argument. When set to None, local
-    histograms ranges are used, which makes them more pronounced, but less compareable.
-    Alternatively the 'image' keyword can be supplied, to use the same range for all
-    local histograms, extracted from the images max and min intensity values. Finally, an
-    own range can be supplied in the form of a tuple.
+    The range of the histograms can be set via the rang argument. The 'image' keyword can
+    be supplied, to use the same range for all local histograms, extracted from the images
+    max and min intensity values. Alternatively, an own range can be supplied in the form
+    of a tuple of two numbers. Values outside the range of the histogram are ignored.
     
     Setting a proper range is important, as all voxels that lie outside of the range are
     ignored i.e. do not contribute to the histograms as if they would not exists. Some
@@ -297,8 +303,6 @@ def local_histogram(image, size = 11, bins = 19, rang = 'image', cutoffp = (0.1,
     
     @param image a single image or a list/tuple of images (for multi-spectral case)
     @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param size either the local cube areas sidelength or a shape of the area
-    @type int | tuple of ints
     @param bins the number of histogram bins
     @type bins integer
     @param rang the range of the histograms, can be supplied manually, set to 'image' or
@@ -306,16 +310,24 @@ def local_histogram(image, size = 11, bins = 19, rang = 'image', cutoffp = (0.1,
     @type rang string | tuple of numbers | None
     @param cutoffp the cut-off percentiles to exclude outliers, only processed if rang is
                    set to 'image'
-    @type cutoffp tuple of numbers
-    @param cval constant value to padd the image with
-    @type cval number
+    @type cutoffp tuple of scalars | 'image'
+    @param size See footprint, below
+    @type size scalar | tuple
+    @param footprint  Either ``size`` or ``footprint`` must be defined. ``size`` gives the shape that is taken from the input array, at every element position, to define the input to the filter function. ``footprint`` is a boolean array that specifies (implicitly) a shape, but also which of the elements within this shape will get passed to the filter function. Thus ``size=(n,m)`` is equivalent to ``footprint=np.ones((n,m))``. We adjust ``size`` to the number of dimensions of the input array, so that, if the input array is shape (10,10,10), and ``size`` is 2, then the actual size used is (2,2,2).
+    @type footprint ndarray
+    @param output  The ``output`` parameter passes an array in which to store the filter output.
+    @type output ndarray | dtype
+    @param mode The ``mode`` parameter determines how the array borders are handled. Default is 'ignore'
+    @type mode 'reflect' | 'ignore' | 'nearest' | 'mirror' | 'wrap'
+    @param origin The ``origin`` parameter controls the placement of the filter. Default 0.
+    @type origin scalar
     @param mask a binary mask for the image
     @type mask ndarray
     
     @return the bin values of the local histograms for each voxel
     @rtype ndarray
-    """
-    return __extract_feature(__extract_local_histogram, image, mask, size = size, bins = bins, rang = rang, cutoffp = cutoffp, cval = cval)
+    """    
+    return __extract_feature(__extract_local_histogram, image, mask, bins=bins, rang=rang, cutoffp=cutoffp, size=size, footprint=footprint, output=output, mode=mode, origin=origin)
 
 
 def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_plane = 0, voxelspacing = None, mask = slice(None)):
@@ -430,44 +442,45 @@ def __extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7
     # extract intensities and return
     return __extract_intensities(hemisphere_difference, mask)
 
-def __extract_local_histogram(image, mask = slice(None), size = 11, bins = 19, rang = 'image', cutoffp = (0.1, 99.9), cval = 0):
+def __extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0):
     """
     Internal, single-image version of @see local_histogram
-    """
-    # create a cube with sidlength size or the desired structure
-    if isinstance(size, int):
-        structure = numpy.ones([size] * image.ndim, dtype=numpy.bool)
-    else:
-        structure = numpy.ones(size, dtype=numpy.bool)
-        
-    # prepare iterators over image dimensions
-    its = [xrange(x) for x in image.shape]
     
-    # extract images intensity range if requested
+    Note: Values outside of the histograms range are not considered.
+    Note: Mode constant is not available, instead a mode "ignore" is provided.
+    Note: Default dtype of returned values is float.
+    """
+    if "constant" == mode:
+        raise RuntimeError('boundary mode not supported')
+    elif "ignore" == mode:
+        mode = "constant"
     if 'image' == rang:
         rang = tuple(numpy.percentile(image[mask], cutoffp))
+    elif not 2 == len(rang):
+        raise RuntimeError('the rang must contain exactly two elements or the string "image"')
         
-    # pad image with 0 values
-    image = __pad_image(image, structure, cval)
+    _, bin_edges = numpy.histogram([], bins=bins, range=rang)
+    output, _ = _get_output(numpy.float if None == output else output, image, shape = [bins] + list(image.shape))
 
-    # iterate over all voxels in the image and collect histograms from the surrounding area covered by structure
-    out = []
-    if isinstance(mask, slice): # iterate without mask (slightly faster)
-        for idx in itertools.product(*its):
-            slicer = [slice(pos, pos + stride) for pos, stride in zip(idx, structure.shape)]
-            h, _ = numpy.histogram(image[slicer], bins, range=rang)
-            out.append(h)
-    else: # iterate with checking the mask 
-        for idx in itertools.product(*its):
-            slicer = [slice(pos, pos + stride) for pos, stride in zip(idx, structure.shape)]
-            if mask[idx]:
-                h, _ = numpy.histogram(image[slicer], bins, range=rang)
-                out.append(h)
-                
-    # assemble and normalize by dividing through the number of elements in each histogram
-    out = numpy.asarray(out, dtype=numpy.float) / numpy.prod(structure.shape, dtype=numpy.float)
-                
-    return out
+    # threshold the image into the histogram bins represented by the output images first dimension, treat last bin separately, since upper border is inclusive
+    for i in range(bins - 1):
+        output[i] = (image >= bin_edges[i]) & (image < bin_edges[i + 1])
+    output[-1] = (image >= bin_edges[-2]) & (image <= bin_edges[-1])
+
+    # apply the sum filter to each dimension, then normalize by dividing through the sum of elements in the bins of each histogram
+    for i in range(bins):
+        output[i] = sum_filter(output[i], size=size, footprint=footprint, output=None, mode=mode, cval=0.0, origin=origin)
+    divident = numpy.sum(output, 0)
+    divident[0 == divident] = 1
+    output /= divident
+    
+    # Notes on modes:
+    # mode=constant with a cval outside histogram range for the histogram equals a mode=constant with a cval = 0 for the sum_filter
+    # mode=constant with a cval inside  histogram range for the histogram has no equal for the sum_filter (and does not make much sense)
+    # mode=X for the histogram equals mode=X for the sum_filter
+
+    # treat as multi-spectral image which intensities to extracted
+    return __extract_feature(__extract_intensities, [h for h in output], mask)
     
 def __extract_median(image, mask = slice(None), size = 1, voxelspacing = None):
     """
@@ -580,4 +593,3 @@ def __extract_feature(fun, image, mask = slice(None), **kwargs):
         return utilities.join(*[fun(i, mask, **kwargs) for i in image])
     else:
         return fun(image, mask, **kwargs)
-    

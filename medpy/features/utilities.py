@@ -3,7 +3,7 @@
 Utilities for feature handling.
 
 @author Oskar Maier
-@version r0.1.0
+@version r0.1.1
 @since 2013-08-24
 @status Release
 """
@@ -163,5 +163,9 @@ def join(*vectors):
         vectors[i] = numpy.array(vectors[i], copy=False)
         if vectors[i].ndim == 1:
             vectors[i] = numpy.array([vectors[i]], copy=False).T
+    
+    # treat single-value cases special (no squeezing)
+    if 1 == len(vectors[0]):
+        return numpy.concatenate(vectors, 1)
     
     return numpy.squeeze(numpy.concatenate(vectors, 1))
