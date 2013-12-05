@@ -2,7 +2,7 @@
 Unittest for medpy.features.intensity.
 
 @author Oskar Maier
-@version d0.1.1
+@version d0.2.1
 @since 2013-08-26
 @status Development
 """
@@ -27,56 +27,61 @@ class TestIntensityFeatures(unittest.TestCase):
     def test_local_histogram(self):
         """Test the feature: local_histogram."""
         
-        i = numpy.asarray([[1, 1, 1],
-                           [1, 1, 1],
-                           [1, 1, 1]])
-        e = numpy.asarray([[5/9., 4/9.], [3/9., 6/9.], [5/9., 4/9.],\
-                           [3/9., 6/9.], [0.,   1.  ], [3/9., 6/9.],\
-                           [5/9., 4/9.], [3/9., 6/9.], [5/9., 4/9.]])
-        r = local_histogram(i, size = 3, bins = 2, rang = None, cutoffp = (0, 100), cval = 0, mask = slice(None))
-        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D local range failed')
+        i = numpy.asarray([[0, 1, 1, 1],
+                           [0, 1, 0, 1],
+                           [0, 0, 0, 1],
+                           [0, 0, 0, 1]])
+        e = numpy.asarray([[ 0.5       ,  0.5       ],
+                           [ 0.5       ,  0.5       ],
+                           [ 0.16666667,  0.83333333],
+                           [ 0.25      ,  0.75      ],
+                           [ 0.66666667,  0.33333333],
+                           [ 0.66666667,  0.33333333],
+                           [ 0.33333333,  0.66666667],
+                           [ 0.33333333,  0.66666667],
+                           [ 0.83333333,  0.16666667],
+                           [ 0.88888889,  0.11111111],
+                           [ 0.55555556,  0.44444444],
+                           [ 0.5       ,  0.5       ],
+                           [ 1.        ,  0.        ],
+                           [ 1.        ,  0.        ],
+                           [ 0.66666667,  0.33333333],
+                           [ 0.5       ,  0.5       ]])
+        r = local_histogram(i, bins=2, size=3)
+        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D image range failed')
         
         m = [[False, False, False],
              [False, True, False],
              [False, False, False]]
-        e = [0, 1] 
-        r = local_histogram(i, size = 3, bins = 2, rang = None, cutoffp = (0, 100), cval = 0, mask = m)
-        self.assertEqual(len(r), 1, 'local histogram: 2D masked failed')
-        numpy.testing.assert_allclose(r[0], e, err_msg = 'local histogram: 2D local range masked failed')
+        e = e[numpy.asarray(m).flatten()]
+        r = local_histogram(i, bins=2, size=3, rang=(0, 1), mask=m)
+        self.assertEqual(len(r), 1, 'local histogram: 2D local range masked failed')
+        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D local range masked failed')
+               
+        i = numpy.asarray([[0, 1, 1, 1],
+                           [0, 1, 0, 1],
+                           [0, 0, 0, 1],
+                           [1, 0, 0, 1]])
+        e = numpy.asarray([(0, 1)] * 16)
+        r = local_histogram(i, size = 3, bins = 2, rang = (0.1, 1))
+        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D fixed range with excluded elements failed')
         
-        e = numpy.asarray([(0, 1)] * 9)
-        r = local_histogram(i, size = 3, bins = 2, rang = None, cutoffp = (0, 100), cval = 1, mask = slice(None))
-        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D local range with cval=1 failed')
-        
-        e = numpy.asarray([(0, 1)] * 9)
-        r = local_histogram(i, size = 3, bins = 2, rang = 'image', cutoffp = (0, 100), cval = 0, mask = slice(None))
-        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D range over complete image failed')
-        
-        i = numpy.asarray([[2, 1, 1],
-                           [1, 1, 1],
-                           [1, 1, 1]])
-        e = numpy.asarray([(1, 0)] * 9)
-        r = local_histogram(i, size = 3, bins = 2, rang = 'image', cutoffp = (1, 99), cval = 0, mask = slice(None))
+        e = numpy.asarray([(0, 1)] * 16)
+        r = local_histogram(i, size = 3, bins = 2, cutoffp = (50, 100))
         numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D rang over complete image \w cutoffp failed')
-        
-        e = numpy.asarray([[5/8., 3/8.], [3/8., 5/8.], [5/9., 4/9.],\
-                           [3/8., 5/8.], [0.,   1.  ], [3/9., 6/9.],\
-                           [5/9., 4/9.], [3/9., 6/9.], [5/9., 4/9.]])
-        r = local_histogram(i, size = 3, bins = 2, rang = (0, 1.9), cutoffp = (1, 99), cval = 0, mask = slice(None))
-        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D rang supplied failed')
         
         i = numpy.asarray([[1, 1, 1],
                            [1, 1, 1],
-                           [1, 1, 1]])
+                           [1, 1, 1]])        
         i = numpy.asarray([i, i, i])
         e = numpy.asarray([(0, 1)] * (9 * 3))
-        r = local_histogram(i, size = 3, bins = 2, rang = None, cutoffp = (0, 100), cval = 1, mask = slice(None))
-        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 3D local range with cval=1 failed')
+        r = local_histogram(i, size = 3, bins = 2, rang=(0,1))
+        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 3D local range failed')
         
         i = numpy.asarray([i, i, i])
         e = numpy.asarray([(0, 1)] * (9 * 3 * 3))
-        r = local_histogram(i, size = 3, bins = 2, rang = None, cutoffp = (0, 100), cval = 1, mask = slice(None))
-        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 4D local range with cval=1 failed')   
+        r = local_histogram(i, size = 3, bins = 2, rang=(0,1))
+        numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 4D local range failed')
         
     
     def test_local_mean_gauss(self):

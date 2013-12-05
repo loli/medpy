@@ -19,3 +19,4 @@ from LabelImageStatistics import LabelImageStatistics
 from houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
 from MinimaExtraction import local_minima
 from otsu import otsu
+from utilities import pad
