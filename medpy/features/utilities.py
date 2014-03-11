@@ -1,6 +1,7 @@
 """
 @package medpy.features.utilities
 Utilities for feature handling.
+Currently only for features from the @see medpy.features.intensity package.
 
 @author Oskar Maier
 @version r0.1.1

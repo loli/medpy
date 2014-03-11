@@ -17,6 +17,7 @@ from scipy.ndimage import _ni_support
 # own modules
 
 # code
+#!TODO: Utilise the numpy.pad function that is available since 1.7.0. The numpy version should go inside this function, since it does not support the supplying of a template/footprint on its own.
 def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0):
     """
     Returns a copy of the input, padded by the supplied structuring element.

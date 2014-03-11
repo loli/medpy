@@ -64,6 +64,7 @@ Thumbs.db
 .project
 .pydevproject
 .settings/
+.metadata/
 
 # Suggestions by GitHub for Python projects #
 #############################################

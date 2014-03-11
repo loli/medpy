@@ -4,6 +4,9 @@ Various image filters and manipulation functions.
 
 Modules:
     - label: Filter for label images.
+    - binary: Filter for binary images. 
+    - smoothing: Smoothing filters.
+    - image: Various image filter modelled after scipy.ndimage functionality.
     
 @author Oskar Maier
 """
@@ -12,11 +15,15 @@ Modules:
 __all__ = []
 
 # if __all__ is not set, only the following, explicit import statements are executed
-from label import relabel, fit_labels_to_mask, relabel_map, relabel_non_zero
+from binary import largest_connected_component
+from image import sls, ssd, average_filter, sum_filter
 from smoothing import anisotropic_diffusion, gauss_xminus1d
-from IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
-from LabelImageStatistics import LabelImageStatistics
+from label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
 from houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
-from MinimaExtraction import local_minima
 from otsu import otsu
 from utilities import pad
+
+from IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
+from LabelImageStatistics import LabelImageStatistics
+from MinimaExtraction import local_minima
+

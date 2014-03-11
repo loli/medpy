@@ -5,6 +5,7 @@ Filters for binary images.
 Provides a number of filter that implement functionality for binary images only.
 
 Functions:
+    - def largest_connected_component(img, structure = None)
     
 
 @author Oskar Maier

@@ -1,6 +1,6 @@
 """
 @package medpy.graphcut.wrapper
-Wrappers for executing graph cuts and other convineance functions.
+Wrappers for executing graph cuts and other convenience functions.
 
 Functions:
     - 
@@ -25,7 +25,6 @@ from generate import graph_from_labels
 from ..core.exceptions import ArgumentError
 from ..core.logger import Logger
 from medpy.filter.label import relabel, relabel_map
-import os
 
 # code
 def split_marker(marker, fg_id = 1, bg_id = 2):

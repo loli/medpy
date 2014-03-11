@@ -15,7 +15,8 @@ Modules:
     - write: Functions to persist a graph in various file formats like Dimacs (b).
     - maxflow: C++ wrapper around the max-flow/min-cut implementation of (1)
     - generate: Provides functions to generate graphs efficiently from nD label-images.
-    - energy: Run-time optimized energy functions for the graph generation.
+    - energy_label: Run-time optimized energy functions for the graph generation. Label/Superpixel based.
+    - energy_voxel: Run-time optimized energy functions for the graph generation. Voxel based.
     
 
 @note This package makes use of @link: medpy.core.Logger to generate progress and debug

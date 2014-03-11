@@ -1,6 +1,12 @@
-#!/usr/bin/python
+"""
+@package medpy.utilities.arsparseu
+Holds a number of utility function to process NiBabel images.
 
-"""Holds a number of utility function to process NiBabel images."""
+@author Oskar Maier
+@version d0.2.1
+@since 2011-12-12
+@status Development
+"""
 
 # build-in modules
 
@@ -12,14 +18,7 @@ from nibabel import Nifti1Image, Nifti1Pair
 
 # own modules
 
-# information
-__author__ = "Oskar Maier"
-__version__ = "d0.2.1, 2011-12-12"
-__email__ = "oskar.maier@googlemail.com"
-__status__ = "Development" # tested functions marked with tested keyword
-__description__ = "NiBabel image utility functions."
-
-# variables
+# constants
 __suffix_to_type = {'nii': Nifti1Image, # mapping from file suffix to type string
                     'nii.gz': Nifti1Image,
                     'hdr': Nifti1Pair,
@@ -42,7 +41,7 @@ def image(data):
 def image_new(data, filename):
     """
     Creates a NiBabel image for the supplied data. The function intends to directly
-    create the apropriate image type, depending on the image header.
+    create the appropriate image type, depending on the image header.
     @param data: a numpy array of arbitrary type
     @param filename the intended filename with the file ending telling the image type
     @return: a NiBabel image for data of any nibabel image type
@@ -64,6 +63,7 @@ def image_like(data, reference):
     Creates a NiBabel image for the data of the same type as image. Where the data
     is not sufficient to provide required information, the header attributes of image
     are used.
+    
     @param data: a numpy array of arbitrary type
     @param image: a NiBabel image
     @param origin: the images origin that should get set, if None the one from the

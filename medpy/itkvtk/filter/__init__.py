@@ -1,9 +1,10 @@
 """
 @package medpy.itkvtk.filter
-Various image filters and manipulation functions that depend on itk or vtk.
+Various image filters and manipulation functions that depend on ITK.
 
 Modules:
     - gradient: Gradient filters
+    - watershed: Watershed filters
     
 @author Oskar Maier
 """

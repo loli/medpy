@@ -1,12 +1,12 @@
 """
 @package medpy.filter.houghtransform
-Provides functionality connected with the hough transform.
+Provides functionality connected with the Hough Transform.
     
 See http://en.wikipedia.org/wiki/Hough_transform and http://en.wikipedia.org/wiki/Generalised_Hough_transform
 for more information on the subject.
 
 @author Oskar Maier
-@version d0.1.1
+@version d0.1.2
 @since 2013-06-07
 @status Release
 """
@@ -18,6 +18,7 @@ import math
 import scipy
 
 # own modules
+from medpy.filter.utilities import pad
 
 # public methods
 def ght_alternative (img, template, indices):
@@ -51,7 +52,7 @@ def ght_alternative (img, template, indices):
         raise AttributeError('The supplied template is bigger than the image. This setting makes no sense for a hough transform.')
     
     # pad the original image
-    img_padded = __pad_image(img, template)
+    img_padded = pad(img, footprint=template, mode='constant')
     
     # prepare the hough image
     if scipy.bool_ == img.dtype:
@@ -199,38 +200,3 @@ def template_ellipsoid (shape):
 
     return template
 
-# private methods
-def __pad_image (img, template, cval = 0):
-    """
-    Pads the supplied image with cval such that the template can be applied to it.
-    The center of the template is the decisive value here.
-    Note that the returned array is a copy of the input array.
-    
-    E.g.
-    img = [[T, T, T, T, T],    template = [[T, T, T],
-           [T, T, T, T, T],                [T, T, T]]
-           [T, T, T, T, T],
-           [T, T, T, T, T]]
-           
-    template_shape = 2 * 3
-    template_center = (0, 1) # note: rounded down!
-           
-    padded_img = [[F, T, T, T, T, T, F],
-                  [F, T, T, T, T, T, F],
-                  [F, T, T, T, T, T, F],
-                  [F, T, T, T, T, T, F],
-                  [F, F, F, F, F, F, F]]
-    """
-    # compute amount of front- and back-padding for each dimension
-    pad_width = [((x - 1) / 2, x / 2) for x in template.shape]
-    
-    # create new array of larger size
-    padded_shape = tuple(a + sum(pad_width[i]) for i, a in enumerate(img.shape)) 
-    padded_img = scipy.zeros(padded_shape, img.dtype)
-    padded_img += cval
-    
-    # copy values from input array to new array
-    slicers = tuple(slice(x, -1 * y) for x, y in pad_width)
-    padded_img[slicers] = img
-        
-    return padded_img

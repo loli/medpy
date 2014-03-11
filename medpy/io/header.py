@@ -132,11 +132,11 @@ def copy_meta_data(hdr_to, hdr_from):
     try:
         set_pixel_spacing(hdr_to, get_pixel_spacing(hdr_from))
     except AttributeError as e:
-        logger.warning('The voxel spacing could not be set correctly. Signaled error: {}'.format(e))
+        logger.warning('The voxel spacing could not be set correctly. Signalled error: {}'.format(e))
     try:
         set_offset(hdr_to, get_offset(hdr_from))
     except AttributeError as e:
-        logger.warning('The image offset could not be set correctly. Signaled error: {}'.format(e))
+        logger.warning('The image offset could not be set correctly. Signalled error: {}'.format(e))
 
 
 def __get_pixel_spacing_itk(hdr):

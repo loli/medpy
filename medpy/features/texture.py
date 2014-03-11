@@ -2,9 +2,6 @@
 @package medpy.features.texture
 Run-time optimized features extraction on images.
 
-Functions:
-    - def boundary_stawiaski(label_image, (gradient_image)): boundary term implementation in (1)
-
 
 @author Oskar Maier
 @version d0.1.0
@@ -18,7 +15,6 @@ Functions:
 import math
 import scipy
 from scipy.ndimage.filters import generic_filter
-import time
 import itertools
 
 # own modules
@@ -82,10 +78,10 @@ def __coarsness_average(img, k):
     return A
 
 def contrast(img):
-    return False
+    raise NotImplementedError()
 
 def directionality(img):
-    return False
+    raise NotImplementedError()
 
 def efficient_local_avg(rt, (p_min, p_max), divider = False):
     """
@@ -236,39 +232,3 @@ def running_total3d(image): # 3.42s for 100^3 image
                 rt[x,y,z] += p0 + p1 + p2 + p3 - m1 - m2 - m3
     return rt
 
-#def running_total3d2(image):
-#    rt = scipy.asarray(image).copy()
-#    
-#    ip0 = scipy.concatenate((scipy.zeros(rt[0:1].shape), rt[:-1]), axis=0)
-#    ip1 = scipy.concatenate((scipy.zeros(rt[:,0:1].shape), rt[:,:-1]), axis=1)
-#    ip2 = scipy.concatenate((scipy.zeros(rt[:,:,0:1].shape), rt[:,:,:-1]), axis=2)
-#    
-#    ip3 = scipy.concatenate((scipy.zeros(rt[0:1].shape), rt[:-1]), axis=0)
-#    ip3 = scipy.concatenate((scipy.zeros(ip3[:,0:1].shape), ip3[:,:-1]), axis=1)
-#    ip3 = scipy.concatenate((scipy.zeros(ip3[:,:,0:1].shape), ip3[:,:,:-1]), axis=2)
-#    
-#    im1 = scipy.concatenate((scipy.zeros(rt[0:1].shape), rt[:-1]), axis=0)
-#    im1 = scipy.concatenate((scipy.zeros(im1[:,0:1].shape), im1[:,:-1]), axis=1)
-#    
-#    im2 = scipy.concatenate((scipy.zeros(rt[0:1].shape), rt[:-1]), axis=0)
-#    im2 = scipy.concatenate((scipy.zeros(im2[:,:,0:1].shape), im2[:,:,:-1]), axis=2)
-#    
-#    im3 = scipy.concatenate((scipy.zeros(rt[:,0:1].shape), rt[:,:-1]), axis=1)
-#    im3 = scipy.concatenate((scipy.zeros(im3[:,:,0:1].shape), im3[:,:,:-1]), axis=2)
-#
-#    rtr = rt.ravel()
-#    for oidx, p0, p1, p2, p3, m1, m2, m3 in zip(range(len(rtr)), ip0.flat, ip1.flat, ip2.flat, ip3.flat, im1.flat, im2.flat, im3.flat):
-#        rtr[oidx] += p0 + p1 + p2 + p3 - m1 - m2 - m3
-#        
-#    return rt
-
-# input array
-[[[2, 1, 1],
-  [3, 2, 1],
-  [1, 1, 2]],
- [[2, 3, 2],
-  [1, 2, 3],
-  [2, 1, 2]],
- [[3, 2, 1],
-  [1, 2, 2],
-  [3, 2, 1]]]

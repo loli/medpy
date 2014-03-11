@@ -2,7 +2,7 @@
 @package medpy.filter.image
 Filters for multi-dimensional images.
 
-These filter rely heavily on and are modeled after the scipy.ndimage package.
+These filter rely heavily on and are modelled after the scipy.ndimage package.
 
 @author Oskar Maier
 @version d0.2.0
