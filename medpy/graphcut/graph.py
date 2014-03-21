@@ -131,7 +131,7 @@ class Graph(object):
         @param tweights a dictionary with node_ids as keys and (weight-to-source, weight-to-sink) tuples as values.
         @type tweights dict
         """
-        self.__tweights.update(tweights) 
+        self.__tweights.update(tweights)    
         
     def get_node_count(self):
         """
@@ -392,6 +392,25 @@ class GCGraph:
         """        
         for node, weight in tweights.iteritems():
             self.set_tweight(node, weight[0], weight[1]) # (weight-to-source, weight-to-sink)
+            
+    def set_tweights_all(self, tweights):
+        """
+        Set all t-weights at once.
+        
+        @warning since this method overrides already existing t-weights, it is strongly
+        recommended to run set_source_nodes() and set_sink_nodes() after the
+        last call to this method.
+        
+        @note the weights for nodes directly connected to either the source or the sink
+        are best set using set_source_nodes() or set_sink_nodes() to ensure
+        consistency of their maximum values.
+        
+        @param tweights an iterable, e.g. a list or an array, containing a pair of
+                        numeric values for each of the graphs nodes 
+        @type tweights iterable
+        """
+        for node, (twsource, twsink) in enumerate(tweights):
+            self.set_tweight(node, twsource, twsink) # source = FG, sink = BG
         
     def get_graph(self):
         """

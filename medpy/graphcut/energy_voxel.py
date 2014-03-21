@@ -27,12 +27,26 @@ Functions:
 import sys
 
 # third-party modules
+import numpy
 import scipy
 import math
 
 # own modules
 
 # code
+def regional_probability_map(graph, (probability_map)):
+    """
+    Setting the regional term with a probability map.
+    
+    Takes an image/graph/map as input where each entry contains a probability value for
+    the corresponding GC graph node to belong to the foreground object. The probabilities
+    must be in the range [0, 1]. The reverse weights are assigned to the sink
+    (which corresponds to the background).
+    """
+    probability_map = scipy.asarray(probability_map)
+    probabilities = numpy.vstack([probability_map.flat, (1 - probability_map).flat]).T
+    graph.set_tweights_all(probabilities)
+
 def boundary_maximum_linear(graph, (gradient_image, spacing)):
     """
     The same as energy_voxel.boundary_difference_linear(), but working on the gradient

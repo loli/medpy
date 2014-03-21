@@ -141,8 +141,10 @@ def graph_from_voxels(fg_markers,
     # collect all voxels that are under the foreground resp. background markers i.e.
     # collect all nodes that are connected to the source resp. sink
     logger.info('Setting terminal weights for the markers...')
-    graph.set_source_nodes(fg_markers.ravel().nonzero()[0])
-    graph.set_sink_nodes(bg_markers.ravel().nonzero()[0])    
+    if not 0 == scipy.count_nonzero(fg_markers):
+        graph.set_source_nodes(fg_markers.ravel().nonzero()[0])
+    if not 0 == scipy.count_nonzero(bg_markers):
+        graph.set_sink_nodes(bg_markers.ravel().nonzero()[0])    
     
     return graph.get_graph()
 
