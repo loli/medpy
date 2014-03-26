@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # build-in modules
 import argparse
+from argparse import RawTextHelpFormatter
 import logging
 
 # third-party modules
@@ -32,7 +33,8 @@ import scipy
 from medpy.io import load, save, header
 from medpy.core import Logger
 from medpy.core.exceptions import ArgumentError
-from medpy.io.header import __update_header_from_array_nibabel
+from medpy.io.header import __update_header_from_array_nibabel,\
+    __is_header_nibabel
 
 
 # information
@@ -45,7 +47,12 @@ __description__ = """
                   
                   One common use is when a number of 3D volumes, each representing a
                   moment in time, are availabel. With this script they can be joined
-                  into a proper 4D volume. 
+                  into a proper 4D volume.
+                  
+                  WARNING: Setting the spacing of the new dimension to any other value
+                  than 1 only works when the first input image is of type NIfTI. In case
+                  of images loaded by the ITK wrapper (e.g. *.mha), this even leads to a
+                  segmentation fault!  
                   
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
@@ -87,7 +94,7 @@ def main():
             raise ArgumentError('The shape {} of image {} differs from the one of the first image {}, which is {}.'.format(image_data.shape, image, args.inputs[0], example_data.shape))
         output_data[idx + 1] = image_data
         
-    # move new dimension to the end
+    # move new dimension to the end or to target position
     for dim in range(output_data.ndim - 1):
         if dim >= args.position: break
         output_data = scipy.swapaxes(output_data, dim, dim + 1)
@@ -96,9 +103,12 @@ def main():
     if not 1 == args.spacing:
         spacing = list(header.get_pixel_spacing(example_header))
         spacing = tuple(spacing[:args.position] + [args.spacing] + spacing[args.position:])
-	# !TODO: BUG: This statement assumes that the example_header, extracted from the first input image, is of type nibabel, which is not guaranteed!
-        __update_header_from_array_nibabel(example_header, output_data)
-        header.set_pixel_spacing(example_header, spacing)
+        # !TODO: Find a way to enable this also for PyDicom and ITK images
+        if __is_header_nibabel(example_header):
+            __update_header_from_array_nibabel(example_header, output_data)
+            header.set_pixel_spacing(example_header, spacing)
+        else:
+            raise ArgumentError("Sorry. Setting the voxel spacing of the new dimension only works with NIfTI images. See the description of this program for more details.")
     
     # save created volume
     save(output_data, args.output, example_header, args.force)
@@ -111,7 +121,7 @@ def getArguments(parser):
 
 def getParser():
     "Creates and returns the argparse parser object."
-    parser = argparse.ArgumentParser(description=__description__)
+    parser = argparse.ArgumentParser(description=__description__, formatter_class=RawTextHelpFormatter)
     parser.add_argument('output', help='Target volume.')
     parser.add_argument('inputs', nargs='+', help='Source volumes of same shape and dtype.')
     parser.add_argument('-s', dest='spacing', type=float, default=1, help='The voxel spacing of the newly created dimension. Default is 1.')
