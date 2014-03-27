@@ -69,6 +69,8 @@ def dc(input1, input2):
 def precision(input1, input2):
     """
     Precison.
+    In case of evaluation, pass the ground truth as second and the classification results
+    as first argument.
     
     Parameters
     ----------
@@ -107,7 +109,9 @@ def precision(input1, input2):
 
 def recall(input1, input2):
     """
-    Recall
+    Recall.
+    In case of evaluation, pass the ground truth as second and the classification results
+    as first argument.
     
     Parameters
     ----------
