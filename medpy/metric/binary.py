@@ -61,7 +61,10 @@ def dc(input1, input2):
     size_i1 = numpy.count_nonzero(input1)
     size_i2 = numpy.count_nonzero(input2)
     
-    dc = 2. * intersection / float(size_i1 + size_i2)
+    try:
+        dc = 2. * intersection / float(size_i1 + size_i2)
+    except ZeroDivisionError:
+        dc = 0.0
     
     return dc
 
@@ -103,9 +106,12 @@ def precision(input1, input2):
     tp = numpy.count_nonzero(input1 & input2)
     fp = numpy.count_nonzero(input1 & ~input2)
     
-    precison = tp / float(tp + fp)
+    try:
+        precision = tp / float(tp + fp)
+    except ZeroDivisionError:
+        precision = 0.0
     
-    return precison
+    return precision
 
 def recall(input1, input2):
     """
@@ -147,7 +153,10 @@ def recall(input1, input2):
     tp = numpy.count_nonzero(input1 & input2)
     fn = numpy.count_nonzero(~input1 & input2)
 
-    recall = tp / float(tp + fn)
+    try:
+        recall = tp / float(tp + fn)
+    except ZeroDivisionError:
+        recall = 0.0
     
     return recall
 
@@ -194,7 +203,7 @@ def hd(input1, input2, voxelspacing=None, connectivity=1):
     This is a real metric.
     """
     hd1 = __surface_distances(input1, input2, voxelspacing, connectivity).max()
-    hd2 = __surface_distances(input2, input1, voxelspacing, ).max()
+    hd2 = __surface_distances(input2, input1, voxelspacing, connectivity).max()
     hd = max(hd1, hd2)
     return hd
 
@@ -352,6 +361,12 @@ def __surface_distances(input1, input2, voxelspacing=None, connectivity=1):
             
     # binary structure
     footprint = generate_binary_structure(input1.ndim, connectivity)
+    
+    # test for emptyness
+    if 0 == numpy.count_nonzero(input1): 
+        raise RuntimeError('The first supplied image does not contain any binary object.')
+    if 0 == numpy.count_nonzero(input2): 
+        raise RuntimeError('The second supplied image does not contain any binary object.')    
             
     # extract only 1-pixel border line of objects
     input1_border = input1 - binary_erosion(input1, structure=footprint, iterations=1)
