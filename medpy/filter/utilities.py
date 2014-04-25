@@ -15,6 +15,7 @@ import numpy
 from scipy.ndimage import _ni_support
 
 # own modules
+from medpy.io import header
 
 # code
 #!TODO: Utilise the numpy.pad function that is available since 1.7.0. The numpy version should go inside this function, since it does not support the supplying of a template/footprint on its own.
@@ -110,6 +111,61 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
         output[slicer_to] = output[slicer_from][slicer_reverse]
 
     return return_value
+
+def intersection(i1, h1, i2, h2):
+        """
+        @phase: Development
+        Returns the intersecting parts of two images.
+        
+        Note that the returned new offset might be inaccurate up to 1/2 voxel size for
+        each dimension due to averaging.
+        
+        @param i1: the first image
+        @param h1: the first header
+        @param i2: the second image
+        @param h2: the second header
+        
+        @return v1, v2, o: the intersecting parts of the images and the new offsets of the sub-images 
+        @rtype ndarray, ndarray
+        """
+        
+        # compute image bounding boxes in real-world coordinates
+        os1 = numpy.asarray(header.get_offset(h1))
+        ps1 = numpy.asarray(header.get_pixel_spacing(h1))
+        bb1 = (os1, numpy.asarray(i1.shape) * ps1 + os1)
+        
+        
+        os2 = numpy.asarray(header.get_offset(h2))
+        ps2 = numpy.asarray(header.get_pixel_spacing(h2))
+        bb2 = (os2, numpy.asarray(i2.shape) * ps2 + os2)
+        
+        # compute intersection
+        ib = (numpy.maximum(bb1[0], bb2[0]), numpy.minimum(bb1[1], bb2[1]))
+        
+        # transfer intersection to respective image coordinates image
+        ib1 = [ ((ib[0] - os1) / numpy.asarray(ps1)).astype(numpy.int), ((ib[1] - os1) / numpy.asarray(ps1)).astype(numpy.int) ]
+        ib2 = [ ((ib[0] - os2) / numpy.asarray(ps2)).astype(numpy.int), ((ib[1] - os2) / numpy.asarray(ps2)).astype(numpy.int) ]
+        
+        # ensure that both sub-volumes are of same size (might be affected by rounding errors); only reduction allowed
+        s1 = ib1[1] - ib1[0]
+        s2 = ib2[1] - ib2[0]
+        d1 = s1 - s2
+        d1[d1 > 0] = 0
+        d2 = s2 - s1
+        d2[d2 > 0] = 0
+        ib1[1] -= d1
+        ib2[1] -= d2
+        
+        # compute new image offsets (in real-world coordinates); averaged to account for rounding errors due to world-to-voxel mapping
+        nos1 = ib1[0] * ps1 + os1 # real offset for image 1
+        nos2 = ib2[0] * ps2 + os2 # real offset for image 2
+        nos = numpy.average([nos1, nos2], 0)
+        
+        # build slice lists
+        sl1 = [slice(l, u) for l, u in zip(*ib1)]
+        sl2 = [slice(l, u) for l, u in zip(*ib2)]
+        
+        return i1[sl1], i2[sl2], nos
 
 def __make_footprint(input, size, footprint):
     "Creates a standard footprint element ala scipy.ndimage."

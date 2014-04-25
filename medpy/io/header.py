@@ -13,6 +13,7 @@ The supplied methods hide more complex usage of a number of third party modules.
 # build-in modules
 
 # third-party modules
+import numpy
 
 # own modules
 from ..core import Logger
@@ -194,7 +195,11 @@ def __get_offset_nibabel(hdr):
     import nibabel
     if type(hdr) == nibabel.nifti1.Nifti1Image or type(hdr) == nibabel.nifti1.Nifti1Pair: # The nifti image format supports offsets
         hdr_real = hdr.get_header()
-        return tuple([float(hdr_real['qoffset_x']), float(hdr_real['qoffset_y']), float(hdr_real['qoffset_z']), float(hdr_real['toffset'])][0:len(hdr.shape)])
+        offset = [float(hdr_real['qoffset_x']), float(hdr_real['qoffset_y']), float(hdr_real['qoffset_z']), float(hdr_real['toffset'])][0:len(hdr.shape)]
+        # multiply with sign of diagonal of voxel-to-world affine to account for axis directions
+        axis_directions = numpy.sign(numpy.diagonal(hdr.get_affine())) 
+        offset_corrected = numpy.multiply(offset, axis_directions[0:len(offset)])
+        return tuple(offset_corrected)
     else: # An Analyze or other image format
         dimensionality = sum(0 if 1 == x else 1 for x in hdr.shape) # required for Analyze format, which always assumes four dimensions, even if less present
         return tuple([0 for _ in range(len(hdr.shape))][0:dimensionality])
