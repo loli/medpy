@@ -34,7 +34,7 @@ import math
 # own modules
 
 # code
-def regional_probability_map(graph, (probability_map)):
+def regional_probability_map(graph, (probability_map, alpha)):
     """
     Setting the regional term with a probability map.
     
@@ -44,7 +44,8 @@ def regional_probability_map(graph, (probability_map)):
     (which corresponds to the background).
     """
     probability_map = scipy.asarray(probability_map)
-    probabilities = numpy.vstack([probability_map.flat, (1 - probability_map).flat]).T
+    probabilities = numpy.vstack([(probability_map * alpha).flat,
+                                  ((1 - probability_map) * alpha).flat]).T
     graph.set_tweights_all(probabilities)
 
 def boundary_maximum_linear(graph, (gradient_image, spacing)):

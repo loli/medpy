@@ -25,7 +25,7 @@ supplied with list/tuple of images instead of an image. in which case they are c
 co-registered and the feature is extracted from all of them independently.
 
 @author Oskar Maier
-@version r0.2.3
+@version r0.3.3
 @since 2013-08-24
 @status Release
 """
@@ -37,6 +37,7 @@ import numpy
 from scipy.ndimage.filters import gaussian_filter, gaussian_gradient_magnitude,\
     median_filter
 from scipy.interpolate.interpolate import interp1d
+from scipy.ndimage.morphology import distance_transform_edt
 from scipy.ndimage._ni_support import _get_output
 
 # own modules
@@ -189,6 +190,37 @@ def indices(image, voxelspacing = None, mask = slice(None)):
 
     return join(*map(lambda (a, vs): a[mask].ravel() * vs, zip(numpy.indices(image.shape), voxelspacing)))
     
+def shifted_mean_gauss(image, offset = None, sigma = 5, voxelspacing = None, mask = slice(None)):
+    """
+    !TODO: Write description: mean gauss over area at point offset of current voxel
+    """
+    return __extract_feature(__extract_shifted_mean_gauss, image, mask, offset = offset, sigma = sigma, voxelspacing = voxelspacing)
+    
+def mask_distance(image, voxelspacing = None, mask = slice(None)):
+    """
+    Computes the distance of each point under the mask to the mask border taking the
+    voxel-spacing into account.
+    
+    Note that this feature is independent of the actual image content, but depends
+    solely the mask image. Therefore always a one-dimensional feature is returned,
+    even if a multi-spectral image has been supplied.
+    
+    If no mask has been supplied, the distances to the image borders are returned. 
+    
+    @param image a single image or a list/tuple of images (for multi-spectral case)
+    @type image ndarray | list of ndarrays | tuple of ndarrays
+    @param voxelspacing the side-length of each voxel
+    @type voxelspacing sequence of floats    
+    @param mask a binary mask for the image
+    @type mask ndarray
+    
+    @return the distances
+    @type ndarray    
+    """
+    if type(image) == tuple or type(image) == list:
+        image = image[0]
+        
+    return __extract_mask_distance(image, mask = mask, voxelspacing = voxelspacing)
     
 def local_mean_gauss(image, sigma = 5, voxelspacing = None, mask = slice(None)):
     """
@@ -507,6 +539,44 @@ def __extract_guassian_gradient_magnitude(image, mask = slice(None), sigma = 1, 
     sigma = __create_structure_array(sigma, voxelspacing)
         
     return __extract_intensities(gaussian_gradient_magnitude(image, sigma), mask)
+    
+def __extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma = 1, voxelspacing = None):
+    """
+    Internal, single-image version of @see shifted_mean_gauss
+    """    
+    # set voxel spacing
+    if voxelspacing is None:
+        voxelspacing = [1.] * image.ndim
+    # set offset
+    if offset is None:
+        offset = [0] * image.ndim
+    
+    # determine gaussian kernel size in voxel units
+    sigma = __create_structure_array(sigma, voxelspacing)
+    
+    # compute smoothed version of image
+    smoothed = gaussian_filter(image, sigma)
+    
+    shifted = numpy.zeros_like(smoothed)
+    in_slicer = []
+    out_slicer = []
+    for o in offset:
+        in_slicer.append(slice(o, None))
+        out_slicer.append(slice(None, -1 * o))
+    shifted[out_slicer] = smoothed[in_slicer]
+    
+    return __extract_intensities(shifted, mask)
+    
+def __extract_mask_distance(image, mask = slice(None), voxelspacing = None):
+    """
+    Internal, single-image version of @see mask_distance
+    """
+    if isinstance(mask, slice):
+        mask = numpy.ones(image.shape, numpy.bool)
+    
+    distance_map = distance_transform_edt(mask, sampling=voxelspacing)
+    
+    return __extract_intensities(distance_map, mask)
     
 def __extract_local_mean_gauss(image, mask = slice(None), sigma = 1, voxelspacing = None):
     """

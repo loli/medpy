@@ -17,7 +17,7 @@ from histogram import fuzzy_histogram, triangular_membership, trapezoid_membersh
                       gaussian_membership, sigmoidal_difference_membership
 from intensity import centerdistance, centerdistance_xdminus1, guassian_gradient_magnitude, \
                       hemispheric_difference, indices, intensities, local_histogram, local_mean_gauss, \
-                      median
+                      median, shifted_mean_gauss, mask_distance
 from utilities import append, join, normalize, normalize_with_model
 #!experimental, therefore not directly included
 #from texture import coarseness, contrast, directionality, efficient_local_avg, efficient_local_avg3d, running_total, running_total3d, tamura
