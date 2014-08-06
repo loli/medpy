@@ -90,8 +90,6 @@ If None, then max_features=n_features.'
     print '\nGeneral tree information:'
     print '\tMean/median/max/min tree depth: {} / {} / {} / {}'.format(numpy.mean(td), numpy.median(td), numpy.max(td), numpy.min(td))
     print '\tMean/median/max/min tree size (in nodes incl leafs): {} / {} / {} / {}'.format(numpy.mean(ts), numpy.median(ts), numpy.max(ts), numpy.min(ts))
-
-    sys.exit(0)
     
     #print '\nFeature\tnode appearances:'
     #for fidx, val in enumerate(numpy.sum(fu, 1)):
@@ -175,6 +173,8 @@ If None, then max_features=n_features.'
         for n, imp in zip(features_unique, grouped_by_feature):
             f.write('{}\t{}\n'.format(n, imp))
     print 'done.'
+
+    sys.exit(0)
 
     print 'Writing rdf/et node usage...',
     etocc = etocc[:numpy.nonzero(etocc)[0][-1]+1]
