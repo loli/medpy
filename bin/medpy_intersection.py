@@ -25,7 +25,6 @@ import logging
 import os
 
 # third-party modules
-import numpy
 
 # path changes
 
