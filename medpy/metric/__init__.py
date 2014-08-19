@@ -22,7 +22,7 @@ Vol.28, No.8, August 2009
 __all__ = []
 
 # if __all__ is not set, only the following, explicit import statements are executed
-from binary import dc, hd, asd, assd, precision, recall
+from binary import dc, jc, hd, asd, assd, precision, recall
 from surface import Surface
 from volume import Volume
 from histogram import *

@@ -66,6 +66,45 @@ def dc(input1, input2):
     return dc
 
 
+def jc(input1, input2):
+    """
+    Jaccard coefficient
+    
+    Computes the Jaccard coefficient between the binary
+    objects in two images.
+    
+    
+    Parameters
+    ----------
+    input1: array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    input2: array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    
+    Returns
+    -------
+    jc: float
+        The Jaccard coefficient between the object(s) in `input1` and the
+        object(s) in `input2`. It ranges from 0 (no overlap) to 1 (perfect overlap).
+        
+    Notes
+    -----
+    This is a real metric.
+    """
+    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
+    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    
+    intersection = numpy.count_nonzero(input1 & input2)
+    union = numpy.count_nonzero(input1 | input2)
+    
+    jc = float(intersection) /  float(union)
+    
+    return jc
+
+
+
 def precision(input1, input2):
     """
     Precison.

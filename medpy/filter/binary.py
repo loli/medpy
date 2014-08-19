@@ -19,7 +19,7 @@ Functions:
 from operator import  lt, le, gt, ge, ne, eq
 
 # third-party modules
-import numpy 
+import numpy as np
 from scipy.ndimage.measurements import label
 
 # own modules
@@ -39,7 +39,7 @@ def size_threshold(img, thr, comp='lt', structure = None):
     Parameters
     ----------
     img : array_like
-        Array whose objects should be removed. Will be cast to type numpy.bool.
+        Array whose objects should be removed. Will be cast to type np.bool.
     thr : int
         Integer defining the threshold size of the binary objects to remove.
     comp : {'lt', 'le', 'gt', 'ge', 'ne', 'eq'}
@@ -69,7 +69,7 @@ def size_threshold(img, thr, comp='lt', structure = None):
     
     operators = {'lt': lt, 'le': le, 'gt': gt, 'ge': ge, 'eq': eq, 'ne': ne}
     
-    img = numpy.asarray(img).astype(numpy.bool)
+    img = np.asarray(img).astype(np.bool)
     if comp not in operators:
         raise ValueError("comp must be one of {}".format(operators.keys()))
     comp = operators[comp]
@@ -77,7 +77,7 @@ def size_threshold(img, thr, comp='lt', structure = None):
     labeled_array, num_features = label(img, structure)
     for oidx in range(1, num_features + 1):
         omask = labeled_array == oidx
-        if comp(numpy.count_nonzero(omask), thr):
+        if comp(np.count_nonzero(omask), thr):
             img[omask] = False
             
     return img
@@ -90,17 +90,17 @@ def largest_connected_component(img, structure = None):
     values where the largest connected component is situated.
     
     @param img A binary image
-    @type numpy.ndarray
+    @type np.ndarray
     @param structure A structuring element that defines the connectivity. Structure must be symmetric. If no structuring element is provided, one is automatically generated with a squared connectivity equal to one.
-    @type numpy.ndarray
+    @type np.ndarray
     
     @return A binary image
-    @rtype numpy.ndarray
+    @rtype np.ndarray
     """   
     labeled_array, num_features = label(img, structure)
-    component_sizes = [numpy.count_nonzero(labeled_array == label_idx) for label_idx in range(1, num_features + 1)]
-    largest_component_idx = numpy.argmax(component_sizes) + 1
+    component_sizes = [np.count_nonzero(labeled_array == label_idx) for label_idx in range(1, num_features + 1)]
+    largest_component_idx = np.argmax(component_sizes) + 1
 
-    out = numpy.zeros(img.shape, numpy.bool)  
+    out = np.zeros(img.shape, np.bool)  
     out[labeled_array == largest_component_idx] = True
     return out
