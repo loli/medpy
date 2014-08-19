@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# version: 0.1.2
+# version: 0.1.3
 
 import os
 # setuptools >= 0.7 supports 'python setup.py develop'
@@ -20,7 +20,7 @@ maxflow = Extension('medpy.graphcut.maxflow',
                     extra_compile_args = ['-O0'])
 
 setup(name='MedPy',
-      version='0.1.0', # major.minor.micro
+      version='0.2.0', # major.minor.micro
       description='Medical image processing in Python',
       author='Oskar Maier',
       author_email='oskar.maier@googlemail.com',
@@ -41,7 +41,7 @@ setup(name='MedPy',
           #'Operating System :: MacOS :: MacOS X',
           #'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
-	  'Operating System :: Unix',
+	      'Operating System :: Unix',
           'Programming Language :: Python',
           'Programming Language :: C++',
           'Topic :: Scientific/Engineering :: Medical Science Apps.',
@@ -83,17 +83,16 @@ setup(name='MedPy',
 	'bin/medpy_dicom_slices_to_volume.py',    
 	'bin/medpy_dicom_to_4D.py',             
 	'bin/medpy_diff.py',
-	'bin/medpy_evaluate_miccai2007.py',
     'bin/medpy_extract_contour.py',
 	'bin/medpy_extract_min_max.py',     
 	'bin/medpy_extract_sub_volume_auto.py',     
 	'bin/medpy_extract_sub_volume_by_example.py',        
 	'bin/medpy_extract_sub_volume.py',
 	'bin/medpy_gradient.py',
-	'bin/medpy_graphcut_label.py',    
 	'bin/medpy_graphcut_label_bgreduced.py',   
 	'bin/medpy_graphcut_label_w_regional.py', 
 	'bin/medpy_graphcut_label_wsplit.py',
+    'bin/medpy_graphcut_label.py',
 	'bin/medpy_graphcut_voxel.py',   
 	'bin/medpy_grid.py',   
 	'bin/medpy_info.py',  
@@ -102,8 +101,8 @@ setup(name='MedPy',
 	'bin/medpy_itk_gradient.py',
 	'bin/medpy_itk_smoothing.py',
 	'bin/medpy_itk_watershed.py',
+    'bin/medpy_join_masks.py',
 	'bin/medpy_join_xd_to_xplus1d.py',
-    'bin/medpy_join_masks.py',          
 	'bin/medpy_merge.py',    
 	'bin/medpy_morphology.py',  
 	'bin/medpy_reduce.py',  

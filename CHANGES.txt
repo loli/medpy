@@ -1,1 +1,2 @@
+v0.2.0, 2014-08-19 -- Little clean-up, many new functionalities; in generally simpler structure and usage.
 v0.1.0, 2013-04-15 -- Initial release.

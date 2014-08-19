@@ -3,9 +3,9 @@
 Global and local noise estimator filters.
 
 @author Oskar Maier
-@version r0.1.0
+@version d0.1.1
 @since 2014-03-20
-@status Release
+@status Development
 """
 
 # build-in module

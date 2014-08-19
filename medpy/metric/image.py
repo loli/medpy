@@ -43,6 +43,10 @@ def mutual_information(i1, i2, bins=256):
     A maximization of the mutual information is equal to a minimization of the joint
     entropy.
     
+    Note
+    ----
+    @see medpy.filter.ssd() for another image metric.
+    
     @param i1 the first image
     @type i1 array-like sequence
     @param i2 the second image

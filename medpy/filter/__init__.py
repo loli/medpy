@@ -21,9 +21,9 @@ from smoothing import anisotropic_diffusion, gauss_xminus1d
 from label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
 from houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
 from otsu import otsu
-from utilities import pad, intersection
+from utilities import pad, intersection, xminus1d
+from noise import immerkaer, immerkaer_local, separable_convolution
 
 from IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
-from LabelImageStatistics import LabelImageStatistics
 from MinimaExtraction import local_minima
 
