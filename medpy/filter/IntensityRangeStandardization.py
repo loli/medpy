@@ -19,6 +19,137 @@ __description__ = "A learning method to align the intensity ranges of images."
 
 # code
 class IntensityRangeStandardization (object):
+    """
+    Class to standardize intensity ranges between a number of images.
+    
+    Short description:
+    Often images containing similar objects or scenes have different intensity ranges
+    that make it difficult to compare them manually as well as to process them
+    further.
+    
+    IntensityRangeStandardization offers a way to transform a number of such images
+    intensity ranges to a common standard intensity space without any loss of
+    information using a multi-segment linear transformation model.
+    
+    Once learned, this model can be applied to other, formerly unseen images to map
+    them to the same standard intensity space.
+    
+    Application example:
+    We have a number of similar images with varying intensity ranges. To make them
+    comparable, we would like to transform them to a common intensity space. Thus we
+    run:
+    
+        from medpy.filter import IntensityRangeStandardization
+        irs = IntensityRangeStandardization()
+        trained_model, transformed_images = irs.train_transform(images)
+        
+    Let us assume we now obtain another, new image, that we would like to make
+    comparable to the others. As long as it does not differ to much from these, we
+    can simply call:
+        
+        transformed_image = irs.transform(new_image)
+        
+    For many application, not all images are already available at the time of
+    execution. It would therefore be good to be able to preserve a once trained
+    model. The solution is to just pickle the once trained model:
+    
+        import pickle
+        with open('my_trained_model.pkl', 'wb') as f:
+            pickle.dump(irs, f)
+            
+    And load it again when required with:
+    
+        with open('my_trained_model.pkl', 'r') as f:
+            irs = pickle.load(f)
+            
+    Concept of similar images:
+    IntensityRangeStandardization is limited to similar images. Images containing
+    different object or different compositions of objects are not suitable to be
+    transformed to a common intensity space (and it would furthermore not make much
+    sense).
+    
+    A typical application of IntensityRangeStandardization are MRI images showing the
+    same body region. These often have different intensity ranges, even when acquired
+    from the same patient and using the same scanner. For further processing, e.g.
+    for training a classifier, they have to be mapped to a common intensity space.
+    
+    Failure of the transformation:
+    The method implemented in IntensityRangeStandardization ensures that no
+    information is lost i.e. a lossless transformation is performed. This can be
+    assured when there exists a one-to-one mapping between the images original
+    intensity values and their values mapped to the standard intensity space.
+    
+    But since the transformation model is trained on, and the standard intensity
+    space range selected over the training images, this can not be guaranteed for all
+    formerly unseen image. If they differ greatly from the training set images, a
+    lossless transformation can not be assured anymore. In this case the transform()
+    method will throw an InformationLossException.
+    
+    Should this happen, the model needs to be re-trained with the original training
+    images and additionally the images which caused the failure. Since this will lead
+    to a new intensity standard space, all already transformed images have to be
+    processed again.
+    
+    Setting the training parameters:
+    The method comes with a set of default parameters, that are suitable for most
+    cases. But for some special cases, it might be better to set them on your own. Ti
+    understand the working of the parameters, it is recommended to read the detailed
+    method description first.
+    
+    The method depends of three parameters:
+    cutoffp, i.e. the cut-off percentiles
+        These are used to the define the intensity outliers, both during training and
+        image transformation. The default values are usualy a good choice.
+        (in [1] these are called the minimum and maximum percentile values pc1 and pc2 respectively)
+    landmarkp, i.e. the landmark percentiles
+        These percentiles define the landmark positions. The more supplied, the more
+        exact but less general becomes the model. It is common to supply equally
+        spaced percentiles between 0 and 100.
+        (in [1] these are called the landmark locations mu_1, .., mu_l)
+    strange, i.e. the standard intensity space range
+        These two intensity values define roughly the standard intensity space (or
+        common intensity space of the images; or even target intensity space) to
+        which each images intensities are mapped. This space can be supplied, but it
+        is usually recommended to let the method select it automatically during the
+        training process. It is additionally possible to supply only the lower or
+        upper range border and set the other to ''auto'', in which case the method
+        chooses the range automatically, but not the position. 
+        (in [1] these are called the minimum and maximum intensities on the standard scale of the IOI s1 resp. s2)
+    
+    
+    Details of the method:
+    In the following the method is described in some more detail. For even more
+    information see [1].
+         
+    Essentially the method is based on a multi-segment linear transformation model. A
+    standard intensity space (or common intensity space) is defined by an intensity
+    value range ''stdrange''.
+    During the training phase, the intensity values at certain cut-off percentiles of
+    each image are computed and a single-segment linear mapping from them to the
+    standard intensity space range limits created. Then the images intensity values
+    at a number of landmark percentiles are extracted and passed to the linear
+    mapping to be transfered roughly to the standard intensity space. The mean of all
+    these mapped landmark intensities form the model learned.
+      
+    When presented with an image to transform, these images intensity values are
+    extracted at the cut-off percentile as well as at the landmark percentile
+    positions. This results in a number of segments. Using these and the
+    corresponding standard intensity space range values and learned mean landmark
+    values, a multi-segment linear transformation model is created for the image.
+    This is then applied to the images intensity values to map them to the standard
+    intensity space.
+    
+    Outliers, i.e. the images intensity values that lie outside of the cut-off
+    percentiles, are treated separately. They are transformed like the first resp.
+    last segmented of the transformation model. Not that this means the transformed
+    images intensity values do not always lie inside the standard intensity space
+    range, but are fitted as best as possible inside.
+    
+    The implementation is based on:
+    [1] Nyul, L.G.; Udupa, J.K.; Xuan Zhang, "New variants of a method of MRI scale
+        standardization," Medical Imaging, IEEE Transactions on , vol.19, no.2, pp.143-150,
+        Feb. 2000
+    """
     
     # static member variables
     L2 = [50]
@@ -27,136 +158,7 @@ class IntensityRangeStandardization (object):
     
     def __init__(self, cutoffp = (1, 99), landmarkp = L4, stdrange = 'auto'):
         """
-        Class to standardize intensity ranges between a number of images.
-        
-        Short description:
-        Often images containing similar objects or scenes have different intensity ranges
-        that make it difficult to compare them manually as well as to process them
-        further.
-        
-        IntensityRangeStandardization offers a way to transform a number of such images
-        intensity ranges to a common standard intensity space without any loss of
-        information using a multi-segment linear transformation model.
-        
-        Once learned, this model can be applied to other, formerly unseen images to map
-        them to the same standard intensity space.
-        
-        Application example:
-        We have a number of similar images with varying intensity ranges. To make them
-        comparable, we would like to transform them to a common intensity space. Thus we
-        run:
-        
-            from medpy.filter import IntensityRangeStandardization
-            irs = IntensityRangeStandardization()
-            trained_model, transformed_images = irs.train_transform(images)
-            
-        Let us assume we now obtain another, new image, that we would like to make
-        comparable to the others. As long as it does not differ to much from these, we
-        can simply call:
-            
-            transformed_image = irs.transform(new_image)
-            
-        For many application, not all images are already available at the time of
-        execution. It would therefore be good to be able to preserve a once trained
-        model. The solution is to just pickle the once trained model:
-        
-            import pickle
-            with open('my_trained_model.pkl', 'wb') as f:
-                pickle.dump(irs, f)
-                
-        And load it again when required with:
-        
-            with open('my_trained_model.pkl', 'r') as f:
-                irs = pickle.load(f)
-                
-        Concept of similar images:
-        IntensityRangeStandardization is limited to similar images. Images containing
-        different object or different compositions of objects are not suitable to be
-        transformed to a common intensity space (and it would furthermore not make much
-        sense).
-        
-        A typical application of IntensityRangeStandardization are MRI images showing the
-        same body region. These often have different intensity ranges, even when acquired
-        from the same patient and using the same scanner. For further processing, e.g.
-        for training a classifier, they have to be mapped to a common intensity space.
-        
-        Failure of the transformation:
-        The method implemented in IntensityRangeStandardization ensures that no
-        information is lost i.e. a lossless transformation is performed. This can be
-        assured when there exists a one-to-one mapping between the images original
-        intensity values and their values mapped to the standard intensity space.
-        
-        But since the transformation model is trained on, and the standard intensity
-        space range selected over the training images, this can not be guaranteed for all
-        formerly unseen image. If they differ greatly from the training set images, a
-        lossless transformation can not be assured anymore. In this case the transform()
-        method will throw an InformationLossException.
-        
-        Should this happen, the model needs to be re-trained with the original training
-        images and additionally the images which caused the failure. Since this will lead
-        to a new intensity standard space, all already transformed images have to be
-        processed again.
-        
-        Setting the training parameters:
-        The method comes with a set of default parameters, that are suitable for most
-        cases. But for some special cases, it might be better to set them on your own. Ti
-        understand the working of the parameters, it is recommended to read the detailed
-        method description first.
-        
-        The method depends of three parameters:
-        cutoffp, i.e. the cut-off percentiles
-            These are used to the define the intensity outliers, both during training and
-            image transformation. The default values are usualy a good choice.
-            (in [1] these are called the minimum and maximum percentile values pc1 and pc2 respectively)
-        landmarkp, i.e. the landmark percentiles
-            These percentiles define the landmark positions. The more supplied, the more
-            exact but less general becomes the model. It is common to supply equally
-            spaced percentiles between 0 and 100.
-            (in [1] these are called the landmark locations mu_1, .., mu_l)
-        strange, i.e. the standard intensity space range
-            These two intensity values define roughly the standard intensity space (or
-            common intensity space of the images; or even target intensity space) to
-            which each images intensities are mapped. This space can be supplied, but it
-            is usually recommended to let the method select it automatically during the
-            training process. It is additionally possible to supply only the lower or
-            upper range border and set the other to ''auto'', in which case the method
-            chooses the range automatically, but not the position. 
-            (in [1] these are called the minimum and maximum intensities on the standard scale of the IOI s1 resp. s2)
-        
-        
-        Detail of the method:
-        In the following the method is described in some more detail. For even more
-        information see [1].
-             
-        Essentially the method is based on a multi-segment linear transformation model. A
-        standard intensity space (or common intensity space) is defined by an intensity
-        value range ''stdrange''.
-        During the training phase, the intensity values at certain cut-off percentiles of
-        each image are computed and a single-segment linear mapping from them to the
-        standard intensity space range limits created. Then the images intensity values
-        at a number of landmark percentiles are extracted and passed to the linear
-        mapping to be transfered roughly to the standard intensity space. The mean of all
-        these mapped landmark intensities form the model learned.
-          
-        When presented with an image to transform, these images intensity values are
-        extracted at the cut-off percentile as well as at the landmark percentile
-        positions. This results in a number of segments. Using these and the
-        corresponding standard intensity space range values and learned mean landmark
-        values, a multi-segment linear transformation model is created for the image.
-        This is then applied to the images intensity values to map them to the standard
-        intensity space.
-        
-        Outliers, i.e. the images intensity values that lie outside of the cut-off
-        percentiles, are treated separately. They are transformed like the first resp.
-        last segmented of the transformation model. Not that this means the transformed
-        images intensity values do not always lie inside the standard intensity space
-        range, but are fitted as best as possible inside.
-        
-        The implementation is based on:
-        [1] Nyul, L.G.; Udupa, J.K.; Xuan Zhang, "New variants of a method of MRI scale
-            standardization," Medical Imaging, IEEE Transactions on , vol.19, no.2, pp.143-150,
-            Feb. 2000
-             
+        See class description for more details.
         
         @param cutoffp lower and upper cut-off percentiles to exclude outliers
         @type cutoffp 2-tuple of numbers
@@ -351,7 +353,7 @@ class IntensityRangeStandardization (object):
         \f]
         the set formed by the two cut-off percentiles \f$cop_l\f$ and \f$cop_u\f$ and the
         landmark percentiles \f$lp_1, ..., lp_n\f$. The corresponding intensity values of
-        an image \f$i\inI\f$ are then
+        an image \f$i\in I\f$ are then
         \f[
             V_i = (v_{i,1}, v_{i,2}, ..., v_{i,n+2})
         \f]
