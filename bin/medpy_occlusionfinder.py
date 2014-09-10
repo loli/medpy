@@ -119,6 +119,7 @@ def main():
         thin, thin_h = load(args.cen)
         rem = int(args.rem)
         thin = thin.astype(numpy.bool)
+        vesselness, vesselness_h = load(args.ves)
         
         vorher = numpy.zeros(thin.shape)
         counter = 0
@@ -126,11 +127,11 @@ def main():
         while not (vorher==thin).all():
             counter = counter + 1
             print ' '
-            print 'Counter WHILE-SCHLEIFE: {}'.format(counter)
+            print 'Counter WHILE-SCHLEIFE - Remove Algorithm: {}'.format(counter)
             
             
             vorher = deepcopy(thin)
-            thin = remove_short_branch(thin, rem)
+            thin = remove_short_branch_vesselness(thin, vesselness, rem)
 
         thin = numpy.asarray(thin, dtype=numpy.bool)
    

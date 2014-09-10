@@ -13,7 +13,7 @@ Created on Aug 25, 2014
 # build-in modules
 import pylab
 from scipy.ndimage.measurements import label, histogram
-
+from copy import deepcopy
 
 # third-party modules
 import numpy
@@ -317,6 +317,10 @@ def gradient_branch(thin, value, number_of_points, seg, brainmask, voxelspacing,
         
         
         #check if point in mask
+        if not check_border(branch_points[0], thin):
+            continue
+        
+        
         if not check_inside_mask(branch_points,brainmask):
             continue
         
@@ -326,8 +330,7 @@ def gradient_branch(thin, value, number_of_points, seg, brainmask, voxelspacing,
             continue
         
         
-        #if not check_border(branch_points[0], thin):
-        #    continue
+
         
         #Gradientbestimmung
         if len(branch_values) <= 11:
@@ -348,9 +351,9 @@ def gradient_branch(thin, value, number_of_points, seg, brainmask, voxelspacing,
         #gra=numpy.delete(gra,-1)
         
         if outsidevalues <= insidevalues*0.3 \
-            and durchschnittliche_vesselness*2/3<= numpy.mean(branch_values) \
-            and max(gra)>=3/2*schwellwert \
-            and check_durchmesser(seg,branch_points[-1]): #\
+            and durchschnittliche_vesselness*2/3.<= numpy.mean(branch_values) \
+            and max(gra)>=3/2.*schwellwert \
+            and check_durchmesser(seg,branch_points[-1]):
             #and min(gra)>-15:
             arg=branch_points[0]
             occlusion_image[arg[0]-3:arg[0]+4,arg[1]-3:arg[1]+4,arg[2]-3:arg[2]+4]=1
@@ -442,7 +445,7 @@ def check_distance_mask(branch_point, brainmask, voxelspacing, distance):
     
     else:
         #Zu dicht am Rand, kein Okklusionskadidat
-        print 'False'
+        print 'Zu dicht am Maskenrand'
         print branch_point
         return False
     '''
@@ -537,6 +540,67 @@ def return_value(listed_points, value_image):
         value_list.append( pylab.round_( value_image[ point[0] ][ point[1] ][ point[2] ] ) )
     return value_list        
 
+def remove_short_branch_vesselness(thinned_image, vesselness, branches_shorter_than):
+    
+    if thinned_image.max != 1 or thinned_image.dtype == numpy.bool: 
+        thinned_image = numpy.asarray(thinned_image, dtype=numpy.bool)
+        thinned_image = numpy.asarray(thinned_image, dtype=numpy.int)
+
+    thinned_image2 = deepcopy(thinned_image)
+    image_neighbor = count_neighbor( thinned_image, numpy.ones((3,3,3)) )
+
+    kreuzungspunkte = numpy.nonzero( image_neighbor >= 3 )
+
+    for iterate_branches in range(0,numpy.size(kreuzungspunkte,1)): #ueber alle kreuzungspunkte iterieren
+        temp_branch_point = ( kreuzungspunkte[0][iterate_branches] , kreuzungspunkte[1][iterate_branches] , kreuzungspunkte[2][iterate_branches])
+        list_branch_points = return_short_branches( thinned_image , image_neighbor , temp_branch_point , 4*branches_shorter_than )
+
+        for number_of_branches in range(0, len( list_branch_points ) ):
+            #wenn die Minimallaenge unterschritten wird, dann wird auf jeden fall geloescht
+            if len( list_branch_points [ number_of_branches ]) <= branches_shorter_than:
+                for number_of_branchpoints in range(0, len( list_branch_points [ number_of_branches ] )):
+                    thinned_image2[ list_branch_points [ number_of_branches ][ number_of_branchpoints ] ] = 0
+            else:
+                #Bestimmen der Durchschnittsvesselness der letzten 3 Punkte
+                vesselvalue1 = []
+                for index in range(-3,0):
+                    vesselvalue1.append(vesselness[ list_branch_points [ number_of_branches ][ index ] ])
+                
+                
+                #########################################numpy.mean(vesselvalue1)
+                listofneighbors = return_neighbor(thinned_image, temp_branch_point, 1)
+                astwerte=0
+                counter=0
+                abzweigender_arm=[]
+                for index2 in range(0,len(listofneighbors)):
+                    if not (list_branch_points[number_of_branches][0] == listofneighbors[index2]):
+                        #abzweigende_arme = return_short_branches( thinned_image , image_neighbor , temp_branch_point , branches_shorter_than )
+                        list_point=[temp_branch_point]
+                        #print 'list_branch_points[number_of_branches][0] {}'.format(list_branch_points[number_of_branches][0])
+                        #print 'listofneighbors[index2] {}'.format(listofneighbors[index2])
+                        abzweigender_arm = give_branch(thinned_image, image_neighbor, list_point, listofneighbors[index2], 4)
+                        #print abzweigender_arm
+                        
+                        if (not abzweigender_arm is None) and len(abzweigender_arm)>=3:
+                            astwerte += numpy.mean(return_value(abzweigender_arm, vesselness))
+                            counter+=1
+                
+                if not counter == 0:
+                    vesselvalue2=astwerte/counter
+                    #print 'counter {}'.format(counter)
+                    #print 'vesselvalue2 {}'.format(vesselvalue2)
+                    #print 'vesselvalue1 {}'.format(numpy.mean(vesselvalue1))
+                else:
+                    continue
+                if ((not vesselvalue2 == 0) and vesselvalue2*(1/2.) >= numpy.mean(vesselvalue1)):
+                    #print 'ES WIRD GELOESCHTTTTTT'
+                    #print list_branch_points [ number_of_branches ]
+                    for number_of_branchpoints in range(0, len( list_branch_points [ number_of_branches ] )):
+                        thinned_image2[ list_branch_points [ number_of_branches ][ number_of_branchpoints ] ] = 0
+                
+    return thinned_image2
+
+
 def remove_short_branch(thinned_image, branches_shorter_than):
     
     if thinned_image.max != 1 or thinned_image.dtype == numpy.bool: 
@@ -607,3 +671,32 @@ def search_branch(thinned_image, image_neighbor, list_point, next_point, max_bra
         
         else:
             return
+        
+def give_branch(thinned_image, image_neighbor, list_point, next_point, max_branch_length):
+    
+    list_point.append(next_point)
+        
+    if(1 == max_branch_length):
+        #wenn keine Schritte mehr, dann wird Suche beendet
+        list_point.pop(0)
+        return list_point
+           
+    else:
+        if(2 == image_neighbor[next_point]):#wenn nur zwei nachbarn, dann ist alles gut und es geht los
+        
+            nachbarn = return_neighbor(thinned_image, next_point, 1)
+            
+            
+            if(nachbarn[0] not in list_point):
+                return give_branch(thinned_image, image_neighbor, list_point, nachbarn[0], max_branch_length-1)
+                  
+            elif(nachbarn[1] not in list_point):
+                return give_branch(thinned_image, image_neighbor, list_point, nachbarn[1], max_branch_length-1)
+            
+            else:
+                #Ring detektiert, oder?!
+                return
+    
+        else:
+            list_point.pop(0)
+            return list_point
