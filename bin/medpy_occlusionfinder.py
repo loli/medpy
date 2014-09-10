@@ -152,8 +152,8 @@ def main():
         value, value_h = load(args.ves)
         mra, mra_h = load(args.mra)
         seg, seg_h = load(args.seg)
+        msk, msk_h = load(args.msk)
         value = ndimage.gaussian_filter(value, sigma=0.7)
-        #save(value,'/home/kleinfeld/DataBert2Kleinfeld/Results/OcclusionPhantoms/shelltest/3000102/vesselness_gauss0_7.nii.gz',value_h)
         
         laenge_des_branch = int(args.com) 
         
@@ -161,7 +161,7 @@ def main():
         
         
         print 'Vesselness: '
-        bild=gradient_branch(thin, numpy.asarray(value,numpy.float32), laenge_des_branch, seg, branchp)
+        bild=gradient_branch(thin, numpy.asarray(value,numpy.float32), laenge_des_branch, seg, msk, get_pixel_spacing(mra_h), branchp)
         #print 'MRA: '
         #gradient_branch(thin, numpy.asarray(mra,value.dtype), laenge_des_branch)
         save(bild, args.out, mra_h, args.force)

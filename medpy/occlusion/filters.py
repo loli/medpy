@@ -20,7 +20,7 @@ import numpy
 
 # own modules
 from medpy.filter.image import sum_filter
-
+from medpy.metric.binary import __surface_distances
 
 
 # code
@@ -249,7 +249,7 @@ def check_ob_nachbar(point1, point2):
     else:
         return True
    
-def gradient_branch(thin, value, number_of_points, seg, stopf=0):
+def gradient_branch(thin, value, number_of_points, seg, brainmask, voxelspacing, occlusionpoint=0):
     endpoints_of_branches = numpy.nonzero(1 == count_neighbor(thin ,numpy.ones((3,3,3)))) #alle Endpunkte ermitteln
 
     alle_vesselness_aufsummiert = 0
@@ -259,6 +259,10 @@ def gradient_branch(thin, value, number_of_points, seg, stopf=0):
     occlusion_image = numpy.zeros(thin.shape)
     speicher=[]
     
+    #calculating skin of mask
+    maskskin=count_neighbor(brainmask, numpy.ones((3,3,3)))
+    maskskin[maskskin>=26]=0
+    maskskin[maskskin>=1]=1
     
     for tmp1 in range(numpy.size(endpoints_of_branches[0])):
 
@@ -272,7 +276,7 @@ def gradient_branch(thin, value, number_of_points, seg, stopf=0):
 
        
         
-        if stopf in branch_points.tolist():
+        if occlusionpoint in branch_points.tolist():
             print 'Occlusionpoints'
             print branch_values
        
@@ -308,20 +312,22 @@ def gradient_branch(thin, value, number_of_points, seg, stopf=0):
         branch_points = last_n_points_of_branch(thin , point, number_of_points) #alle Astpunkte vom Ende bis maximale Anzahl oder bis inklusive Kreuzpunkt
         branch_values = return_value(branch_points,value)
         
-        
-        if stopf in branch_points.tolist():
-            h=0
-            #print '#######'
-            #print 'Occlusionvalues'
-            #print branch_values
-            #print numpy.mean(branch_values)
-            #print '#######'
       
         liste_mean_values.append(numpy.mean(branch_values))
         
         
-        if not check_border(branch_points[0], thin):
+        #check if point in mask
+        if not check_inside_mask(branch_points,brainmask):
             continue
+        
+        
+        distance = 2
+        if not check_distance_mask(branch_points[0], maskskin, voxelspacing, distance):
+            continue
+        
+        
+        #if not check_border(branch_points[0], thin):
+        #    continue
         
         #Gradientbestimmung
         if len(branch_values) <= 11:
@@ -349,7 +355,7 @@ def gradient_branch(thin, value, number_of_points, seg, stopf=0):
             arg=branch_points[0]
             occlusion_image[arg[0]-3:arg[0]+4,arg[1]-3:arg[1]+4,arg[2]-3:arg[2]+4]=1
             
-            if stopf in branch_points.tolist():
+            if occlusionpoint in branch_points.tolist():
                 print '#######'
                 print 'Occlusion'
                 print '#######'
@@ -404,7 +410,52 @@ def check_durchmesser(seg, point):
     else:    
         return False
     
+def check_inside_mask(branchpoints, mask):
+    'Returns False, if points of branch are not inside mask'
+    for i in range(0,len(branchpoints)):
+        if not 1 <= mask[branchpoints[i][0]][branchpoints[i][1]][branchpoints[i][2]]:
+            return False
+    return True
 
+def check_distance_mask(branch_point, brainmask, voxelspacing, distance):
+    #Kantenlaenge des Kastens um die Branchpoints
+    box = 4
+    
+    image = numpy.zeros(brainmask.shape)
+    imagepoint = numpy.zeros(brainmask.shape)
+    imagepoint[branch_point[0]][branch_point[1]][branch_point[2]] = 1
+    
+    for i in range(max(0, branch_point[0]-box), min(brainmask.shape[0] - 1, branch_point[0]+box+1)):
+        for j in range(max(0, branch_point[1]-box), min(brainmask.shape[1] - 1, branch_point[1]+box+1)):
+            for k in range(max(0, branch_point[2]-box), min(brainmask.shape[2] - 1, branch_point[2]+box+1)):
+                image[i][j][k] = 1
+                    
+    image2 = image * brainmask
+
+    if 0 == numpy.max(image2):
+        return True
+    
+
+    if __surface_distances(imagepoint, image2, voxelspacing, 1).min() >= distance:      
+        #Weiterhin Okklusionskadidat
+        return True
+    
+    else:
+        #Zu dicht am Rand, kein Okklusionskadidat
+        print 'False'
+        print branch_point
+        return False
+    '''
+    image = numpy.zeros(brainmask.shape)
+    for i in range(0,len(branch_point)):
+        image[branch_point[i][0]][branch_point[i][1]][branch_point[i][2]] = 1
+    print __surface_distances(image, brainmask, voxelspacing, 1).min() 
+    if __surface_distances(image, brainmask, voxelspacing, 1).min() >= distance:
+        return True
+    else:
+        return False
+    '''
+ 
 def calc_direction(point1, point2):
     point1=numpy.asarray(point1)
     point2=numpy.asarray(point2)
