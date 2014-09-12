@@ -13,6 +13,7 @@ Created on Aug 25, 2014
 # build-in modules
 import pylab
 from scipy.ndimage.measurements import label, histogram
+from scipy.ndimage.morphology import binary_dilation
 from copy import deepcopy
 
 # third-party modules
@@ -24,7 +25,7 @@ from medpy.metric.binary import __surface_distances
 
 
 # code
-
+from medpy.io import save
 
 def close_gaps(labeled_cen, av, pixel_spacing, vesselness_image, ori_cen, zwischenspeicher,cen_h):
     
@@ -506,13 +507,15 @@ def last_n_points_of_branch(thinned_image,branch_endpoint,length):
     
     for i in range(0,length-1):
         tmp_neighbor = return_neighbor(thinned_image, tmp_point, 1)
-        if not 2 < tmp_neighbor.__len__():
+        if 2 == tmp_neighbor.__len__() or 1 == tmp_neighbor.__len__() :
             if tmp_neighbor[0] not in pointlist:
                 pointlist.append(tmp_neighbor[0])
                 tmp_point=tmp_neighbor[0]
-            else:
+            elif 1 < tmp_neighbor.__len__():
                 pointlist.append(tmp_neighbor[1])
                 tmp_point=tmp_neighbor[1]
+            else:
+                return numpy.asarray(pointlist)
         else:
             return numpy.asarray(pointlist)
     return numpy.asarray(pointlist)
@@ -541,62 +544,63 @@ def return_value(listed_points, value_image):
     return value_list        
 
 def remove_short_branch_vesselness(thinned_image, vesselness, branches_shorter_than):
-    
+    #ueberpruefung der centerline auf datentyp
     if thinned_image.max != 1 or thinned_image.dtype == numpy.bool: 
         thinned_image = numpy.asarray(thinned_image, dtype=numpy.bool)
         thinned_image = numpy.asarray(thinned_image, dtype=numpy.int)
 
+
     thinned_image2 = deepcopy(thinned_image)
+    #Bild mit Anzahl der Nachbarpunkte
     image_neighbor = count_neighbor( thinned_image, numpy.ones((3,3,3)) )
 
+    #Liste alles Punkte, die eine Abzweigung beinhalten
     kreuzungspunkte = numpy.nonzero( image_neighbor >= 3 )
+    
+    #ueber alle kreuzungspunkte iterieren
+    for iterate_branches in range(0,numpy.size(kreuzungspunkte,1)): 
+        temp_kreuzungspunkt = ( kreuzungspunkte[0][iterate_branches] , kreuzungspunkte[1][iterate_branches] , kreuzungspunkte[2][iterate_branches])
+        #Liste die die einzelnen, abzwigenden Arme beinhaltet
+        gelistete_seitenarme = return_short_branches( thinned_image , image_neighbor , temp_kreuzungspunkt , 4*branches_shorter_than )
 
-    for iterate_branches in range(0,numpy.size(kreuzungspunkte,1)): #ueber alle kreuzungspunkte iterieren
-        temp_branch_point = ( kreuzungspunkte[0][iterate_branches] , kreuzungspunkte[1][iterate_branches] , kreuzungspunkte[2][iterate_branches])
-        list_branch_points = return_short_branches( thinned_image , image_neighbor , temp_branch_point , 4*branches_shorter_than )
-
-        for number_of_branches in range(0, len( list_branch_points ) ):
+        #ueber die moeglichen Seitenarme iterieren
+        for temp_seitenarme in range(0, len( gelistete_seitenarme ) ):
             #wenn die Minimallaenge unterschritten wird, dann wird auf jeden fall geloescht
-            if len( list_branch_points [ number_of_branches ]) <= branches_shorter_than:
-                for number_of_branchpoints in range(0, len( list_branch_points [ number_of_branches ] )):
-                    thinned_image2[ list_branch_points [ number_of_branches ][ number_of_branchpoints ] ] = 0
+            if len( gelistete_seitenarme [ temp_seitenarme ]) <= branches_shorter_than:
+                for number_of_branchpoints in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
+                    thinned_image2[ gelistete_seitenarme [ temp_seitenarme ][ number_of_branchpoints ] ] = 0
+            #sonst ueberpruefe die Vesselness vom Seitenarme und den anderen Armen, die vom gleichen Kreuzungspunkt ausgehen
             else:
                 #Bestimmen der Durchschnittsvesselness der letzten 3 Punkte
                 vesselvalue1 = []
                 for index in range(-3,0):
-                    vesselvalue1.append(vesselness[ list_branch_points [ number_of_branches ][ index ] ])
+                    vesselvalue1.append(vesselness[ gelistete_seitenarme [ temp_seitenarme ][ index ] ])
+                #Durchschnittliche Vesselness der letzten drei Astpunkte des zu ueberpruefenden Seitenarmes
+                vesselvalue1 = numpy.mean(vesselvalue1) 
+                               
                 
+                zu_delitieren = numpy.zeros(thinned_image.shape)
+                zu_delitieren[temp_kreuzungspunkt[0]][temp_kreuzungspunkt[1]][temp_kreuzungspunkt[2]]=1
                 
-                #########################################numpy.mean(vesselvalue1)
-                listofneighbors = return_neighbor(thinned_image, temp_branch_point, 1)
-                astwerte=0
-                counter=0
-                abzweigender_arm=[]
-                for index2 in range(0,len(listofneighbors)):
-                    if not (list_branch_points[number_of_branches][0] == listofneighbors[index2]):
-                        #abzweigende_arme = return_short_branches( thinned_image , image_neighbor , temp_branch_point , branches_shorter_than )
-                        list_point=[temp_branch_point]
-                        #print 'list_branch_points[number_of_branches][0] {}'.format(list_branch_points[number_of_branches][0])
-                        #print 'listofneighbors[index2] {}'.format(listofneighbors[index2])
-                        abzweigender_arm = give_branch(thinned_image, image_neighbor, list_point, listofneighbors[index2], 4)
-                        #print abzweigender_arm
-                        
-                        if (not abzweigender_arm is None) and len(abzweigender_arm)>=3:
-                            astwerte += numpy.mean(return_value(abzweigender_arm, vesselness))
-                            counter+=1
+                zu_delitieren = binary_dilation(zu_delitieren, structure=numpy.ones((3,3,3)), iterations=5, mask=thinned_image,)
                 
-                if not counter == 0:
-                    vesselvalue2=astwerte/counter
-                    #print 'counter {}'.format(counter)
-                    #print 'vesselvalue2 {}'.format(vesselvalue2)
-                    #print 'vesselvalue1 {}'.format(numpy.mean(vesselvalue1))
-                else:
-                    continue
-                if ((not vesselvalue2 == 0) and vesselvalue2*(1/2.) >= numpy.mean(vesselvalue1)):
+                for index4 in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
+                    zu_delitieren[ gelistete_seitenarme [ temp_seitenarme ][ index4 ] ] = 0
+                
+                values=zu_delitieren*vesselness
+
+                vesselvalue2 = 0
+                if not 0 == numpy.count_nonzero(values):
+                    vesselvalue2 = sum(sum(sum(values)))/numpy.count_nonzero(values)
+
+                if ((not vesselvalue2 == 0) and vesselvalue2*(1/2.) >= vesselvalue1):
                     #print 'ES WIRD GELOESCHTTTTTT'
                     #print list_branch_points [ number_of_branches ]
-                    for number_of_branchpoints in range(0, len( list_branch_points [ number_of_branches ] )):
-                        thinned_image2[ list_branch_points [ number_of_branches ][ number_of_branchpoints ] ] = 0
+                    if (296,168,42) in gelistete_seitenarme [ temp_seitenarme ]:
+                        print 'es wird geloescht'
+                    print 'es wird geloescht'
+                    for number_of_branchpoints in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
+                        thinned_image2[ gelistete_seitenarme [ temp_seitenarme ][ number_of_branchpoints ] ] = 0
                 
     return thinned_image2
 
@@ -623,7 +627,7 @@ def remove_short_branch(thinned_image, branches_shorter_than):
 
 def return_short_branches(thinned_image, image_neighbor, branch_point, max_branch_length):
     '''
-    returns a list including all relevant_branches, ausgehend vom Abzweigungspunkt
+    gibt eine Liste zurueck, die mehrere Listen mit den jeweiligen Astpunkten beinhaltet, die hoechstens so lang wie max_branch_length sind
     '''
     next_neighbors = return_neighbor(thinned_image, branch_point, 1)
     return_list = []
