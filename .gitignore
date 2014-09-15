@@ -8,7 +8,9 @@ TODO.txt
 
 # DOC dirs #
 ############
-doc/
+doc/build/
+doc/generated/
+doc/source/generated/
 
 # BUILD dirs #
 ##############

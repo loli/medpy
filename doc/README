@@ -1,0 +1,8 @@
+Build the HTML documentation:
+
+    sphinx-build -aE -b html source/ build/
+
+Generate the API documentation files:
+
+    sphinx-apidoc -efF -H MedPy -A "Oskar Maier" -V 0.2 -R 1 -o generated/ ../../medpy/medpy/
+

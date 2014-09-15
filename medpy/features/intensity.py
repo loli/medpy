@@ -1,73 +1,63 @@
-"""
-@package medpy.features.intensity
-Functions to extracts voxel-wise intensity based features from images.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.3.3
+# since 2013-08-24
+# status Release
 
-Feature representation:
-Features can be one or more dimensional and are kept in the following structures:
-           s1    s2    s3    [...]
-    f1.1
-    f1.2
-    f2.1
-    f3.1
-    f3.2
-    [...]
-, where each column sX denotes a single sample (voxel) and each row a features element
-e.g. f1 is constitutes a 2-dimensional features and occupies therefore two rows, while
-f2 is a single element features with a single row. Entries of this array are of type
-float.
-These feature representation forms are processable by the scikit-learn machine learning
-methods.
-
-Multi-spectral images:
-This package was originally designed for MR images and is therefore suited to handle
-multi-spectral data such as RGB and MR images. Each feature extraction function can be
-supplied with list/tuple of images instead of an image. in which case they are considered
-co-registered and the feature is extracted from all of them independently.
-
-@author Oskar Maier
-@version r0.3.3
-@since 2013-08-24
-@status Release
-"""
-
-# build-in module
+# build-in modules
 
 # third-party modules
 import numpy
-from scipy.ndimage.filters import gaussian_filter, gaussian_gradient_magnitude,\
-    median_filter
+from scipy.ndimage.filters import gaussian_filter, median_filter
+from scipy.ndimage.filters import gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude
 from scipy.interpolate.interpolate import interp1d
 from scipy.ndimage.morphology import distance_transform_edt
 from scipy.ndimage._ni_support import _get_output
 
 # own modules
-from medpy.features import utilities
-from medpy.core.exceptions import ArgumentError
-from medpy.features.utilities import join
-from medpy.filter.image import sum_filter
+from utilities import join
+from ..core import ArgumentError
+from ..filter import sum_filter
 
 # constants
 
 def intensities(image, mask = slice(None)):
-    """
-    Takes a simple or multi-spectral image and returns its voxel-wise intensities.
+    r"""Takes a simple or multi-spectral image and returns its voxel-wise intensities.
     A multi-spectral image must be supplied as a list or tuple of its spectra.
     
     Optionally a binary mask can be supplied to select the voxels for which the feature
     should be extracted.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    mask : array_like
+        A binary mask for the image.
     
-    @return the images intensities
-    @type ndarray
+    Returns
+    -------
+    intensities : ndarray
+        The images intensities.
     """
-    return __extract_feature(__extract_intensities, image, mask)
+    return _extract_feature(_extract_intensities, image, mask)
 
 def centerdistance(image, voxelspacing = None, mask = slice(None)):
-    """
+    r"""
     Takes a simple or multi-spectral image and returns its voxel-wise center distance in
     mm. A multi-spectral image must be supplied as a list or tuple of its spectra.
     
@@ -81,48 +71,68 @@ def centerdistance(image, voxelspacing = None, mask = slice(None)):
     solely on its shape. Therefore always a one-dimensional feature is returned, even if
     a multi-spectral image has been supplied. 
 
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.
+
+    Returns
+    -------
+    centerdistance : ndarray
+        The distance of each voxel to the images center.
+        
+    See Also
+    --------
+    centerdistance_xdminus1
     
-    @return the distance of each voxel to the images center
-    @type ndarray
     """
     if type(image) == tuple or type(image) == list:
         image = image[0]
         
-    return __extract_feature(__extract_centerdistance, image, mask, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_centerdistance, image, mask, voxelspacing = voxelspacing)
 
 def centerdistance_xdminus1(image, dim, voxelspacing = None, mask = slice(None)):
-    """
-    Implementation of @see centerdistance that allows to compute sub-volume wise
+    r"""
+    Implementation of `centerdistance` that allows to compute sub-volume wise
     centerdistances.
     
-    The same notes as for @see centerdistance apply.
+    The same notes as for `centerdistance` apply.
     
-    Example:
-        Considering a 3D medical image we want to compute the axial slice-wise
-        centerdistances instead of the ones over the complete image volume. Assuming that
-        the third image dimension corresponds to the axial axes of the image, we call
-            centerdistance_xdminus1(image, 2)
-        Note that the centerdistance of each slice is the same.
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    dim : int or sequence of ints
+        The dimension or dimensions along which to cut the image into sub-volumes.
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param dim the dimension or dimensions along which to cut the image into sub-volumes
-    @type dim int | sequence of ints
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Returns
+    -------
+    centerdistance_xdminus1 : ndarray
+        The distance of each voxel to the images center in the supplied dimensions.
     
-    @return the distance of each voxel to the images center
-    @type ndarray
+    Raises
+    ------
+    ArgumentError
+        If a invalid dim index of number of dim indices were supplied
+
+    Examples
+    --------
+    Considering a 3D medical image we want to compute the axial slice-wise
+    centerdistances instead of the ones over the complete image volume. Assuming that
+    the third image dimension corresponds to the axial axes of the image, we call
+        
+    >>> centerdistance_xdminus1(image, 2)
     
-    @raises ArgumentError if a invalid dim index of number of dim indices were supplied    
+    Note that the centerdistance of each slice will be equal.
+
     """
     # pre-process arguments
     if type(image) == tuple or type(image) == list:
@@ -157,7 +167,7 @@ def centerdistance_xdminus1(image, dim, voxelspacing = None, mask = slice(None))
     return intensities(o, mask)
 
 def indices(image, voxelspacing = None, mask = slice(None)):
-    """
+    r"""
     Takes an image and returns the voxels ndim-indices as voxel-wise feature. The voxel
     spacing is taken into account, i.e. the indices are not array indices, but millimeter
     indices.
@@ -165,19 +175,26 @@ def indices(image, voxelspacing = None, mask = slice(None)):
     This is a multi-element feature where each element corresponds to one of the images
     axes, e.g. x, y, z, ...
     
-    Note that this feature is independent of the actual image content, but depends
-    solely on its shape. Therefore always a one-dimensional feature is returned, even if
-    a multi-spectral image has been supplied. 
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image. 
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats    
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Returns
+    -------
+    indices : ndarray
+        Each voxels ndimensional index.
 
-    @return each voxel ndim-index
-    @type ndarray
+    Notes
+    -----
+    This feature is independent of the actual image content, but depends
+    solely on its shape. Therefore always a one-dimensional feature is returned, even if
+    a multi-spectral image has been supplied.
+    
     """
     if type(image) == tuple or type(image) == list:
         image = image[0]
@@ -191,13 +208,43 @@ def indices(image, voxelspacing = None, mask = slice(None)):
     return join(*map(lambda (a, vs): a[mask].ravel() * vs, zip(numpy.indices(image.shape), voxelspacing)))
     
 def shifted_mean_gauss(image, offset = None, sigma = 5, voxelspacing = None, mask = slice(None)):
+    r"""
+    The approximate mean over a small region at an offset from each voxel.
+    
+    Functions like `local_mean_gauss`, but instead of computing the average over a small
+    patch around the current voxel, the region is centered at an offset away. Can be used
+    to use a distant regions average as feature for a voxel.
+    
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    offset : sequence of ints
+        At this offset in voxels of the current position the region is placed.
+    sigma : number or sequence of numbers
+        Standard deviation for Gaussian kernel. The standard deviations of the
+        Gaussian filter are given for each axis as a sequence, or as a single number,
+        in which case it is equal for all axes. Note that the voxel spacing of the image
+        is taken into account, the given values are treated as mm.
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image. 
+    
+    Returns
+    -------
+    shifted_mean_gauss : ndarray
+        The weighted mean intensities over a region at offset away from each voxel.
+    
+    See also
+    --------
+    local_mean_gauss
+    
     """
-    !TODO: Write description: mean gauss over area at point offset of current voxel
-    """
-    return __extract_feature(__extract_shifted_mean_gauss, image, mask, offset = offset, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_shifted_mean_gauss, image, mask, offset = offset, sigma = sigma, voxelspacing = voxelspacing)
     
 def mask_distance(image, voxelspacing = None, mask = slice(None)):
-    """
+    r"""
     Computes the distance of each point under the mask to the mask border taking the
     voxel-spacing into account.
     
@@ -205,25 +252,30 @@ def mask_distance(image, voxelspacing = None, mask = slice(None)):
     solely the mask image. Therefore always a one-dimensional feature is returned,
     even if a multi-spectral image has been supplied.
     
-    If no mask has been supplied, the distances to the image borders are returned. 
+    If no mask has been supplied, the distances to the image borders are returned.
+
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.     
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats    
-    @param mask a binary mask for the image
-    @type mask ndarray
-    
-    @return the distances
-    @type ndarray    
+    Returns
+    -------
+    mask_distance : ndarray
+        Each voxels distance to the mask borders.
+
     """
     if type(image) == tuple or type(image) == list:
         image = image[0]
         
-    return __extract_mask_distance(image, mask = mask, voxelspacing = voxelspacing)
+    return _extract_mask_distance(image, mask = mask, voxelspacing = voxelspacing)
     
 def local_mean_gauss(image, sigma = 5, voxelspacing = None, mask = slice(None)):
-    """
+    r"""
     Takes a simple or multi-spectral image and returns the approximate mean over a small
     region around each voxel. A multi-spectral image must be supplied as a list or tuple
     of its spectra.
@@ -232,43 +284,61 @@ def local_mean_gauss(image, sigma = 5, voxelspacing = None, mask = slice(None)):
     should be extracted.
     
     For this feature a Gaussian smoothing filter is applied to the image / each spectrum
-    and then the resulting intensity values returned.
+    and then the resulting intensity values returned. Another name for this function
+    would be weighted local mean.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param sigma Standard deviation for Gaussian kernel. The standard deviations of the Gaussian filter are given for each axis as a sequence, or as a single number, in which case it is equal for all axes. Note that the voxel spacing of the image is taken into account, the given values are treated as mm.
-    @type sigma scalar or sequence of scalars
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats    
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    sigma : number or sequence of numbers
+        Standard deviation for Gaussian kernel. The standard deviations of the
+        Gaussian filter are given for each axis as a sequence, or as a single number,
+        in which case it is equal for all axes. Note that the voxel spacing of the image
+        is taken into account, the given values are treated as mm.        
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.       
     
-    @return the images intensities
-    @type ndarray
+    
+    Returns
+    -------
+    local_mean_gauss : ndarray
+        The weighted mean intensities over a region around each voxel.
+    
     """
-    return __extract_feature(__extract_local_mean_gauss, image, mask, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_local_mean_gauss, image, mask, sigma = sigma, voxelspacing = voxelspacing)
 
-def guassian_gradient_magnitude(image, sigma = 5, voxelspacing = None, mask = slice(None)):
-    """
+def gaussian_gradient_magnitude(image, sigma = 5, voxelspacing = None, mask = slice(None)):
+    r"""
     Computes the gradient magnitude (edge-detection) of the supplied image using gaussian
     derivates and returns the intensity values.
     
     Optionally a binary mask can be supplied to select the voxels for which the feature
     should be extracted.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param sigma Standard deviation for Gaussian kernel. The standard deviations of the Gaussian filter are given for each axis as a sequence, or as a single number, in which case it is equal for all axes. Note that the voxel spacing of the image is taken into account, the given values are treated as mm.
-    @type sigma scalar or sequence of scalars
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats    
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    sigma : number or sequence of numbers
+        Standard deviation for Gaussian kernel. The standard deviations of the
+        Gaussian filter are given for each axis as a sequence, or as a single number,
+        in which case it is equal for all axes. Note that the voxel spacing of the image
+        is taken into account, the given values are treated as mm.        
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.          
+
+    Returns
+    -------
+    guassian_gradient_magnitude : ndarray
+        The gaussian gradient magnitude of the supplied image.
     
-    @return the images intensities
-    @type ndarray
     """
-    return __extract_feature(__extract_guassian_gradient_magnitude, image, mask, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_guassian_gradient_magnitude, image, mask, sigma = sigma, voxelspacing = voxelspacing)
 
 def median(image, size = 5, voxelspacing = None, mask = slice(None)):
     """
@@ -278,22 +348,30 @@ def median(image, size = 5, voxelspacing = None, mask = slice(None)):
     Optionally a binary mask can be supplied to select the voxels for which the feature
     should be extracted.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param size Size of the structuring element. Can be given given for each axis as a sequence, or as a single number, in which case it is equal for all axes. Note that the voxel spacing of the image is taken into account, the given values are treated as mm.
-    @type size scalar or sequence of scalars
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats    
-    @param mask a binary mask for the image
-    @type mask ndarray
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    size : number or sequence of numbers
+        Size of the structuring element. Can be given given for each axis as a sequence,
+        or as a single number, in which case it is equal for all axes. Note that the
+        voxel spacing of the image is taken into account, the given values are treated
+        as mm.
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.
+        
+    Returns
+    -------
+    median : ndarray
+        Multi-dimesnional median filtered version of the input images.
     
-    @return the images intensities
-    @type ndarray
     """
-    return __extract_feature(__extract_median, image, mask, size = size, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_median, image, mask, size = size, voxelspacing = voxelspacing)
 
 def local_histogram(image, bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0, mask=slice(None)):
-    """
+    r"""
     Computes multi-dimensional histograms over a region around each voxel.
     
     Supply an image and (optionally) a mask and get the local histogram of local
@@ -333,43 +411,58 @@ def local_histogram(image, bins=19, rang="image", cutoffp=(0.0, 100.0), size=Non
     The local histograms are normalized by dividing them through the number of elements
     in the bins.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param bins the number of histogram bins
-    @type bins integer
-    @param rang the range of the histograms, can be supplied manually, set to 'image' or
-                set to None to use local ranges
-    @type rang string | tuple of numbers | None
-    @param cutoffp the cut-off percentiles to exclude outliers, only processed if rang is
-                   set to 'image'
-    @type cutoffp tuple of scalars | 'image'
-    @param size See footprint, below
-    @type size scalar | tuple
-    @param footprint  Either ``size`` or ``footprint`` must be defined. ``size`` gives the shape that is taken from the input array, at every element position, to define the input to the filter function. ``footprint`` is a boolean array that specifies (implicitly) a shape, but also which of the elements within this shape will get passed to the filter function. Thus ``size=(n,m)`` is equivalent to ``footprint=np.ones((n,m))``. We adjust ``size`` to the number of dimensions of the input array, so that, if the input array is shape (10,10,10), and ``size`` is 2, then the actual size used is (2,2,2).
-    @type footprint ndarray
-    @param output  The ``output`` parameter passes an array in which to store the filter output.
-    @type output ndarray | dtype
-    @param mode The ``mode`` parameter determines how the array borders are handled. Default is 'ignore'
-    @type mode 'reflect' | 'ignore' | 'nearest' | 'mirror' | 'wrap'
-    @param origin The ``origin`` parameter controls the placement of the filter. Default 0.
-    @type origin scalar
-    @param mask a binary mask for the image
-    @type mask ndarray
-    
-    @return the bin values of the local histograms for each voxel
-    @rtype ndarray
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    bins : integer
+        The number of histogram bins.
+    rang : 'image' or tuple of numbers or None
+        The range of the histograms, can be supplied manually, set to 'image' to use
+        global or set to None to use local ranges.
+    cutoffp : tuple of numbers
+        The cut-off percentiles to exclude outliers, only processed if ``rang`` is set
+        to 'image'.
+    size : scalar or tuple of integers
+        See footprint, below
+    footprint : array
+        Either ``size`` or ``footprint`` must be defined. ``size`` gives the shape that
+        is taken from the input array, at every element position, to define the input to
+        the filter function. ``footprint`` is a boolean array that specifies (implicitly)
+        a shape, but also which of the elements within this shape will get passed to the
+        filter function. Thus ``size=(n,m)`` is equivalent to
+        ``footprint=np.ones((n,m))``. We adjust ``size`` to the number of dimensions of
+        the input array, so that, if the input array is shape (10,10,10), and ``size``
+        is 2, then the actual size used is (2,2,2).
+    output ndarray or dtype
+        The ``output`` parameter passes an array in which to store the filter output.
+    mode : {'reflect', 'ignore', 'nearest', 'mirror', 'wrap'}
+        The ``mode`` parameter determines how the array borders are handled. Default is 'ignore'
+    origin : number
+        The ``origin`` parameter controls the placement of the filter. Default 0.
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.
+        
+    Returns
+    -------
+    local_histogram : ndarray
+        The bin values of the local histograms for each voxel as a multi-dimensional image.
+
     """    
-    return __extract_feature(__extract_local_histogram, image, mask, bins=bins, rang=rang, cutoffp=cutoffp, size=size, footprint=footprint, output=output, mode=mode, origin=origin)
+    return _extract_feature(_extract_local_histogram, image, mask, bins=bins, rang=rang, cutoffp=cutoffp, size=size, footprint=footprint, output=output, mode=mode, origin=origin)
 
 
 def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_plane = 0, voxelspacing = None, mask = slice(None)):
-    """
+    r"""
     Computes the hemispheric intensity difference between the brain hemispheres of an brain image.
     
     Cuts the image along the middle of the supplied cut-plane. This results in two
     images, each containing one of the brains hemispheres.
     
     For each of these two, the following steps are applied:
+    
     1. One image is marked as active image
     2. The other hemisphere image is marked as reference image
     3. The reference image is fliped along the cut_plane
@@ -388,30 +481,46 @@ def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_pla
     interpolated from the two hemisphere difference images when stitching them back
     together.
     
-    @param image a single image or a list/tuple of images (for multi-spectral case)
-    @type image ndarray | list of ndarrays | tuple of ndarrays
-    @param sigma_active Standard deviation for Gaussian kernel of the active image. The standard deviations of the Gaussian filter are given for each axis as a sequence, or as a single number, in which case it is equal for all axes. Note that the voxel spacing of the image is taken into account, the given values are treated as mm.
-    @type sigma_active scalar or sequence of scalars
-    @param sigma_reference Standard deviation for Gaussian kernel of the reference image. The standard deviations of the Gaussian filter are given for each axis as a sequence, or as a single number, in which case it is equal for all axes. Note that the voxel spacing of the image is taken into account, the given values are treated as mm.
-    @type sigma_reference scalar or sequence of scalars
-    @param cut_plane The axes along which to cut. This is usually the coronal plane.
-    @type cut_plane int
-    @param voxelspacing the side-length of each voxel
-    @type voxelspacing sequence of floats    
-    @param mask a binary mask for the image
-    @type mask ndarray
-    
-    @return the bin values of the local histograms for each voxel
-    @rtype ndarray
-    
-    @raise ArgumentError If the supplied cut-plane dimension is invalid.
+    Parameters
+    ----------
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    sigma_active : number or sequence of numbers
+        Standard deviation for Gaussian kernel of the active image. The standard
+        deviations of the Gaussian filter are given for each axis as a sequence, or as a
+        single number, in which case it is equal for all axes. Note that the voxel
+        spacing of the image is taken into account, the given values are treated
+        as mm.
+    sigma_reference : number or sequence of numbers
+        Standard deviation for Gaussian kernel of the reference image. The standard
+        deviations of the Gaussian filter are given for each axis as a sequence, or as a
+        single number, in which case it is equal for all axes. Note that the voxel
+        spacing of the image is taken into account, the given values are treated
+        as mm.
+    cut_plane : integer
+        he axes along which to cut. This is usually the coronal plane.
+    voxelspacing : sequence of floats
+        The side-length of each voxel.
+    mask : array_like
+        A binary mask for the image.
+        
+    Returns
+    -------
+    hemispheric_difference : ndarray
+        The intensity differences between the locally smoothed hemispheres of the image.    
+
+    Raises
+    ------
+    ArgumentError
+        If the supplied cut-plane dimension is invalid.
+
     """   
-    return __extract_feature(__extract_hemispheric_difference, image, mask, sigma_active = sigma_active, sigma_reference = sigma_reference, cut_plane = cut_plane, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_hemispheric_difference, image, mask, sigma_active = sigma_active, sigma_reference = sigma_reference, cut_plane = cut_plane, voxelspacing = voxelspacing)
 
 
-def __extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7, sigma_reference = 7, cut_plane = 0, voxelspacing = None):
+def _extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7, sigma_reference = 7, cut_plane = 0, voxelspacing = None):
     """
-    Internal, single-image version of @see hemispheric_difference
+    Internal, single-image version of `hemispheric_difference`.
     """
     # constants
     INTERPOLATION_RANGE = int(10) # how many neighbouring values to take into account when interpolating the medial longitudinal fissure slice
@@ -442,8 +551,8 @@ def __extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7
     right_hemisphere = right_hemisphere[slicer]
 
     # substract once left from right and once right from left hemisphere, including smoothing steps
-    right_hemisphere_difference = __substract_hemispheres(right_hemisphere, left_hemisphere, sigma_active, sigma_reference, voxelspacing)
-    left_hemisphere_difference = __substract_hemispheres(left_hemisphere, right_hemisphere, sigma_active, sigma_reference, voxelspacing)
+    right_hemisphere_difference = _substract_hemispheres(right_hemisphere, left_hemisphere, sigma_active, sigma_reference, voxelspacing)
+    left_hemisphere_difference = _substract_hemispheres(left_hemisphere, right_hemisphere, sigma_active, sigma_reference, voxelspacing)
     
     # re-flip right hemisphere image to original orientation
     right_hemisphere_difference = right_hemisphere_difference[slicer]
@@ -472,11 +581,11 @@ def __extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7
         hemisphere_difference = numpy.concatenate((left_hemisphere_difference, right_hemisphere_difference), cut_plane)
 
     # extract intensities and return
-    return __extract_intensities(hemisphere_difference, mask)
+    return _extract_intensities(hemisphere_difference, mask)
 
-def __extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0):
+def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0):
     """
-    Internal, single-image version of @see local_histogram
+    Internal, single-image version of `local_histogram`.
     
     Note: Values outside of the histograms range are not considered.
     Note: Mode constant is not available, instead a mode "ignore" is provided.
@@ -512,37 +621,37 @@ def __extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cu
     # mode=X for the histogram equals mode=X for the sum_filter
 
     # treat as multi-spectral image which intensities to extracted
-    return __extract_feature(__extract_intensities, [h for h in output], mask)
+    return _extract_feature(_extract_intensities, [h for h in output], mask)
     
-def __extract_median(image, mask = slice(None), size = 1, voxelspacing = None):
+def _extract_median(image, mask = slice(None), size = 1, voxelspacing = None):
     """
-    Internal, single-image version of @see median
+    Internal, single-image version of `median`.
     """
     # set voxel spacing
     if voxelspacing is None:
         voxelspacing = [1.] * image.ndim
         
     # determine structure element size in voxel units
-    size = __create_structure_array(size, voxelspacing)
+    size = _create_structure_array(size, voxelspacing)
         
-    return __extract_intensities(median_filter(image, size), mask)
+    return _extract_intensities(median_filter(image, size), mask)
     
-def __extract_guassian_gradient_magnitude(image, mask = slice(None), sigma = 1, voxelspacing = None):
+def _extract_gaussian_gradient_magnitude(image, mask = slice(None), sigma = 1, voxelspacing = None):
     """
-    Internal, single-image version of @see guassian_gradient_magnitude
+    Internal, single-image version of `gaussian_gradient_magnitude`.
     """
     # set voxel spacing
     if voxelspacing is None:
         voxelspacing = [1.] * image.ndim
         
     # determine gaussian kernel size in voxel units
-    sigma = __create_structure_array(sigma, voxelspacing)
+    sigma = _create_structure_array(sigma, voxelspacing)
         
-    return __extract_intensities(gaussian_gradient_magnitude(image, sigma), mask)
+    return _extract_intensities(scipy_gaussian_gradient_magnitude(image, sigma), mask)
     
-def __extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma = 1, voxelspacing = None):
+def _extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma = 1, voxelspacing = None):
     """
-    Internal, single-image version of @see shifted_mean_gauss
+    Internal, single-image version of `shifted_mean_gauss`.
     """    
     # set voxel spacing
     if voxelspacing is None:
@@ -552,7 +661,7 @@ def __extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma
         offset = [0] * image.ndim
     
     # determine gaussian kernel size in voxel units
-    sigma = __create_structure_array(sigma, voxelspacing)
+    sigma = _create_structure_array(sigma, voxelspacing)
     
     # compute smoothed version of image
     smoothed = gaussian_filter(image, sigma)
@@ -565,36 +674,36 @@ def __extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma
         out_slicer.append(slice(None, -1 * o))
     shifted[out_slicer] = smoothed[in_slicer]
     
-    return __extract_intensities(shifted, mask)
+    return _extract_intensities(shifted, mask)
     
-def __extract_mask_distance(image, mask = slice(None), voxelspacing = None):
+def _extract_mask_distance(image, mask = slice(None), voxelspacing = None):
     """
-    Internal, single-image version of @see mask_distance
+    Internal, single-image version of `mask_distance`.
     """
     if isinstance(mask, slice):
         mask = numpy.ones(image.shape, numpy.bool)
     
     distance_map = distance_transform_edt(mask, sampling=voxelspacing)
     
-    return __extract_intensities(distance_map, mask)
+    return _extract_intensities(distance_map, mask)
     
-def __extract_local_mean_gauss(image, mask = slice(None), sigma = 1, voxelspacing = None):
+def _extract_local_mean_gauss(image, mask = slice(None), sigma = 1, voxelspacing = None):
     """
-    Internal, single-image version of @see local_mean_gauss
+    Internal, single-image version of `local_mean_gauss`.
     """
     # set voxel spacing
     if voxelspacing is None:
         voxelspacing = [1.] * image.ndim
         
     # determine gaussian kernel size in voxel units
-    sigma = __create_structure_array(sigma, voxelspacing)
+    sigma = _create_structure_array(sigma, voxelspacing)
         
-    return __extract_intensities(gaussian_filter(image, sigma), mask)
+    return _extract_intensities(gaussian_filter(image, sigma), mask)
 
 
-def __extract_centerdistance(image, mask = slice(None), voxelspacing = None):
+def _extract_centerdistance(image, mask = slice(None), voxelspacing = None):
     """
-    Internal, single-image version of @see centerdistance
+    Internal, single-image version of `centerdistance`.
     """
     image = numpy.array(image, copy=False)
     
@@ -614,26 +723,26 @@ def __extract_centerdistance(image, mask = slice(None), voxelspacing = None):
     return numpy.sqrt(numpy.sum(numpy.square(indices), 0))[mask].ravel()
     
 
-def __extract_intensities(image, mask = slice(None)):
+def _extract_intensities(image, mask = slice(None)):
     """
-    Internal, single-image version of @see intensities
+    Internal, single-image version of `intensities`.
     """
     return numpy.array(image, copy=True)[mask].ravel()
 
-def __substract_hemispheres(active, reference, active_sigma, reference_sigma, voxel_spacing):
+def _substract_hemispheres(active, reference, active_sigma, reference_sigma, voxel_spacing):
     """
-    Helper function for @see __extract_hemispheric_difference.
+    Helper function for `_extract_hemispheric_difference`.
     Smoothes both images and then substracts the reference from the active image.
     """
-    active_kernel = __create_structure_array(active_sigma, voxel_spacing)
+    active_kernel = _create_structure_array(active_sigma, voxel_spacing)
     active_smoothed = gaussian_filter(active, sigma = active_kernel)
 
-    reference_kernel = __create_structure_array(reference_sigma, voxel_spacing)
+    reference_kernel = _create_structure_array(reference_sigma, voxel_spacing)
     reference_smoothed = gaussian_filter(reference, sigma = reference_kernel)
 
     return active_smoothed - reference_smoothed
 
-def __create_structure_array(structure_array, voxelspacing):
+def _create_structure_array(structure_array, voxelspacing):
     """
     Convenient function to take a structure array (single number valid for all dimensions
     or a sequence with a distinct number for each dimension) assumed to be in mm and
@@ -647,19 +756,25 @@ def __create_structure_array(structure_array, voxelspacing):
     
     return structure_array    
 
-def __extract_feature(fun, image, mask = slice(None), **kwargs):
+def _extract_feature(fun, image, mask = slice(None), **kwargs):
     """
     Convenient function to cope with multi-spectral images and feature normalization.
     
-    @param fun the feature extraction function to call
-    @param image the single or multi-spectral image
-    @param mask the binary mask to select the voxels for which to extract the feature
-    @param kwargs additional keyword arguments to be passed to the feature extraction function 
+    Parameters
+    ----------
+    fun : function
+        The feature extraction function to call
+    image : array_like or list/tuple of array_like 
+        A single image or a list/tuple of images (for multi-spectral case).
+    mask : ndarray
+        The binary mask to select the voxels for which to extract the feature
+    kwargs : sequence
+        Additional keyword arguments to be passed to the feature extraction function 
     """
     if not type(mask) is slice:
         mask = numpy.array(mask, copy=False, dtype=numpy.bool)
     
     if type(image) == tuple or type(image) == list:
-        return utilities.join(*[fun(i, mask, **kwargs) for i in image])
+        return join(*[fun(i, mask, **kwargs) for i in image])
     else:
         return fun(image, mask, **kwargs)

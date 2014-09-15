@@ -1,14 +1,24 @@
-"""
-@package medpy.features.histogram
-Functions to create and manipulate histograms.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.3
+# since 2012-03-01
+# status Release
 
-@author Oskar Maier
-@version r0.1.3
-@since 2012-03-01
-@status Release
-"""
-
-# build-in module
+# build-in modules
 import math
 
 # third-party modules
@@ -22,73 +32,57 @@ __MBS = ['triangular', 'trapezoid', 'gaussian', 'sigmoid']
 
 # code
 def fuzzy_histogram(a, bins=10, range=None, normed=False, membership='triangular', smoothness=None, guarantee=False):
-    """
-    Compute a fuzzy histogram. The percentage of a value's membership in a bin is
-    computed using the selected membership function.
-    This functions stays as near as possible to the numpy.histogram behaviour.
+    r"""Compute a fuzzy histogram.
+    The percentage of a value's membership in a bin is computed using the selected
+    membership function. This functions stays as near as possible to the `numpy.histogram`
+    behaviour.
     
-    @param a Input data; The histogram is computed over the flattened array (with ravel()).
-    @type a array_like
-    @param bins Defines the number of equal-width bins in the given range (10, by default).
-    @type bins int
-    @param range The lower and upper range of the bins; If not provided, range is simply
-                (a.min(), a.max()); Values outside the range are ignored.
-    @type range (float, float)
-    @param normed If False, the result will contain the number of samples in each bin; If
-                  True, the result is the value of the probability density function at
-                  the bin, normalized such that the integral over the range is 1.
-    @type normed bool
-    @param membership Select the type of the fuzzy membership function; See description
-                      for available options.
-    @type membership string
-    @param smoothness The smoothness of the fuzzy function; See the descriptions of the
-                      membership functions and below for more details.
-    @type float
-    @param guarantee Guarantee that all values contribute equally to the histogram; when
-                     this value is set, the range term is ignored; see boundary effect
-                     below.
-    @type guarantee normed
+    Parameters
+    ----------
+    a : array_like
+        Input data; The histogram is computed over the flattened array (with ravel()).
+    bins : int
+        The number of equal-width bins in the given range (10, by default).
+    range : (float, float)
+        The lower and upper range of the bins; If not provided, range is simply
+        (a.min(), a.max()); Values outside the range are ignored.
+    normed : bool
+        If False, the result will contain the number of samples in each bin; If
+        True, the result is the value of the probability density function at
+        the bin, normalized such that the integral over the range is 1.
+    membership : string
+        Select the type of the fuzzy membership function; See package
+        description for available options.
+    smoothness : float
+        The smoothness of the fuzzy function; See package
+        description and the membership functions for more details.
+    guarantee : bool
+        Guarantee that all values contribute equally to the histogram; when this value is
+        set, the range term is ignored; see package descriptions for details.
     
-    Available membership functions:
-        - triangular: @link(triangular_membership().
-        - trapezoid: @link(trapezoid_membership().
-        - gaussian: @link(gaussian_membership().
-        - sigmoid: @link(sigmoidal_difference_membership().
+    Returns
+    -------
+    hist : array
+        The values of the histogram. See normed and weights for a description of the possible semantics.
+    bin_edges : array of dtype float
+        Return the bin edges (length(hist)+1).
     
-    \par The smoothness term
-    The smoothness term determines the affected neighbourhood, e.g., when set to 2, all
-    values in the range (2 * bin_width + 1/2 bin_wdith) to the left and right of this bin
-    (center) contribute to this bin. Therefore it determines the smoothing factor of this
-    fuzzy membership function.
-    More clearly the smoothness term determines how much the function reaches into the
-    adjunct bins.
-    \par
-    An example of the smoothness parameter:
+    Note
+    ----
+    See package description for more details on the usage.
     
-                  ____________ ________ ____________ ________ ____________
-                 /          / \        / \       /  \        / \          \ 
-                /          /   \      /   \     /    \      /   \          \
-               /          /     \    /     \   /      \    /     \          \
-    ---|----------|----------|----------|----------|----------|----------|----------|----
-            x-3        x-2        x-1        x          x+1        x+2        x+3
-                  |-nbh      |          |crisp bin |          |      +nbh|
-    \par
-    The considered value v is associated with the bin x using crisp (i.e. standard)
-    histograms. For fuzzy histograms with a smoothness of 2, its membership value for
-    the bins x-smoothness (x-2) until x+smoothness (x+2) is computed. While it also
-    might have a membership values for bins further away from x, these are considered to
-    be only marginal and are therefore nor computed. This leads to a speed-up that is
-    especially important when a great number of fuzzy histograms have to be computed.
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from medpy.features import fuzzy_histogram
+    >>> a = np.asarray([1,2,3,3.2,3.4,3.5,7.5,7.6,7.8,8,9,10])
+    >>> np.histogram(a, bins=4)
+    (array([4, 2, 2, 4]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))
+    >>> fuzzy_histogram(a, bins=4)
+    (array([ 3.4       ,  2.04444444,  2.04444444,  3.4       ]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))
+    >>> fuzzy_histogram(a, bins=4, membership='sigmoid')
+    (array([ 3.34304743,  2.15613626,  2.15613626,  3.34304743]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))
     
-    \par Boundary effect / the guarantee parameter
-    Values near the left and right border of the histogram might
-    not contribute with a full value of 1 to the histogram, as part of their contribution
-    lies outside of the histogram range. To avoid this affect (which can be quite strong
-    for histograms with few bins and a height smoothness term), set 'guarantee' to True.
-    The histogram size is then selected to be (left_side - smoothness * bin_width till
-    right_side + smoothness * bin_width) and therefore neglect all boundary effects.    
-    
-    Plots of the membership functions can e.g. be found at http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html .
     """
     # check and prepare parameters
     a = scipy.asarray(a).ravel()
@@ -144,41 +138,56 @@ def fuzzy_histogram(a, bins=10, range=None, normed=False, membership='triangular
 # //////////////////// #
 # see http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html for graphs    
 
-def triangular_membership(bin_center, bin_width, smoothness):
-    """
+def triangular_membership(bin_center, bin_width, smoothness = 0.5):
+    r"""
     Create a triangular membership function for a fuzzy histogram bin.
     
-    @param bin_center The center of the bin of which to compute the membership function
-    @param bin_width The width of a single bin (all expected to be of equal width)
-    @param smoothness The smoothness of the function; determines the neighbourhood
-    affected; see below and @link(fuzzy_histogram() for a more detailed explanation
-    @return a triangular membership function centered on the bin
+    Parameters
+    ----------
+    bin_center : number
+        The center of the bin of which to compute the membership function.
+    bin_width : number
+        The width of a single bin (all expected to be of equal width).
+    smoothness : number, optional
+        The smoothness of the function; determines the neighbourhood affected.
+        See below and `fuzzy_histogram` for a more detailed explanation
     
-    @note For the triangular function the smoothness factor has to be 0.5. Lower values
+    Returns
+    -------
+    triangular_membership : function
+        A triangular membership function centered on the bin.
+    
+    Notes
+    -----
+    For the triangular function the smoothness factor has to be 0.5. Lower values
     are accepted, but then the function assumes the shape of the trapezium membership
     function. Higher values lead to an exception.
     
     The triangular membership function is defined as
-    \f[
-      \mu_{\triangle}(x) =
-        \left\{
-          \begin{array}{ll}
-        0, & x<a, x>c\\
-        \frac{x-a}{b-a}, & a\leq x\leq b \\
-        \frac{c-x}{c-b}, & b<x\leq c\\
-          \end{array}
-        \right.
-    \f]
-    where a is the left border, c the right border and b the center of the triangular
-    function. The hight of the triangle is chosen such, that all values contribute with
-    exactely one.
+
+    .. math::
+        
+        \mu_{\triangle}(x) =
+          \left\{
+            \begin{array}{ll}
+              0, & x<a, x>c\\
+              \frac{x-a}{b-a}, & a\leq x\leq b \\
+              \frac{c-x}{c-b}, & b<x\leq c\\
+            \end{array}
+          \right.
+
+    where :math:`a` is the left border, :math:`c` the right border and :math:`b` the center of the triangular
+    function. The height of the triangle is chosen such, that all values contribute with
+    exactly one.
     
-    The standard triangular function (smoothness = 0.5) is displayed in the following
+    The standard triangular function (:math:`smoothness = 0.5`) is displayed in the following
     figure
     
-    @image html doxygen_triangular_01.png  "Triangular functions (1)"
+    .. image:: images/triangular_01.png
     
-    where the bin width is 2 with centers at -2, 0 and 2.
+    "Triangular functions (1)"
+    
+    where the bin width is :math:`2` with centers at :math:`-2`, :math:`0` and :math:`2`.
     """
     if smoothness > 0.5: raise AttributeError('the triangular/trapezium membership functions supports only smoothnesses between 1/10 and 1/2.')
     if smoothness < 0.5: return trapezoid_membership(bin_center, bin_width, smoothness)
@@ -194,53 +203,72 @@ def triangular_membership(bin_center, bin_width, smoothness):
     return fun
     
 def trapezoid_membership(bin_center, bin_width, smoothness):
-    """
-    Create a trapezium membership function for a fuzzy histogram bin.
+    r"""Create a trapezium membership function for a fuzzy histogram bin.
     
-    @param bin_center The center of the bin of which to compute the membership function
-    @param bin_width The width of a single bin (all expected to be of equal width)
-    @param smoothness The smoothness of the function; determines the neighbourhood
-    affected; see below and @link(fuzzy_histogram() for a more detailed explanation
-    @return a trapezium membership function centered on the bin
+    Parameters
+    ----------
+    bin_center : number
+        The center of the bin of which to compute the membership function.
+    bin_width : number
+        The width of a single bin (all expected to be of equal width).
+    smoothness : number, optional
+        The smoothness of the function; determines the neighbourhood affected.
+        See below and `fuzzy_histogram` for a more detailed explanation
+        
+    Returns
+    -------
+    trapezoid_membership : function
+        A trapezoidal membership function centered on the bin.
     
-    @note For the trapezium function the smoothness factor can be between >0.0 and <0.5.
+    Notes
+    -----
+    For the trapezium function the smoothness factor can be between >0.0 and <0.5.
     Higher values are excepted, but then the function assumes the shape of the triangular
     membership function. A value of 0.0 would make the histogram behave like a crisp one.
     
     The trapezium membership function is defined as
-    \f[
-      \mu_{trapez}(x) =
-        \left\{
-          \begin{array}{ll}
-        0, & x<a, x>d\\
-        \frac{x-a}{b-a}, & a\leq x\leq b \\
-        1, & b<x<c\\
-        \frac{d-x}{d-c}, & c\leq x\leq d\\
-          \end{array}
-        \right.
-    \f]
-    where a is the left lower border, b the left upper border, c the right upper border
-    and d the right lower border of the trapezium.
     
-    A smoothness term of 0.1 makes the trapezium function reach by 0.1 * bin_width into
+    .. math::
+    
+        \mu_{trapez}(x) =
+          \left\{
+            \begin{array}{ll}
+              0, & x<a, x>d\\
+              \frac{x-a}{b-a}, & a\leq x\leq b \\
+              1, & b<x<c\\
+              \frac{d-x}{d-c}, & c\leq x\leq d\\
+            \end{array}
+          \right.
+    
+    where :math:`a` is the left lower border, :math:`b` the left upper border, :math:`c` the right upper border
+    and :math:`d` the right lower border of the trapezium.
+    
+    A smoothness term of 0.1 makes the trapezium function reach by :math:`0.1 * bin\_width` into
     the areas of the adjunct bins, as can be observed in the following figure
     
-    @image html doxygen_trapezium_02.png  "Trapezium functions (1)"
+    .. image:: images/trapezium_02.png
+    
+    "Trapezium functions (1)"
     
     where the bin width is 2 with centers at -2, 0 and 2.
     
     Increasing the smoothness term toward 0.5, the function starts to resemble the
-    triangular membership function, which in fact it becomes for any smoothness >= 0.5.
-    The behavior can be observed in the following graph with smoothness=0.4 
+    triangular membership function, which in fact it becomes for any :math:`smoothness >= 0.5`.
+    The behavior can be observed in the following graph with :math:`smoothness=0.4` 
     
-    @image html doxygen_trapezium_01.png  "Trapezium functions (2)"
+    .. image:: images/trapezium_01.png
+    
+    "Trapezium functions (2)"
     
     Lowering the smoothness toward 0.0, on the other hand, leads the trapezium function
     to behave more and more like a crisp histogram membership, which in fact it becomes
     at a smoothness of 0.0. The following figure, where the smoothness term is near zero,
     illustrates this behaviour
     
-    @image html doxygen_trapezium_03.png  "Trapezium functions (3)"
+    .. image:: images/trapezium_03.png
+    
+    "Trapezium functions (3)"
+    
     """
     # special case of high smoothness
     if smoothness < 1./10: raise AttributeError('the triangular/trapezium membership functions supports only smoothnesses between 1/10 and 1/2.')
@@ -259,52 +287,61 @@ def trapezoid_membership(bin_center, bin_width, smoothness):
     return fun
 
 def gaussian_membership(bin_center, bin_width, smoothness):
-    """
-    Create a gaussian membership function for a fuzzy histogram bin.
+    r"""Create a gaussian membership function for a fuzzy histogram bin.
     
-    @param bin_center The center of the bin of which to compute the membership function
-    @param bin_width The width of a single bin (all expected to be of equal width)
-    @param smoothness The smoothness of the function; determines the neighbourhood
-    affected; see below and @link(fuzzy_histogram() for a more detailed explanation
-    @return the cumulative density function of the desired gaussian
-    
-    The gaussian membership function is defined as
-    \f[
-      \mu_{gauss}(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\zeta)^2}{2\sigma^2}}
-    \f]
-    
-    \par Smoothness term
-    It should be note that, since the gaussian membership function is infinite, it is
+    Parameters
+    ----------
+    bin_center : number
+        The center of the bin of which to compute the membership function.
+    bin_width : number
+        The width of a single bin (all expected to be of equal width).
+    smoothness : number, optional
+        The smoothness of the function; determines the neighbourhood affected.
+        See below and `fuzzy_histogram` for a more detailed explanation
+        
+    Returns
+    -------
+    gaussian_membership : function
+        The cumulative density function of the desired gaussian.
+
+    Notes
+    -----
+    Since the gaussian membership function is infinite, it is
     not actually true that it does not contribute to bins outside of the neighbourhood
-    range. But the contribution is so marginal (eps <= 0.001 per value) that it can be
+    range. But the contribution is so marginal (:math:`eps <= 0.001` per value) that it can be
     safely ignored.
     
-    \par Implementation details
+    The gaussian membership function is defined as
+    
+    .. math::
+    
+        \mu_{gauss}(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\zeta)^2}{2\sigma^2}}
+
     Since the gaussian distributions can not be formed to sum up to one at each point of
     the x-axis, their cumulative density functions (CDF) are used instead. For more
     details on CDF see http://en.wikipedia.org/wiki/Normal_distribution .
-    \par
+    
     The gaussian and therefore the CDF are centered above the requested value instead of
     the bin center. Then the CDF value for the left side of the bin is subtracted from
     the CDF value returned for the right side. The result is the integral under the
-    gaussian with mu/zeta = value with the bin-sides as the integral borders.
-    \par
+    gaussian with :math:`\mu/\zeta = value` with the bin-sides as the integral borders.
+    
     This approach might seem a little bit unintuitive, but is the best possible for
     gaussian membership functions. The following graph gives a graphical example of the
     computation of each values bin membership
     
-    @image html doxygen_gaussian_01.png  "Trapezium functions (1)"
+    .. image:: images/gaussian_01.png 
     
-    \par
+    "Trapezium functions (1)"
+    
     where the bin_width is 1, one bin between each of the x tics (e.g. [-1, 0], [0, 1],
     etc.). The value which membership should be computed is marked by a yellow bar at
-    x = 0.3. Its membership in each bin is defined by the integral under the gaussian
+    :math:`x = 0.3`. Its membership in each bin is defined by the integral under the gaussian
     centered at the value (i.e. 0.3). The purple area therefore defines its membership in
     the [-2,-1] bin, the red area its membership in the [-1,0] bin, etc.
     Since the gaussian is guaranteed to have an infinite integral of 1, the some of the
     contributions of a value to all bins is one.
-    
-    \par
+
     For computation the function normalizes all values to a bin_width of 1, which can
     introduce marginal rounding errors.
     """
@@ -314,16 +351,15 @@ def gaussian_membership(bin_center, bin_width, smoothness):
     bin_center = bin_center / bin_width
     start = bin_center - 0.5
     end = bin_center + 0.5
-    sigma = __gaussian_membership_sigma(smoothness)
+    sigma = _gaussian_membership_sigma(smoothness)
 
     def fun(x):
         return scipy.stats.norm.cdf(end, x / bin_width, sigma) - scipy.stats.norm.cdf(start, x / bin_width, sigma) # x, mu, sigma
     
     return fun
 
-def __gaussian_membership_sigma(smoothness, eps = 0.0005): # 275us @ smothness=10
-    """
-    Compute the sigma required for a gaussian, such that in a neighbourhood of
+def _gaussian_membership_sigma(smoothness, eps = 0.0005): # 275us @ smothness=10
+    r"""Compute the sigma required for a gaussian, such that in a neighbourhood of
     smoothness the maximum error is 'eps'.
     The error is here the difference between the clipped integral and one.
     """
@@ -339,26 +375,45 @@ def __gaussian_membership_sigma(smoothness, eps = 0.0005): # 275us @ smothness=1
     return sigma
 
 def sigmoidal_difference_membership(bin_center, bin_width, smoothness):
-    """
-    Create the difference of two sigmoids as membership function for a fuzzy histogram bin.
+    r"""Create the difference of two sigmoids as membership function for a fuzzy histogram bin.
     
-    @param bin_center The center of the bin of which to compute the membership function
-    @param bin_width The width of a single bin (all expected to be of equal width)
-    @param smoothness The smoothness of the function; determines the neighbourhood
-    affected; see below and @link(fuzzy_histogram() for a more detailed explanation
-    @return a sigmoidal difference membership function centered on the bin
+    Parameters
+    ----------
+    bin_center : number
+        The center of the bin of which to compute the membership function.
+    bin_width : number
+        The width of a single bin (all expected to be of equal width).
+    smoothness : number, optional
+        The smoothness of the function; determines the neighbourhood affected.
+        See below and `fuzzy_histogram` for a more detailed explanation
+        
+    Returns
+    -------
+    sigmoidal_difference_membership : function
+        A sigmoidal difference membership function centered on the bin.
+    
+    Notes
+    -----
+    Since the sigmoidal membership function is infinite, it is
+    not actually true that it does not contribute to bins outside of the neighbourhood
+    range. But the contribution is so marginal (eps <= 0.001 per value) that it can be
+    safely ignored.
     
     The sigmoidal membership function is defined as
-    \f[
-     \mu_{sigmoid}(x) = \left[1+e^{-\alpha_1 (x-\zeta_1)}\right]^{-1} - \left[1+e^{-\alpha_2 (x-\zeta_2)}\right]^{-1}
-    \f]
-    where alpha1 = alpha2 = alpha is computed throught the smoothness term and zeta1 and
-    zeta2 constitute the left resp. right borders of the bin.
+    
+    .. math::
+        
+        \mu_{sigmoid}(x) = \left[1+e^{-\alpha_1 (x-\zeta_1)}\right]^{-1} - \left[1+e^{-\alpha_2 (x-\zeta_2)}\right]^{-1}
+
+    where :math:`\alpha_1 = \alpha_2 = \alpha` is computed throught the smoothness term
+    and :math:`\zeta_1` and :math:`\zeta_2` constitute the left resp. right borders of the bin.
     
     The following figure shows three sigmoidal membership functions for bins at the
     centers -2, -0 and 2 with a bin width of 2 and a smoothness of 2:
     
-    @image html doxygen_sigmoid_01.png "Sigmoidal functions (1)"
+    .. image:: images/sigmoid_01.png
+    
+    "Sigmoidal functions (1)"
     
     The central (green) membership functions extends to its up till the second bin
     (centered around -4) and the same to the right (until the bin centered around +4).
@@ -370,16 +425,13 @@ def sigmoidal_difference_membership(bin_center, bin_width, smoothness):
     
     The influence of the smoothness term can be observed in the following figure:
     
-    @image html doxygen_sigmoid_02.png "Sigmoidal functions (2)"
+    .. image:: images/sigmoid_02.png
+    
+    "Sigmoidal functions (2)"
     
     Here smoothness has been chosen to be 1. The green function therefore extends just
     into the directly adjunct bins to its left and right.
     
-    \par Smoothness term
-    It should be note that, since the sigmoidal membership function is infinite, it is
-    not actually true that it does not contribute to bins outside of the neighbourhood
-    range. But the contribution is so marginal (eps <= 0.001 per value) that it can be
-    safely ignored.
     """
     if smoothness > 10 or smoothness < 1./10: raise AttributeError('the sigmoidal membership function supports only smoothnesses between 1/10 and 10.')
     
