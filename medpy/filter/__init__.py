@@ -1,29 +1,136 @@
 """
-@package medpy.filter
-Various image filters and manipulation functions.
+===================================================
+Image filter and manipulation (:mod:`medpy.filter`)
+===================================================
+.. currentmodule:: medpy.filter
 
-Modules:
-    - label: Filter for label images.
-    - binary: Filter for binary images. 
-    - smoothing: Smoothing filters.
-    - image: Various image filter modelled after scipy.ndimage functionality.
+This package contains various image filters and image
+manipulation functions.
+ 
+Smoothing :mod:`medpy.filter.smoothing`
+=======================================
+Image smoothing / noise reduction in grayscale images.
+
+.. module:: medpy.filter.smoothing
+.. autosummary::
+    :toctree: generated/
     
-@author Oskar Maier
+    anisotropic_diffusion
+    gauss_xminus1d
+ 
+Binary :mod:`medpy.filter.binary`
+=================================
+Binary image manipulation.
+
+.. module:: medpy.filter.binary
+.. autosummary::
+    :toctree: generated/
+    
+    size_threshold
+    largest_connected_component
+
+Image :mod:`medpy.filter.image`
+=================================
+Grayscale image manipulation.
+
+.. module:: medpy.filter.image
+.. autosummary::
+    :toctree: generated/
+    
+    sls
+    ssd
+    average_filter
+    sum_filter
+    local_minima
+    otsu
+    
+Label :mod:`medpy.filter.label`
+=================================
+Label map manipulation.
+
+.. module:: medpy.filter.label
+.. autosummary::
+    :toctree: generated/
+    
+    relabel_map
+    relabel
+    relabel_non_zero
+    fit_labels_to_mask
+    
+Noise :mod:`medpy.filter.noise`
+===============================
+Global and local noise estimation in grayscale images.
+
+.. module:: medpy.filter.noise
+.. autosummary::
+    :toctree: generated/
+    
+    immerkaer
+    immerkaer_local
+    separable_convolution
+    
+    
+Utilities :mod:`medpy.filter.utilities`
+=======================================
+Utilities to apply filters selectively and create your own ones.
+
+.. module:: medpy.filter.utilities
+.. autosummary::
+    :toctree: generated/
+    
+    intersection
+    pad
+    
+Hough transform :mod:`medpy.filter.houghtransform`
+==================================================
+The hough transform shape detection algorithm.
+
+.. module:: medpy.filter.houghtransform
+.. autosummary::
+    :toctree: generated/
+    
+    ght
+    ght_alternative
+    template_ellipsoid
+    template_sphere
+    
+Intensity range standardization :mod:`medpy.filter.IntensityRangeStandardization`
+=================================================================================
+A learning method to align the intensity ranges of images.
+
+.. module:: medpy.filter.IntensityRangeStandardization
+.. autosummary::
+    :toctree: generated/
+    
+    IntensityRangeStandardization
+
 """
 
-# determines the modules that should be imported when "from filter import *" is used
-__all__ = []
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# if __all__ is not set, only the following, explicit import statements are executed
-from binary import largest_connected_component, size_threshold
-from image import sls, ssd, average_filter, sum_filter
-from smoothing import anisotropic_diffusion, gauss_xminus1d
-from label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
-from houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
-from otsu import otsu
-from utilities import pad, intersection
+# import all functions/methods/classes into the module
+from .binary import largest_connected_component, size_threshold
+from .image import average_filter, sls, ssd, sum_filter, otsu, local_minima
+from .smoothing import anisotropic_diffusion, gauss_xminus1d
+from .label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
+from .noise import immerkaer, immerkaer_local, separable_convolution
+from .utilities import intersection, pad
 
-from IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
-from LabelImageStatistics import LabelImageStatistics
-from MinimaExtraction import local_minima
+from .houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
+from .IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError 
 
+# import all sub-modules in the __all__ variable
+__all__ = [s for s in dir() if not s.startswith('_')]

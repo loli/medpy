@@ -1,31 +1,40 @@
-"""
-@package medpy.filter.image
-Filters for multi-dimensional images.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.3.0
+# since 2013-11-29
+# status Release
 
-These filter rely heavily on and are modelled after the scipy.ndimage package.
-
-@author Oskar Maier
-@version d0.2.0
-@since 2013-11-29
-@status Development
-"""
-
-# build-in module
+# build-in modules
 import itertools
+import math
 
 # third-party modules
 import numpy
-from scipy.ndimage.filters import convolve, gaussian_filter
+from scipy.ndimage.filters import convolve, gaussian_filter, minimum_filter
 from scipy.ndimage._ni_support import _get_output
 
 # own modules
-from medpy.filter.utilities import pad, __make_footprint
+from .utilities import pad, __make_footprint
 
 # code
 def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
         sn_size = None, sn_footprint = None, sn_mode = "reflect", sn_cval = 0.0,
         pn_size = None, pn_footprint = None, pn_mode = "reflect", pn_cval = 0.0):
-    """
+    r"""
     Computes the signed local similarity between two images.
 
     Compares a patch around each voxel of the minuend array to a number of patches
@@ -34,8 +43,10 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     corresponding search area in the subtrahend.
 
     This filter can also be used to compute local self-similarity, obtaining a
-    descriptor similar to the one described in [1].
+    descriptor similar to the one described in [1]_.
 
+    Parameters
+    ----------
     minuend : array_like
         Input array from which to subtract the subtrahend.
     subtrahend : array_like
@@ -51,7 +62,6 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     signed : bool, optional
         Whether the filter output should be signed or not. If set to 'False',
         only the absolute values will be returned. Default is 'True'.
-
     sn_size : scalar or tuple, optional
         See sn_footprint, below
     sn_footprint : array, optional
@@ -72,8 +82,7 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
         'constant'. Default is 'reflect'
     sn_cval : scalar, optional
         Value to fill past edges of input if `sn_mode` is 'constant'. Default
-        is 0.0        
-        
+        is 0.0
     pn_size : scalar or tuple, optional
         See pn_footprint, below
     pn_footprint : array, optional
@@ -94,11 +103,19 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     pn_cval : scalar, optional
         Value to fill past edges of input if `pn_mode` is 'constant'. Default
         is 0.0
+        
+    Returns
+    -------
+    sls : ndarray
+        The signed local similarity image between subtrahend and minuend.
 
-    [1] Mattias P. Heinrich, Mark Jenkinson, Manav Bhushan, Tahreema Matin, Fergus V. Gleeson, Sir Michael Brady, Julia A. Schnabel
-        MIND: Modality independent neighbourhood descriptor for multi-modal deformable registration
-        Medical Image Analysis, Volume 16, Issue 7, October 2012, Pages 1423-1435, ISSN 1361-8415
-        http://dx.doi.org/10.1016/j.media.2012.05.008
+    References
+    ----------
+    
+    .. [1] Mattias P. Heinrich, Mark Jenkinson, Manav Bhushan, Tahreema Matin, Fergus V. Gleeson, Sir Michael Brady, Julia A. Schnabel
+       MIND: Modality independent neighbourhood descriptor for multi-modal deformable registration
+       Medical Image Analysis, Volume 16, Issue 7, October 2012, Pages 1423-1435, ISSN 1361-8415
+       http://dx.doi.org/10.1016/j.media.2012.05.008
     """
     minuend = numpy.asarray(minuend)
     subtrahend = numpy.asarray(subtrahend)
@@ -150,9 +167,11 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     return numpy.rollaxis(numpy.asarray(sls), 0, minuend.ndim + 1)
 
 def ssd(minuend, subtrahend, normalized=True, signed=False, size=None, footprint=None, mode="reflect", cval=0.0, origin=0):
-    """
-    Computes the SSD between patches of minuend and subtrahend.
+    r"""
+    Computes the sum of squared difference (SSD) between patches of minuend and subtrahend.
     
+    Parameters
+    ----------
     minuend : array_like
         Input array from which to subtract the subtrahend.
     subtrahend : array_like
@@ -185,6 +204,11 @@ def ssd(minuend, subtrahend, normalized=True, signed=False, size=None, footprint
     cval : scalar, optional
         Value to fill past edges of input if `mode` is 'constant'. Default
         is 0.0
+        
+    Returns
+    -------
+    ssd : ndarray
+        The patchwise sum of squared differences between minuend and subtrahend.
     """
     convolution_filter = average_filter if normalized else sum_filter
     output = numpy.float if normalized else minuend.dtype
@@ -199,10 +223,9 @@ def ssd(minuend, subtrahend, normalized=True, signed=False, size=None, footprint
         distance_sign = 1
     
     return distance, distance_sign
-    
 
 def average_filter(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0):
-    """
+    r"""
     Calculates a multi-dimensional average filter.
 
     Parameters
@@ -247,7 +270,7 @@ def average_filter(input, size=None, footprint=None, output=None, mode="reflect"
 
     See Also
     --------
-    convolve : Convolve an image with a kernel.
+    scipy.ndimage.filters.convolve : Convolve an image with a kernel.
     """
     footprint = __make_footprint(input, size, footprint)
     filter_size = footprint.sum()
@@ -259,7 +282,7 @@ def average_filter(input, size=None, footprint=None, output=None, mode="reflect"
 
 
 def sum_filter(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0):
-    """
+    r"""
     Calculates a multi-dimensional sum filter.
 
     Parameters
@@ -304,8 +327,96 @@ def sum_filter(input, size=None, footprint=None, output=None, mode="reflect", cv
 
     See Also
     --------
-    convolve : Convolve an image with a kernel.
+    scipy.ndimage.filters.convolve : Convolve an image with a kernel.
     """
     footprint = __make_footprint(input, size, footprint)
     slicer = [slice(None, None, -1)] * footprint.ndim 
     return convolve(input, footprint[slicer], output, mode, cval, origin)
+
+def otsu (img, bins=64):
+    r"""
+    Otsu's method to find the optimal threshold separating an image into fore- and background.
+    
+    This rather expensive method iterates over a number of thresholds to separate the
+    images histogram into two parts with a minimal intra-class variance.
+    
+    An increase in the number of bins increases the algorithms specificity at the cost of
+    slowing it down.
+    
+    Parameters
+    ----------
+    img : array_like
+        The image for which to determine the threshold.
+    bins : integer
+        The number of histogram bins.
+        
+    Returns
+    -------
+    otsu : intger
+        The otsu threshold to separate the input image into fore- and background.
+    """
+    # cast bins parameter to int
+    bins = int(bins)
+    
+    # cast img parameter to scipy arrax
+    img = numpy.asarray(img)
+    
+    # check supplied parameters
+    if bins <= 1:
+        raise AttributeError('At least a number two bins have to be provided.')
+    
+    # determine initial threshold and threshold step-length
+    steplength = (img.max() - img.min()) / float(bins)
+    initial_threshold = img.min() + steplength
+    
+    # initialize best value variables
+    best_bcv = 0
+    best_threshold = initial_threshold
+    
+    # iterate over the thresholds and find highest between class variance
+    for threshold in numpy.arange(initial_threshold, img.max(), steplength):
+        mask_fg = (img >= threshold)
+        mask_bg = (img < threshold)
+        
+        wfg = numpy.count_nonzero(mask_fg)
+        wbg = numpy.count_nonzero(mask_bg)
+        
+        if 0 == wfg or 0 == wbg: continue
+        
+        mfg = img[mask_fg].mean()
+        mbg = img[mask_bg].mean()
+        
+        bcv = wfg * wbg * math.pow(mbg - mfg, 2)
+        
+        if bcv > best_bcv:
+            best_bcv = bcv
+            best_threshold = threshold
+        
+    return best_threshold
+
+def local_minima(img, min_distance = 4):
+    r"""
+    Returns all local minima from an image.
+    
+    Parameters
+    ----------
+    img : array_like
+        The image.
+    min_distance : integer
+        The minimal distance between the minimas in voxels. If it is less, only the lower minima is returned.
+    
+    Returns
+    -------
+    indices : sequence
+        List of all minima indices.
+    values : sequence
+        List of all minima values.
+    """
+    # @TODO: Write a unittest for this.
+    fits = numpy.asarray(img)
+    minfits = minimum_filter(fits, size=min_distance) # default mode is reflect
+    minima_mask = fits == minfits
+    good_indices = numpy.transpose(minima_mask.nonzero())
+    good_fits = fits[minima_mask]
+    order = good_fits.argsort()
+    return good_indices[order], good_fits[order]

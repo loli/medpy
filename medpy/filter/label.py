@@ -1,21 +1,24 @@
-"""
-@package medpy.filter.label
-Filter for label images.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.1
+# since 2012-02-07
+# status Development
 
-Provides a number of filter that work on label images.
-
-Functions:
-    - def relabel(label_image, start): Relabel an image.
-    - def fit_labels_to_mask(image_labels, image_mask): Assigns all labels of an image either to the foreground or background.
-    - def relabel_map(label_image, mapping, key): Relabel a label image according to a mapping.
-
-@author Oskar Maier
-@version d0.1.1
-@since 2012-02-07
-@status Development
-"""
-
-# build-in module
+# build-in modules
 
 # third-party modules
 import scipy
@@ -25,23 +28,32 @@ from ..core.exceptions import ArgumentError
 
 # code
 def relabel_map(label_image, mapping, key=lambda x, y: x[y]):
-    """
+    r"""
     Relabel an image using the supplied mapping.
     
-    The mapping can be any kind of subscriptable object. The respective region id is used
-    to access the new value from the mapping. The key keyword parameter can be used to
-    supply another access function. The key function must have the signature
+    The ``mapping`` can be any kind of subscriptable object. The respective region id is used
+    to access the new value from the ``mapping``. The ``key`` keyword parameter can be used to
+    supply another access function. The ``key`` function must have the signature
     key(mapping, region-id) and return the new region-id to assign.
     
-    @param label_image A nD label_image
-    @type label_image sequence
-    @param mapping A mapping object
-    @type mapping subscriptable object
+    Parameters
+    ----------
+    label_image : array_like
+        A nD label map.
+    mapping : dictionary or subscriptable object
+        A mapping object.
+    key : function
+        Can be used to defined the key-access to the ``mapping`` object.
     
-    @return A binary image
-    @rtype numpy.ndarray
+    Returns
+    -------
+    relabel_map : ndarray
+        A label map with new region ids.
     
-    @raise ArgumentError If a region id is missing in the supplied mapping
+    Raises
+    ------
+    ArgumentError
+        If a region id is missing in the supplied mapping
     """    
     label_image = scipy.array(label_image)
     
@@ -56,16 +68,25 @@ def relabel_map(label_image, mapping, key=lambda x, y: x[y]):
     return vmap(label_image)
 
 def relabel(label_image, start = 1):
-    """ 
+    r"""
     Relabel the regions of a label image.
     Re-processes the labels to make them consecutively and starting from start.
     
-    @param label_image a label image
-    @type label_image sequence
-    @param start the id of the first label to assign
-    @type start int
-    @return The relabeled image.
-    @rtype numpy.ndarray
+    Parameters
+    ----------
+    label_image : array_like
+        A nD label map.
+    start : integer
+        The id of the first label to assign
+    
+    Returns
+    -------
+    relabel_map : ndarray
+        The relabelled label map.
+        
+    See also
+    --------
+    relabel_non_zero
     """
     label_image = scipy.asarray(label_image)
     mapping = {}
@@ -78,17 +99,26 @@ def relabel(label_image, start = 1):
     return rav.reshape(label_image.shape)
 
 def relabel_non_zero(label_image, start = 1):
-    """ 
+    r""" 
     Relabel the regions of a label image.
     Re-processes the labels to make them consecutively and starting from start.
     Keeps all zero (0) labels, as they are considered background.
     
-    @param label_image a label image
-    @type label_image sequence
-    @param start the id of the first label to assign
-    @type start int
-    @return The relabeled image.
-    @rtype numpy.ndarray
+    Parameters
+    ----------
+    label_image : array_like
+        A nD label map.
+    start : integer
+        The id of the first label to assign
+    
+    Returns
+    -------
+    relabel_map : ndarray
+        The relabelled label map.
+        
+    See also
+    --------
+    relabel  
     """
     if start <= 0: raise ArgumentError('The starting value can not be 0 or lower.')
     
@@ -102,43 +132,48 @@ def relabel_non_zero(label_image, start = 1):
     return relabel_map(label_image, mapping)
 
 
-def fit_labels_to_mask(image_labels, image_mask):
-    """
+def fit_labels_to_mask(label_image, mask):
+    r"""
     Reduces a label images by overlaying it with a binary mask and assign the labels
     either to the mask or to the background. The resulting binary mask is the nearest
     expression the label image can form of the supplied binary mask.
     
-    @param image_labels: A labeled image, i.e., numpy array with labeled regions.
-    @type image_labels sequence
-    @param image_mask: A mask image, i.e., a binary image with False for background and
-                       True for foreground.
-    @type image_mask sequence
-    @return: A mask image, i.e. a binary image with False for background and True for
-             foreground.
-    @rtype: numpy.ndarray
-             
-    @raise ValueError if the input images are not of the same shape, offset or physical
-                      spacing.
+    Parameters
+    ----------
+    label_image : array_like
+        A nD label map.
+    mask : array_like
+        A mask image, i.e., a binary image with False for background and True for foreground.
+        
+    Returns
+    -------
+    best_fit : ndarray
+        The best fit of the labels to the mask.
+    
+    Raises
+    ------         
+    ValueError
+        If ``label_image`` and ``mask`` are not of the same shape.
     """
-    image_labels = scipy.asarray(image_labels)
-    image_mask = scipy.asarray(image_mask, dtype=scipy.bool_)
+    label_image = scipy.asarray(label_image)
+    mask = scipy.asarray(mask, dtype=scipy.bool_)
 
-    if image_labels.shape != image_mask.shape:
+    if label_image.shape != mask.shape:
         raise ValueError('The input images must be of the same shape.')
     
     # prepare collection dictionaries
-    labels = scipy.unique(image_labels)
+    labels = scipy.unique(label_image)
     collection = {}
     for label in labels:
         collection[label] = [0, 0, []]  # size, union, points
     
     # iterate over the label images pixels and collect position, size and union
-    for x in range(image_labels.shape[0]):
-        for y in range(image_labels.shape[1]):
-            for z in range(image_labels.shape[2]):
-                entry = collection[image_labels[x,y,z]]
+    for x in range(label_image.shape[0]):
+        for y in range(label_image.shape[1]):
+            for z in range(label_image.shape[2]):
+                entry = collection[label_image[x,y,z]]
                 entry[0] += 1
-                if image_mask[x,y,z]: entry[1] += 1
+                if mask[x,y,z]: entry[1] += 1
                 entry[2].append((x,y,z))
                 
     # select labels that are more than half in the mask
@@ -146,8 +181,8 @@ def fit_labels_to_mask(image_labels, image_mask):
         if collection[label][0] / 2. >= collection[label][1]:
             del collection[label]
                 
-    # image_result = numpy.zeros_like(image_mask) this is eq. to image_mask.copy().fill(0), which directly applied does not allow access to the rows and colums: Why?
-    image_result = image_mask.copy()
+    # image_result = numpy.zeros_like(mask) this is eq. to mask.copy().fill(0), which directly applied does not allow access to the rows and colums: Why?
+    image_result = mask.copy()
     image_result.fill(False)         
 
     # add labels to result mask

@@ -1,14 +1,24 @@
-"""
-@package medpy.filter.noise
-Global and local noise estimator filters.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.0
+# since 2014-03-20
+# status Release
 
-@author Oskar Maier
-@version r0.1.0
-@since 2014-03-20
-@status Release
-"""
-
-# build-in module
+# build-in modules
 
 # third-party modules
 import numpy
@@ -19,7 +29,7 @@ from scipy.ndimage.filters import convolve1d
 
 # code
 def immerkaer_local(input, size, output=None, mode="reflect", cval=0.0):
-    """
+    r"""
     Estimate the local noise.
     
     The input image is assumed to have additive zero mean Gaussian noise. The Immerkaer
@@ -81,7 +91,7 @@ def immerkaer_local(input, size, output=None, mode="reflect", cval=0.0):
     return return_value    
 
 def immerkaer(input, mode="reflect", cval=0.0):
-    """
+    r"""
     Estimate the global noise.
     
     The input image is assumed to have additive zero mean Gaussian noise. Using a
@@ -89,14 +99,15 @@ def immerkaer(input, mode="reflect", cval=0.0):
     deviation sigma of this noise is estimated. This estimation is global i.e. the
     noise is assumed to be globally homogeneous over the image.
     
-    Implementation based on:
-    [1] John Immerkaer, "Fast Noise Variance Estimation", Computer Vision and Image
-        Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142
+    Implementation based on [1]_.
+    
         
-    Immerkaer suggested a Laplacian-based 2D kernel
-    [[ 1, -2,  1],
-     [-2,  4, -1],
-     [ 1, -2, 1]]
+    Immerkaer suggested a Laplacian-based 2D kernel::
+    
+        [[ 1, -2,  1],
+         [-2,  4, -1],
+         [ 1, -2, 1]]
+
     , which is separable and can therefore be applied by consecutive convolutions with
     the one dimensional kernel [1, -2, 1].
     
@@ -104,6 +115,7 @@ def immerkaer(input, mode="reflect", cval=0.0):
     convolutions with the 1D-kernel along all N dimensions.
     
     This is equivalent with convolving the image with an ND-kernel constructed by calling
+    
     >>> kernel1d = numpy.asarray([1, -2, 1])
     >>> kernel = kernel1d.copy()
     >>> for _ in range(input.ndim):
@@ -134,6 +146,11 @@ def immerkaer(input, mode="reflect", cval=0.0):
     See also
     --------
     immerkaer_local
+    
+    References
+    ----------
+    .. [1] John Immerkaer, "Fast Noise Variance Estimation", Computer Vision and Image
+       Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142
     """
     # build nd-kernel to acquire square root of sum of squared elements
     kernel = [1, -2, 1]
@@ -149,7 +166,8 @@ def immerkaer(input, mode="reflect", cval=0.0):
     return sigma
     
 def separable_convolution(input, weights, output=None, mode="reflect", cval=0.0, origin=0):
-    """Calculate a n-dimensional convolution of a separable kernel to a n-dimensional input.
+    r"""
+    Calculate a n-dimensional convolution of a separable kernel to a n-dimensional input.
     
     Achieved by calling convolution1d along the first axis, obtaining an intermediate
     image, on which the next convolution1d along the second axis is called and so on.
@@ -176,8 +194,8 @@ def separable_convolution(input, weights, output=None, mode="reflect", cval=0.0,
         
     Returns
     -------
-    sigma : float
-        The estimated standard deviation of the images Gaussian noise.
+    output : ndarray
+        Input image convolved with the supplied kernel.
     """
     input = numpy.asarray(input)
     output, return_value = _ni_support._get_output(output, input)

@@ -1,12 +1,22 @@
-"""
-@package medpy.filter.utilities
-Utilities and private methods for filter handling.
-
-@author Oskar Maier
-@version r0.1.2
-@since 2013-12-03
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.2
+# since 2013-12-03
+# status Release
 
 # build-in modules
 
@@ -15,12 +25,12 @@ import numpy
 from scipy.ndimage import _ni_support
 
 # own modules
-from medpy.io import header
+from ..io import header
 
 # code
 #!TODO: Utilise the numpy.pad function that is available since 1.7.0. The numpy version should go inside this function, since it does not support the supplying of a template/footprint on its own.
 def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0):
-    """
+    r"""
     Returns a copy of the input, padded by the supplied structuring element.
     
     In the case of odd dimensionality, the structure element will be centered as
@@ -31,6 +41,8 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
 
     Simulates the behaviour of scipy.ndimage filters.
 
+    Parameters
+    ----------
     input : array_like
         Input array to pad.
     size : scalar or tuple, optional
@@ -56,6 +68,16 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     cval : scalar, optional
         Value to fill past edges of input if `mode` is 'constant'. Default
         is 0.0
+        
+    Returns
+    -------
+    output : ndarray
+        The padded version of the input image.
+        
+    Notes
+    -----
+    Since version 1.7.0, numpy supplied a pad function `numpy.pad` that provides
+    the same functionality and should be preferred.
     """
     input = numpy.asarray(input)
     if footprint is None:
@@ -113,20 +135,30 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     return return_value
 
 def intersection(i1, h1, i2, h2):
-        """
-        @phase: Development
-        Returns the intersecting parts of two images.
+        r"""
+        Returns the intersecting parts of two images in real world coordinates.
+        Takes both, voxelspacing and image offset into account.
         
         Note that the returned new offset might be inaccurate up to 1/2 voxel size for
         each dimension due to averaging.
         
-        @param i1: the first image
-        @param h1: the first header
-        @param i2: the second image
-        @param h2: the second header
-        
-        @return v1, v2, o: the intersecting parts of the images and the new offsets of the sub-images 
-        @rtype ndarray, ndarray
+        Parameters
+        ----------
+        i1 : array_like
+        i2 : array_like
+            The two images.
+        h1 : MedPy image header
+        h2 : MedPy image header
+            The corresponding headers.
+            
+        Returns
+        -------
+        v1 : ndarray
+            The intersecting part of ``i1``.
+        v2 : ndarray
+            The intersecting part of ``i2``.
+        offset : tuple of floats
+            The new offset of ``v1`` and ``v2`` in real world coordinates.
         """
         
         # compute image bounding boxes in real-world coordinates

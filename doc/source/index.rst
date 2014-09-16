@@ -10,6 +10,12 @@ References
 
     core
     features
+    filter
+    graphcut
+    io
+    itkvtk
+    metrics
+    utilities
 
 
 Indices and tables

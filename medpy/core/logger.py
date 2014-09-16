@@ -97,7 +97,7 @@ class Logger (NativeLogger):
         NativeLogger.__init__(self, name, level)
         
         # set attributes
-        self.setHandler(logging.StreamHandler(sys.stdout)) 
+        self.setHandler(logging.StreamHandler(sys.stdout))
         self.setLevel(logging.WARNING)
         
     def setHandler(self, hdlr):
