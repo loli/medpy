@@ -1,29 +1,112 @@
 """
-@package medpy.metric
-Metric measures.
+=====================================
+Metric measures (:mod:`medpy.metric`)
+=====================================
+.. currentmodule:: medpy.metric
 
-Provides a number of metric measures that e.g. can be used for testing and/or evaluation
-purposes on two binary masks (i.e. measuring their similarity) or distance between
-histograms.
+This package provides a number of metric measures that e.g. can be used for testing
+and/or evaluation purposes on two binary masks (i.e. measuring their similarity) or
+distance between histograms.
 
-Modules:
-    - surface: Holds a class to compute and extract surface similarities as used in (1).
-    - volume: Holds a class to compute and extract volume similarities as used in (1).
-    - histogram: Holds a number of real or near histogram distance metrics.
-    - image: Metrics computed directly on the image intensities.
-    - binary: Metrics to compare binary objects in images.
+Binary metrics (:mod:`medpy.metric.binary`)
+===========================================
+Metrics to compare binary objects and classification results.
 
-(1) The MICCAI 2997 Grand Challenge: Heimann T. et al. / "Comparison and Evaluation of
-Methods for Liver Segmentation From CT Datasets" / IEEE Transactions on Medical Imaging,
-Vol.28, No.8, August 2009
+Compare two binary objects
+**************************
+ 
+.. module:: medpy.metric.binary
+
+.. autosummary::
+    :toctree: generated/
+    
+    dc
+    hd
+    asd
+    assd
+    precision
+    recall
+    ravd
+    
+Compare two sets of binary objects
+**********************************
+
+.. autosummary::
+    :toctree: generated/
+    
+    obj_tpr
+    obj_fpr
+    obj_asd
+    obj_assd
+    
+Image metrics (:mod:`medpy.metric.image`)
+=========================================
+Some more image metrics (e.g. `~medpy.filter.image.sls` and `~medpy.filter.image.ssd`)
+can be found in :mod:`medpy.filter.image`. 
+
+.. module:: medpy.metric.image
+.. autosummary::
+    :toctree: generated/
+    
+    mutual_information
+    
+Histogram metrics (:mod:`medpy.metric.histogram`)
+=================================================
+
+.. module:: medpy.metric.histogram
+.. autosummary::
+    :toctree: generated/
+    
+    chebyshev
+    chebyshev_neg
+    chi_square
+    correlate
+    correlate_1
+    cosine
+    cosine_1
+    cosine_2
+    cosine_alt
+    euclidean
+    fidelity_based
+    histogram_intersection
+    histogram_intersection_1
+    jensen_shannon
+    kullback_leibler
+    manhattan
+    minowski
+    noelle_1
+    noelle_2
+    noelle_3
+    noelle_4
+    noelle_5
+    quadratic_forms
+    relative_bin_deviation
+    relative_deviation
+
 """
 
-# determines the modules that should be imported when "from metric import *" is used
-__all__ = []
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# if __all__ is not set, only the following, explicit import statements are executed
-from binary import dc, hd, asd, assd, precision, recall, ravd, obj_tpr, obj_fpr, obj_asd, obj_assd
-from surface import Surface
-from volume import Volume
-from histogram import *
-from image import mutual_information
+# import all functions/methods/classes into the module
+from .binary import dc, hd, asd, assd, precision, recall, ravd, obj_tpr, obj_fpr, obj_asd, obj_assd
+from .histogram import chebyshev, chebyshev_neg, chi_square, correlate, correlate_1, cosine,\
+     cosine_1, cosine_2, cosine_alt, euclidean, fidelity_based, histogram_intersection,\
+     histogram_intersection_1, jensen_shannon, kullback_leibler, manhattan, minowski, noelle_1,\
+     noelle_2, noelle_3, noelle_4, noelle_5, quadratic_forms, relative_bin_deviation, relative_deviation
+from .image import mutual_information
+
+# import all sub-modules in the __all__ variable
+__all__ = [s for s in dir() if not s.startswith('_')]

@@ -67,8 +67,8 @@ def fuzzy_histogram(a, bins=10, range=None, normed=False, membership='triangular
     bin_edges : array of dtype float
         Return the bin edges (length(hist)+1).
     
-    Note
-    ----
+    Notes
+    -----
     See package description for more details on the usage.
     
     Examples
@@ -183,7 +183,7 @@ def triangular_membership(bin_center, bin_width, smoothness = 0.5):
     The standard triangular function (:math:`smoothness = 0.5`) is displayed in the following
     figure
     
-    .. image:: images/triangular_01.png
+    .. .. image:: images/triangular_01.png
     
     "Triangular functions (1)"
     
@@ -246,7 +246,7 @@ def trapezoid_membership(bin_center, bin_width, smoothness):
     A smoothness term of 0.1 makes the trapezium function reach by :math:`0.1 * bin\_width` into
     the areas of the adjunct bins, as can be observed in the following figure
     
-    .. image:: images/trapezium_02.png
+    .. .. image:: images/trapezium_02.png
     
     "Trapezium functions (1)"
     
@@ -256,7 +256,7 @@ def trapezoid_membership(bin_center, bin_width, smoothness):
     triangular membership function, which in fact it becomes for any :math:`smoothness >= 0.5`.
     The behavior can be observed in the following graph with :math:`smoothness=0.4` 
     
-    .. image:: images/trapezium_01.png
+    .. .. image:: images/trapezium_01.png
     
     "Trapezium functions (2)"
     
@@ -265,7 +265,7 @@ def trapezoid_membership(bin_center, bin_width, smoothness):
     at a smoothness of 0.0. The following figure, where the smoothness term is near zero,
     illustrates this behaviour
     
-    .. image:: images/trapezium_03.png
+    .. .. image:: images/trapezium_03.png
     
     "Trapezium functions (3)"
     
@@ -330,7 +330,7 @@ def gaussian_membership(bin_center, bin_width, smoothness):
     gaussian membership functions. The following graph gives a graphical example of the
     computation of each values bin membership
     
-    .. image:: images/gaussian_01.png 
+    .. .. image:: images/gaussian_01.png 
     
     "Trapezium functions (1)"
     
@@ -411,7 +411,7 @@ def sigmoidal_difference_membership(bin_center, bin_width, smoothness):
     The following figure shows three sigmoidal membership functions for bins at the
     centers -2, -0 and 2 with a bin width of 2 and a smoothness of 2:
     
-    .. image:: images/sigmoid_01.png
+    .. .. image:: images/sigmoid_01.png
     
     "Sigmoidal functions (1)"
     
@@ -425,7 +425,7 @@ def sigmoidal_difference_membership(bin_center, bin_width, smoothness):
     
     The influence of the smoothness term can be observed in the following figure:
     
-    .. image:: images/sigmoid_02.png
+    .. .. image:: images/sigmoid_02.png
     
     "Sigmoidal functions (2)"
     

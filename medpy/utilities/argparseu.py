@@ -1,12 +1,22 @@
-"""
-@package medpy.utilities.arsparseu
-Holds additional functionality for the argparse commandline parser package.
-
-@author Oskar Maier
-@version r0.1.1
-@since 2013-07-02
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.1
+# since 2013-07-02
+# status Release
 
 # build-in modules
 import argparse
@@ -23,8 +33,10 @@ def sequenceOfIntegersGeAscendingStrict(string):
     Accepts only colon-separated lists of valid integer values that are greater than or
     equal to 0 and in ascending order.
     
-    Usage:
-    parser.add_argument('argname', type=sequenceOfIntegersGeAscending, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfIntegersGeAscending, help='help')
     """
     return __sequenceAscendingStrict(__sequenceGe(sequenceOfIntegers(string)))
 
@@ -33,8 +45,10 @@ def sequenceOfIntegers(string):
     A custom type for the argparse commandline parser.
     Accepts only colon-separated lists of valid integer values.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfIntegers, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfIntegers, help='help')
 
     """
     value = map(int, string.split(','))
@@ -45,8 +59,10 @@ def sequenceOfIntegersGt(string):
     A custom type for the argparse commandline parser.
     Accepts only colon-separated lists of valid integer values that are greater than 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfIntegersGt, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfIntegersGt, help='help')
 
     """
     value = sequenceOfIntegers(string)
@@ -58,8 +74,10 @@ def sequenceOfIntegersGe(string):
     Accepts only colon-separated lists of valid integer values that are greater than or
     equal to 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfIntegersGe, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfIntegersGe, help='help')
 
     """
     value = sequenceOfIntegers(string)
@@ -70,8 +88,10 @@ def sequenceOfIntegersLt(string):
     A custom type for the argparse commandline parser.
     Accepts only colon-separated lists of valid integer values that are less than 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfIntegersLt, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfIntegersLt, help='help')
 
     """
     value = sequenceOfIntegers(string)
@@ -83,8 +103,10 @@ def sequenceOfIntegersLe(string):
     Accepts only colon-separated lists of valid integer values that are less than or
     equal to 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfIntegersLe, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfIntegersLe, help='help')
 
     """
     value = sequenceOfIntegers(string)
@@ -95,8 +117,10 @@ def sequenceOfFloats(string):
     A custom type for the argparse commandline parser.
     Accepts only colon-separated lists of valid float values.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfFloats, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfFloats, help='help')
 
     """
     value = map(float, string.split(','))
@@ -107,8 +131,10 @@ def sequenceOfFloatsGt(string):
     A custom type for the argparse commandline parser.
     Accepts only colon-separated lists of valid float values that are greater than 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfFloatsGt, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfFloatsGt, help='help')
 
     """
     value = sequenceOfFloats(string)
@@ -120,8 +146,10 @@ def sequenceOfFloatsGe(string):
     Accepts only colon-separated lists of valid float values that are greater than or
     equal to 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfFloatsGe, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfFloatsGe, help='help')
 
     """
     value = sequenceOfFloats(string)
@@ -132,8 +160,10 @@ def sequenceOfFloatsLt(string):
     A custom type for the argparse commandline parser.
     Accepts only colon-separated lists of valid float values that are less than 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfFloatsLt, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfFloatsLt, help='help')
 
     """
     value = sequenceOfFloats(string)
@@ -145,8 +175,10 @@ def sequenceOfFloatsLe(string):
     Accepts only colon-separated lists of valid float values that are less than or
     equal to 0.
 
-    Usage:
-    parser.add_argument('argname', type=sequenceOfFloatsLe, help='help')
+    Examples
+    --------
+
+    >>> parser.add_argument('argname', type=sequenceOfFloatsLe, help='help')
 
     """
     value = sequenceOfFloats(string)

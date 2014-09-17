@@ -1,12 +1,22 @@
-"""
-@package medpy.metric.binary
-Provides a number of binary image distance measures.
-
-@author Oskar Maier
-@version r0.1.1
-@since 2014-03-13
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.1
+# since 2014-03-13
+# status Release
 
 # build-in modules
 
@@ -21,7 +31,7 @@ from scipy.ndimage.measurements import label, find_objects
 
 # code
 def dc(input1, input2):
-    """
+    r"""
     Dice coefficient
     
     Computes the Dice coefficient (also known as Sorensen index) between the binary
@@ -31,24 +41,24 @@ def dc(input1, input2):
     
     .. math::
         
-        DC = \frac{2|A\capB|}{|A|+|B|}
+        DC=\frac{2|A\cap B|}{|A|+|B|}
         
-    , where A is the first and B the second set of samples (here binary objects).
+    , where :math:`A` is the first and :math:`B` the second set of samples (here: binary objects).
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
     Returns
     -------
-    dc: float
-        The Dice coefficient between the object(s) in `input1` and the
-        object(s) in `input2`. It ranges from 0 (no overlap) to 1 (perfect overlap).
+    dc : float
+        The Dice coefficient between the object(s) in ```input1``` and the
+        object(s) in ```input2```. It ranges from 0 (no overlap) to 1 (perfect overlap).
         
     Notes
     -----
@@ -78,16 +88,16 @@ def precision(input1, input2):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
     Returns
     -------
-    precision: float
+    precision : float
         The precision between two binary datasets, here mostly binary objects in images,
         which is defined as the fraction of retrieved instances that are relevant. The
         precision is not symmetric.
@@ -96,10 +106,15 @@ def precision(input1, input2):
     --------
     :func:`recall`
     
-    Note
-    ----
+    Notes
+    -----
     Not symmetric. The inverse of the precision is :func:`recall`.
     High precision means that an algorithm returned substantially more relevant results than irrelevant.
+    
+    References
+    ----------
+    .. [1] http://en.wikipedia.org/wiki/Precision_and_recall
+    .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion
     """
     input1 = numpy.atleast_1d(input1.astype(numpy.bool))
     input2 = numpy.atleast_1d(input2.astype(numpy.bool))
@@ -116,37 +131,39 @@ def precision(input1, input2):
 
 def recall(input1, input2):
     """
-    Recall.
+    Recall (or sensitivity).
     In case of evaluation, pass the ground truth as second and the classification results
     as first argument.
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
     Returns
     -------
-    recall: float
+    recall : float
         The recall between two binary datasets, here mostly binary objects in images,
-        which is defined as tthe fraction of relevant instances that are retrieved. The
+        which is defined as the fraction of relevant instances that are retrieved. The
         recall is not symmetric.
-    
-    while recall (also known as sensitivity) is the fraction of relevant instances that are retrieved.
-    In simple terms, high precision means that an algorithm returned substantially more relevant results than irrelevant, while high recall means that an algorithm returned most of the relevant results.
     
     See also
     --------
     :func:`precision`
     
-    Note
-    ----
+    Notes
+    -----
     Not symmetric. The inverse of the recall is :func:`precision`.
     High recall means that an algorithm returned most of the relevant results.
+    
+    References
+    ----------
+    .. [1] http://en.wikipedia.org/wiki/Precision_and_recall
+    .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion
     """
     input1 = numpy.atleast_1d(input1.astype(numpy.bool))
     input2 = numpy.atleast_1d(input2.astype(numpy.bool))
@@ -170,28 +187,28 @@ def hd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    voxelspacing: float or int, or sequence of same, optional
+    voxelspacing : float or sequence of floats, optional
         The voxelspacing in a distance unit i.e. spacing of elements
         along each dimension. If a sequence, must be of length equal to
         the input rank; if a single number, this is used for all axes. If
         not specified, a grid spacing of unity is implied.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         Presumably does not influence the result in the case of the Hausdorff distance.
         
     Returns
     -------
-    hd: float
-        The symmetric Hausdorff Distance between the object(s) in `input1` and the
-        object(s) in `input2`. The distance unit is the same as for the spacing of 
+    hd : float
+        The symmetric Hausdorff Distance between the object(s) in ```input1``` and the
+        object(s) in ```input2```. The distance unit is the same as for the spacing of 
         elements along each dimension, which is usually given in mm.
         
     See also
@@ -217,29 +234,29 @@ def assd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    voxelspacing: float or int, or sequence of same, optional
+    voxelspacing : float or sequence of floats, optional
         The voxelspacing in a distance unit i.e. spacing of elements
         along each dimension. If a sequence, must be of length equal to
         the input rank; if a single number, this is used for all axes. If
         not specified, a grid spacing of unity is implied.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.         
         
     Returns
     -------
-    assd: float
-        The average symmetric surface distance between the object(s) in `input1` and the
-        object(s) in `input2`. The distance unit is the same as for the spacing of 
+    assd : float
+        The average symmetric surface distance between the object(s) in ``input1`` and the
+        object(s) in ``input2``. The distance unit is the same as for the spacing of 
         elements along each dimension, which is usually given in mm.
         
     See also
@@ -250,9 +267,13 @@ def assd(input1, input2, voxelspacing=None, connectivity=1):
     Notes
     -----
     This is a real metric, obtained by calling and averaging
-    >>>> asd(input1, input2)
+    
+    >>> asd(input1, input2)
+    
     and
-    >>>> asd(input2, input1)
+    
+    >>> asd(input2, input1)
+    
     """
     assd = numpy.mean( (asd(input1, input2, voxelspacing, connectivity), asd(input2, input1, voxelspacing, connectivity)) )
     return assd
@@ -265,29 +286,29 @@ def asd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    voxelspacing: float or int, or sequence of same, optional
+    voxelspacing : float or sequence of floats, optional
         The voxelspacing in a distance unit i.e. spacing of elements
         along each dimension. If a sequence, must be of length equal to
         the input rank; if a single number, this is used for all axes. If
         not specified, a grid spacing of unity is implied.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
     
     Returns
     -------
-    asd: float
-        The average surface distance between the object(s) in `input1` and the
-        object(s) in `input2`. The distance unit is the same as for the spacing
+    asd : float
+        The average surface distance between the object(s) in ``input1`` and the
+        object(s) in ``input2``. The distance unit is the same as for the spacing
         of elements along each dimension, which is usually given in mm.
         
     See also
@@ -307,39 +328,58 @@ def asd(input1, input2, voxelspacing=None, connectivity=1):
     --------
     The `connectivity` determines what pixels/voxels are considered the surface of a
     binary object. Take the following binary image showing a cross
+    
     >>> from scipy.ndimage.morphology import generate_binary_structure
     >>> cross = generate_binary_structure(2, 1)
     array([[0, 1, 0],
            [1, 1, 1],
            [0, 1, 0]])
+           
     With `connectivity` set to `1` a 4-neighbourhood is considered when determining the
-    object surface, resulting in
-    array([[0, 1, 0],
-           [1, 0, 1],
-           [0, 1, 0]])
+    object surface, resulting in the surface
+    
+    .. code-block:: python
+    
+        array([[0, 1, 0],
+               [1, 0, 1],
+               [0, 1, 0]])
+           
     Changing `connectivity` to `2`, a 8-neighbourhood is considered and we get:
-    array([[0, 1, 0],
-           [1, 1, 1],
-           [0, 1, 0]])
+    
+    .. code-block:: python
+    
+        array([[0, 1, 0],
+               [1, 1, 1],
+               [0, 1, 0]])
+           
     , as a diagonal connection does no longer qualifies as valid object surface.
     
     This influences the  results `asd` returns. Imagine we want to compute the surface
     distance of our cross to a cube-like object:
-    >>>> cube = generate_binary_structure(2, 1)
+    
+    >>> cube = generate_binary_structure(2, 1)
     array([[1, 1, 1],
            [1, 1, 1],
            [1, 1, 1]])
+           
     , which surface is, independent of the `connectivity` value set, always
-    array([[1, 1, 1],
-           [1, 0, 1],
-           [1, 1, 1]])
+    
+    .. code-block:: python
+    
+        array([[1, 1, 1],
+               [1, 0, 1],
+               [1, 1, 1]])
            
     Using a `connectivity` of `1` we get
-    >>>> asd(cross, cube, connectivity=1)
+    
+    >>> asd(cross, cube, connectivity=1)
     0.0
-    while a value of `2` returns uns
-    >>>> asd(cross, cube, connectivity=2)
+    
+    while a value of `2` returns us
+    
+    >>> asd(cross, cube, connectivity=2)
     0.20000000000000001
+    
     due to the center of the cross being considered surface as well.
     
     """
@@ -356,23 +396,24 @@ def ravd(input1, input2):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
         
     Returns
     -------
-    ravd: float
-        The relative absolute volume difference between the object(s) in `input1`
-        and the object(s) in `input2`. This is a percentage value in the range
-        [-1.0, +inf] for which a `0` denotes an ideal score.
+    ravd : float
+        The relative absolute volume difference between the object(s) in ``input1``
+        and the object(s) in ``input2``. This is a percentage value in the range
+        :math:`[-1.0, +inf]` for which a :math:`0` denotes an ideal score.
         
-    Exceptions
-    ----------
-    Throws a `RuntimeError` if the reference object is empty.
+    Raises
+    ------
+    RuntimeError
+        If the reference object is empty.
         
     See also
     --------
@@ -391,7 +432,8 @@ def ravd(input1, input2):
     
     Examples
     --------
-    Considering the following inputs 
+    Considering the following inputs
+    
     >>> import numpy
     >>> arr1 = numpy.asarray([[0,1,0],[1,1,1],[0,1,0]])
     >>> arr1
@@ -403,19 +445,25 @@ def ravd(input1, input2):
     array([[0, 1, 0],
            [1, 0, 1],
            [0, 1, 0]])
+           
     comparing `arr1` to `arr2` we get
+    
     >>> ravd(arr1, arr2)
     -0.2
+    
     and reversing the inputs the directivness of the metric becomes evident
+    
     >>> ravd(arr2, arr1)
     0.25
     
     It is important to keep in mind that a perfect score of `0` does not mean that the
     binary objects fit exactely, as only the volumes are compared:
+    
     >>> arr1 = numpy.asarray([1,0,0])
     >>> arr2 = numpy.asarray([0,0,1])
     >>> ravd(arr1, arr2)
     0.0
+    
     """
     input1 = numpy.atleast_1d(input1.astype(numpy.bool))
     input2 = numpy.atleast_1d(input2.astype(numpy.bool))
@@ -432,35 +480,35 @@ def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
     """
     Average symmetric surface distance.
     
-    Computes the average symmetric surface distance (ASD) between the binary objects in
+    Computes the average symmetric surface distance (ASSD) between the binary objects in
     two images.
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    voxelspacing: float or int, or sequence of same, optional
+    voxelspacing : float or sequence of floats, optional
         The voxelspacing in a distance unit i.e. spacing of elements
         along each dimension. If a sequence, must be of length equal to
         the input rank; if a single number, this is used for all axes. If
         not specified, a grid spacing of unity is implied.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object as well as when determining the surface
         of the binary objects. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
     Returns
     -------
-    assd: float
+    assd : float
         The average symmetric surface distance between all mutually existing distinct
-        binary object(s) in `input1` and `input2`. The distance unit is the same as for
+        binary object(s) in ``input1`` and ``input2``. The distance unit is the same as for
         the spacing of elements along each dimension, which is usually given in mm.
         
     See also
@@ -470,9 +518,13 @@ def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
     Notes
     -----
     This is a real metric, obtained by calling and averaging
-    >>>> obj_asd(input1, input2)
+    
+    >>> obj_asd(input1, input2)
+    
     and
-    >>>> obj_asd(input2, input1)
+    
+    >>> obj_asd(input2, input1)
+    
     """
     assd = numpy.mean( (obj_asd(input1, input2, voxelspacing, connectivity), obj_asd(input2, input1, voxelspacing, connectivity)) )
     return assd
@@ -488,30 +540,30 @@ def obj_asd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    voxelspacing: float or int, or sequence of same, optional
+    voxelspacing : float or sequence of floats, optional
         The voxelspacing in a distance unit i.e. spacing of elements
         along each dimension. If a sequence, must be of length equal to
         the input rank; if a single number, this is used for all axes. If
         not specified, a grid spacing of unity is implied.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object as well as when determining the surface
         of the binary objects. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
     Returns
     -------
-    asd: float
+    asd : float
         The average surface distance between all mutually existing distinct binary
-        object(s) in `input1` and `input2`. The distance unit is the same as for the
+        object(s) in ``input1`` and ``input2``. The distance unit is the same as for the
         spacing of elements along each dimension, which is usually given in mm.
         
     See also
@@ -634,29 +686,30 @@ def obj_fpr(input1, input2, connectivity=1):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
     Returns
     -------
-    tpr: float
-        A percentage measure of how many distinct binary objects in `input2` have no
-        corresponding binary object in `input2`. It has the range [0, 1], where a `0`
+    tpr : float
+        A percentage measure of how many distinct binary objects in ``input2`` have no
+        corresponding binary object in ``input2``. It has the range :math:`[0, 1]`, where a :math:`0`
         denotes an ideal score.
         
-    Exceptions
-    ----------
-    Throws a `RuntimeError` if the second array is empty.
+    Raises
+    ------
+    RuntimeError
+        If the second array is empty.
     
     See also
     --------
@@ -665,7 +718,7 @@ def obj_fpr(input1, input2, connectivity=1):
     Notes
     -----
     This is not a real metric, as it is directed. Whatever array is considered as
-    reference should be passed first. A perfect score of '0' tells that there are no
+    reference should be passed first. A perfect score of :math:`0` tells that there are no
     distinct binary objects in the second array that do not exists also in the reference
     array, but does not reveal anything about objects in the reference array also
     existing in the second array (use :func:`obj_tpr` for this).
@@ -712,16 +765,16 @@ def obj_fpr(input1, input2, connectivity=1):
     >>> obj_fpr(arr2, arr1)
     0.3333333333333333
     
-    arr1 = numpy.asarray([[1,0,1,0,0],
-                          [1,0,0,0,0],
-                          [1,0,1,1,1],
-                          [0,0,0,0,0],
-                          [1,0,1,0,0]])
-    arr2 = numpy.asarray([[1,1,1,0,0],
-                          [0,0,0,0,0],
-                          [1,1,1,0,1],
-                          [0,0,0,0,0],
-                          [1,1,1,0,0]])
+    >>> arr1 = numpy.asarray([[1,0,1,0,0],
+                              [1,0,0,0,0],
+                              [1,0,1,1,1],
+                              [0,0,0,0,0],
+                              [1,0,1,0,0]])
+    >>> arr2 = numpy.asarray([[1,1,1,0,0],
+                              [0,0,0,0,0],
+                              [1,1,1,0,1],
+                              [0,0,0,0,0],
+                              [1,1,1,0,0]])
     >>> obj_fpr(arr1, arr2)
     0.0
     >>> obj_fpr(arr2, arr1)
@@ -744,28 +797,29 @@ def obj_tpr(input1, input2, connectivity=1):
     
     Parameters
     ----------
-    input1: array_like
+    input1 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2: array_like
+    input2 : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    connectivity: int
+    connectivity : int
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object. This value is passed to
-        scipy.ndimage.morphology.generate_binary_structure and should usually be > 1.
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
     Returns
     -------
-    tpr: float
-        A percentage measure of how many distinct binary objects in `input1` also exists
-        in `input2`. It has the range [0, 1], where a `1` denotes an ideal score.
+    tpr : float
+        A percentage measure of how many distinct binary objects in ``input1`` also exists
+        in ``input2``. It has the range :math:`[0, 1]`, where a :math:`1` denotes an ideal score.
         
-    Exceptions
-    ----------
-    Throws a `RuntimeError` if the reference object is empty.
+    Raises
+    ------
+    RuntimeError
+        If the reference object is empty.
     
     See also
     --------
@@ -774,7 +828,7 @@ def obj_tpr(input1, input2, connectivity=1):
     Notes
     -----
     This is not a real metric, as it is directed. Whatever array is considered as
-    reference should be passed first. A perfect score of '1' tells that all distinct
+    reference should be passed first. A perfect score of :math:`1` tells that all distinct
     binary objects in the reference array also exist in the second array, but does not
     reveal anything about additional binary objects in the second array
     (use :func:`obj_fpr` for this).
@@ -821,16 +875,16 @@ def obj_tpr(input1, input2, connectivity=1):
     >>> obj_tpr(arr2, arr1)
     1.0
     
-    arr1 = numpy.asarray([[1,0,1,0,0],
-                          [1,0,0,0,0],
-                          [1,0,1,1,1],
-                          [0,0,0,0,0],
-                          [1,0,1,0,0]])
-    arr2 = numpy.asarray([[1,1,1,0,0],
-                          [0,0,0,0,0],
-                          [1,1,1,0,1],
-                          [0,0,0,0,0],
-                          [1,1,1,0,0]])
+    >>> arr1 = numpy.asarray([[1,0,1,0,0],
+                              [1,0,0,0,0],
+                              [1,0,1,1,1],
+                              [0,0,0,0,0],
+                              [1,0,1,0,0]])
+    >>> arr2 = numpy.asarray([[1,1,1,0,0],
+                              [0,0,0,0,0],
+                              [1,1,1,0,1],
+                              [0,0,0,0,0],
+                              [1,1,1,0,0]])
     >>> obj_tpr(arr1, arr2)
     0.8
     >>> obj_tpr(arr2, arr1)

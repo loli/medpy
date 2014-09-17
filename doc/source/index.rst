@@ -8,15 +8,14 @@ References
 .. toctree::
     :maxdepth: 1
 
-    core
-    features
-    filter
-    graphcut
     io
+    metric
+    filter
+    features
+    graphcut
     itkvtk
-    metrics
+    core
     utilities
-
 
 Indices and tables
 ------------------

@@ -57,4 +57,4 @@ from .exceptions import ArgumentError, FunctionError, SubprocessError, ImageLoad
                         DependencyError, ImageSavingError, ImageTypeError, MetaDataError
                         
 # import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith('_')]                        
+__all__ = [s for s in dir() if not s.startswith('_')]

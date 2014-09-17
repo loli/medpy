@@ -1,5 +1,5 @@
 """
-@package medpy.utilities.arsparseu
+@package medpy.utilities.nibabelu
 Holds a number of utility function to process NiBabel images.
 
 @author Oskar Maier

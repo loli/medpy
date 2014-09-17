@@ -181,8 +181,11 @@ class IntensityRangeStandardization (object):
     
     # static member variables
     L2 = [50]
+    """1-value landmark points model."""
     L3 = [25, 50, 75]
+    """3-value landmark points model."""
     L4 = [10, 20, 30, 40, 50, 60, 70, 80, 90]
+    """9-value landmark points model."""
     
     def __init__(self, cutoffp = (1, 99), landmarkp = L4, stdrange = 'auto'):
         # check parameters
@@ -360,7 +363,7 @@ class IntensityRangeStandardization (object):
     
     @property
     def model(self):
-        """Get the model i.e. the learned percentile values."""
+        """Get the model (the learned percentile values)."""
         return self.__model
     
     def __compute_stdrange(self, images):

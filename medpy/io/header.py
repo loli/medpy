@@ -1,14 +1,22 @@
-"""
-@package medpy.io.header
-Provides functionality to access the image headers.
-    
-The supplied methods hide more complex usage of a number of third party modules.
-
-@author Oskar Maier
-@version r0.1.3
-@since 2012-06-01
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.3
+# since 2012-06-01
+# status Release
 
 # build-in modules
 
@@ -18,18 +26,27 @@ import numpy
 # own modules
 from ..core import Logger
 
-# !TODO: Turn into an own class, with sub-classes for each 3rd party type.
+# !TODO: Turn into an own class, with sub-classes for each 3rd party type (see _header.py).
 
 # code
 def get_pixel_spacing(hdr):
-    """
+    r"""
     Extracts the pixels spacing from an image header.
     
-    @param hdr an image header as returned by @link io.load.load()
-    @type object
+    Parameters
+    ----------
+    hdr : object
+        An image header as returned by `load`.
     
-    @return the image's pixel spacing
-    @rtype tuple
+    Returns
+    -------
+    pixel_spacing : tuple of floats
+        The image's pixel spacing.
+        
+    Raises
+    ------
+    AttributeError
+        If the header is of an unknown type or does not support the reading of the pixel spacing.
     """
     try:
         if __is_header_nibabel(hdr):
@@ -44,21 +61,32 @@ def get_pixel_spacing(hdr):
         raise AttributeError('The provided header {} is of unknown type or does not support queries for pixel spacing.'.format(type(hdr)))
 
 def get_offset(hdr):
-    """
+    r"""
     Extracts the image offset from an image header.
     
-    @note Usually it can be assumed that the offset is measured from the center point of
-          the first pixel, but this does not hold true for ITK versions < 3.16 and even for
-          later it can not be assured, as some compile flags change the behaviour.
-          
-    @note The Analyze format does not specify a header field for the offset, thus zeros
-          are returned in this case.
+    Parameters
+    ----------
+    hdr : object
+        An image header as returned by `load`.
     
-    @param hdr an image header as returned by @link io.load.load()
-    @type object
+    Returns
+    -------
+    offset : tuple of floats
+        The image's offset.
     
-    @return the image's offset
-    @rtype tuple
+    Raises
+    ------
+    AttributeError
+        If the header is of an unknown type or does not support the reading of the offset.
+    
+    Notes
+    -----
+    Usually it can be assumed that the offset is measured from the center point of
+    the first pixel, but this does not hold true for ITK versions < 3.16 and even for
+    later it can not be assured, as some compile flags change the behaviour.
+    
+    The Analyze format does not specify a header field for the offset, thus zeros
+    are returned in this case.
     """
     try:
         if __is_header_nibabel(hdr):
@@ -73,13 +101,20 @@ def get_offset(hdr):
         raise AttributeError('The provided header {} is of unknown type or does not support queries for offsets.'.format(type(hdr)))        
 
 def set_pixel_spacing(hdr, spacing):
-    """
+    r"""
     Sets the pixels spacing in an image header.
     
-    @param hdr and image header as returned by @link io.load.load()
-    @type object
-    @param spacing the desired pixel spacing
-    @type spacing sequence
+    Parameters
+    ----------
+    hdr : object
+        An image header as returned by `load`.
+    pixel_spacing : tuple of floats
+        The desired pixel spacing.
+        
+    Raises
+    ------
+    AttributeError
+        If the header is of an unknown type or does not support the setting of the pixel spacing.
     """
     try:
         if __is_header_nibabel(hdr):
@@ -96,15 +131,25 @@ def set_pixel_spacing(hdr, spacing):
         raise AttributeError('The provided header {} is of unknown type or does not support setting of pixel spacing.'.format(type(hdr)))
 
 def set_offset(hdr, offset):
-    """
+    r"""
     Sets the offset in the image header.
     
-    @note The offset is based on the center of the first voxel.
-    
-    @param hdr an image header as returned by @link io.load.load()
-    @type object
-    @param offset the desired offset
-    @type offset sequence
+    Parameters
+    ----------
+    hdr : object
+        An image header as returned by `load`.
+    offset : tuple of floats
+        The desired offset.
+        
+    Raises
+    ------
+    AttributeError
+        If the header is of an unknown type or does not support the setting of the offset.
+        
+    Notes
+    -----
+    The offset is usually based on the center of the first voxel.
+    See also `get_offset` for more details.
     """
     try:
         if __is_header_nibabel(hdr):
@@ -121,23 +166,30 @@ def set_offset(hdr, offset):
         raise AttributeError('The provided header {} is of unknown type or does not support setting of offsets.'.format(type(hdr)))    
 
 def copy_meta_data(hdr_to, hdr_from):
-    """
+    r"""
     Copy image meta data (voxel spacing and offset) from one header to another.
     
-    @param hdr_to an image header as returned by @link io.load.load()
-    @type object
-    @param hdr_from an image header as returned by @link io.load.load()
-    @type object
+    Parameters
+    ----------
+    hdr_to : object
+        An image header as returned by `load`.
+    hdr_from : object
+        An image header as returned by `load`.
+        
+    Raises
+    ------
+    AttributeError
+        If one of the headers does not support the reading respectively writing of metadata.
     """
     logger = Logger.getInstance()
     try:
         set_pixel_spacing(hdr_to, get_pixel_spacing(hdr_from))
     except AttributeError as e:
-        logger.warning('The voxel spacing could not be set correctly. Signalled error: {}'.format(e))
+        logger.warning('The voxel spacing could not be set correctly. Signaled error: {}'.format(e))
     try:
         set_offset(hdr_to, get_offset(hdr_from))
     except AttributeError as e:
-        logger.warning('The image offset could not be set correctly. Signalled error: {}'.format(e))
+        logger.warning('The image offset could not be set correctly. Signaled error: {}'.format(e))
 
 
 def __get_pixel_spacing_itk(hdr):
@@ -188,7 +240,7 @@ def __get_pixel_spacing_pydicom(hdr):
 def __get_offset_nibabel(hdr):
     """
     @note Only Nifit has full support for image offsets. The two Analyze versions SPM2
-          and SPM99 can also define offsets, but the definition is reather unclear.
+          and SPM99 can also define offsets, but the definition is rather unclear.
           Instead zero sequences are returned in these cases, which is the standard
           behaviour.
     """ 

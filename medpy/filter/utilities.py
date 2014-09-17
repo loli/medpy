@@ -34,9 +34,11 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     Returns a copy of the input, padded by the supplied structuring element.
     
     In the case of odd dimensionality, the structure element will be centered as
-    following on the currently processed position:
-    [[T, Tx, T],
-     [T, T , T]]
+    following on the currently processed position::
+    
+        [[T, Tx, T],
+         [T, T , T]]
+         
     , where Tx denotes the center of the structure element.
 
     Simulates the behaviour of scipy.ndimage filters.

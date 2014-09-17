@@ -1,14 +1,22 @@
-"""
-@package medpy.io.save
-Provides functionality connected with image saving.
-    
-The supplied methods hide more complex usage of a number of third party modules.
-
-@author Oskar Maier
-@version r0.1.1
-@since 2012-05-28
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.1
+# since 2012-05-28
+# status Release
 
 # build-in modules
 import os
@@ -20,18 +28,19 @@ import scipy
 from ..core import Logger
 from ..core import ImageTypeError, DependencyError,\
     ImageSavingError
-from header import __update_header_from_array_nibabel, __is_header_itk, __is_header_nibabel, copy_meta_data, get_pixel_spacing
+from .header import __update_header_from_array_nibabel,\
+    __is_header_itk, __is_header_nibabel, copy_meta_data
 
 # !TODO: Change to not work with the Exceptions anymore, as these hides bugs!
 
 # code
 def save(arr, filename, hdr = False, force = True):
-    """
-    Save the image arr as filename using information encoded in hdr. The target image
-    format is determined by the filename suffix. If the force parameter is set to true,
+    r"""
+    Save the image ``arr`` as filename using information encoded in ``hdr``. The target image
+    format is determined by the ``filename`` suffix. If the ``force`` parameter is set to true,
     an already existing image is overwritten silently. Otherwise an error is thrown.
     
-    The header (hdr) object is the one returned by @link io.load.load() and is only used
+    The header (``hdr``) object is the one returned by `~medpy.io.load.load` and is only used
     if the source and target image formats are the same.
     
     Generally this function does not guarantee, that metadata other than the image shape
@@ -43,27 +52,31 @@ def save(arr, filename, hdr = False, force = True):
     WrapITK. Note that for the later it is import how it has been compiled.
     
     NiBabel enables support for:
+    
         - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
         - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
-        and some others (http://nipy.sourceforge.net/nibabel/)
+        - and some others (http://nipy.sourceforge.net/nibabel/)
+        
     WrapITK enables support for:
+    
         - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
         - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
         - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
         - Itk/Vtk MetaImage (.mhd, .mha/.raw)
         - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)
-        and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
+        - and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
         
     Generally we advise to use the nibabel third party tool, which is implemented in pure
     python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
     and comprehensive.
         
     For informations about which image formats, dimensionalities and pixel data types
-    your current configuration supports, see @link unittest.io.loadsave . There you can
+    your current configuration supports, see :mod:`test.io.loadsave` . There you can
     find an automated test method.
                 
     Some known restrictions are explicit, independent of the third party modules or how
     they were compiled:
+    
         - DICOM does not support images of 4 or more dimensions (Danger: ITK actually
           saves the image without signaling an error. But the dimensionality is reduced
           to 3 dimensions).
@@ -76,23 +89,31 @@ def save(arr, filename, hdr = False, force = True):
         - PNG images are always loaded as 2D, even if they have been saved as 3D images.
     
     Further information:
-    - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
-    - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
-    - http://code.google.com/p/pydicom/ : The PyDicom python module
     
-    @param arr the image data
-    @type arr scipy.ndarray
-    @param filename where to save the image, path and filename including the image suffix
-    @type filename string
-    @param hdr the image header
-    @type hdr object
-    @param force set to True to overwrite already exiting image silently
-    @type force bool
+        - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
+        - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
+        - http://code.google.com/p/pydicom/ : The PyDicom python module
     
-    @throws ImageTypeError if attempting to save as an unsupported image type
-    @throws DependencyError if an required third party module is not existent or has been
-                            compiled without support for the target image format
-    @throws ImageSavingError if the image could not be saved dure to various reasons
+    Parameters
+    ----------
+    arr : array_like
+        The image data.
+    filename : string
+        Where to save the image; path and filename including the image suffix.
+    hdr : object
+        The image header containing the metadata.
+    force : bool
+        Set to True to overwrite already exiting image silently.
+    
+    Raises
+    ------
+    ImageTypeError
+        If attempting to save as an unsupported image type.
+    DependencyError
+        If an required third party module is not existent or has been
+        compiled without support for the target image format
+    ImageSavingError
+        If the image could not be saved due to various reasons
     """
     ###############################
     # responsibility dictionaries #

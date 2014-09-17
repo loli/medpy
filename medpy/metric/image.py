@@ -1,12 +1,22 @@
-"""
-@package medpy.metric.image
-Provides a number of image distance and similarity measures.
-
-@author Oskar Maier
-@version r0.1.0
-@since 2013-07-09
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.0
+# since 2013-07-09
+# status Release
 
 # build-in modules
 
@@ -14,44 +24,56 @@ Provides a number of image distance and similarity measures.
 import numpy
 
 # own modules
-from medpy.core import ArgumentError
+from ..core import ArgumentError
 
 # code
 def mutual_information(i1, i2, bins=256):
-    """
+    r"""
     Computes the mutual information (MI) (a measure of entropy) between two images.
 
     MI is not real metric, but a symmetric and nonnegative similarity measures that
     takes high values for similar images. Negative values are also possible.
     
-    Intuitively, mutual information measures the information that X and Y share: it
+    Intuitively, mutual information measures the information that ``i1`` and ``i2`` share: it
     measures how much knowing one of these variables reduces uncertainty about the other.
     
     The Entropy is defined as:
-    \f[
-        H(X) = - \sum_i p(g_i) * ln(p(g_i)
-    \f]
-    with \f$p(g_i)\f$ being the intensity probability of the images grey value \f$g_i\f$.
     
-    Assuming two image R and T, the mutual information is then computed by comparing the
+    .. math::
+    
+        H(X) = - \sum_i p(g_i) * ln(p(g_i)
+
+    with :math:`p(g_i)` being the intensity probability of the images grey value :math:`g_i`.
+    
+    Assuming two images :math:`R` and :math:`T`, the mutual information is then computed by comparing the
     images entropy values (i.e. a measure how well-structured the common histogram is).
     The distance metric is then calculated as follows:
-    \f[
+    
+    .. math::
+    
         MI(R,T) = H(R) + H(T) - H(R,T) = H(R) - H(R|T) = H(T) - H(T|R)
-    \f]
     
     A maximization of the mutual information is equal to a minimization of the joint
     entropy.
     
-    @param i1 the first image
-    @type i1 array-like sequence
-    @param i2 the second image
-    @type i2 array-like sequence
-    @param bins the number of histogram bins (squared for the joined histogram)
-    @type bins int
+    Parameters
+    ----------
+    i1 : array_like
+        The first image.
+    i2 : array_like
+        The second image.
+    bins : integer
+        The number of histogram bins (squared for the joined histogram).
     
-    @return the mutual information distance value
-    @rtype float
+    Returns
+    -------
+    mutual_information : float
+        The mutual information distance value between the supplied images.
+    
+    Raises
+    ------
+    ArgumentError
+        If the supplied arrays are of different shape.
     """
     # pre-process function arguments
     i1 = numpy.asarray(i1)

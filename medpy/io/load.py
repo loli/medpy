@@ -1,14 +1,22 @@
-"""
-@package medpy.io.load
-Provides functionality connected with image loading.
-    
-The supplied methods hide more complex usage of a number of third party modules.
-
-@author Oskar Maier
-@version r0.2.1
-@since 2012-05-28
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.2.1
+# since 2012-05-28
+# status Release
 
 # build-in modules
 import os
@@ -26,14 +34,14 @@ from ..core import ImageTypeError, DependencyError,\
 
 # code
 def load(image):
-    """
-    Loads the image and returns a scipt array with the image's pixel content as well as
+    r"""
+    Loads the ``image`` and returns a ndarray with the image's pixel content as well as
     an image format specific header object.
     
     The type of the returned header object depends on the third party module used to load
     the image. It can, with restrictions, be used to extract additional meta-information
-    about the image (e.g. using the methods in @link io.header). Additionally it serves
-    as meta-data container that can be passes to @link io.save.save() when the altered
+    about the image (e.g. using the methods in :mod:`medpy.io.header`). Additionally it serves
+    as meta-data container that can be passes to `~medpy.io.save.save` when the altered
     image is saved to the hard drive again. Note that the transfer of meta-data is only
     possible, and even then not guaranteed, when the source and target image formats are
     the same.
@@ -43,31 +51,37 @@ def load(image):
     WrapITK. Note that for the later it is import how it has been compiled.
     
     NiBabel enables support for:
+    
         - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
         - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
-        and some others (http://nipy.sourceforge.net/nibabel/)
+        - and some others (http://nipy.sourceforge.net/nibabel/)
+        
     PyDicom:
+    
         - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
+        
     WrapITK enables support for:
+    
         - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
         - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
         - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
         - Itk/Vtk MetaImage (.mhd, .mha/.raw)
         - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)
-        and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
+        - and many others (http://www.cmake.org/Wiki/ITK/File_Formats)
         
     Generally we advise to use the nibabel third party tool, which is implemented in pure
     python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
     and comprehensive.
         
     For informations about which image formats, dimensionalities and pixel data types
-    your current configuration supports, see @link unittest.io.loadsave . There you can
+    your current configuration supports, see :mod:`tests.io.loadsave`. There you can
     find an automated test method.    
     
     Further information:
-    - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
-    - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
-    - http://code.google.com/p/pydicom/ : The PyDicom python module
+    
+        - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module
+        - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK
+        - http://code.google.com/p/pydicom/ : The PyDicom python module
     
     
     Internally first tries to figure out the image type and the associated loader to use.
@@ -75,16 +89,27 @@ def load(image):
     third party module might be able to load an image for which it is not registered as
     responsible.
     
-    @param image the image to load
-    @type image string
+    Parameters
+    ----------
+    image : string
+        Path to the image to load.
     
-    @return (image_data, image_header) tuple
-    @rtype (scipy.ndarray, object)
+    Returns
+    -------
+    image_data : ndarray
+        The image data as numpy array.
+    image_header : object
+        The image metadata as header object to be processed with the methods in :mod:`medpy.io.header`.
     
-    @raise ImageLoadingError if the image could not be loaded due to some reason
-    @raise ImageTypeError if the image type is not supported
-    @raise DependencyError if a required third-party module is missing or has been
-                           compiled without the required support
+    Raises
+    ------
+    ImageLoadingError
+        If the image could not be loaded due to some reason.
+    ImageTypeError
+        If the image type is not supported.
+    DependencyError
+        If a required third-party module is missing or has been
+        compiled without the required support
     """
     ###############################
     # responsibility dictionaries #

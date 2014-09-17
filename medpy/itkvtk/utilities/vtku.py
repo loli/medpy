@@ -1,6 +1,22 @@
-#!/usr/bin/python
-
-"""\file Holds a number of utility function to process VTK images."""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.1
+# since 2011-11-25
+# status Release
 
 # build-in modules
 
@@ -12,21 +28,24 @@ import vtk
 
 # own modules
 
-# information
-__author__ = "Oskar Maier"
-__version__ = "r0.1.1, 2011-11-25"
-__email__ = "oskar.maier@googlemail.com"
-__status__ = "Release"  # tested functions marked with tested keyword
-__description__ = "VTK image utility functions."
-
 # code
 def getInformation(image): #tested
     """
     Returns an information string about a VTK image in a compressed way.
-    Note: Performs UpdateInformation() on the image, therefore
-          triggering pipeline processing if necessary
-    @param image: an instance of vtk.vtkImageData
-    @return: formatted information string
+    
+    Parameters
+    ----------
+    image : vtk.vtkImageData
+        An VTK image as used by WrapITK.
+        
+    Returns
+    -------
+    information : string
+        Pretty-formatted string with image metadata.
+        
+    Notes
+    -----
+    Performs UpdateOutputInformation() on the image, therefore triggering pipeline processing if necessary
     """
     assert isinstance(image, vtk.vtkImageData)
     
@@ -48,12 +67,21 @@ def getInformation(image): #tested
 def getImageTypeFromVtk(image): # tested
     """
     Returns the image type of the supplied image as itk.Image template.
-    Note: Performs Update() and UpdateInformation() on the image, therefore
-          triggering pipeline processing if necessary
-    @param image: an instance of vtk.vtkImageData
     
-    @return a template of itk.Image
-    @rtype itk.Image
+    Parameters
+    ----------
+    image : vtk.vtkImageData
+        An VTK image as used by WrapITK.
+    
+    Returns
+    -------
+    image_type : itk.Image (template)
+        An itk image type.
+    
+    Notes
+    -----
+    Performs Update() and UpdateInformation() on the image, therefore
+    triggering pipeline processing if necessary
     """
     assert isinstance(image, vtk.vtkImageData)
     
@@ -80,9 +108,17 @@ def getImageTypeFromVtk(image): # tested
 def saveImageMetaIO(image, file_name): #tested
     """
     Saves the image data into a file as MetaIO format.
-    Note: A write operation will trigger the image pipeline to be processed.
-    @param image: an instance of vtk.vtkImageData
-    @param file_name: path to the save file as string, \wo file-suffix
+    
+    Parameters
+    ----------
+    image : vtk.vtkImageData
+        An VTL image as used by WrapITK.
+    file_name : string
+        Path and file name (without suffix) where to save the image.
+    
+    Notes
+    -----
+    A write operation will trigger the image pipeline to be processed.
     """
     assert isinstance(image, vtk.vtkImageData)
     

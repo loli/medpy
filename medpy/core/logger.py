@@ -33,8 +33,8 @@ from logging import Logger as NativeLogger
 class Logger (NativeLogger):
     r"""Logger to be used by all applications and classes.
     
-    Note
-    ----
+    Notes
+    -----
     Singleton class i.e. setting the log level changes the output globally.
     
     Examples
@@ -108,8 +108,8 @@ class Logger (NativeLogger):
         hdlr : logging.Handler
             A subclass of Handler that should used to handle the logging output. 
         
-        Note
-        ----
+        Notes
+        -----
         If none should be replaces, but just one added, use the parent classes
         addHandler() method.
         """
@@ -126,8 +126,8 @@ class Logger (NativeLogger):
         level : int
             The new log level to set. See the logging levels in the logging module for details.
             
-        Example
-        -------
+        Examples
+        --------
         >>> import logging
         >>> Logger.setLevel(logging.DEBUG)
         """

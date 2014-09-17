@@ -1,10 +1,24 @@
-#!/usr/bin/python
- 
-"""@file Holds a number of utility function to process ITK images."""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.5.1
+# since 2011-11-25
+# status Release
 
 # build-in modules
-from ...core import ImageLoadingError
-from ...core import Logger
 
 # third-party modules
 import scipy
@@ -13,24 +27,27 @@ import itk
 # path changes
 
 # own modules
-from ...core.exceptions import DependencyError, ImageTypeError
-
-# information
-__author__ = "Oskar Maier"
-__version__ = "r0.5.1, 2011-11-25"
-__email__ = "oskar.maier@googlemail.com"
-__status__ = "Release" # tested functions marked with tested keyword
-__description__ = "ITK image utility functions."
+from ...core import ImageLoadingError, DependencyError, ImageTypeError, Logger
 
 # code
 def getInformation(image): # tested
     """
     Returns an information string about a ITK image in a compressed way.
-    Note: Performs UpdateOutputInformation() on the image, therefore
-          triggering pipeline processing if necessary
-    Note: Only works on 3D images.
-    @param image: an instance of itk.Image
-    @return: formatted information string
+    
+    Parameters
+    ----------
+    image : itk.Image
+        An ITK image as used by WrapITK.
+        
+    Returns
+    -------
+    information : string
+        Pretty-formatted string with image metadata.
+        
+    Notes
+    -----
+    Performs UpdateOutputInformation() on the image, therefore triggering pipeline processing if necessary
+    Only works on 3D images.
     """
     # refresh information
     image.UpdateOutputInformation()
@@ -50,10 +67,21 @@ def getInformation(image): # tested
 
 def getInformationWithScalarRange(image): # tested
     """
-    Behaves like getInformation() but also computes the intensity range,
-    which is computationally expensive.
-    Note: Performs Update() on the image, therefore
-          triggering pipeline processing if necessary
+    Behaves like `getInformation` but also computes the intensity range, which is computationally expensive.
+          
+    Parameters
+    ----------
+    image : itk.Image
+        An ITK image as used by WrapITK.
+        
+    Returns
+    -------
+    information : string
+        Pretty-formatted string with image metadata and intensity range.
+        
+    Notes
+    -----
+    Performs UpdateOutputInformation() on the image, therefore triggering pipeline processing if necessary
     """
     s = getInformation(image)
     
@@ -73,18 +101,34 @@ def getInformationWithScalarRange(image): # tested
 def saveImageMetaIO(image, file_name): # tested
     """
     Saves the image data into a file as MetaIO format.
-    Note: A write operation will trigger the image pipeline to be processed.
-    @param image: an instance of itk.Image
-    @param file_name: path to the save file as string, \wo file-suffix
+    
+    Parameters
+    ----------
+    image : itk.Image
+        An ITK image as used by WrapITK.
+    file_name : string
+        Path and file name (without suffix) where to save the image.
+    
+    Notes
+    -----
+    A write operation will trigger the image pipeline to be processed.
     """
     saveImage(image, file_name + '.mhd')
     
 def saveImage(image, file_name): # tested
     """
     Saves the image data into a file in the format specified by the file name suffix.
-    Note: A write operation will trigger the image pipeline to be processed.
-    @param image: an instance of itk.Image
-    @param file_name: path to the save file as string, \w file-suffix
+    
+    Parameters
+    ----------
+    image : itk.Image
+        An ITK image as used by WrapITK.
+    file_name : string
+        Path and file name (with suffix) where to save the image.
+    
+    Notes
+    -----
+    A write operation will trigger the image pipeline to be processed.
     """
     # retrieve image type
     image_type = getImageType(image)
@@ -96,20 +140,25 @@ def saveImage(image, file_name): # tested
     
 def getImageFromArray(arr, image_type = False):
     """
-    Returns an itk Image created from the supplied scipy ndarray.
-    If the image_type is supported, will be automatically transformed to that type,
+    Returns an itk Image created from the supplied numpy ndarray.
+    If the ``image_type`` is supported, will be automatically transformed to that type,
     otherwise the most suitable is selected.
     
-    @note always use this instead of directly the itk.PyBuffer, as that object transposes
-          the image axes.
+    Parameters
+    ----------
+    arr : array_like
+        The image as numpy array.
+    image_type : itk.Image (template)
+        An itk image type.
     
-    @param arr an array
-    @type arr scipy.ndarray
-    @param image_type an itk image type
-    @type image_type itk.Image (template)
+    Returns
+    -------
+    itk_image : itk.Image (instance)
+        An instance of itk.Image holding the array's data.
     
-    @return an instance of itk.Image holding the array's data
-    @rtype itk.Image (instance)
+    Notes
+    -----
+    Always use this instead of directly the itk.PyBuffer, as that object transposes the image axes.
     """
     # The itk_py_converter transposes the image dimensions. This has to be countered.
     arr = scipy.transpose(arr)
@@ -124,16 +173,21 @@ def getImageFromArray(arr, image_type = False):
     
 def getArrayFromImage(image):
     """
-    Returns a scipy array created from the supplied itk image.
+    Returns a numpy ndarray created from the supplied itk image.
     
-    @note always use this instead of directly the itk.PyBuffer, as that object transposes
-          the image axes.
+    Parameters
+    ----------
+    image : itk.Image (instance)
+        An instance of itk.Image holding the array's data.
+        
+    Returns
+    -------
+    arr : ndarray
+        The image as numpy array.
     
-    @param image an instance of itk.Image holding the array's data
-    @type itk.Image (instance)
-    
-    @return an array
-    @rtype scipy.ndarray
+    Notes
+    -----
+    Always use this instead of directly the itk.PyBuffer, as that object transposes the image axes.
     """
     #convert
     itk_py_converter = itk.PyBuffer[getImageType(image)]
@@ -153,10 +207,16 @@ def getArrayFromImage(image):
 def getImageType(image): # tested
     """
     Returns the image type of the supplied image as itk.Image template.
-    @param image: an instance of itk.Image
     
-    @return a template of itk.Image
-    @rtype itk.Image
+    Parameters
+    ----------
+    image : itk.Image (instance)
+        An instance of itk.Image.
+    
+    Returns
+    -------
+    image_type : itk.Image (template)
+        An itk image type.
     """
     try:
         return itk.Image[itk.template(image)[1][0],
@@ -167,13 +227,23 @@ def getImageType(image): # tested
 def getImageTypeFromArray(arr): # tested
     """
     Returns the image type of the supplied array as itk.Image template.
-    @param arr: an scipy.ndarray array
     
-    @return a template of itk.Image
-    @rtype itk.Image
+    Parameters
+    ----------
+    arr : array_like
+        The image as numpy array.
     
-    @raise DependencyError if the itk wrapper do not support the target image type
-    @raise ImageTypeError if the array dtype is unsupported
+    Returns
+    -------
+    image_type : itk.Image (template)
+        An itk image type.
+    
+    Raises
+    ------
+    DependencyError
+        If the itk wrapper do not support the target image type
+    ImageTypeError
+        If the array dtype is unsupported
     """
     # mapping from scipy to the possible itk types, in order from most to least suitable
     # ! this assumes char=8bit, short=16bit and long=32bit (minimal values)
@@ -224,14 +294,20 @@ def getImageTypeFromFile(image): # tested
     Holds functionalities to determine the voxel data type and dimensions of an unknown
     image.
     
-    @param image path to an image
-    @type image string
+    Parameters
+    ----------
+    image : string
+        Path to an image.
     
-    @return either the correct image type (itk.Image template) or False if loading failed
-    @rtype itk.Image
+    Returns
+    -------
+    image_type : itk.Image (template) or False
+        Either the correct image type (itk.Image template) associated with the image file or False if loading failed.
     
-    @raise ImageLoadingError if the header of the supplied image could be recognized but
-                             is on an unsupported type
+    Raises
+    ------
+    ImageLoadingError
+        If the header of the supplied image could be recognized but is on an unsupported type
     """
     logger = Logger.getInstance()
     
