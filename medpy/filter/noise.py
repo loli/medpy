@@ -150,7 +150,7 @@ def immerkaer(input, mode="reflect", cval=0.0):
     References
     ----------
     .. [1] John Immerkaer, "Fast Noise Variance Estimation", Computer Vision and Image
-       Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142
+           Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142
     """
     # build nd-kernel to acquire square root of sum of squared elements
     kernel = [1, -2, 1]

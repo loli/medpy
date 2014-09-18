@@ -29,7 +29,7 @@ from scipy.ndimage.morphology import distance_transform_edt
 from scipy.ndimage._ni_support import _get_output
 
 # own modules
-from utilities import join
+from .utilities import join
 from ..core import ArgumentError
 from ..filter import sum_filter
 

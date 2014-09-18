@@ -113,9 +113,9 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     ----------
     
     .. [1] Mattias P. Heinrich, Mark Jenkinson, Manav Bhushan, Tahreema Matin, Fergus V. Gleeson, Sir Michael Brady, Julia A. Schnabel
-       MIND: Modality independent neighbourhood descriptor for multi-modal deformable registration
-       Medical Image Analysis, Volume 16, Issue 7, October 2012, Pages 1423-1435, ISSN 1361-8415
-       http://dx.doi.org/10.1016/j.media.2012.05.008
+           MIND: Modality independent neighbourhood descriptor for multi-modal deformable registration
+           Medical Image Analysis, Volume 16, Issue 7, October 2012, Pages 1423-1435, ISSN 1361-8415
+           http://dx.doi.org/10.1016/j.media.2012.05.008
     """
     minuend = numpy.asarray(minuend)
     subtrahend = numpy.asarray(subtrahend)
