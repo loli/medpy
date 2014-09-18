@@ -1,6 +1,6 @@
 include *.txt
 
-include distribute_setup.py
+include ez_setup.py
 
 include lib/maxflow/src/*.h
 include lib/maxflow/src/*.cpp

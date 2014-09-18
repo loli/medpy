@@ -27,6 +27,8 @@ from scipy.ndimage.filters import gaussian_filter
 # path changes
 
 # own modules
+from medpy.filter.utilities import xminus1d
+
 
 # code
 def gauss_xminus1d(img, sigma, dim=2):
@@ -51,7 +53,7 @@ def gauss_xminus1d(img, sigma, dim=2):
         The input image ``img`` smoothed by a gaussian kernel along dimension ``dim``. 
     """
     img = numpy.array(img, copy=False)
-    return __xminus1d(img, gaussian_filter, dim, sigma=sigma)
+    return xminus1d(img, gaussian_filter, dim, sigma=sigma)
 
 def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, option=1):
     r"""
@@ -152,22 +154,3 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
         out += gamma * (numpy.sum(matrices, axis=0))
 
     return out
-
-
-def __xminus1d(img, fun, dim, *args, **kwargs):
-    """
-    Applies the function fun along all all X-1D dimensional volumes of the images img
-    dimension dim.
-
-    E.g. you want to apply a gauss filter to each slice of a 3D MRI brain image,
-    simply supply the function as fun, the image as img and the dimension along which
-    to iterate as dim.
-
-    With *args and **kwargs, arguments can be passed to the function fun.
-    """
-    slicer = [slice(None)] * img.ndim
-    output = []
-    for slid in range(img.shape[dim]):
-        slicer[dim] = slice(slid, slid + 1)
-        output.append(fun(numpy.squeeze(img[slicer]), *args, **kwargs))
-    return numpy.rollaxis(numpy.asarray(output), 0, dim + 1)
