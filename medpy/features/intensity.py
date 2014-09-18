@@ -585,7 +585,7 @@ def _extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7,
 
 def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0):
     """
-    Internal, single-image version of `local_histogram`.
+    Internal, single-image version of @see local_histogram
     
     Note: Values outside of the histograms range are not considered.
     Note: Mode constant is not available, instead a mode "ignore" is provided.
