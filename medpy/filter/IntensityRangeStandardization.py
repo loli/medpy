@@ -388,7 +388,7 @@ class IntensityRangeStandardization (object):
         
         the set formed by the two cut-off percentiles :math:`cop_l` and :math:`cop_u` and the
         landmark percentiles :math:`lp_1, ..., lp_n`. The corresponding intensity values of
-        an image :math:`i\inI` are then
+        an image :math:`i\in I` are then
         
         .. math::
             
