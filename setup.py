@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# version: 0.2.3
+# version: 0.2.4
 # Many thanks to simplejson for the idea on how to install c++-extention module optionally!
 # https://pypi.python.org/pypi/simplejson/
 
@@ -93,7 +93,7 @@ def run_setup(with_compilation):
 
     setup(
           name='MedPy',
-          version='0.2.1', # major.minor.micro
+          version='0.2.2', # major.minor.micro
           description='Medical image processing in Python',
           author='Oskar Maier',
           author_email='oskar.maier@googlemail.com',
@@ -139,7 +139,6 @@ def run_setup(with_compilation):
             'bin/medpy_apparent_diffusion_coefficient.py',
             'bin/medpy_check_marker_intersection.py',
             'bin/medpy_convert.py',       
-            'bin/medpy_count_labels.py',   
             'bin/medpy_create_empty_volume_by_example.py',
             'bin/medpy_dicom_slices_to_volume.py',    
             'bin/medpy_dicom_to_4D.py',             
@@ -164,16 +163,17 @@ def run_setup(with_compilation):
             'bin/medpy_itk_watershed.py',
             'bin/medpy_join_masks.py',
             'bin/medpy_join_xd_to_xplus1d.py',
+            'bin/medpy_label_count.py',
+            'bin/medpy_label_fit_to_mask.py',
+            'bin/medpy_label_superimposition.py',
             'bin/medpy_merge.py',    
             'bin/medpy_morphology.py',  
-            'bin/medpy_reduce.py',  
             'bin/medpy_resample.py',
             'bin/medpy_reslice_3d_to_4d.py',     
             'bin/medpy_set_pixel_spacing.py',     
             'bin/medpy_shrink_image.py',  
             'bin/medpy_split_xd_to_xminus1d.py', 
             'bin/medpy_stack_sub_volumes.py',
-            'bin/medpy_superimposition.py',
             'bin/medpy_swap_dimensions.py',
             'bin/medpy_watershed.py',
             'bin/medpy_zoom_image.py'

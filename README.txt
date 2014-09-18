@@ -4,7 +4,7 @@
 
 **MedPy** is a library and script collection for medical image processing in Python. It contains basic functionalities for reading, writing and manipulating large images of arbitrary dimensions.
 
-Additionally some image manipulation scripts are installed under the *medpy_*-prefix which offer various functionalities. See https://github.com/loli/medpy/wiki for a complete list. 
+Additionally some image manipulation scripts are installed under the *medpy_*-prefix which offer various functionalities. See http://pythonhosted.org//MedPy/tutorial/commandline_tools_listing.html for a complete list. 
 
 One of the central usages is graph-cuts for image segmentation. **Medpy**  implements a voxel based standard and a label based version.
 
@@ -22,10 +22,9 @@ You can find our sources and single-click downloads:
 * Download as a zip file the `current trunk <https://github.com/loli/medpy/archive/master.zip>`_.
 
 
-API Documentation
-=================
-http://pythonhosted.org/MedPy
-See especially the sections `Packages` and `Package Functions`. 
+Tutorials and API Documentation
+===============================
+http://pythonhosted.org/MedPy 
 
 
 Requirements
