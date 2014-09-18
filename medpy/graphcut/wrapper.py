@@ -1,17 +1,24 @@
-"""
-@package medpy.graphcut.wrapper
-Wrappers for executing graph cuts and other convenience functions.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.0
+# since 2012-06-25
+# status Release
 
-Functions:
-    - 
-    
-@author Oskar Maier
-@version r0.1.0
-@since 2012-06-25
-@status Release
-"""
-
-# build-in module
+# build-in modules
 import multiprocessing
 import itertools
 import math
@@ -20,11 +27,11 @@ import math
 import scipy
 
 # own modules
-from energy_label import boundary_stawiaski
-from generate import graph_from_labels
+from .energy_label import boundary_stawiaski
+from .generate import graph_from_labels
 from ..core.exceptions import ArgumentError
 from ..core.logger import Logger
-from medpy.filter.label import relabel, relabel_map
+from ..filter import relabel, relabel_map
 
 # code
 def split_marker(marker, fg_id = 1, bg_id = 2):
@@ -35,15 +42,19 @@ def split_marker(marker, fg_id = 1, bg_id = 2):
     as neutral marker and all others are ignored.
     This behaviour can be changed by supplying the fg_id and/or bg_id parameters.
     
-    @param marker the marker image
-    @type marker scipy.ndimage (dtype=scipy.int?)
-    @param fg_id the id that should be treated as foreground
-    @type fg_id int
-    @param bg_id the id that should be treated as background
-    @type bg_id int
+    Parameters
+    ----------
+    marker : ndarray
+        The marker image.
+    fg_id : integer
+        The value that should be treated as foreground.
+    bg_id : integer
+        The value that should be treated as background.
     
-    @return fgmarkers, bgmarkers
-    @rtype scipy.ndimage (dtype=scipy.bool_), scipy.ndimage (dtype=scipy.bool_)
+    Returns
+    -------
+    fgmarkers, bgmarkers : nadarray
+        The fore- and background markers as boolean images.
     """
     img_marker = scipy.asarray(marker)
     
@@ -64,26 +75,30 @@ def graphcut_split(graphcut_function, regions, gradient, foreground, background,
     used with, as it can lead to different results. To minimize this effect, the overlap
     parameter allows control over how much the respective sub-volumes should overlap.
     
-    @param graphcut_function the graph cut to use (e.g. @link graphcut_stawiaski())
-    @type graphcut_function function
-    
-    @param regions the regions image
-    @type regions scipy.ndarray (dtype=scipy.int?)
-    @param gradient the gradient image
-    @type gradient scipy.ndarray (dtype=scipy.float?)
-    @param foreground the foreground markers
-    @type foreground scipy.ndarray (dtype=scipy.bool_)
-    @param background the background markers
-    @type background scipy.ndarray (dtype=scipy.bool_)
-    
-    @param minimal_edge_length the minimal edge length of the sub-volumes
-    @type minimal_edge_length int
-    @param overlap the overlap (in voxels) between the generated sub-volumes
-    @type overlap int
-    
-    @param processes the number of processes to run simultaneously, if not supplied, will
-                     be the same as the number of processors
-    @type processes int
+    Parameters
+    ----------
+    graphcut_function : function
+        The graph cut to use (e.g. `graphcut_stawiaski`).
+    regions : ndarray
+        The regions image / label map.
+    gradient : ndarray
+        The gradient image.
+    foreground : ndarray
+        The foreground markers.
+    background : ndarray
+        The background markers.
+    minimal_edge_length : integer
+        The minimal edge length of the sub-volumes in voxels.
+    overlap : integer
+        The overlap (in voxels) between the generated sub-volumes.
+    processes : integer or None
+        The number of processes to run simultaneously, if not supplied, will be the same
+        as the number of processors.
+        
+    Returns
+    -------
+    segmentation : ndarray
+        The graph-cut segmentation result as boolean array.
     """
     # initialize logger
     logger = Logger.getInstance()
@@ -149,16 +164,20 @@ def graphcut_subprocesses(graphcut_function, graphcut_arguments, processes = Non
     Executes multiple graph cuts in parallel.
     This can result in a significant speed-up.
     
-    @param graphcut_function the graph cut to use (e.g. @link graphcut_stawiaski())
-    @type graphcut_function function
-    @param graphcut_arguments list of arguments to pass to the respective subprocesses 
-    @type graphcut_arguments sequence
-    @param processes the number of processes to run simultaneously, if not supplied, will
-                     be the same as the number of processors
-    @type processes int
-    
-    @return list of all results, of same length as the supplied graphcut_arguments list
-    @rtype sequence
+    Parameters
+    ----------
+    graphcut_function : function
+        The graph cut to use (e.g. `graphcut_stawiaski`).
+    graphcut_arguments : tuple
+        List of arguments to pass to the respective subprocesses resp. the ``graphcut_function``.
+    processes : integer or None
+        The number of processes to run simultaneously, if not supplied, will be the same
+        as the number of processors.
+        
+    Returns
+    -------
+    segmentations : tuple of ndarray
+        The graph-cut segmentation results as list of boolean arraya.
     """
     # initialize logger
     logger = Logger.getInstance()
@@ -180,19 +199,26 @@ def graphcut_stawiaski(regions, gradient = False, foreground = False, background
     """
     Executes a Stawiaski label graph cut.
     
-    @param regions the regions image
-    @type regions scipy.ndarray (dtype=scipy.int?)
-    @param gradient the gradient image
-    @type gradient scipy.ndarray (dtype=scipy.float?)
-    @param foreground the foreground markers
-    @type foreground scipy.ndarray (dtype=scipy.bool_)
-    @param background the background markers
-    @type background scipy.ndarray (dtype=scipy.bool_)
-    
-    @return the cut image as binary array
-    @rtype scipy.ndarray (dtype=scipy.bool_)
-    
-    @raise ArgumentError when the supplied data is erroneous
+    Parameters
+    ----------
+    regions : ndarray
+        The regions image / label map.
+    gradient : ndarray
+        The gradient image.
+    foreground : ndarray
+        The foreground markers.
+    background : ndarray
+        The background markers.
+        
+    Returns
+    -------
+    segmentation : ndarray
+        The graph-cut segmentation result as boolean array.
+        
+    Raises
+    ------
+    ArgumentError
+        When the supplied data is erroneous.
     """
     # initialize logger
     logger = Logger.getInstance()

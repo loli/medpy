@@ -31,7 +31,7 @@ Use together with an energy term from :mod:`~medpy.graphcut.energy_voxel` respec
     
 Energy terms for voxel-based graph-cuts :mod:`medpy.graphcut.energy_voxel`
 ==========================================================================
-Run-time optimized energy functions for the graph generation. Voxel based.
+Run-time optimized energy functions for the graph generation. Voxel based [7]_.
 
 .. module:: medpy.graphcut.energy_voxel
     
@@ -58,7 +58,7 @@ Regional energy terms
     
 Energy terms for label-based graph-cuts :mod:`medpy.graphcut.energy_label`
 ==========================================================================
-Run-time optimized energy functions for the graph generation. Label/Superpixel based.
+Run-time optimized energy functions for the graph generation. Label/Superpixel based [6]_.
 
 .. module:: medpy.graphcut.energy_label
 
@@ -80,7 +80,7 @@ Regional energy terms
 
 Persist a graph :mod:`medpy.graphcut.write`
 ===========================================
-Functions to persist a graph in file formats like Dimacs [5]_.
+Functions to persist a graph in file formats like Dimacs [5]_, which can be read by external graph-cut algorithms.
 
 .. module:: medpy.graphcut.write
 .. autosummary::
@@ -99,8 +99,8 @@ Graph objects that can be used to generate a custom graph and execute a graph-cu
     GCGraph
     Graph
     
-Graph :mod:`medpy.graphcut.maxflow`
-===================================
+Maxflow :mod:`medpy.graphcut.maxflow`
+=====================================
 C++ wrapper around the max-flow/min-cut implementation of [4]_ using Boost.Python.
 Do not use these directly, but rather the graph objects supplied by :mod:`medpy.graphcut.graph`.
 
@@ -112,10 +112,21 @@ Do not use these directly, but rather the graph objects supplied by :mod:`medpy.
     GraphFloat
     GraphInt
     
+Wrapper :mod:`medpy.graphcut.wrapper`
+=====================================
+Wrappers for executing graph cuts in a memory-friendly way and other convenience functions.
+
+.. module:: medpy.graphcut.wrapper
+.. autosummary::
+    :toctree: generated/
+    
+    split_marker
+    graphcut_split
+    graphcut_subprocesses
+    graphcut_stawiaski
 
 Example of voxel based graph cut
 --------------------------------
-
 Import the necessary methods
 
 >>> import numpy
@@ -163,6 +174,11 @@ References
        Algorithms for Energy Minimization in Vision" In IEEE Transactions on PAMI, Vol. 26,
        No. 9, pp. 1124-1137, Sept. 2004
 .. [5] http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm
+.. [6] Stawiaski J., Decenciere E., Bidlaut F. "Interactive Liver Tumor Segmentation
+       Using Graph-cuts and watershed" MICCAI 2008 participation
+.. [7] Kolmogorov, Vladimir, and Ramin Zabin. "What energy functions can be minimized
+       via graph cuts?." Pattern Analysis and Machine Intelligence, IEEE Transactions
+       on 26.2 (2004): 147-159.
 """
 
 # Copyright (C) 2013 Oskar Maier

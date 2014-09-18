@@ -1,26 +1,22 @@
-"""
-@package medpy.graphcut.generate
-Provides functionality to generate graphs efficiently from nD label-images and image voxels.
-
-Functions:
-    - def graph_from_labels(label_image,
-                      fg_markers,
-                      bg_markers,
-                      regional_term = False,
-                      boundary_term = False,
-                      regional_term_args = False,
-                      boundary_term_args = False): Creates a Graph object from a nD label image.
-    - def graph_from_voxels(fg_markers,
-                      bg_markers,
-                      regional_term = False,
-                      boundary_term = False,
-                      regional_term_args = False,
-                      boundary_term_args = False): Creates a Graph object from the voxels of an image.
-@author Oskar Maier
-@version r0.3.0
-@since 2012-01-18
-@status Release
-"""
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.3.0
+# since 2012-01-18
+# status Release
 
 # build-in modules
 import inspect
@@ -30,22 +26,25 @@ import scipy
 
 # own modules
 from ..core import Logger
-from ..graphcut import GCGraph
+from .graph import GCGraph
 
 def graph_from_voxels(fg_markers,
-                      bg_markers,
-                      regional_term = False,
-                      boundary_term = False,
-                      regional_term_args = False,
-                      boundary_term_args = False):
+                        bg_markers,
+                        regional_term = False,
+                        boundary_term = False,
+                        regional_term_args = False,
+                        boundary_term_args = False):
     """
-    Create a graphcut.maxflow.GraphDouble object for all voxels of an image with a
-    ndim * 2 neighbourhood.
+    Create a graph-cut ready graph to segment a nD image using the voxel neighbourhood.
+    
+    Create a `~medpy.graphcut.maxflow.GraphDouble` object for all voxels of an image with a
+    :math:`ndim * 2` neighbourhood.
     
     Every voxel of the image is regarded as a node. They are connected to their immediate
     neighbours via arcs. If to voxels are neighbours is determined using
-    ndim*2-connectedness (e.g. 3*2=6 for 3D). In the next step the arcs weights
-    (n-weights) are computed using the supplied boundary_term function.
+    :math:`ndim*2`-connectedness (e.g. :math:`3*2=6` for 3D). In the next step the arcs weights
+    (n-weights) are computed using the supplied ``boundary_term`` function
+    (see :mod:`~medpy.graphcut.energy_voxel` for a selection).
     
     Implicitly the graph holds two additional nodes: the source and the sink, so called
     terminal nodes. These are connected with all other nodes through arcs of an initial
@@ -53,53 +52,57 @@ def graph_from_voxels(fg_markers,
     All voxels that are under the foreground markers are considered to be tightly bound
     to the source: The t-weight of the arc from source to these nodes is set to a maximum
     value. The same goes for the background markers: The covered voxels receive a maximum
-    (graphcut.graph.GCGraph.MAX) t-weight for their arc towards the sink.
+    (`~medpy.graphcut.graph.GCGraph.MAX`) t-weight for their arc towards the sink.
     
-    @note If a voxel is marked as both, foreground and background, the background marker
+    All other t-weights are set using the supplied ``regional_term`` function
+    (see :mod:`~medpy.graphcut.energy_voxel` for a selection).
+    
+    Parameters
+    ----------
+    fg_markers : ndarray
+        The foreground markers as binary array of the same shape as the original image.
+    bg_markers : ndarray
+        The background markers as binary array of the same shape as the original image.
+    regional_term : function
+        This can be either `False`, in which case all t-weights are set to 0, except for
+        the nodes that are directly connected to the source or sink; or a function, in
+        which case the supplied function is used to compute the t_edges. It has to
+        have the following signature *regional_term(graph, regional_term_args)*, and is
+        supposed to compute (source_t_weight, sink_t_weight) for all voxels of the image
+        and add these to the passed `~medpy.graphcut.graph.GCGraph` object. The weights
+        have only to be computed for nodes where they do not equal zero. Additional
+        parameters can be passed to the function via the ``regional_term_args`` parameter.
+    boundary_term : function
+        This can be either `False`, in which case all n-edges, i.e. between all nodes
+        that are not source or sink, are set to 0; or a function, in which case the
+        supplied function is used to compute the edge weights. It has to have the
+        following signature *boundary_term(graph, boundary_term_args)*, and is supposed
+        to compute the edges between the graphs nodes and to add them to the supplied
+        `~medpy.graphcut.graph.GCGraph` object. Additional parameters can be passed to
+        the function via the ``boundary_term_args`` parameter.
+    regional_term_args : tuple
+        Use this to pass some additional parameters to the ``regional_term`` function.
+    boundary_term_args : tuple    
+        Use this to pass some additional parameters to the ``boundary_term`` function.
+    
+    Returns
+    -------
+    graph : `~medpy.graphcut.maxflow.GraphDouble`
+        The created graph, ready to execute the graph-cut.
+    
+    Raises
+    ------
+    AttributeError
+        If an argument is malformed.
+    FunctionError
+        If one of the supplied functions returns unexpected results.
+    
+    Notes
+    -----
+    If a voxel is marked as both, foreground and background, the background marker
     is given higher priority.
      
-    @note all arcs whose weight is not explicitly set are assumed to carry a weight of
-    zero.
-    
-    @param fg_markers The foreground markers as binary array of the same shape as the original image.
-    @type fg_markers ndarray
-    @param bg_markers The background markers as binary array of the same shape as the original image.
-    @type bg_markers ndarray
-    @param regional_term This can be either
-                         False - all t-weights are set to 0, except for the nodes that are
-                         directly connected to the source or sink.
-                         , or a function - 
-                         The supplied function is used to compute the t_edges. It has to
-                         have the following signature
-                         regional_term(graph, regional_term_args),
-                         and is supposed to compute (source_t_weight, sink_t_weight) for
-                         all voxels of the image and add these to the passed graph.GCGraph
-                         object. The weights have only to be computed for nodes where
-                         they do not equal zero. Additional parameters can be passed via
-                         the regional_term_args argument.
-    @type regional_term function
-    @param boundary_term This can be either
-                         False - 
-                         In which case the weight of all n_edges i.e. between all nodes
-                         that are not source or sink, are set to 0.
-                         , or a function -
-                         In which case it is used to compute the edges weights. The
-                         supplied function has to have the following signature
-                         fun(graph, boundary_term_args), and is supposed to compute the
-                         edges between the graphs node and to add them to the supplied
-                         graph.GCGraph object. Additional parameters
-                         can be passed via the boundary_term_args argument.
-    @type boundary_term function
-    @param regional_term_args Use this to pass some additional parameters to the
-                              regional_term function.
-    @param boundary_term_args Use this to pass some additional parameters to the
-                              boundary_term function.
-    
-    @return the created graph
-    @rtype graphcut.maxflow.GraphDouble
-    
-    @raise AttributeError If an argument is maleformed.
-    @raise FunctionError If one of the supplied functions returns unexpected results.
+    All arcs whose weight is not explicitly set are assumed to carry a weight of zero.
     """
     # prepare logger
     logger = Logger.getInstance()
@@ -149,20 +152,23 @@ def graph_from_voxels(fg_markers,
     return graph.get_graph()
 
 def graph_from_labels(label_image,
-                      fg_markers,
-                      bg_markers,
-                      regional_term = False,
-                      boundary_term = False,
-                      regional_term_args = False,
-                      boundary_term_args = False):
+                        fg_markers,
+                        bg_markers,
+                        regional_term = False,
+                        boundary_term = False,
+                        regional_term_args = False,
+                        boundary_term_args = False):
     """
-    Create a graphcut.maxflow.GraphDouble object from a nD label image.
+    Create a graph-cut ready graph to segment a nD image using the region neighbourhood.
+    
+    Create a `~medpy.graphcut.maxflow.GraphDouble` object for all regions of a nD label
+    image.
     
     Every region of the label image is regarded as a node. They are connected to their
     immediate neighbours by arcs. If to regions are neighbours is determined using
-    ndim*2-connectedness (e.g. 3*2=6 for 3D).
+    :math:`ndim*2`-connectedness (e.g. :math:`3*2=6` for 3D).
     In the next step the arcs weights (n-weights) are computed using the supplied
-    boundary_term function.
+    ``boundary_term`` function (see :mod:`~medpy.graphcut.energy_voxel` for a selection).
     
     Implicitly the graph holds two additional nodes: the source and the sink, so called
     terminal nodes. These are connected with all other nodes through arcs of an initial
@@ -170,57 +176,61 @@ def graph_from_labels(label_image,
     All regions that are under the foreground markers are considered to be tightly bound
     to the source: The t-weight of the arc from source to these nodes is set to a maximum 
     value. The same goes for the background markers: The covered regions receive a
-    maximum (graphcut.graph.GCGraph.MAX) t-weight for their arc towards the sink.
+    maximum (`~medpy.graphcut.graph.GCGraph.MAX`) t-weight for their arc towards the sink.
     
-    @note If a region is marked as both, foreground and background, the background marker
+    All other t-weights are set using the supplied ``regional_term`` function
+    (see :mod:`~medpy.graphcut.energy_voxel` for a selection).
+    
+    Parameters
+    ----------
+    label_image: ndarray
+        The label image as an array cwhere each voxel carries the id of the region it
+        belongs to. Note that the region labels have to start from 1 and be continuous
+        (can be achieved with `~medpy.filter.label.relabel`).
+    fg_markers : ndarray
+        The foreground markers as binary array of the same shape as the original image.
+    bg_markers : ndarray
+        The background markers as binary array of the same shape as the original image.
+    regional_term : function
+        This can be either `False`, in which case all t-weights are set to 0, except for
+        the nodes that are directly connected to the source or sink; or a function, in
+        which case the supplied function is used to compute the t_edges. It has to
+        have the following signature *regional_term(graph, regional_term_args)*, and is
+        supposed to compute (source_t_weight, sink_t_weight) for all regions of the image
+        and add these to the passed `~medpy.graphcut.graph.GCGraph` object. The weights
+        have only to be computed for nodes where they do not equal zero. Additional
+        parameters can be passed to the function via the ``regional_term_args`` parameter.
+    boundary_term : function
+        This can be either `False`, in which case all n-edges, i.e. between all nodes
+        that are not source or sink, are set to 0; or a function, in which case the
+        supplied function is used to compute the edge weights. It has to have the
+        following signature *boundary_term(graph, boundary_term_args)*, and is supposed
+        to compute the edges between all adjacent regions of the image and to add them
+        to the supplied `~medpy.graphcut.graph.GCGraph` object. Additional parameters
+        can be passed to the function via the ``boundary_term_args`` parameter.
+    regional_term_args : tuple
+        Use this to pass some additional parameters to the ``regional_term`` function.
+    boundary_term_args : tuple    
+        Use this to pass some additional parameters to the ``boundary_term`` function.
+
+    Returns
+    -------
+    graph : `~medpy.graphcut.maxflow.GraphDouble`
+        The created graph, ready to execute the graph-cut.
+    
+    Raises
+    ------
+    AttributeError
+        If an argument is malformed.
+    FunctionError
+        If one of the supplied functions returns unexpected results.
+    
+    Notes
+    -----
+    If a voxel is marked as both, foreground and background, the background marker
     is given higher priority.
      
-    @note all arcs whose weight is not explicitly set are assumed to carry a weight of
-    zero.
-    
-    @param label_image The label image as an array containing uint values. Note that the
-                       region labels have to start from 1 and be continuous (filter.label.relabel()).
-    @type label_image numpy.ndarray 
-    @param fg_markers The foreground markers as binary array of the same shape as the label image.
-    @type fg_markers ndarray
-    @param bg_markers The background markers as binary array of the same shape as the label image.
-    @type bg_markers ndarray
-    @param regional_term This can be either
-                         False - all t-weights are set to 0, except for the nodes that are
-                         directly connected to the source or sink.
-                         , or a function - 
-                         The supplied function is used to compute the t_edges. It has to
-                         have the following signature
-                         regional_term(graph, label_image, regional_term_args), and is
-                         supposed to compute the weights between the regions of the
-                         label_image and the sink resp. source. The computed values it
-                         should add directly to the supplied graph.GCGraph object.
-                         Additional parameters can be passed via the regional_term_args
-                         argument.
-    @type regional_term function
-    @param boundary_term This can be either
-                         False - 
-                         In which case the weight of all n_edges i.e. between all nodes
-                         that are not source or sink, are set to 0.
-                         , or a function -
-                         In which case it is used to compute the edges weights. The
-                         supplied function has to have the following signature
-                         fun(graph, label_image, boundary_term_args), and is supposed to
-                         compute the (directed or undirected) edges between any two
-                         adjunct regions of the label image. These computed weights it
-                         adds directly to the supplied graph.GCGraph object. Additional
-                         parameters can be passed via the boundary_term_args argument.
-    @type boundary_term function
-    @param regional_term_args Use this to pass some additional parameters to the
-                              regional_term function.
-    @param boundary_term_args Use this to pass some additional parameters to the
-                              boundary_term function.
-    
-    @return the created graph
-    @rtype graphcut.maxflow.GraphDouble
-    
-    @raise AttributeError If an argument is maleformed.
-    @raise FunctionError If one of the supplied functions returns unexpected results.
+    All arcs whose weight is not explicitly set are assumed to carry a weight of zero.    
     """    
     # prepare logger
     logger = Logger.getInstance()

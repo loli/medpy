@@ -34,13 +34,13 @@ from medpy.io import save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2012-06-13"
+__version__ = "r0.1.1, 2012-06-13"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
-                  Converts a collection of DICOM slices into a proper image volume.
-                  Note that this operation does not preserve the voxel spacing (or any
-                  other header information, come to that).
+                  Converts a collection of DICOM slices (a DICOM series) into a proper
+                  image volume. Note that this operation does not preserve the voxel
+                  spacing (or any other header information, come to that).
                   
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,

@@ -36,8 +36,8 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.mathjax',
     'sphinx.ext.autosummary',
+    'sphinx.ext.todo',
     'numpydoc',
-    
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +47,7 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 
 # The encoding of source files.
-#source_encoding = 'utf-8-sig'
+source_encoding = 'utf-8-sig'
 
 # The master toctree document.
 master_doc = 'index'
@@ -351,4 +351,8 @@ epub_exclude_files = ['search.html']
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
 numpydoc_class_members_toctree = False
-#autoclass_content = 'both'
+
+###
+# TODO extention options
+###
+todo_include_todos = True

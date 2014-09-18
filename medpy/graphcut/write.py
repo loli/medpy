@@ -1,17 +1,24 @@
-"""
-@package medpy.graphcut.write
-Functions to persist a graph in various file formats.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.1.0
+# since 2012-02-06
+# status Release
 
-Functions:
-    - def bk_mfmc_parse(output): Parse the output of Boyov and Kolmogorovs max-flow/min-cut algorithm.
-
-@author Oskar Maier
-@version d0.1.0
-@since 2012-02-06
-@status Release
-"""
-
-# build-in module
+# build-in modules
 
 # third-party modules
 
@@ -20,11 +27,14 @@ Functions:
 # code
 def graph_to_dimacs(g, f):
     """
-    Persists the supplied graph in valid dimacs format into the file. 
-    @param g A graph object to persist.
-    @type g Graph
-    @param f A file-like object.
-    @type f file
+    Persists the supplied graph in valid dimacs format into the file.
+    
+    Parameters
+    ----------
+    g : `~medpy.graphcut.graph.Graph`
+        A graph object to persist.
+    f : file
+        A file-like object.
     """
     # write comments
     f.write('c Created by medpy\n')
@@ -61,4 +71,3 @@ def graph_to_dimacs(g, f):
             
     # end comment
     f.write('c end-of-file')
-    

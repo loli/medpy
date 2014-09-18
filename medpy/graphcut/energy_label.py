@@ -1,27 +1,24 @@
-"""
-@package medpy.graphcut.energy_label
-Run-time optimized energy functions for graph-cut on label images.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.3.0
+# since 2012-01-18
+# status Release
 
-Provides a number of standard energy functions for both, boundary and regional terms,
-that follow the signature required for building graphs using the graph module of this
-package. Additionally a number of convenience functions for re-occurring data processing
-are given.
-
-Functions:
-    - def boundary_difference_of_means(label_image, (original_image)): simple mean value base boundary term
-    - def boundary_stawiaski(label_image, (gradient_image)): boundary term implementation in (1)
-    - def boundary_stawiaski_directed(label_image, (gradient_image, directedness)): boundary term implementation in (1) with directed edges
-
-(1) Stawiaski J., Decenciere E., Bidlaut F. / "Interactive Liver Tumor Segmentation
-Using Graph-cuts and watershed" / MICCAI 2008 participation
-
-@author Oskar Maier
-@version r0.3.0
-@since 2012-01-18
-@status Release
-"""
-
-# build-in module
+# build-in modules
 import math
 
 # third-party modules
@@ -32,44 +29,47 @@ import sys
 
 # code
 def boundary_difference_of_means(graph, label_image, (original_image)): # label image is not required to hold continuous ids or to start from 1
-    """
-    An implementation of the boundary term, suitable to be used with the
-    graphcut.generate.graph_from_labels() function.
+    r"""
+    Boundary term based on the difference of means between adjacent image regions.
+    
+    An implementation of the boundary term, suitable to be used with the `~medpy.graphcut.generate.graph_from_labels` function.
     
     This simple energy function computes the mean values for all regions. The weights of
     the edges are then determined by the difference in mean values.
     
     The graph weights generated have to be strictly positive and preferably in the
-    interval (0, 1].
+    interval :math:`(0, 1]`. To ensure this, the maximum possible difference in mean values is computed as:
     
-    To ensure this, the maximum possible difference in mean values is computed as
-    \f[
+    .. math::
+    
         \alpha = \|\max \bar{I} - \min \bar{I}\|
-    \f]
-    , where \f$\min \bar{I}\f$ constitutes the lowest mean intensity value of all regions in
-    the image, while \f$\max \bar{I}\f$ constitutes the highest mean intensity value 
     
-    With this value the weights between a voxel \f$x\f$ and its neighbour \f$y\f$ can be
-    computed
-    \f[
+    , where :math:`\min \bar{I}` constitutes the lowest mean intensity value of all regions in
+    the image, while :math:`\max \bar{I}` constitutes the highest mean intensity value With this
+    value the weights between a region :math:`x` and its neighbour :math:`y` can be computed:
+    
+    .. math::
+    
         w(x,y) = \max \left( 1 - \frac{\|\bar{I}_x - \bar{I}_y\|}{\alpha}, \epsilon \right)
-    \f]
-    where \f$\epsilon\f$ is the smallest floating point step and thus
-    \f$w(x,y) \in (0, 1]\f$ holds true.
     
-    @note This function requires the original image to be passed along. That means that
-    graphcut.generate.graph_from_labels() has to be called with boundary_term_args set to the
+    where :math:`\epsilon` is the smallest floating point step and thus :math:`w(x,y) \in (0, 1]` holds true.
+    
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    label_image : ndarray
+        The label image.
+    original_image : ndarray
+        The original image.
+    
+    Notes
+    -----
+    This function requires the original image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_labels` has to be called with ``boundary_term_args`` set to the
     original image. 
     
-    @note This function is tested on 2D and 3D images and theoretically works on all
-    dimensions. 
-    
-    @param graph the graph to add the weights to
-    @type graph graphcut.graph.GCGraph    
-    @param label_image the label image
-    @type label_image numpy.ndarray
-    @param original_image The original image.
-    @type original_image numpy.ndarray
+    This function is tested on 2D and 3D images and theoretically works for all dimensionalities. 
     """
     # convert to arrays if necessary
     label_image = scipy.asarray(label_image)
@@ -106,43 +106,57 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
 
 
 def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
-    """
-    An implementation of the boundary term in (1), suitable to be used with the
-    graphcut.generate.graph_from_labels() function.
+    r"""
+    Boundary term based on the sum of border voxel pairs differences.
+     
+    An implementation of the boundary term in [1]_, suitable to be used with the `~medpy.graphcut.generate.graph_from_labels` function.
     
     Determines for each two supplied regions the voxels forming their border assuming
-    ndim*2-connectedness (e.g. 3*2=6 for 3D). From the gradient magnitude values of each
+    :math:`ndim*2`-connectedness (e.g. :math:`3*2=6` for 3D). From the gradient magnitude values of each
     end-point voxel the border-voxel pairs, the highest one is selected and passed to a
-    strictly positive and decreasing function g, which is defined as:
-    \f[
+    strictly positive and decreasing function :math:`g(x)`, which is defined as:
+    
+    .. math::
+    
         g(x) = \left(\frac{1}{1+|x|}\right)^k
-    \f]
-    ,where \f$k=2\f$. The final weight \f$w_{i,j}\f$ between two regions \f$r_i\f$ and
-    \f$r_j\f$ is then determined by the sum of all these neighbour values:
-    \f[
-        w = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|))
-    \f]
-    , where \f$F_{(r_i,r_j)}\f$ is the set of border voxel-pairs \f$e_{m,n}\f$ between
-    the regions \f$r_i\f$ and \f$r_j\f$ and \f$|I(p)|\f$ the absolute of the gradient
-    magnitude at the voxel \f$p\f$
+    
+    ,where :math:`k=2`. The final weight :math:`w_{i,j}` between two regions :math:`r_i` and
+    :math:`r_j` is then determined by the sum of all these neighbour values:
+    
+    .. math::
+    
+        w_{i,j} = \sum_{e_{m,n}\in F_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|))
+    
+    , where :math:`F_{(r_i,r_j)}` is the set of border voxel-pairs :math:`e_{m,n}` between
+    the regions :math:`r_i` and :math:`r_j` and :math:`|I(p)|` the absolute of the gradient
+    magnitude at the voxel :math:`p`
     
     This boundary_function works as an edge indicator in the original image. In simpler
     words the weight (and therefore the energy) is obtained by summing the local contrast
     along the boundaries between two regions.
     
-    @note This function requires the gradient magnitude image of the original image to
-    be passed along. That means that graphcut.generate.graph_from_labels() has to be called with
-    boundary_term_args set to the gradient image.
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    label_image : ndarray
+        The label image.
+    gradient_image : ndarray
+        The gradient image.
     
-    @note This function is tested on 2D and 3D images and theoretically works on all
-    dimensions.
+    Notes
+    -----
+    This function requires the gradient magnitude image of the original image to be passed
+    along. That means that `~medpy.graphcut.generate.graph_from_labels` has to be called
+    with ``boundary_term_args`` set to the gradient image. This can be obtained e.g. with
+    `generic_gradient_magnitude` and `prewitt` from `scipy.ndimage`.
     
-    @param graph the graph to add the weights to
-    @type graph graphcut.graph.GCGraph
-    @param label_image the label image
-    @type label_image numpy.ndarray
-    @param gradient_image The gradient magnitude image of the original image.
-    @type gradient_image numpy.ndarray
+    This function is tested on 2D and 3D images and theoretically works for all dimensionalities. 
+    
+    References
+    ----------
+    .. [1] Stawiaski J., Decenciere E., Bidlaut F. "Interactive Liver Tumor Segmentation
+           Using Graph-cuts and watershed" MICCAI 2008 participation
     """
     # convert to arrays if necessary
     label_image = scipy.asarray(label_image)
@@ -174,73 +188,76 @@ def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is n
 
 
 def boundary_stawiaski_directed(graph, label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
-    """
-    An implementation of the boundary term in (1), suitable to be used with the
-    graphcut.generate.graph_from_labels() function.
+    r"""
+    Boundary term based on the sum of border voxel pairs differences, directed version.
     
-    Determines for each two supplied regions the voxels forming their border assuming
-    ndim*2-connectedness (e.g. 3*2=6 for 3D). From the gradient magnitude values of each
-    end-point voxel the border-voxel pairs, the highest one is selected and passed to a
-    strictly positive and decreasing function g, which is defined as:
-    \f[
-        g(x) = \left(\frac{1}{1+|x|}\right)^k
-    \f]
-    ,where \f$k=2\f$. The final weight \f$w_{i,j}\f$ between two regions \f$r_i\f$ and
-    \f$r_j\f$ is then determined by the sum of all these neighbour values:
-    \f[
-        w_{i,j} = \sum_{e_{m,n}|inF_{(r_i,r_j)}}g(\max(|I(m)|,|I(n)|))
-    \f]
-    , where \f$F_{(r_i,r_j)}\f$ is the set of border voxel-pairs \f$e_{m,n}\f$ between
-    the regions \f$r_i\f$ and \f$r_j\f$ and \f$|I(p)|\f$ the absolute of the gradient
-    magnitude at the voxel \f$p\f$
+    An implementation of the boundary term in [1]_, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_labels` function.
+    
+    The basic definition of this term is the same as for `boundary_stawiaski`, but the
+    edges of the created graph will be directed.
     
     This boundary_function works as an edge indicator in the original image. In simpler
     words the weight (and therefore the energy) is obtained by summing the local contrast
     along the boundaries between two regions.
     
-    When the directedness parameter is set to zero, the resulting graph will be undirected.
+    When the ``directedness`` parameter is set to zero, the resulting graph will be undirected
+    and the behaviour equals `boundary_stawiaski`.
     When it is set to a positive value, light-to-dark transitions are favored i.e. voxels
     with a lower intensity (darker) than the objects tend to be assigned to the object.
-    The boundary term is thus changed to
-    \f[
+    The boundary term is thus changed to:
+    
+    .. math::
+    
           g_{ltd}(x) = \left\{
               \begin{array}{l l}
                 g(x) + \beta & \quad \textrm{if $I_i > I_j$}\\
                 g(x) & \quad \textrm{if $I_i \leq I_j$}\\
               \end{array} \right.
-    \f]
-    With a negative value for directedness, the opposite effect can be achieved i.e.
+
+    With a negative value for ``directedness``, the opposite effect can be achieved i.e.
     voxels with a higher intensity (lighter) than the objects tend to be assigned to the
     object. The boundary term is thus changed to
-    \f[
+    
+    .. math::
+    
       g_{dtl} = \left\{
           \begin{array}{l l}
             g(x) & \quad \textrm{if $I_i > I_j$}\\
             g(x) + \beta & \quad \textrm{if $I_i \leq I_j$}\\
           \end{array} \right.
-    \f]
-    Subsequently the \f$g(x)\f$ in the computation of \f$w_{i,j}\f$ is substituted by
-    \f$g_{ltd}\f$ resp. \f$g_{dtl}\f$. The value \f$\beta\$ determines the power of the
-    directedness and corresponds to the absolute value of the supplied directedness
+
+    Subsequently the :math:`g(x)` in the computation of :math:`w_{i,j}` is substituted by
+    :math:`g_{ltd}` resp. :math:`g_{dtl}`. The value :math:`\beta` determines the power of the
+    directedness and corresponds to the absolute value of the supplied ``directedness``
     parameter. Experiments showed values between 0.0001 and 0.0003 to be good candidates.
     
-    @note This function requires the gradient magnitude image of the original image to
-    be passed along. That means that graphcut.generate.graph_from_labels() has to be called with
-    boundary_term_args set to the gradient image.
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    label_image : ndarray
+        The label image.
+    gradient_image : ndarray
+        The gradient image.
+    directedness : integer
+        The weight of the directedness, a positive number to favour
+        light-to-dark and a negative to dark-to-light transitions. See function
+        description for more details.
     
-    @note This function is tested on 2D and 3D images and theoretically works on all
-    dimensions. 
+    Notes
+    -----
+    This function requires the gradient magnitude image of the original image to be passed
+    along. That means that `~medpy.graphcut.generate.graph_from_labels` has to be called
+    with ``boundary_term_args`` set to the gradient image. This can be obtained e.g. with
+    `generic_gradient_magnitude` and `prewitt` from `scipy.ndimage`.
     
-    @param graph the graph to add the weights to
-    @type graph graphcut.graph.GCGraph    
-    @param label_image the label image
-    @type label_image numpy.ndarray
-    @param gradient_image The gradient magnitude image of the original image.
-    @type gradient_image numpy.ndarray
-    @param directedness The weight of the directedness, a positive number to favour
-    light-to-dark and a negative to dark-to-light transitions. See function
-    description for more details.
-    @type directedness int
+    This function is tested on 2D and 3D images and theoretically works for all dimensionalities.
+    
+    References
+    ----------
+    .. [1] Stawiaski J., Decenciere E., Bidlaut F. "Interactive Liver Tumor Segmentation
+           Using Graph-cuts and watershed" MICCAI 2008 participation    
     """
     # convert to arrays if necessary
     label_image = scipy.asarray(label_image)
@@ -291,37 +308,42 @@ def boundary_stawiaski_directed(graph, label_image, (gradient_image, directednes
                   gradient_image[slices_x],
                   gradient_image[slices_y])
 
-def regional_atlas(graph, label_image, (atlas_image, alpha)): # label image is required to hold continuous ids starting from 1
-    """
-    An implementation of a regions term using a statistical atlas, suitable to be used
-    with the graphcut.generate.graph_from_labels() function.
+def regional_atlas(graph, label_image, (probability_map, alpha)): # label image is required to hold continuous ids starting from 1
+    r"""
+    Regional term based on a probability atlas.
     
-    Computes the sum of all statistical atlas voxels under each region and uses this
-    value as node weight for the graph cut.
+    An implementation of a regional term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_labels` function.
     
     This regional term introduces statistical probability of a voxel to belong to the
-    object to segment. 
+    object to segment. It computes the sum of all statistical atlas voxels under each
+    region and uses this value as terminal node weight for the graph cut.
+
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    label_image : ndarray
+        The label image.
+    probability_map : ndarray
+        The probability atlas image associated with the object to segment.
+    alpha : float
+        The energy terms alpha value, balancing between boundary and regional term. 
     
-    @note This function requires an atlas image of the same shape as the original image
-    to be passed along. That means that graphcut.generate.graph_from_labels() has to be
-    called with boundary_term_args set to the atlas image.
+    Notes
+    -----
+    This function requires a probability atlas image of the same shape as the original image
+    to be passed along. That means that `~medpy.graphcut.generate.graph_from_labels` has to
+    be called with ``regional_term_args`` set to the probability atlas image.
     
-    @note This function is tested on 2D and 3D images and theoretically works on all
-    dimensions.
-    
-    @param graph the graph to add the weights to
-    @type graph graphcut.graph.GCGraph
-    @param label_image the label image
-    @type label_image numpy.ndarray
-    @param atlas_image The atlas image associated with the object to segment.
-    @type atlas_image numpy.ndarray
+    This function is tested on 2D and 3D images and theoretically works for all dimensionalities.    
     """
     # finding the objects in the label image (bounding boxes around regions)
     objects = scipy.ndimage.find_objects(label_image)
     
     # iterate over regions and compute the respective sums of atlas values
     for rid in range(1, len(objects) + 1):
-        weight = scipy.sum(atlas_image[objects[rid - 1]][label_image[objects[rid - 1]] == rid])
+        weight = scipy.sum(probability_map[objects[rid - 1]][label_image[objects[rid - 1]] == rid])
         graph.set_tweight(rid - 1, alpha * weight, -1. * alpha * weight) # !TODO: rid's inside the graph start from 0 or 1? => seems to start from 0
         # !TODO: I can exclude source and sink nodes from this!
         # !TODO: I only have to do this in the range of the atlas objects!

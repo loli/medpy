@@ -1,29 +1,24 @@
-"""
-@package medpy.graphcut.energy_voxel
-Run-time optimized energy functions for graph-cut on voxel images.
+# Copyright (C) 2013 Oskar Maier
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# author Oskar Maier
+# version r0.3.0
+# since 2012-03-23
+# status Release
 
-Provides a number of standard energy functions for both, boundary and regional terms,
-that follow the signature required for building graphs using the graph module of this
-package. Additionally a number of convenience functions for re-occurring data processing
-are given.
-
-Functions:
-    - def boundary_maximum_linear(graph, (gradient_image, spacing))
-    - def boundary_difference_linear(graph, (original_image, spacing))
-    - def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing))
-    - def boundary_difference_exponential(graph, (original_image, sigma, spacing))
-    - def boundary_maximum_division(graph, (gradient_image, sigma, spacing))
-    - def boundary_difference_division(graph, (original_image, sigma, spacing))
-    - def boundary_maximum_power(graph, (gradient_image, sigma, spacing))
-    - def boundary_difference_power(graph, (original_image, sigma, spacing))
-
-@author Oskar Maier
-@version d0.3.0
-@since 2012-03-23
-@status Development
-"""
-
-# build-in module
+# build-in modules
 import sys
 
 # third-party modules
@@ -35,13 +30,31 @@ import math
 
 # code
 def regional_probability_map(graph, (probability_map, alpha)):
-    """
-    Setting the regional term with a probability map.
+    r"""
+    Regional term based on a probability atlas.
+    
+    An implementation of a regional term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
     
     Takes an image/graph/map as input where each entry contains a probability value for
     the corresponding GC graph node to belong to the foreground object. The probabilities
-    must be in the range [0, 1]. The reverse weights are assigned to the sink
+    must be in the range :math:`[0, 1]`. The reverse weights are assigned to the sink
     (which corresponds to the background).
+    
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    probability_map : ndarray
+        The label image.
+    alpha : float
+        The energy terms alpha value, balancing between boundary and regional term.
+    
+    Notes
+    -----
+    This function requires a probability atlas image of the same shape as the original image
+    to be passed along. That means that `~medpy.graphcut.generate.graph_from_labels` has to
+    be called with ``regional_term_args`` set to the probability atlas image.
     """
     probability_map = scipy.asarray(probability_map)
     probabilities = numpy.vstack([(probability_map * alpha).flat,
@@ -49,11 +62,31 @@ def regional_probability_map(graph, (probability_map, alpha)):
     graph.set_tweights_all(probabilities)
 
 def boundary_maximum_linear(graph, (gradient_image, spacing)):
-    """
-    The same as energy_voxel.boundary_difference_linear(), but working on the gradient
-    image instead of the original.
+    r"""
+    Boundary term processing adjacent voxels maximum value using a linear relationship. 
     
-    @see energy_voxel.boundary_difference_linear() for details.
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
+    
+    The same as `boundary_difference_linear`, but working on the gradient image instead
+    of the original. See there for details.
+    
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    gradient_image : ndarray
+        The gradient image.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the gradient image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
+    gradient image.
     """
     gradient_image = scipy.asarray(gradient_image)
     
@@ -74,47 +107,55 @@ def boundary_maximum_linear(graph, (gradient_image, spacing)):
     __skeleton_maximum(graph, gradient_image, boundary_term_linear)
 
 def boundary_difference_linear(graph, (original_image, spacing)):
-    """
-    An implementation of the boundary term, suitable to be used with the
-    generate.graph_from_voxels() function.
+    r"""
+    Boundary term processing adjacent voxels difference value using a linear relationship. 
+    
+    An implementation of a regional term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
     
     Finds all edges between all neighbours of the image and uses their normalized
     difference in intensity values as edge weight.
     
     The weights are linearly normalized using the maximum possible intensity difference
-    of the image.
+    of the image. Formally, this value is computed as:
     
-    Formally this value is computed as
-    \f[
+    .. math::
+    
         \sigma = |max I - \min I|
-    \f]
-    , where \f$\min I\f$ constitutes the lowest intensity value in the image, while
-    \f$\max I\f$ constitutes the highest. 
     
-    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
-    \f[
+    , where :math:`\min I` constitutes the lowest intensity value in the image, while
+    :math:`\max I` constitutes the highest.
+    
+    The weights between two neighbouring voxels :math:`(p, q)` is then computed as:
+    
+    .. math::
+    
         w(p,q) = 1 - \frac{|I_p - I_q|}{\sigma} + \epsilon
-    \f]
-    , where \f$\epsilon\f$ is a infinitively small number and for which
-    \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    , where :math:`\epsilon` is a infinitively small number and for which
+    :math:`w(p, q) \in (0, 1]` holds true.
     
     When the created edge weights should be weighted according to the slice distance,
-    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights
     computed for the corresponding direction are divided by the respective slice
-    thickness. Set this parameter to False for equally weighted edges.     
+    thickness. Set this parameter to `False` for equally weighted edges.     
     
-    @note This function requires the original image to be passed along. That means that
-    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    original_image : ndarray
+        The original image.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the original image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
-    
-    @param graph An initialized graph.GCGraph object
-    @type graph.GCGraph
-    @param original_image The original image.
-    @type original_image numpy.ndarray
-    @param spacing A sequence containing the slice spacing used for weighting the
-                   computed neighbourhood weight value for different dimensions. If
-                   False, no distance based weighting of the graph edges is performed.
-    @param spacing sequence | False        
     """
     original_image = scipy.asarray(original_image)
     
@@ -135,11 +176,33 @@ def boundary_difference_linear(graph, (original_image, spacing)):
     __skeleton_difference(graph, original_image, boundary_term_linear)
 
 def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing)):
-    """
-    The same as energy_voxel.boundary_difference_exponential(), but working on the gradient
-    image instead of the original.
+    r"""
+    Boundary term processing adjacent voxels maximum value using an exponential relationship. 
     
-    @see energy_voxel.boundary_difference_exponential() for details.
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
+    
+    The same as `boundary_difference_exponential`, but working on the gradient image instead
+    of the original. See there for details.
+    
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    gradient_image : ndarray
+        The gradient image.
+    sigma : float
+        The sigma parameter to use in the boundary term.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the gradient image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
+    gradient image.
     """
     gradient_image = scipy.asarray(gradient_image)
     
@@ -158,44 +221,50 @@ def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing)):
     __skeleton_maximum(graph, gradient_image, boundary_term_exponential)    
 
 def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
-    """
-    An implementation of the boundary term, suitable to be used with the
-    generate.graph_from_voxels() function.
+    r"""
+    Boundary term processing adjacent voxels difference value using an exponential relationship.
+    
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
     
     Finds all edges between all neighbours of the image and uses their difference in
     intensity values as edge weight.
     
     The weights are normalized using an exponential function and a smoothing factor
-    \f$\sigma\f$.
+    :math:`\sigma`. The :math:`\sigma` value has to be supplied manually, since its
+    ideal settings differ greatly from application to application.
     
-    The \f$\sigma\f$. value has to be supplied manually, since its ideal settings
-    differ greatly from application to application.
+    The weights between two neighbouring voxels :math:`(p, q)` is then computed as
     
-    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
-    \f[
+    .. math::
+    
         w(p,q) = \exp^{-\frac{|I_p - I_q|^2}{\sigma^2}}
-    \f]
-    , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    , for which :math:`w(p, q) \in (0, 1]` holds true.
     
     When the created edge weights should be weighted according to the slice distance,
-    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights
     computed for the corresponding direction are divided by the respective slice
-    thickness. Set this parameter to False for equally weighted edges.     
+    thickness. Set this parameter to `False` for equally weighted edges.     
     
-    @note This function requires the original image to be passed along. That means that
-    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    original_image : ndarray
+        The original image.
+    sigma : float
+        The sigma parameter to use in the boundary term.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the original image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
-    
-    @param graph An initialized graph.GCGraph object
-    @type graph.GCGraph
-    @param original_image The original image.
-    @type original_image numpy.ndarray
-    @param sigma The sigma to use in the boundary term
-    @type sigma float
-    @param spacing A sequence containing the slice spacing used for weighting the
-                   computed neighbourhood weight value for different dimensions. If
-                   False, no distance based weighting of the graph edges is performed.
-    @param spacing sequence | False        
     """
     original_image = scipy.asarray(original_image)
     
@@ -214,11 +283,33 @@ def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
     __skeleton_difference(graph, original_image, boundary_term_exponential, spacing)
     
 def boundary_maximum_division(graph, (gradient_image, sigma, spacing)):
-    """
-    The same as energy_voxel.boundary_difference_division(), but working on the gradient
-    image instead of the original.
+    r"""
+    Boundary term processing adjacent voxels maximum value using a division relationship. 
     
-    @see energy_voxel.boundary_difference_division() for details.
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
+    
+    The same as `boundary_difference_division`, but working on the gradient image instead
+    of the original. See there for details.
+    
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    gradient_image : ndarray
+        The gradient image.
+    sigma : float
+        The sigma parameter to use in the boundary term.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the gradient image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
+    gradient image.
     """
     gradient_image = scipy.asarray(gradient_image)
     
@@ -235,44 +326,50 @@ def boundary_maximum_division(graph, (gradient_image, sigma, spacing)):
     __skeleton_difference(graph, gradient_image, boundary_term_division)
     
 def boundary_difference_division(graph, (original_image, sigma, spacing)):
-    """
-    An implementation of the boundary term, suitable to be used with the
-    generate.graph_from_voxels() function.
+    r"""
+    Boundary term processing adjacent voxels difference value using a division relationship. 
+    
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
     
     Finds all edges between all neighbours of the image and uses their difference in
     intensity values as edge weight.
     
     The weights are normalized using an division function and a smoothing factor
-    \f$\sigma\f$.
-    
-    The \f$\sigma\f$. value has to be supplied manually, since its ideal settings
+    :math:`\sigma`. The :math:`\sigma` value has to be supplied manually, since its ideal settings
     differ greatly from application to application.
     
-    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
-    \f[
+    The weights between two neighbouring voxels :math:`(p, q)` is then computed as
+    
+    .. math::
+    
         w(p,q) = \frac{1}{1 + \frac{|I_p - I_q|}{\sigma}}
-    \f]
-    , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    , for which :math:`w(p, q) \in (0, 1]` holds true.
     
     When the created edge weights should be weighted according to the slice distance,
-    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights
     computed for the corresponding direction are divided by the respective slice
-    thickness. Set this parameter to False for equally weighted edges.     
+    thickness. Set this parameter to `False` for equally weighted edges.     
     
-    @note This function requires the original image to be passed along. That means that
-    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    original_image : ndarray
+        The original image.
+    sigma : float
+        The sigma parameter to use in the boundary term.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the original image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
-    
-    @param graph An initialized graph.GCGraph object
-    @type graph.GCGraph
-    @param original_image The original image.
-    @type original_image numpy.ndarray
-    @param sigma The sigma to use in the boundary term
-    @type sigma float
-    @param spacing A sequence containing the slice spacing used for weighting the
-                   computed neighbourhood weight value for different dimensions. If
-                   False, no distance based weighting of the graph edges is performed.
-    @param spacing sequence | False        
     """
     original_image = scipy.asarray(original_image)
     
@@ -290,10 +387,32 @@ def boundary_difference_division(graph, (original_image, sigma, spacing)):
     
 def boundary_maximum_power(graph, (gradient_image, sigma, spacing)):
     """
-    The same as energy_voxel.boundary_difference_power(), but working on the gradient
-    image instead of the original.
+    Boundary term processing adjacent voxels maximum value using a power relationship. 
     
-    @see energy_voxel.boundary_difference_power() for details.
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
+    
+    The same as `boundary_difference_power`, but working on the gradient image instead
+    of the original. See there for details.
+    
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    gradient_image : ndarray
+        The gradient image.
+    sigma : float
+        The sigma parameter to use in the boundary term.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the gradient image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
+    gradient image.    
     """
     gradient_image = scipy.asarray(gradient_image)
     
@@ -311,44 +430,50 @@ def boundary_maximum_power(graph, (gradient_image, sigma, spacing)):
     
     
 def boundary_difference_power(graph, (original_image, sigma, spacing)):
-    """
-    An implementation of the boundary term, suitable to be used with the
-    generate.graph_from_voxels() function.
+    r"""
+    Boundary term processing adjacent voxels difference value using a power relationship. 
+    
+    An implementation of a boundary term, suitable to be used with the
+    `~medpy.graphcut.generate.graph_from_voxels` function.
     
     Finds all edges between all neighbours of the image and uses their difference in
     intensity values as edge weight.
     
     The weights are normalized using an power function and a smoothing factor
-    \f$\sigma\f$.
+    :math:`\sigma`. The :math:`\sigma` value has to be supplied manually, since its
+    ideal settings differ greatly from application to application.
     
-    The \f$\sigma\f$. value has to be supplied manually, since its ideal settings
-    differ greatly from application to application.
+    The weights between two neighbouring voxels :math:`(p, q)` is then computed as
     
-    The weights between two neighbouring voxels \f$(p, q)\f$ is then computed as
-    \f[
+    .. math::
+    
         w(p,q) = \frac{1}{1 + |I_p - I_q|}^\sigma
-    \f]
-    , for which \f$w(p, q) \in (0, 1]\f$ holds true.
+    
+    , for which :math:`w(p, q) \in (0, 1]` holds true.
     
     When the created edge weights should be weighted according to the slice distance,
-    provide the list of slice thicknesses via the spacing parameter. Then all weights
+    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights
     computed for the corresponding direction are divided by the respective slice
-    thickness. Set this parameter to False for equally weighted edges. 
+    thickness. Set this parameter to `False` for equally weighted edges.     
     
-    @note This function requires the original image to be passed along. That means that
-    generate.graph_from_voxels() has to be called with boundary_term_args set to the
+    Parameters
+    ----------
+    graph : GCGraph
+        The graph to add the weights to.
+    original_image : ndarray
+        The original image.
+    sigma : float
+        The sigma parameter to use in the boundary term.
+    spacing : sequence of float or False
+        A sequence containing the slice spacing used for weighting the
+        computed neighbourhood weight value for different dimensions. If
+        `False`, no distance based weighting of the graph edges is performed.
+        
+    Notes
+    -----
+    This function requires the original image to be passed along. That means that
+    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
-    
-    @param graph An initialized graph.GCGraph object
-    @type graph.GCGraph
-    @param original_image The original image.
-    @type original_image numpy.ndarray
-    @param sigma The sigma to use in the boundary term
-    @type sigma float
-    @param spacing A sequence containing the slice spacing used for weighting the
-                   computed neighbourhood weight value for different dimensions. If
-                   False, no distance based weighting of the graph edges is performed.
-    @param spacing sequence | False    
     """
     original_image = scipy.asarray(original_image)
     
@@ -374,10 +499,12 @@ def __skeleton_maximum(graph, image, boundary_term, spacing):
     image.
     
     The computation of the edge weights follows
-    \f[
+    
+    .. math::
+    
         w(p,q) = g(max(I_p, I_q))
-    \f]
-    ,where \f$g(\cdot)\f$ is the supplied boundary term function.
+    
+    ,where :math:`g(\cdot)` is the supplied boundary term function.
     
     @param graph An initialized graph.GCGraph object
     @type graph.GCGraph
@@ -408,20 +535,22 @@ def __skeleton_difference(graph, image, boundary_term, spacing):
     A skeleton for the calculation of intensity difference based boundary terms.
     
     Iterates over the images dimensions and generates for each an array of absolute
-    neighbouring voxel \f$(p, q)\f$ intensity differences \f$|I_p, I_q|\f$. These are
-    then passed to the supplied function \f$g(\cdot)\f$ for for boundary term
+    neighbouring voxel :math:`(p, q)` intensity differences :math:`|I_p, I_q|`. These are
+    then passed to the supplied function :math:`g(\cdot)` for for boundary term
     computation. Finally the returned edge weights are added to the graph.
     
-    Formally for each edge \f$(p, q)\f$ of the image, their edge weight is computed as
-    \f[
+    Formally for each edge :math:`(p, q)` of the image, their edge weight is computed as
+    
+    .. math::
+    
         w(p,q) = g(|I_p - I_q|)
-    \f]
-    ,where \f$g(\cdot)\f$ is the supplied boundary term function.
+    
+    ,where :math:`g(\cdot)` is the supplied boundary term function.
     
     The boundary term function has to take an array of intensity differences as only
     parameter and return an array of the same shape containing the edge weights. For the
-    implemented function the condition \f$g(\cdot)\in(0, 1]\f$ must hold true, i.e., it
-    has to be strictly positive with \f$1\f$ as the upper limit.
+    implemented function the condition :math:`g(\cdot)\in(0, 1]` must hold true, i.e., it
+    has to be strictly positive with :math:`1` as the upper limit.
     
     @note the underlying neighbourhood connectivity is 4 for 2D, 6 for 3D, etc. 
     

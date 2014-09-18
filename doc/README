@@ -1,8 +1,37 @@
-Build the HTML documentation:
+Building the HTML documentation
+###############################
+
+Run
 
     sphinx-build -aE -b html source/ build/
+    
+, then edit .rst files belong to Python classes
 
-Generate the API documentation files:
+source/generated/medpy.graphcut.graph.Graph.rst
+source/generated/medpy.graphcut.graph.GCGraph.rst
+source/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.rst
+source/generated/medpy.core.logger.Logger.rst
+
+by removing the line
+
+    .. automethod:: __init__
+    
+and adding the line
+    
+    :toctree: generated/
+    
+beneath each ".. autosummary::" command.
+
+Finally rerun the build
+    
+    sphinx-build -aE -b html source/ build/
+
+
+
+Generate the API documentation files
+####################################
+
+Run
 
     sphinx-apidoc -efF -H MedPy -A "Oskar Maier" -V 0.2 -R 1 -o generated/ ../../medpy/medpy/
 

@@ -2,6 +2,14 @@ MedPy
 =====
 A medical image processing library written in Python.
 
+Tutorials
+---------
+
+.. toctree::
+    :maxdepth: 1
+    
+    commandline_tools_listing
+
 References
 ----------
 

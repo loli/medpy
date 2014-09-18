@@ -37,7 +37,7 @@ from medpy.utilities import argparseu
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2013-07-08"
+__version__ = "r0.1.1, 2013-07-08"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -46,10 +46,7 @@ __description__ = """
           BSpline is used for interpolation. A order between 1 and 5 can be selected.
           
           Note that the pixel data type of the input image is respected, i.e. a integer
-          input image leads to an integer output image etc. Use the --binary flag, if a
-          binary input image is supplied that does is not marked as binary pixel data
-          types. Similar, the --float flag can be used to enforce a floating point output
-          image. 
+          input image leads to an integer output image etc.
 
           Copyright (C) 2013 Oskar Maier
           This program comes with ABSOLUTELY NO WARRANTY; This is free software,
