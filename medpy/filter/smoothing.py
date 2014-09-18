@@ -11,7 +11,8 @@ from scipy.ndimage.filters import gaussian_filter
 # path changes
 
 # own modules
-from medpy.filter import xminus1d
+from medpy.filter.utilities import xminus1d
+
 
 # information
 __author__ = "Oskar Maier and others (see below)"
