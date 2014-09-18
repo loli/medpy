@@ -23,7 +23,7 @@ html_static_path = ['_static']
 html_theme_options = {
     "edit_link": "true",
     "sidebar": "right",
-    "scipy_org_logo": "true",
+    "scipy_org_logo": "false",
     "rootlinks": [("http://scipy.org/", "Scipy.org"),
                   ("http://docs.scipy.org/", "Docs")]
 }

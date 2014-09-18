@@ -27,6 +27,15 @@ Finally rerun the build
     sphinx-build -aE -b html source/ build/
 
 
+Enabling the search box
+#######################
+
+Remove
+
+    scipy-sphinx-theme/_theme/scipy/searchbox.html
+    
+from the scipy template, as it somehow overrides the search box with a custom link to edit the .rst files in-place online.
+
 
 Generate the API documentation files
 ####################################

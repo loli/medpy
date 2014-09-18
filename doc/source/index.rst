@@ -1,17 +1,22 @@
 MedPy
 =====
-A medical image processing library written in Python.
+
+:Release: |release|
+:Date: |today|
+
+MedPy is a medical image processing library written in Python.
 
 Tutorials
 ---------
 
 .. toctree::
+    :glob:
     :maxdepth: 1
     
-    commandline_tools_listing
+    tutorial/*
 
-References
-----------
+Reference
+---------
 
 .. toctree::
     :maxdepth: 1
@@ -24,11 +29,4 @@ References
     itkvtk
     core
     utilities
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
