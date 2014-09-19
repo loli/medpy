@@ -53,7 +53,7 @@ def xminus1d(img, fun, dim, *args, **kwargs):
     
     Notes
     -----
-    With *args and **kwargs, arguments can be passed to the function ``fun``.
+    With ``*args`` and ``**kwargs``, arguments can be passed to the function ``fun``.
     """
     slicer = [slice(None)] * img.ndim
     output = []

@@ -6,6 +6,29 @@ MedPy
 
 MedPy is a medical image processing library written in Python.
 
+Installation
+------------
+
+.. toctree::
+    :maxdepth: 1
+    
+    installation/fastpath
+    installation/asroot
+    installation/asuser
+    installation/developmentmode
+    installation/uninstall
+    installation/graphcutsupport
+    installation/itkwrapper
+
+Information
+-----------
+
+.. toctree::
+    :glob:
+    :maxdepth: 1
+    
+    information/*
+
 Tutorials
 ---------
 
@@ -14,6 +37,15 @@ Tutorials
     :maxdepth: 1
     
     tutorial/*
+
+Receipts
+--------
+
+.. toctree::
+    :glob:
+    :maxdepth: 1
+    
+    receipts/*
 
 Reference
 ---------
