@@ -78,6 +78,7 @@ Utilities to apply filters selectively and create your own ones.
 .. autosummary::
     :toctree: generated/
     
+    xminus1d
     intersection
     pad
     
@@ -122,17 +123,13 @@ A learning method to align the intensity ranges of images.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # if __all__ is not set, only the following, explicit import statements are executed
-from binary import largest_connected_component, size_threshold
-from image import sls, ssd, average_filter, sum_filter
-from smoothing import anisotropic_diffusion, gauss_xminus1d
-from label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
-from houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
-from otsu import otsu
-from utilities import pad, intersection
-
-from IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
-from LabelImageStatistics import LabelImageStatistics
-from MinimaExtraction import local_minima
+from .binary import largest_connected_component, size_threshold
+from .image import sls, ssd, average_filter, sum_filter, otsu, local_minima
+from .smoothing import anisotropic_diffusion, gauss_xminus1d
+from .label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
+from .houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere
+from .utilities import pad, intersection, xminus1d
+from .IntensityRangeStandardization import IntensityRangeStandardization, UntrainedException, InformationLossException, SingleIntensityAccumulationError
 
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]

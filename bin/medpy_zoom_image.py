@@ -85,6 +85,10 @@ def zoom(image, factor, dimension, hdr = False, order = 3):
     If an image header (hdr) is supplied, its voxel spacing gets updated.
     Returns the image and the updated header or false.
     """
+    # check if supplied dimension is valid
+    if dimension >= image.ndim:
+        raise argparse.ArgumentError('The supplied zoom-dimension {} exceeds the image dimensionality of 0 to {}.'.format(dimension, image.ndim - 1))
+    
     # get logger
     logger = Logger.getInstance()
 

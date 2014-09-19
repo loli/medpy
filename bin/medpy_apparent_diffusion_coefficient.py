@@ -33,7 +33,7 @@ from scipy.ndimage.morphology import binary_fill_holes, binary_dilation,\
 # own modules
 from medpy.core import Logger
 from medpy.io import load, save, header
-from medpy.filter.otsu import otsu
+from medpy.filter import otsu
 from medpy.core.exceptions import ArgumentError
 from medpy.filter.binary import largest_connected_component
 

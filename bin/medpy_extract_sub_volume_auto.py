@@ -35,7 +35,7 @@ from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.0, 2012-05-17"
+__version__ = "r0.2.1, 2012-05-17"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -73,20 +73,18 @@ def main():
         logger.critical('The supplied cut-dimensions {} is invalid. The input image has only {} dimensions.'.format(args.dimension, image_data.ndim))
         raise ArgumentError('The supplied cut-dimensions {} is invalid. The input image has only {} dimensions.'.format(args.dimension, image_data.ndim))
     
+    # prepare output filenames
+    name_output = args.output.replace('{}', '{:03d}')
+    
     # determine cut lines
     no_sub_volumes = image_data.shape[args.dimension] / args.maxsize + 1 # int-division is desired
     slices_per_volume = image_data.shape[args.dimension] / no_sub_volumes # int-division is desired
-    
-    # construct names of output images
-    chunks = args.image.split('/')[-1].split('.')
-    image_suffix = chunks[-1]
-    output_base_name = ''.join(chunks[:-1])
     
     # construct processing dict for each sub-volume
     processing_array = []
     for i in range(no_sub_volumes):
         processing_array.append(
-            {'path': '{}/{}_sv{}.{}'.format(args.output, output_base_name, i+1, image_suffix),
+            {'path': name_output.format(i+1),
              'cut': (i * slices_per_volume, (i + 1) * slices_per_volume)})
         if no_sub_volumes - 1 == i: # last volume has to have increased cut end
             processing_array[i]['cut'] = (processing_array[i]['cut'][0], image_data.shape[args.dimension])
@@ -125,7 +123,7 @@ def getParser():
     parser = argparse.ArgumentParser(description=__description__, formatter_class=RawTextHelpFormatter)
     
     parser.add_argument('image', help='An image of arbitrary dimensions that should be split.')
-    parser.add_argument('output', help='The location where to store the sub-volumes. They will be of the same file-type as the input image.')
+    parser.add_argument('output', help='Output volumes. Has to include the sequence "{}" in the place where the volume number should be placed.')
     parser.add_argument('dimension', type=int, help='The dimension in which direction to split (starting from 0:x).')
     parser.add_argument('maxsize', type=int, help='The produced volumes will always be smaller than this size (in terms of slices in the cut-dimension).')
     parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')

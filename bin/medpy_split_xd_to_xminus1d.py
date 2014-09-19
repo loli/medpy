@@ -73,7 +73,7 @@ def main():
     if args.dimension >= data_input.ndim or args.dimension < 0:
         raise ArgumentError('The supplied cut-dimension {} exceeds the image dimensionality of 0 to {}.'.format(args.dimension, data_input.ndim - 1))
     
-    # preapre output file string
+    # prepare output file string
     name_output = args.output.replace('{}', '{:03d}')
     
     # compute the new the voxel spacing
@@ -105,7 +105,7 @@ def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
     parser.add_argument('input', help='Source volume.')
-    parser.add_argument('output', help='Target volume. Has to include the sequence "{}" in the place where the volume number should be placed.')
+    parser.add_argument('output', help='Target volumes. Has to include the sequence "{}" in the place where the volume number should be placed.')
     parser.add_argument('dimension', type=int, help='The dimension along which to split (starting from 0).')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

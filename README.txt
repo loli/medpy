@@ -190,7 +190,7 @@ Dependencies
 
 These dependencies can be found in the repositories of all major distribution. For e.g. Ubuntu, you can simply call::
 
-	sudo apt-get install python-boost build-essentials
+	sudo apt-get install libboost-python-dev build-essential
 	
 	
 License

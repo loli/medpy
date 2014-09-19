@@ -1,5 +1,4 @@
 """
-@package medpy
 Medical image processing in Python.
 
 MedPy is a library and script collection for medical image processing in Python. It

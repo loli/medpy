@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # author Oskar Maier
-# version r0.1.2
+# version r0.1.3
 # since 2013-12-03
 # status Release
 
@@ -28,6 +28,40 @@ from scipy.ndimage import _ni_support
 from ..io import header
 
 # code
+def xminus1d(img, fun, dim, *args, **kwargs):
+    r"""
+    Applies the function fun along all X-1D dimensional volumes of the images img
+    dimension dim.
+    
+    E.g. you want to apply a gauss filter to each slice of a 3D MRI brain image,
+    simply supply the function as fun, the image as img and the dimension along which
+    to iterate as dim.
+    
+    Parameters
+    ----------
+    img : ndarray
+        The image to apply the function ``fun`` to.
+    fun : function
+        A image modification function.
+    dim : integer
+        The dimension along which to apply the function.
+    
+    Returns
+    -------
+    output : ndarray
+        The result of the operation over the image ``img``.
+    
+    Notes
+    -----
+    With *args and **kwargs, arguments can be passed to the function ``fun``.
+    """
+    slicer = [slice(None)] * img.ndim
+    output = []
+    for slid in range(img.shape[dim]):
+        slicer[dim] = slice(slid, slid + 1)
+        output.append(fun(numpy.squeeze(img[slicer]), *args, **kwargs))
+    return numpy.rollaxis(numpy.asarray(output), 0, dim + 1)
+
 #!TODO: Utilise the numpy.pad function that is available since 1.7.0. The numpy version should go inside this function, since it does not support the supplying of a template/footprint on its own.
 def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0):
     r"""

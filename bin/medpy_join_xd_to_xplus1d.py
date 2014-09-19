@@ -100,15 +100,15 @@ def main():
         output_data = scipy.swapaxes(output_data, dim, dim + 1)
         
     # set pixel spacing
-    if not 1 == args.spacing:
-        spacing = list(header.get_pixel_spacing(example_header))
-        spacing = tuple(spacing[:args.position] + [args.spacing] + spacing[args.position:])
-        # !TODO: Find a way to enable this also for PyDicom and ITK images
-        if __is_header_nibabel(example_header):
-            __update_header_from_array_nibabel(example_header, output_data)
-            header.set_pixel_spacing(example_header, spacing)
-        else:
-            raise ArgumentError("Sorry. Setting the voxel spacing of the new dimension only works with NIfTI images. See the description of this program for more details.")
+    spacing = list(header.get_pixel_spacing(example_header))
+    spacing = tuple(spacing[:args.position] + [args.spacing] + spacing[args.position:])
+    
+    # !TODO: Find a way to enable this also for PyDicom and ITK images
+    if __is_header_nibabel(example_header):
+        __update_header_from_array_nibabel(example_header, output_data)
+        header.set_pixel_spacing(example_header, spacing)
+    else:
+        raise ArgumentError("Sorry. Setting the voxel spacing of the new dimension only works with NIfTI images. See the description of this program for more details.")
     
     # save created volume
     save(output_data, args.output, example_header, args.force)

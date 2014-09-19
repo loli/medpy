@@ -27,7 +27,7 @@ from scipy.ndimage.filters import gaussian_filter
 # path changes
 
 # own modules
-from medpy.filter.utilities import xminus1d
+from .utilities import xminus1d
 
 
 # code

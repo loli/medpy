@@ -35,7 +35,7 @@ from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.3.0, 2011-03-29"
+__version__ = "r0.3.1, 2011-03-29"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -68,6 +68,10 @@ def main():
     # load first image as result image
     logger.info('Loading {}...'.format(args.images[0]))
     result_data, result_header = load(args.images[0])
+    
+    # check dimension argument
+    if args.dimension >= result_data.ndim:
+        raise argparse.ArgumentError('The supplied stack-dimension {} exceeds the image dimensionality of 0 to {}.'.format(args.dimension, result_data.ndim - 1))
     
     # reduce the image dimensions (nibabel Analyze always assumes 4)
     if args.zero and result_data.all():
