@@ -20,15 +20,18 @@
 
 # build-in modules
 import itertools
+import numbers
 import math
 
 # third-party modules
 import numpy
 from scipy.ndimage.filters import convolve, gaussian_filter, minimum_filter
 from scipy.ndimage._ni_support import _get_output
+from scipy.ndimage.interpolation import zoom
 
 # own modules
 from .utilities import pad, __make_footprint
+from ..io import header
 
 # code
 def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
@@ -420,3 +423,39 @@ def local_minima(img, min_distance = 4):
     good_fits = fits[minima_mask]
     order = good_fits.argsort()
     return good_indices[order], good_fits[order]
+
+def resample(img, hdr, target_spacing, bspline_order):
+        """
+        Re-sample an image to a new voxel-spacing.
+        
+        Parameters
+        ----------
+        img : array_like
+            The image.
+        hdr : object
+            The image header.
+        target_spacing : number or sequence of numbers
+            The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.
+        bspline_order : int
+            The bspline order used for interpolation.
+            
+        Returns
+        -------
+        img : ndarray
+            The re-sampled image.
+        hdr : object
+            The image header with the new voxel spacing.
+        """
+        if isinstance(target_spacing, numbers.Number):
+            target_spacing = [target_spacing] * img.ndim
+        
+        # compute zoom values
+        zoom_factors = [old / float(new) for new, old in zip(target_spacing, header.get_pixel_spacing(hdr))]
+    
+        # zoom image
+        img = zoom(img, zoom_factors, order=bspline_order)
+        
+        # set new voxel spacing
+        header.set_pixel_spacing(hdr, target_spacing)
+        
+        return img, hdr

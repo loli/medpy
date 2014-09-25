@@ -21,12 +21,39 @@
 # build-in modules
 import argparse
 import itertools
+import os
 
 # third-party modules
 
 # own modules
 
 # code
+def existingDirectory(string):
+    """
+    A custom type for the argparse commandline parser.
+    Check whether the supplied string points to a valid directory.
+    
+    Examples
+    --------
+    
+    >>> parser.add_argument('argname', type=existingDirectory, help='help')    
+    """
+    if not os.path.isdir(string):
+        argparse.ArgumentTypeError('{} is not a valid directory.'.format(string))
+    return string
+
+def sequenceOfStrings(string):
+    """
+    A custom type for the argparse commandline parser.
+    Accepts colon-separated lists of strings.
+    
+    Examples
+    --------
+    
+    >>> parser.add_argument('argname', type=sequenceOfStrings, help='help')
+    """
+    return string.split(',')
+
 def sequenceOfIntegersGeAscendingStrict(string):
     """
     A custom type for the argparse commandline parser.

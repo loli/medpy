@@ -43,6 +43,7 @@ Grayscale image manipulation.
     sum_filter
     local_minima
     otsu
+    resample
     
 Label :mod:`medpy.filter.label`
 =================================
@@ -124,7 +125,7 @@ A learning method to align the intensity ranges of images.
 
 # if __all__ is not set, only the following, explicit import statements are executed
 from .binary import largest_connected_component, size_threshold
-from .image import sls, ssd, average_filter, sum_filter, otsu, local_minima
+from .image import sls, ssd, average_filter, sum_filter, otsu, local_minima, resample
 from .smoothing import anisotropic_diffusion, gauss_xminus1d
 from .label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
 from .houghtransform import ght, ght_alternative, template_ellipsoid, template_sphere

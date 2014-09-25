@@ -64,7 +64,7 @@ And save the binary image, marking the foreground
 After taking a look at it, you might want to dive deeper with the `documentation <http://pythonhosted.org/MedPy/>`_.
 
 
-Getting started with the library
+Getting started with the scripts
 ================================
 Get an image as described above. Now::
 
