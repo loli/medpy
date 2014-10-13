@@ -57,6 +57,7 @@ Reference
     metric
     filter
     features
+    iterators
     graphcut
     itkvtk
     core
