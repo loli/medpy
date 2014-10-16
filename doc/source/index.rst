@@ -58,6 +58,7 @@ Reference
     filter
     features
     iterators
+    neighbours
     graphcut
     itkvtk
     core
