@@ -119,6 +119,11 @@ class CentredPatchIterator():
         Apply a slicer returned by the iterator to a new array of the same
         dimensionality as the one used to initialize the iterator.
         
+        Notes
+        -----
+        If ``array`` has more dimensions than ``slicer`` and ``pmask``, the first ones
+        are sliced.
+        
         Parameters
         ----------
         array : array_like
@@ -128,8 +133,10 @@ class CentredPatchIterator():
         pmask : narray
             The array mask as returned by `next()`.
         """
-        patch = numpy.zeros(pmask.shape, array.dtype)
-        patch[pmask] = array[slicer].flat
+        l = len(slicer)
+        patch = numpy.zeros(list(pmask.shape[:l]) + list(array.shape[l:]), array.dtype)
+        sliced = array[slicer]
+        patch[pmask] = sliced.reshape([numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:]))
         return patch
         
         
