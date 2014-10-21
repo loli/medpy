@@ -114,6 +114,11 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     -----
     Since version 1.7.0, numpy supplied a pad function `numpy.pad` that provides
     the same functionality and should be preferred.
+    
+    Raises
+    ------
+    ValueError
+        If the provided footprint/size is more than double the image size.
     """
     input = numpy.asarray(input)
     if footprint is None:
@@ -126,6 +131,9 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     fshape = [ii for ii in footprint.shape if ii > 0]
     if len(fshape) != input.ndim:
         raise RuntimeError('filter footprint array has incorrect shape.')
+    
+    if numpy.any([x > 2*y for x, y in zip(footprint.shape, input.shape)]):
+        raise ValueError('The size of the padding element is not allowed to be more than double the size of the input array in any dimension.')
 
     padding_offset = [((s - 1) / 2, s / 2) for s in fshape]
     input_slicer = [slice(l, None if 0 == r else -1 * r) for l, r in padding_offset]
