@@ -23,7 +23,8 @@ from itertools import product
 
 # third-party modules
 import numpy
-import math
+from operator import itemgetter
+from scipy.ndimage import find_objects
 
 # own modules
 
@@ -49,6 +50,33 @@ class CentredPatchIterator():
         To extract the same patch from another array of the same size as ``array``, use
         the `applyslicer` method.
         
+        The following schematic overview explains the behaviour to expect for even and odd
+        images respectively patches. All ``O`` denote image voxels, ``|`` the patch
+        borders and ``#`` padded voxels.
+        
+        One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5:
+        
+            |O|O|O|O|O|
+            
+            |#O|OO|OO|
+            
+            |##O|OOO|O##|
+            
+            |OOOO|O###|
+            
+            |OOOOO|
+        
+        One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4: 
+        
+            |O|O|O|O|
+            
+            |#O|OO|O#|
+            
+            |OOO|O##|
+            
+            |OOOO|
+        
+        
         Parameters
         ----------
         array : array_like
@@ -57,6 +85,55 @@ class CentredPatchIterator():
             The patch size. If a single integer interpreted as hyper-cube.
         cval : number
             Value to fill undefined positions.
+            
+        Examples
+        --------
+        >>> import numpy
+        >>> from medpy.iterators import CentredPatchIterator
+        >>> arr = numpy.arange(0, 25).reshape((5,5))
+        >>> arr
+        array([[ 0,  1,  2,  3,  4],
+               [ 5,  6,  7,  8,  9],
+               [10, 11, 12, 13, 14],
+               [15, 16, 17, 18, 19],
+               [20, 21, 22, 23, 24]])
+        >>> patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))
+        Total number of patches:
+        >>> len(patches)
+        9
+        Central patch:
+        >>> patches[4]
+        array([[ 6,  7,  8],
+               [11, 12, 13],
+               [16, 17, 18]])
+        Bottom-right corner patch:
+        >>> patches[-1]
+        array([[24,  0,  0],
+               [ 0,  0,  0],
+               [ 0,  0,  0]])
+        And its definition mask:
+        >>> pmasks[-1]
+        array([[ True, False, False],
+               [False, False, False],
+               [False, False, False]], dtype=bool)
+               
+        One dimensional behaviour examples:
+        >>> arr = range(1, 5)
+        >>> len(arr)
+        4
+        >>> patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))
+        >>> arr, patches
+        ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))
+        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))
+        >>> arr, patches
+        ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))
+        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))
+        >>> arr, patches
+        ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))
+        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))
+        >>> arr, patches
+        ([1, 2, 3, 4], (array([1, 2, 3, 4]),))
+        
         """
         # process arguments
         self.array = numpy.asarray(array)
@@ -66,14 +143,24 @@ class CentredPatchIterator():
             self.psize = list(psize)
         self.cval = cval
         
-        # determine array centre, central patch centre and the offset between them
-        central_patch_idx = map(int, [math.ceil((s / 2. + ps / 2.) / ps) for s, ps in zip(self.array.shape, psize)])
-        central_patch_centre = [cpi * ps - int(math.ceil(ps/2.)) for cpi, ps in zip(central_patch_idx, psize)]
-        array_centre = [s/2 for s in self.array.shape]
-        self.offset = [ic - cpc for ic, cpc in zip(array_centre, central_patch_centre)]
+        # validate
+        if numpy.any([x <= 0 for x in self.psize]):
+            raise ValueError('The patch size must be at least 1 in any dimension.')
+        elif len(self.psize) != self.array.ndim:
+            raise ValueError('The patch dimensionality must equal the array dimensionality.')
+        elif numpy.any([x > y for x, y in zip(self.psize, self.array.shape)]):
+            raise ValueError('The patch is not allowed to be larger than the array in any dimension.')
         
+        # compute required padding
+        even_even_correction = [(1 - s%2) * (1 - ps%2) for s, ps in zip(self.array.shape, self.psize)]
+        array_centre = [s/2 - (1 - s%2) for s in self.array.shape]
+        remainder = [(c - ps/2 + ee,
+                      s - c - (ps+1)/2 - ee) for c, s, ps, ee in zip(array_centre, self.array.shape, self.psize, even_even_correction)]
+        padding = [((ps - l % ps) % ps,
+                   (ps - r % ps) % ps) for (l, r), ps in zip(remainder, self.psize)]
+            
         # determine slice-points for each dimension and initialize internal slice-point iterator
-        slicepoints = [range(self.offset[d], self.array.shape[d] - self.offset[d], psize[d]) for d in range(self.array.ndim)]
+        slicepoints = [range(-l, s + r, ps) for s, ps, (l, r) in zip(self.array.shape, self.psize, padding)]
         self.__slicepointiter = product(*slicepoints)
         
         # initialize internal grid-id iterator
@@ -114,7 +201,7 @@ class CentredPatchIterator():
         return patch, pmask, gridid, slicer
         
     @staticmethod
-    def applyslicer(array, slicer, pmask):
+    def applyslicer(array, slicer, pmask, cval = 0):
         r"""
         Apply a slicer returned by the iterator to a new array of the same
         dimensionality as the one used to initialize the iterator.
@@ -132,13 +219,89 @@ class CentredPatchIterator():
             List if `slice()` instances as returned by `next()`.
         pmask : narray
             The array mask as returned by `next()`.
+        cval : number
+            Value to fill undefined positions.            
+            
+        Experiments
+        -----------
+        >>> import numpy
+        >>> from medpy.iterators import CentredPatchIterator
+        >>> arr = numpy.arange(0, 25).reshape((5,5))
+        >>> for patch, pmask, _, slicer in CentredPatchIterator(arr, 3):
+        >>>     new_patch = CentredPatchIterator.applyslicer(arr, slicer, pmask)
+        >>>     print numpy.all(new_patch == patch)
+        True
+        ...
+        
         """
         l = len(slicer)
         patch = numpy.zeros(list(pmask.shape[:l]) + list(array.shape[l:]), array.dtype)
+        if not 0 == cval: patch.fill(cval)
         sliced = array[slicer]
         patch[pmask] = sliced.reshape([numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:]))
         return patch
         
+    @staticmethod
+    def assembleimage(patches, pmasks, gridids):
+        r"""
+        Assemble an image from a number of patches, patch masks and their grid ids.
+        
+        Parameters
+        ----------
+        patches : sequence
+            Sequence of patches.
+        pmasks : sequence
+            Sequence of associated patch masks.
+        gridids
+            Sequence of associated grid ids.
+            
+        Returns
+        -------
+        image : ndarray
+            The patches assembled back into an image of the original proportions.
+            
+        Examples
+        --------
+        Two-dimensional example:
+        >>> import numpy
+        >>> from medpy.iterators import CentredPatchIterator
+        >>> arr = numpy.arange(0, 25).reshape((5,5))
+        >>> arr
+        array([[ 0,  1,  2,  3,  4],
+               [ 5,  6,  7,  8,  9],
+               [10, 11, 12, 13, 14],
+               [15, 16, 17, 18, 19],
+               [20, 21, 22, 23, 24]])
+        >>> patches, pmasks, gridids, _ = zip(*CentredPatchIterator(arr, 2))
+        >>> result = CentredPatchIterator.assembleimage(patches, pmasks, gridids)
+        >>> numpy.all(arr == result)
+        True
+        
+        Five-dimensional example:
+        >>> arr = numpy.random.randint(0, 10, range(5, 10))
+        >>> patches, pmasks, gridids, _ = zip(*CentredPatchIterator(arr, range(2, 7)))
+        >>> result = CentredPatchIterator.assembleimage(patches, pmasks, gridids)
+        >>> numpy.all(arr == result)
+        True            
+        """
+        for d in range(patches[0].ndim):
+            groups = {}
+            for patch, pmask, gridid in zip(patches, pmasks, gridids):
+                groupid = gridid[1:]
+                if not groupid in groups:
+                    groups[groupid] = []
+                groups[groupid].append((patch, pmask, gridid[0]))
+            patches = []
+            gridids = []
+            pmasks = []
+            for groupid, group in groups.iteritems():
+                patches.append(numpy.concatenate([p for p, _, _ in sorted(group, key=itemgetter(2))], d))
+                pmasks.append(numpy.concatenate([m for _, m, _ in sorted(group, key=itemgetter(2))], d))
+                gridids.append(groupid)
+        objs = find_objects(pmasks[0])
+        if not 1 == len(objs):
+            raise ValueError('The assembled patch masks contain more than one binary object.')
+        return patches[0][objs[0]]
         
 def is_integer(s):
     try:
