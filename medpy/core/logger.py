@@ -91,7 +91,7 @@ class Logger (NativeLogger):
     def __init__(self, name = 'MedPyLogger', level = 0) :
         # To guarantee that no one created more than one instance of Logger:
         if not Logger._instance == None :
-            raise RuntimeError, 'Only one instance of Logger is allowed!'
+            raise RuntimeError('Only one instance of Logger is allowed!')
         
         # initialize parent
         NativeLogger.__init__(self, name, level)
