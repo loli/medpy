@@ -1,0 +1,11 @@
+# After changing this file, check it on:
+#   http://lint.travis-ci.org/
+language: python
+python:
+  - 3.3
+  - 2.7
+before_install:
+  - pip install --upgrade pip setuptools  # Upgrade pip and setuptools to get ones with `wheel` support
+  - pip install --find-links http://wheels.astropy.org/ --find-links http://wheels2.astropy.org/ --use-wheel --use-mirrors nose numpy matplotlib Sphinx
+script:
+  - python setup.py test

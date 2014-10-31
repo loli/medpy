@@ -1,0 +1,19 @@
+# Copyright David Abrahams 2006. Distributed under the Boost
+# Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+using python ;
+
+# Specify that the boost-python library exists under the name
+# boost_python. That is, because the library was installed at the
+# standard search path as /usr/lib/libboost_python.so, bjam will find
+# it automatically. No need to specify the absolute path.
+lib libboost_python : : <name>boost_python ;
+
+# Set up the project-wide requirements that everything uses the
+# boost_python library.
+project : requirements <library>libboost_python ;
+
+# Declare the three extension modules.  You can specify multiple
+# source files after the colon separated by spaces.
+python-extension maxflow : wrapper.cpp ;

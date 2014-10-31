@@ -1,0 +1,8 @@
+Second version.
+- Added GraphFloat and GraphInt.
+- Added new method sum_edge which behaves like add_edge but does not increase the number of arcs. Instead adds the new capacities to the already existing arc.
+- Added new method get_edge which returns the capacity of the arc i->j. When multiple arcs exist between i->j (as happens when add_edge is called multiple times with the same node ids), the capacity of the first one encountered is returned.
+- Added new method get_arc, which returns the first encountered arc between two nodes. This function is not exploitet throught the Python wrappee.
+- Added a small python test file get_edge_test.py, which tests the get_edge method.
+- Addded a small python test file sum_edge_test.py, which tests the sum_edge method.
+- Increased the comments in the CPP files as well as for the Python wrappers.

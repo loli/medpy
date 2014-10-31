@@ -1,0 +1,4 @@
+v0.2.2, 2014-09-18 -- changes the documentation engine to Sphinx and fixed a number of bugs
+v0.2.1, 2014-08-19 -- ez_setup.py has not been include
+v0.2.0, 2014-08-19 -- Little clean-up, many new functionalities; in generally simpler structure and usage; complilation of C++ module not required anymore
+v0.1.0, 2013-04-15 -- Initial release.

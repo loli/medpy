@@ -1,0 +1,8 @@
+include *.txt
+
+include ez_setup.py
+
+include lib/maxflow/src/*.h
+include lib/maxflow/src/*.cpp
+include lib/maxflow/src/instances.inc
+include lib/maxflow/src/readme
