@@ -1,8 +1,8 @@
 """
 Unittest for medpy.features.texture.
 
-@author Oskar Maier
-@version d0.1.1
+@author Alexander Ruesch
+@version r0.1.0
 @since 2012-02-17
 @status Development
 """
@@ -15,73 +15,76 @@ import unittest
 import scipy
 
 # own modules
-from medpy.features.texture import running_total, efficient_local_avg,\
-    running_total3d, efficient_local_avg3d
+from medpy.features.texture import *
 
 # code
 class TestTextureFeatures(unittest.TestCase):
+    """ Test the Tamura Texture features programmed in medpy.features.texture.
+        Functions are:  coarseness(image, voxelspacing = None, mask = slice(None))
+                        contrast(image, mask = slice(None))
+                        directionality(image, voxelspacing = None, mask = slice(None), min_distance = 4)
+    """
+
+    def setUp(self):
+        self.image1 = numpy.zeros([100,100])
+        self.image1[:,::3] = 1
+        self.voxelspacing1 = (1.0, 3.0)
+        self.mask1 = [slice(0,50,1), slice(0,50,1)]
     
-    def test_running_total3d(self):
-        """Test the running_total / efficient_local_avg loop for efficient average intensity calculation (3D)."""
-        dim = 3
-        for size in range(3, 80, 10): # image sizes 3 to 80
-            img, q_total, q_div, r_total, r_div = self.__get_test_running_total_data(dim, size)
-            rt = running_total3d(img)
-            # one voxel region
-            res = efficient_local_avg(rt, (scipy.array(img.shape) - 1, scipy.array(img.shape) - 1))
-            self.assertEqual(res, img[tuple(scipy.array(img.shape) - 1)]/1., 'Complete image: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, img[tuple(scipy.array(img.shape) - 1)]/1.))
-            # complete image
-            res = efficient_local_avg(rt, (dim * [0], scipy.array(img.shape) - 1))
-            self.assertEqual(res, scipy.sum(img)/float(img.size), 'Complete image: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, scipy.sum(img)/float(img.size)))
-            # max quadratic region \wo divider
-            res = efficient_local_avg3d(rt, (dim * [1], scipy.array(img.shape) - 1))
-            self.assertEqual(res, q_total/q_div, 'Quadratic region: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, q_total/q_div))
-            # max quadratic region \w divider
-            res = efficient_local_avg3d(rt, (dim * [1], scipy.array(img.shape) - 1), 10.)
-            self.assertEqual(res, q_total/10., 'Quadratic region: Calculated average intensity when supplying divider returned unexpected values: got {}, expected {}.'.format(res, q_total/10.))
-            # max rectangular region \wo divider
-            res = efficient_local_avg3d(rt, ((dim - 1) * [1] + [2], scipy.array(img.shape) - 1))
-            self.assertEqual(res, r_total/r_div, 'Rectangular region: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, r_total/r_div))
-    
-    def test_running_total(self):
-        """Test the running_total / efficient_local_avg loop for efficient average intensity calculation."""
-        for dim in range(1, 7): # dimension 1 to 6
-            for size in range(3, 6): # image sizes 3 to 5
-                img, q_total, q_div, r_total, r_div = self.__get_test_running_total_data(dim, size)
-                rt = running_total(img)
-                # one voxel region
-                res = efficient_local_avg(rt, (scipy.array(img.shape) - 1, scipy.array(img.shape) - 1))
-                self.assertEqual(res, img[tuple(scipy.array(img.shape) - 1)]/1., 'Complete image: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, img[tuple(scipy.array(img.shape) - 1)]/1.))
-                # complete image
-                res = efficient_local_avg(rt, (dim * [0], scipy.array(img.shape) - 1))
-                self.assertEqual(res, scipy.sum(img)/float(img.size), 'Complete image: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, scipy.sum(img)/float(img.size)))
-                # max quadratic region \wo divider
-                res = efficient_local_avg(rt, (dim * [1], scipy.array(img.shape) - 1))
-                self.assertEqual(res, q_total/q_div, 'Quadratic region: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, q_total/q_div))
-                # max quadratic region \w divider
-                res = efficient_local_avg(rt, (dim * [1], scipy.array(img.shape) - 1), 10.)
-                self.assertEqual(res, q_total/10., 'Quadratic region: Calculated average intensity when supplying divider returned unexpected values: got {}, expected {}.'.format(res, q_total/10.))
-                # max rectangular region \wo divider
-                res = efficient_local_avg(rt, ((dim - 1) * [1] + [2], scipy.array(img.shape) - 1))
-                self.assertEqual(res, r_total/r_div, 'Rectangular region: Calculated average intensity returned unexpected values: got {}, expected {}.'.format(res, r_total/r_div))
-                
-            
-    def __get_test_running_total_data(self, d, s):
-        """
-        Supply the dimensions the returned quadratic image should have and its seitenlaenge (size).
-        @return img, quadr_sum, quadr_divider, rect_sum, rect_div
-        """
-        if s < 3: raise ValueError('size s must be >= 3')
-        base = range(1, s + 1)
-        quad = [slice(1, None) for _ in range(d)]
-        rect = [slice(1, None) for _ in range(d-1)] + [slice(2, None)]
-        #quad = base[1:]
-        #rect = base[2:]
-        for _ in range(d - 1):
-            base = s * [base]
-        base = scipy.asarray(base)
-        return base, scipy.sum(base[quad]), float(base[quad].size), scipy.sum(base[rect]), float(base[rect].size)
-        #return scipy.asarray(base), math.pow(2, d-1) * sum(quad), float(math.pow(s-1, d)), math.pow(2, d-1) * sum(rect), float(math.pow(s-1, d-1) * (s - 2))
+    def test_Coarseness(self):
+        res = coarseness(self.image1)
+        self.assertEqual(res, 1.33,"coarseness: 2D image [1,0,0...], no voxelspacing, no mask: got {} ,expected {}".format(res, 1.33))
         
-if __name__ == '__main__':
+        res = coarseness(self.image1,voxelspacing = self.voxelspacing1)
+        self.assertEqual(res, 1.0,"coarseness: 2D image [1,0,0...], voxelspacing = (1,3), no mask: got {} ,expected {}".format(res, 1.0))
+        # @TODO: there is a very strong relation to the border handle if the texture is very small (1px)
+        res = coarseness(self.image1,voxelspacing = self.voxelspacing1, mask = self.mask1)
+        self.assertEqual(res, 76.26,"coarseness: 2D image [1,0,0...], voxelspacing = (1,3), mask = [slice(0,50,1),slice(0,50,1)]: got {} ,expected {}".format(res, 76.26))
+        
+        res = coarseness(numpy.zeros([100,100]))
+        self.assertEqual(res, 1.0,"coarseness: 2D image [0,0,0,...], no voxelspacing, no mask: got {} ,expected {}".format(res, 1.0))
+        
+        res = coarseness(self.image1,voxelspacing = (1,2,3))
+        self.assertEqual(res, None,"coarseness: 2D image [1,0,0,...], voxelspacing = (1,2,3), no mask: got {} ,expected {} ".format(res, None))
+
+
+    def test_Contrast(self):
+        standard_deviation = numpy.std(self.image1)
+        kurtosis = stats.kurtosis(self.image1, axis=None, bias=True, fisher=False)  
+        Fcon1 = standard_deviation / (kurtosis**0.25) 
+        
+        res = contrast(self.image1)
+        self.assertEqual(res, Fcon1,"contrast: 2D image, no mask: got {} ,expected {}".format(res, Fcon1))
+        
+        image2 = self.image1[0:50,0:50]
+        standard_deviation = numpy.std(image2)
+        kurtosis = stats.kurtosis(image2, axis=None, bias=True, fisher=False) 
+        Fcon2 = standard_deviation / (kurtosis**0.25) 
+        
+        res = contrast(self.image1, mask=self.mask1)
+        self.assertEqual(res, Fcon2,"contrast: 2D image, mask = [slice(0,50,1), slice(0,50,1)]: got {} ,expected {}".format(res, Fcon2))
+
+
+    def test_Directionality(self):
+        res = directionality(self.image1)
+        self.assertEqual(res, 1.0,"directionality: 2D image, no voxelspacing, no mask, default min_distance, default threshold: got {} ,expected {}".format(res, 1.0))
+
+        res = directionality(self.image1,voxelspacing = self.voxelspacing1)
+        self.assertEqual(res, 1.0,"directionality: 2D image, voxelspacing = (1.0, 3.0), no mask, default min_distance, default threshold: got {} ,expected {}".format(res, 1.0))
+
+        res = directionality(self.image1,voxelspacing = (1,2,3))
+        self.assertEqual(res, None,"directionality: 2D image, voxelspacing = (1,2,3), no mask, default min_distance, default threshold: got {} ,expected {}".format(res, None))
+
+        res = directionality(self.image1, voxelspacing = self.voxelspacing1, mask=self.mask1)
+        self.assertEqual(res, 1.0,"directionality: 2D image, voxelspacing(1.0, 3.0), mask = [slice(0,50,1), slice(0,50,1)], default min_distance, default threshold: got {} ,expected {}".format(res, 1.0))
+        
+        res = directionality(self.image1, min_distance = 10.0)
+        self.assertEqual(res, 1.0,"directionality: 2D image, no voxelspacing, no mask , min_distance= 10, default threshold: got {} ,expected {}".format(res, 1.0))
+        
+        res = directionality(self.image1,threshold = 0.5)
+        self.assertEqual(res, 1.0,"directionality: 2D image, no voxelspacing, no mask, default min_distance, threshold = 0.5: got {} ,expected {}".format(res, 1.0))
+
+if __name__ == "__main__":
     unittest.main()
+    
+        
