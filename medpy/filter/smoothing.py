@@ -132,13 +132,13 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
         voxelspacing = tuple([1.] * img.ndim)
 
     # initialize some internal variables
-    deltas = [numpy.zeros_like(out) for _ in xrange(out.ndim)]
+    deltas = [numpy.zeros_like(out) for _ in range(out.ndim)]
 
-    for _ in xrange(niter):
+    for _ in range(niter):
 
         # calculate the diffs
-        for i in xrange(out.ndim):
-            slicer = [slice(None, -1) if j == i else slice(None) for j in xrange(out.ndim)]
+        for i in range(out.ndim):
+            slicer = [slice(None, -1) if j == i else slice(None) for j in range(out.ndim)]
             deltas[i][slicer] = numpy.diff(out, axis=i)
         
         # update matrices
@@ -146,8 +146,8 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
 
         # subtract a copy that has been shifted ('Up/North/West' in 3D case) by one
         # pixel. Don't as questions. just do it. trust me.
-        for i in xrange(out.ndim):
-            slicer = [slice(1, None) if j == i else slice(None) for j in xrange(out.ndim)]
+        for i in range(out.ndim):
+            slicer = [slice(1, None) if j == i else slice(None) for j in range(out.ndim)]
             matrices[i][slicer] = numpy.diff(matrices[i], axis=i)
 
         # update the image

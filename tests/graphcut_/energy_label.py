@@ -275,7 +275,7 @@ class TestEnergyLabel(unittest.TestCase):
     def _reorder_keys(self, dic, msg_base = ''):
         """Reorders the keys of the result dictionary to be inside itslef ordered."""
         di = {}
-        for key, value in dic.iteritems():
+        for key, value in dic.items():
             new_key = (min(key[0], key[1]), max(key[0], key[1]))
             if not new_key == key:
                 self.assertTrue(not new_key in dic, '{}: Found edges {} and reversed edge {} in the result dictionary, which is not legal.'.format(msg_base, key, new_key))
@@ -284,14 +284,14 @@ class TestEnergyLabel(unittest.TestCase):
         
     def __to_two_directed(self, dic):
         """Takes a dictionary of values and converts it into one with two directions."""
-        for key, value in dic.iteritems():
+        for key, value in dic.items():
             dic[key] = (value, value)
         return dic
     
     def __compare_dictionaries(self, result, expected_result, msg_base = ''):
         """Evaluates the returned results."""
         self.assertEqual(len(expected_result), len(result), '{}: Expected {} region neighbourhoods (4-connectedness), instead got {}.'.format(msg_base, len(expected_result), len(result)))
-        for key, value in result.iteritems():
+        for key, value in result.items():
             self.assertTrue(key in expected_result, '{}: Region border {} unexpectedly found in results.'.format(msg_base, key))
             if key in expected_result:
                 self.assertAlmostEqual(value[0], expected_result[key][0], msg='{}: Weight for region border {} is {}. Expected {}.'.format(msg_base, key, value, expected_result[key]), places=8)
@@ -299,7 +299,7 @@ class TestEnergyLabel(unittest.TestCase):
                 self.assertGreater(value[0], 0.0, '{}: Encountered a weight {} <= 0.0 for key {}.'.format(msg_base, value, key))
                 self.assertGreater(value[1], 0.0, '{}: Encountered a weight {} <= 0.0 for key {}.'.format(msg_base, value, key))
                 
-        for key, value in expected_result.iteritems():
+        for key, value in expected_result.items():
             self.assertTrue(key in result, '{}: Region border {} expectedly but not found in results.'.format(msg_base, key))
         
 if __name__ == '__main__':

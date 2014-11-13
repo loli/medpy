@@ -53,7 +53,7 @@ def main():
                 es_apex['dm'].append(float(dm))
                 es_apex['hd'].append(float(hd))
             else:
-                print sorting
+                print(sorting)
                 raise Exception('Failed on line {}.'.format(line))
             
     # padd all lists
@@ -83,12 +83,12 @@ def main():
     es_apex['hd'] = es_apex['hd'] + [''] *  (max_length - len(es_apex['hd']))
     
     # iterate and print
-    print
-    print 'ED;;;;;;ES'
-    print 'base;;mid;;apex;;base;;mid;;apex'
-    print 'DM;HM;DM;HM;DM;HM;DM;HM;DM;HM;DM;HM'
+    print()
+    print('ED;;;;;;ES')
+    print('base;;mid;;apex;;base;;mid;;apex')
+    print('DM;HM;DM;HM;DM;HM;DM;HM;DM;HM;DM;HM')
     for idx in range(max_length):
-        print '{};{};{};{};{};{};{};{};{};{};{};{}'.format(
+        print('{};{};{};{};{};{};{};{};{};{};{};{}'.format(
                         ed_base['dm'][idx],
                         ed_base['hd'][idx],
                         ed_mid['dm'][idx],
@@ -100,7 +100,7 @@ def main():
                         es_mid['dm'][idx],
                         es_mid['hd'][idx],
                         es_apex['dm'][idx],
-                        es_apex['hd'][idx])
+                        es_apex['hd'][idx]))
     
 def read_patient_file(patient, ctype_searched, time_offset):
     
@@ -144,7 +144,7 @@ def read_patient_file(patient, ctype_searched, time_offset):
     es = (collection['es'][:3], collection['es'][3:-3], collection['es'][-3:])
     
     #print 'Patient {} mid count = {}.'.format(patient, len(ed[1]))
-    print len(ed[1]), ';', 
+    print(len(ed[1]), ';', end=' ') 
     return ed, es 
     
 if __name__ == "__main__":

@@ -36,11 +36,11 @@ class TestGraph(unittest.TestCase):
         
         # SETTER TESTS
         # set_source_nodes should accept a sequence and raise an error if an invalid node id was passed
-        graph.set_source_nodes(range(0, nodes))
+        graph.set_source_nodes(list(range(0, nodes)))
         self.assertRaises(ValueError, graph.set_source_nodes, [-1])
         self.assertRaises(ValueError, graph.set_source_nodes, [nodes])
         # set_sink_nodes should accept a sequence and raise an error if an invalid node id was passed
-        graph.set_sink_nodes(range(0, nodes))
+        graph.set_sink_nodes(list(range(0, nodes)))
         self.assertRaises(ValueError, graph.set_sink_nodes, [-1])
         self.assertRaises(ValueError, graph.set_sink_nodes, [nodes])
         # set_nweight should accept integers resp. floats and raise an error if an invalid node id was passed or the weight is zero or negative
@@ -79,7 +79,7 @@ class TestGraph(unittest.TestCase):
         # SOME MINOR GETTERS
         self.assertEqual(graph.get_node_count(), nodes)
         self.assertEqual(graph.get_edge_count(), edges)
-        self.assertSequenceEqual(graph.get_nodes(), range(0, nodes))
+        self.assertSequenceEqual(graph.get_nodes(), list(range(0, nodes)))
     
 if __name__ == '__main__':
     unittest.main()

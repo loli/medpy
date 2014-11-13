@@ -32,6 +32,7 @@ from .generate import graph_from_labels
 from ..core.exceptions import ArgumentError
 from ..core.logger import Logger
 from ..filter import relabel, relabel_map
+from functools import reduce
 
 # code
 def split_marker(marker, fg_id = 1, bg_id = 2):
@@ -119,7 +120,7 @@ def graphcut_split(graphcut_function, regions, gradient, foreground, background,
     
     # compute how to split the volumes into sub-volumes i.e. determine step-size for each image dimension
     shape = list(img_region.shape)
-    steps = map(lambda x: x / int(minimal_edge_length), shape) # we want integer division
+    steps = [x / int(minimal_edge_length) for x in shape] # we want integer division
     steps = [1 if 0 == x else x for x in steps] # replace zeros by ones
     stepsizes = [math.ceil(x / float(y)) for x, y in zip(shape, steps)]
     logger.debug('Using a minimal edge length of {}, a sub-volume size of {} was determined from the shape {}, which means {} sub-volumes.'.format(minimal_edge_length, stepsizes, shape, reduce(lambda x, y: x*y, steps)))
@@ -130,7 +131,7 @@ def graphcut_split(graphcut_function, regions, gradient, foreground, background,
         if c < o: raise Exception("The computed sub-volumes do not cover the complete image!")
             
     # iterate over the steps and extract subvolumes according to the stepsizes
-    slicer_steps = [range(0, int(step * stepsize), int(stepsize)) for step, stepsize in zip(steps, stepsizes)]
+    slicer_steps = [list(range(0, int(step * stepsize), int(stepsize))) for step, stepsize in zip(steps, stepsizes)]
     slicers = [[slice(_from, _from + _offset + overlap) for _from, _offset in zip(slicer_step, stepsizes)] for slicer_step in itertools.product(*slicer_steps)]
     subvolumes_input = [(img_region[slicer],
                          img_gradient[slicer],
@@ -251,8 +252,7 @@ def graphcut_stawiaski(regions, gradient = False, foreground = False, background
     
     # apply results to the region image
     mapping = [0] # no regions with id 1 exists in mapping, entry used as padding
-    mapping.extend(map(lambda x: 0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1,
-                       scipy.unique(img_region)))
+    mapping.extend([0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1 for x in scipy.unique(img_region)])
     img_results = relabel_map(img_region, mapping)
     
     return img_results.astype(scipy.bool_)

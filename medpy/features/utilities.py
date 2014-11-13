@@ -83,7 +83,7 @@ def normalize(vector, cutoffp = (0, 100), model = False):
     minp, maxp = numpy.percentile(vector, cutoffp, 0)
     
     # shift outliers to fit range
-    for i in xrange(vector.shape[1]):
+    for i in range(vector.shape[1]):
         vector[:,i][vector[:,i] < minp[i]] = minp[i]
         vector[:,i][vector[:,i] > maxp[i]] = maxp[i]
     
@@ -126,7 +126,7 @@ def normalize_with_model(vector, model):
         vector = vector[:, None]
     
     # shift outliers to fit range
-    for i in xrange(vector.shape[1]):
+    for i in range(vector.shape[1]):
         vector[:,i][vector[:,i] < minp[i]] = minp[i]
         vector[:,i][vector[:,i] > maxp[i]] = maxp[i]
         
@@ -167,7 +167,7 @@ def append(*vectors):
     
     # process supplied arguments
     vectors = list(vectors)
-    for i in xrange(len(vectors)):
+    for i in range(len(vectors)):
         vectors[i] = numpy.asarray(vectors[i])
         if vectors[i].ndim == 1:
             vectors[i] = numpy.asarray([vectors[i]]).T

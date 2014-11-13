@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-import itku
-import vtku
+from . import itku
+from . import vtku
                         
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]

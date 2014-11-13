@@ -141,8 +141,7 @@ def main():
     # apply results to the region image
     logger.info('Applying results...')
     mapping = [0] # no regions with id 1 exists in mapping, entry used as padding
-    mapping.extend(map(lambda x: 0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1,
-                       scipy.unique(region_image_data)))
+    mapping.extend([0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1 for x in scipy.unique(region_image_data)])
     region_image_data = filter.relabel_map(region_image_data, mapping)
     
     # generating final image by increasing the size again
@@ -169,7 +168,7 @@ def __split_along(arr, view):
     start = 1
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):
@@ -195,7 +194,7 @@ def __xd_iterator_pass_on(arr, view, fun):
     Like xd_iterator, but the fun return values are always passed on to the next and only the last returned.
     """
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     passon = None

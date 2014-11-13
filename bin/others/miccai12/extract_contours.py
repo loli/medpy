@@ -134,7 +134,7 @@ def main():
             contour_final = []
             while point:
                 nearest_pos = __find_nearest(point, contour, processed)
-                if False == nearest_pos: break
+                if not nearest_pos: break
                 contour_final.extend(__draw_line(point, contour[nearest_pos], divider))
                 processed.append(nearest_pos)
                 point = contour[nearest_pos]

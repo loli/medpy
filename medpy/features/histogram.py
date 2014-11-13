@@ -348,7 +348,7 @@ def gaussian_membership(bin_center, bin_width, smoothness):
     if smoothness > 10 or smoothness < 1./10: raise AttributeError('the gaussian membership function supports only smoothnesses between 1/10 and 5.')
     
     bin_width = float(bin_width)
-    bin_center = bin_center / bin_width
+    bin_center /= bin_width
     start = bin_center - 0.5
     end = bin_center + 0.5
     sigma = _gaussian_membership_sigma(smoothness)

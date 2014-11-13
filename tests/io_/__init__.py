@@ -1,2 +1,2 @@
-from loadsave import TestIOFacilities
-from metadata import TestMetadataConsistency
+from .loadsave import TestIOFacilities
+from .metadata import TestMetadataConsistency

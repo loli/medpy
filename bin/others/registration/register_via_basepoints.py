@@ -98,8 +98,8 @@ def main():
         raise ArgumentError('Aligning base-point through shifting failed due to unknown reason: {} does not equal {}.'.format(shiftp(moving_basep, shift), fixed_basep))
     
     # shift both vector end-points to origin base
-    fixed_otherp = shiftp(fixed_otherp, map(lambda x: -1. * x, fixed_basep))
-    moving_otherp = shiftp(moving_otherp, map(lambda x: -1. * x, fixed_basep))
+    fixed_otherp = shiftp(fixed_otherp, [-1. * x for x in fixed_basep])
+    moving_otherp = shiftp(moving_otherp, [-1. * x for x in fixed_basep])
     
     # determine angle
     angle = angle_between_vectors(fixed_otherp, moving_otherp)
@@ -113,17 +113,17 @@ def main():
     shift = [-1. * x for x in shift]
     
     # print results
-    print '// {}'.format(math.degrees(angle))
-    print """
+    print('// {}'.format(math.degrees(angle)))
+    print("""
 //# SOME NOTES ON 'ELASTIX'
 //# 1. 'elastix' performs shifting before rotation!
 //# 2. 'elastix' works on the real world coordinates (i.e. with voxel spacing of 0)
-"""
-    print transform_string(data_fixed.shape,
+""")
+    print(transform_string(data_fixed.shape,
                            fixed_spacing,
                            [0] + list(shift),
                            [angle, 0, 0],
-                           [0] + list(turn_point))
+                           [0] + list(turn_point)))
     
     logger.info("Successfully terminated.")
     
@@ -243,10 +243,10 @@ def transform_string(shape, spacing, shift, angles, turn_point):
 (ResultImagePixelType "short")
 (CompressResultImage "false")
 """
-    shape = map(int, shape)
-    spacing = map(float, spacing)
-    angles = map(float, angles)
-    turn_point = map(float, turn_point)
+    shape = list(map(int, shape))
+    spacing = list(map(float, spacing))
+    angles = list(map(float, angles))
+    turn_point = list(map(float, turn_point))
     return base.format(xsize=shape[0], ysize=shape[1], zsize=shape[2],
                        xspacing=spacing[0], yspacing=spacing[1], zspacing=spacing[2],
                        xangle=angles[0], yangle=angles[1], zangle=angles[2],

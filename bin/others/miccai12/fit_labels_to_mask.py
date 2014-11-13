@@ -116,7 +116,7 @@ def fit_labels_to_mask2(image_labels, image_mask):
     image_result.fill(False)         
 
     # add labels to result mask
-    for label, data in collection.iteritems():
+    for label, data in collection.items():
         for point in data[2]:
             image_result[point] = True
             

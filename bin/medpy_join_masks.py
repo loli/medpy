@@ -73,10 +73,10 @@ def main():
     
     # check if their shapes and voxel spacings are all equal
     s0 = images[0][0].shape
-    if not numpy.all(map(lambda i: i[0].shape == s0, images[1:])):
+    if not numpy.all([i[0].shape == s0 for i in images[1:]]):
         raise argparse.ArgumentError(args.input, 'At least one input image is of a different shape than the others.')
     vs0 = header.get_pixel_spacing(images[0][1])
-    if not numpy.all(map(lambda i: header.get_pixel_spacing(i[1]) == vs0, images[1:])):
+    if not numpy.all([header.get_pixel_spacing(i[1]) == vs0 for i in images[1:]]):
         raise argparse.ArgumentError(args.input, 'At least one input image has a different voxel spacing than the others.')
     
     # execute operation

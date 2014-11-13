@@ -71,7 +71,7 @@ def main():
             sys.exit(0)
         
     # write header line
-    print 'image;min;max\n'
+    print('image;min;max\n')
     
     # iterate over input images
     for image in args.images:
@@ -85,7 +85,7 @@ def main():
         max_value = image_data.max() 
         
         # count number of labels and write
-        print '{};{};{}\n'.format(image.split('/')[-1], min_value, max_value)
+        print('{};{};{}\n'.format(image.split('/')[-1], min_value, max_value))
         
         sys.stdout.flush()
             

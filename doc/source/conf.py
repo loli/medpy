@@ -53,8 +53,8 @@ source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
 # General information about the project.
-project = u'MedPy'
-copyright = u'2014, Oskar Maier'
+project = 'MedPy'
+copyright = '2014, Oskar Maier'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -223,8 +223,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'MedPy.tex', u'MedPy Documentation',
-   u'Oskar Maier', 'manual'),
+  ('index', 'MedPy.tex', 'MedPy Documentation',
+   'Oskar Maier', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -253,8 +253,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'medpy', u'MedPy Documentation',
-     [u'Oskar Maier'], 1)
+    ('index', 'medpy', 'MedPy Documentation',
+     ['Oskar Maier'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -267,8 +267,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'MedPy', u'MedPy Documentation',
-   u'Oskar Maier', 'MedPy', 'One line description of project.',
+  ('index', 'MedPy', 'MedPy Documentation',
+   'Oskar Maier', 'MedPy', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -288,10 +288,10 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'MedPy'
-epub_author = u'Oskar Maier'
-epub_publisher = u'Oskar Maier'
-epub_copyright = u'2014, Oskar Maier'
+epub_title = 'MedPy'
+epub_author = 'Oskar Maier'
+epub_publisher = 'Oskar Maier'
+epub_copyright = '2014, Oskar Maier'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'MedPy'

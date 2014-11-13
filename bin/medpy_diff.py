@@ -31,6 +31,7 @@ import scipy
 # own modules
 from medpy.core import Logger
 from medpy.io import load
+from functools import reduce
 
 
 # information
@@ -65,19 +66,19 @@ def main():
     data_input2, _ = load(args.input2)
     
     # compare dtype and shape
-    if not data_input1.dtype == data_input2.dtype: print 'Dtype differs: {} to {}'.format(data_input1.dtype, data_input2.dtype)
+    if not data_input1.dtype == data_input2.dtype: print('Dtype differs: {} to {}'.format(data_input1.dtype, data_input2.dtype))
     if not data_input1.shape == data_input2.shape:
-        print 'Shape differs: {} to {}'.format(data_input1.shape, data_input2.shape)
-        print 'The voxel content of images of different shape can not be compared. Exiting.'
+        print('Shape differs: {} to {}'.format(data_input1.shape, data_input2.shape))
+        print('The voxel content of images of different shape can not be compared. Exiting.')
         sys.exit(-1)
     
     # compare image data
     voxel_total = reduce(lambda x, y: x*y, data_input1.shape)
     voxel_difference = len((data_input1 != data_input2).nonzero()[0])
     if not 0 == voxel_difference:
-        print 'Voxel differ: {} of {} total voxels'.format(voxel_difference, voxel_total)
-        print 'Max difference: {}'.format(scipy.absolute(data_input1 - data_input2).max())
-    else: print 'No other difference.'
+        print('Voxel differ: {} of {} total voxels'.format(voxel_difference, voxel_total))
+        print('Max difference: {}'.format(scipy.absolute(data_input1 - data_input2).max()))
+    else: print('No other difference.')
     
     logger.info("Successfully terminated.")    
     

@@ -4,7 +4,7 @@
 
 # build-in modules
 import unittest
-import io_
+from . import io_
 
 # third-party modules
 

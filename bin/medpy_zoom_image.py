@@ -104,7 +104,7 @@ def zoom(image, factor, dimension, hdr = False, order = 3):
     
     if hdr:
         new_spacing = list(header.get_pixel_spacing(hdr))
-        new_spacing[dimension] = new_spacing[dimension] / float(factor + 1)
+        new_spacing[dimension] /= float(factor + 1)
         logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(hdr), new_spacing))
         header.set_pixel_spacing(hdr, tuple(new_spacing))
     

@@ -222,7 +222,7 @@ def getImageType(image): # tested
         return itk.Image[itk.template(image)[1][0],
                          itk.template(image)[1][1]]
     except IndexError as _:
-        raise NotImplementedError, 'The python wrappers of ITK define no template class for this data type.'
+        raise NotImplementedError('The python wrappers of ITK define no template class for this data type.')
     
 def getImageTypeFromArray(arr): # tested
     """
@@ -283,7 +283,7 @@ def getImageTypeFromArray(arr): # tested
     if type(ex) == KeyError:
         raise DependencyError('The itk python wrappers were compiled without support the combination of {} dimensions and at least one of the following pixel data types (which are compatible with dtype {}): {}.'.format(arr.ndim, arr.dtype, scipy_to_itk_types[arr.dtype.type]))
     else:
-        raise
+        raise Exception()
 
     
 def getImageTypeFromFile(image): # tested

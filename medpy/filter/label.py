@@ -126,7 +126,7 @@ def relabel_non_zero(label_image, start = 1):
     if 0 in l: l.remove(0)
     mapping = dict()
     mapping[0] = 0
-    for key, item in zip(l, range(start, len(l) + start)):
+    for key, item in zip(l, list(range(start, len(l) + start))):
         mapping[key] = item
     
     return relabel_map(label_image, mapping)
@@ -186,7 +186,7 @@ def fit_labels_to_mask(label_image, mask):
     image_result.fill(False)         
 
     # add labels to result mask
-    for label, data in collection.iteritems():
+    for label, data in collection.items():
         for point in data[2]:
             image_result[point] = True
             

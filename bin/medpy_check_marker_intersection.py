@@ -74,7 +74,7 @@ def main():
     elif scipy.logical_and(contour_data, marker_data_bg).any():
         logger.warning('Intersection between {} and {} (type {}) in background.'.format(args.marker, args.contour, args.type))
     else:
-        print "No intersection."
+        print("No intersection.")
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."

@@ -98,7 +98,7 @@ def main():
     
     # set new pixel spacing
     new_spacing = list(header.get_pixel_spacing(input_header))
-    new_spacing[args.dimension] = new_spacing[args.dimension] * float(args.discard + 1)
+    new_spacing[args.dimension] *= float(args.discard + 1)
     logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(input_header), new_spacing))
     header.set_pixel_spacing(input_header, tuple(new_spacing))
     

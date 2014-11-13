@@ -117,6 +117,6 @@ def pdist(objects, dmeasure, diagval = numpy.inf):
     """
     out = numpy.zeros([len(objects)] * 2, numpy.float)
     numpy.fill_diagonal(out, diagval)
-    for idx1, idx2 in combinations(range(len(objects)), 2):
+    for idx1, idx2 in combinations(list(range(len(objects))), 2):
         out[idx1, idx2] = dmeasure(objects[idx1], objects[idx2])
     return out + out.T

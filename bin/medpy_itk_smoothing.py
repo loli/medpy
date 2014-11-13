@@ -113,9 +113,9 @@ def main():
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
-    args.iterations = map(float, args.iterations.split(','))
-    args.conductances = map(float, args.conductances.split(','))
-    args.timesteps = map(float, args.timesteps.split(','))
+    args.iterations = list(map(float, args.iterations.split(',')))
+    args.conductances = list(map(float, args.conductances.split(',')))
+    args.timesteps = list(map(float, args.timesteps.split(',')))
     return args
 
 def getParser():

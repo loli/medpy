@@ -300,7 +300,7 @@ def __set_offset_nibabel(hdr, offset):
 def __set_offset_pydicom(hdr, offset):
     if not len(hdr.pixel_array.shape) == len(offset):
         raise AttributeError('Vector dimensions of header ({}) and supplied offset sequence ({}) differ.'.format(len(hdr.pixel_array.shape), len(offset)))
-    hdr.ImagePositionPatient = map(float, offset)
+    hdr.ImagePositionPatient = list(map(float, offset))
     
 def __set_offset_itk(hdr, offset):
     origin = hdr.GetOrigin()
@@ -367,7 +367,7 @@ def __is_header_pydicom(hdr):
     Returns true is the supplied object is a valid pydicom image, otherwise False.
     """
     import dicom
-    return (type(hdr) == dicom.dataset.FileDataset)
+    return type(hdr) == dicom.dataset.FileDataset
 
 def __is_header_nibabel(hdr):
     """
@@ -390,6 +390,6 @@ def __is_header_itk(hdr):
     except Exception:
         pass
     # see if itk header type
-    for cl in itk.Image.__template__.itervalues():
+    for cl in itk.Image.__template__.values():
         if cl in type(hdr).__bases__: return True
     return False
