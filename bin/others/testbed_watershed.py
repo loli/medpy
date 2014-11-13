@@ -68,12 +68,12 @@ def watershed8(i_d, logger):
         
     # compute relevant neighbours
     def test(x, y, z, shape):
-        if x<0: print "x<0", x, y, z
-        if y<0: print "y<0", x, y, z
-        if z<0: print "z<0", x, y, z
-        if x >= shape[0]: print "x>={}".format(shape[0]), x, y, z
-        if y >= shape[1]: print "y>={}".format(shape[1]), x, y, z
-        if z >= shape[2]: print "z>={}".format(shape[2]), x, y, z
+        if x<0: print("x<0", x, y, z)
+        if y<0: print("y<0", x, y, z)
+        if z<0: print("z<0", x, y, z)
+        if x >= shape[0]: print("x>={}".format(shape[0]), x, y, z)
+        if y >= shape[1]: print("y>={}".format(shape[1]), x, y, z)
+        if z >= shape[2]: print("z>={}".format(shape[2]), x, y, z)
     
     logger.info('Computing relevant neighbours through masks...')
     # down (x-1) # up (x+1) # left (y-1) # right (y+1) # into (z-1) # out (z+1)
@@ -88,7 +88,7 @@ def watershed8(i_d, logger):
         for y in range(minaltitude.shape[1]):
             for z in range(minaltitude.shape[2]):
                 c[len(neighbours[x][y][z]) - 1] += 1
-    print "Distribution of relevant neighbours (1,2,3,4,5,6):", c
+    print("Distribution of relevant neighbours (1,2,3,4,5,6):", c)
                   
                 
     # watershed

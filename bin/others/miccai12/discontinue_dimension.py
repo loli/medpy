@@ -51,7 +51,7 @@ def main():
     
     # cut and relabel along the required dimension
     logger.info('Cutting and relabeling...')
-    dimensions = range(input_data.ndim)
+    dimensions = list(range(input_data.ndim))
     del dimensions[args.dimension]
     __split_along(input_data, dimensions)
     
@@ -75,7 +75,7 @@ def __split_along(arr, view):
     start = 1
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):

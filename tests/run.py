@@ -4,7 +4,7 @@
 
 # build-in modules
 import unittest
-import metric_, graphcut_, itkvtk_, features_, filter_
+from . import metric_, graphcut_, itkvtk_, features_, filter_
 
 # third-party modules
 

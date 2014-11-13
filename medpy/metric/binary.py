@@ -698,7 +698,7 @@ def obj_asd(input1, input2, voxelspacing=None, connectivity=1):
     labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(input1, input2, connectivity)
     slicers1 = find_objects(labelmap1)
     slicers2 = find_objects(labelmap2)
-    for lid2, lid1 in mapping.iteritems():
+    for lid2, lid1 in mapping.items():
         window = __combine_windows(slicers1[lid1 - 1], slicers2[lid2 - 1])
         object1 = labelmap1[window] == lid1
         object2 = labelmap2[window] == lid2
@@ -970,7 +970,7 @@ def __distinct_binary_object_correspondences(input1, input2, connectivity=1):
     # process one-to-many mappings, always choosing the one with the least labelmap2 correspondences first
     while True:
         one_to_many = [(l1id, l2ids - used_labels) for l1id, l2ids in one_to_many] # remove already used ids from all sets
-        one_to_many = filter(lambda x: x[1], one_to_many) # remove empty sets
+        one_to_many = [x for x in one_to_many if x[1]] # remove empty sets
         one_to_many = sorted(one_to_many, key=lambda x: len(x[1])) # sort by set length
         if 0 == len(one_to_many):
             break

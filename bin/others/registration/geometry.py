@@ -32,7 +32,7 @@ def shiftp(p, s):
     """
     Shift a point by shift.
     """ 
-    return map(lambda x: x[0] + x[1], zip(p, s))
+    return [x[0] + x[1] for x in zip(p, s)]
 
 def angle_between_vectors(v1, v2):
     """
@@ -53,14 +53,14 @@ def dotproduct(v1, v2):
     """
     Compute the dot-product of two vectors.
     """
-    return float(sum(map(lambda x: x[0] * x[1], zip(v1, v2))))
+    return float(sum([x[0] * x[1] for x in zip(v1, v2)]))
 
 def normalize(v):
     """
     Normalize a vector.
     """
     l = length_of_vector(v)
-    return map(lambda x: x/l, v)
+    return [x/l for x in v]
 
 def length_of_vector(v):
     """
@@ -71,7 +71,7 @@ def length_of_vector(v):
 def angle_between_lines(line1, line2):
     """Compute the angle between two lines."""
         
-    print '// {}, {}'.format(line2[0], line1[0])
+    print('// {}, {}'.format(line2[0], line1[0]))
         
     if -1 == line1[0] * line2[0]: # special case: lines are perpendicular
         angle = math.radians(90)

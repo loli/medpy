@@ -173,7 +173,7 @@ class GCGraphTest(GCGraph):
         """Compares the nweights hold by the graph with the once provided (as a dict)."""
         unittest.assertTrue(len(self.__nweights) == self.__edges, '{}: Expected {} edges, but {} were added.'.format(msg_base, self.__edges, len(self.__nweights)))
         node_id_set = set()
-        for key in self.__nweights.iterkeys():
+        for key in self.__nweights.keys():
             node_id_set.add(key[0])
             node_id_set.add(key[1])
         unittest.assertTrue(len(node_id_set) == self.__nodes), '{}: Not all {} node-ids appeared in the edges, but only {}. Missing are {}.'.format(msg_base, self.__nodes, len(node_id_set), set(range(0, self.__nodes)) - node_id_set)
@@ -182,7 +182,7 @@ class GCGraphTest(GCGraph):
     def __compare_dictionaries(self, unittest, result, expected_result, msg_base = ''):
         """Evaluates the returned results."""
         unittest.assertEqual(len(expected_result), len(result), '{}: The expected result dict contains {} entries (for 4-connectedness), instead found {}.'.format(msg_base, len(expected_result), len(result)))
-        for key, value in result.iteritems():
+        for key, value in result.items():
             unittest.assertTrue(key in expected_result, '{}: Region border {} unexpectedly found in results.'.format(msg_base, key))
             if key in expected_result:
                 unittest.assertAlmostEqual(value[0], expected_result[key][0], msg='{}: Weight for region border {} is {}. Expected {}.'.format(msg_base, key, value, expected_result[key]), delta=sys.float_info.epsilon)
@@ -192,7 +192,7 @@ class GCGraphTest(GCGraph):
                 unittest.assertLessEqual(value[0], 1.0, '{}: Encountered a weight {} > 1.0 for key {}.'.format(msg_base, value, key))
                 unittest.assertLessEqual(value[1], 1.0, '{}: Encountered a weight {} > 1.0 for key {}.'.format(msg_base, value, key))
                 
-        for key, value in expected_result.iteritems():
+        for key, value in expected_result.items():
             unittest.assertTrue(key in result, '{}: Region border {} expectedly but not found in results.'.format(msg_base, key))
 
 if __name__ == '__main__':

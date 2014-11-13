@@ -76,14 +76,14 @@ def main():
         # transform to logarithmic scale
         logger.info('To logarithmic space...')
         image_real_data = image_fft_data.real
-        print image_real_data.min(), image_real_data.max()
+        print(image_real_data.min(), image_real_data.max())
         image_real_data = image_real_data + abs(image_real_data.min())
         constant = 65535./(math.log(1 + image_real_data.max())) # scale by 0.0001, log and then scale to fir uint16
         myfunc = lambda x: constant * math.log(1 + x * 0.0001)
         new_func = numpy.vectorize(myfunc)
         logger.info('Apply...')
         image_real_data = new_func(image_real_data)
-        print image_real_data.min(), image_real_data.max()
+        print(image_real_data.min(), image_real_data.max())
         image_imag_data = image_fft_data.imag
         
         # save resulting images

@@ -120,8 +120,8 @@ def getArguments(parser):
             return int(string)
         def _to_int_or_none_double (string):
             if 0 == len(string): return [None, None]
-            return map(_to_int_or_none, string.split(':'))        
-        args.volume = map(_to_int_or_none_double, args.volume.split(','))
+            return list(map(_to_int_or_none, string.split(':')))        
+        args.volume = list(map(_to_int_or_none_double, args.volume.split(',')))
         args.volume = [(x[0], x[1]) for x in args.volume]
     except (ValueError, IndexError) as e:
         raise ArgumentError('Maleformed volume parameter "{}", see description with -h flag.'.format(args.volume), e)

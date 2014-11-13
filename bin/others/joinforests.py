@@ -16,7 +16,7 @@ def main():
     target = sys.argv[2]
     sources = sys.argv[3:]
     
-    print 'Combining forests...'
+    print('Combining forests...')
     rdf = pickle.load(open(sources[0], 'r'))
     rdf.estimators_[:ntrees]
     nfeatures =  rdf.n_features_
@@ -29,17 +29,17 @@ def main():
             raise Exception('Forest {} has incompatible number of classes {} with first forest.'.format(source, rdf_.n_classes_))
         rdf.estimators_.extend(rdf_.estimators_[:ntrees])
     rdf.n_estimators = len(rdf.estimators_)
-    print 'done.'
+    print('done.')
        
     #rdf.n_estimators
     #rdf.n_features_
     #rdf.n_classes_
     
-    print 'Saving resulting forest...'
+    print('Saving resulting forest...')
     pickle.dump(rdf, open(target, 'w'))
-    print 'done.'
+    print('done.')
     
-    print 'Warning: The parameters reflected by the resulting forests will not be valid!'
+    print('Warning: The parameters reflected by the resulting forests will not be valid!')
     
 if __name__ == "__main__":
     main()

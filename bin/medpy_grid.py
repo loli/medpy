@@ -108,14 +108,14 @@ def list_of_integers_or_int(string, separator=','):
 
 def list_of_integers(string, separator=','):
     values = string.split(separator)
-    if not scipy.all(map(str.isdigit, values)):
+    if not scipy.all(list(map(str.isdigit, values))):
         raise argparse.ArgumentTypeError('{} is not a "{}" separated list of integers'.format(string, separator))
-    return map(int, values)
+    return list(map(int, values))
 
 def list_of_floats(string, separator=','):
     values = string.split(separator)
     try:
-        return map(float, values)
+        return list(map(float, values))
     except ValueError:
         raise argparse.ArgumentTypeError('{} is not a "{}" separated list of floats'.format(string, separator))
 

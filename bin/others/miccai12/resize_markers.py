@@ -63,7 +63,7 @@ def main():
     logger.debug('New shape = {}.'.format(output_data.shape))
     
     new_spacing = list(header.get_pixel_spacing(input_header))
-    new_spacing[contour_dimension] = new_spacing[contour_dimension] / float(args.enhancement + 1)
+    new_spacing[contour_dimension] /= float(args.enhancement + 1)
     logger.debug('Setting pixel spacing from {} to {}....'.format(header.get_pixel_spacing(input_header), new_spacing))
     header.set_pixel_spacing(input_header, tuple(new_spacing))
     

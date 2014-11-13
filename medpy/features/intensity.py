@@ -205,7 +205,7 @@ def indices(image, voxelspacing = None, mask = slice(None)):
     if voxelspacing is None:
         voxelspacing = [1.] * image.ndim
 
-    return join(*map(lambda (a, vs): a[mask].ravel() * vs, zip(numpy.indices(image.shape), voxelspacing)))
+    return join(*[a_vs[0][mask].ravel() * a_vs[1] for a_vs in zip(numpy.indices(image.shape), voxelspacing)])
     
 def shifted_mean_gauss(image, offset = None, sigma = 5, voxelspacing = None, mask = slice(None)):
     r"""
@@ -565,8 +565,8 @@ def _extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7,
         right_slicer[cut_plane] = slice(None, INTERPOLATION_RANGE)
         interp_data_left = left_hemisphere_difference[left_slicer]
         interp_data_right = right_hemisphere_difference[right_slicer]
-        interp_indices_left = range(-1 * interp_data_left.shape[cut_plane], 0)
-        interp_indices_right = range(1, interp_data_right.shape[cut_plane] + 1)
+        interp_indices_left = list(range(-1 * interp_data_left.shape[cut_plane], 0))
+        interp_indices_right = list(range(1, interp_data_right.shape[cut_plane] + 1))
         interp_data = numpy.concatenate((left_hemisphere_difference[left_slicer], right_hemisphere_difference[right_slicer]), cut_plane)
         interp_indices = numpy.concatenate((interp_indices_left, interp_indices_right), 0)
         medial_longitudinal_fissure_estimated = interp1d(interp_indices, interp_data, kind='cubic', axis=cut_plane)(0)
@@ -711,7 +711,7 @@ def _extract_centerdistance(image, mask = slice(None), voxelspacing = None):
         voxelspacing = [1.] * image.ndim
         
     # get image center and an array holding the images indices
-    centers = map(lambda x: (x - 1) / 2., image.shape)
+    centers = [(x - 1) / 2. for x in image.shape]
     indices = numpy.indices(image.shape, dtype=numpy.float)
     
     # shift to center of image and correct spacing to real world coordinates

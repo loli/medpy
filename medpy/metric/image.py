@@ -112,7 +112,7 @@ def __range(a, bins):
 def __entropy(data):
     '''Compute entropy of the flattened data set (e.g. a density distribution).'''
     # normalize and convert to float
-    data = data/float(numpy.sum(data))
+    data /= float(numpy.sum(data))
     # for each grey-value g with a probability p(g) = 0, the entropy is defined as 0, therefore we remove these values and also flatten the histogram
     data = data[numpy.nonzero(data)]
     # compute entropy

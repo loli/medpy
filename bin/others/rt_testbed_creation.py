@@ -6,7 +6,7 @@
 import argparse
 import logging
 import random
-import cPickle
+import pickle
 import sys
 import os
 
@@ -46,7 +46,7 @@ def main():
     args = getArguments(parser)
     
     # compose the target file name
-    if sys.maxint == args.evalmax and sys.maxint == args.fgmax and sys.maxint == args.bgmax:
+    if sys.maxsize == args.evalmax and sys.maxsize == args.fgmax and sys.maxsize == args.bgmax:
         target = 'tstb_{}_unrestricted_{}.pickle'.format(args.mode, args.suffix)
     else:
         target = 'tstb_{}_restricted_{}.pickle'.format(args.mode, args.suffix)
@@ -129,13 +129,13 @@ def main():
     
     logger.info('Pickle obtained results results to testbed file {}...'.format(target))
     with open(target, 'w') as f:
-        cPickle.dump(model_fg_ids, f)
-        cPickle.dump(model_bg_ids, f)
-        cPickle.dump(eval_ids, f)
-        cPickle.dump(truth_fg, f)
-        cPickle.dump(truth_bg, f)
-        cPickle.dump(bdr_fg, f)
-        cPickle.dump(bdr_bg, f)
+        pickle.dump(model_fg_ids, f)
+        pickle.dump(model_bg_ids, f)
+        pickle.dump(eval_ids, f)
+        pickle.dump(truth_fg, f)
+        pickle.dump(truth_bg, f)
+        pickle.dump(bdr_fg, f)
+        pickle.dump(bdr_bg, f)
     
     logger.info('Successfully terminated.')
         
@@ -251,9 +251,9 @@ def getParser():
     parser.add_argument('label', help='The watershed label image.')
     parser.add_argument('mask', help='The ground-truth liver-mask.')
     parser.add_argument('boundary', help='The boundary term created liver-mask.')
-    parser.add_argument('--eval-max', dest='evalmax', type=int, default=sys.maxint, help='Restrict the number of regions designated for evaluation. They will be picked randomly.')
-    parser.add_argument('--fg-max', dest='fgmax', type=int, default=sys.maxint, help='Restrict the number of regions designated to create the foreground model. They will be picked randomly.')
-    parser.add_argument('--bg-max', dest='bgmax', type=int, default=sys.maxint, help='Restrict the number of regions designated to create the background model. They will be picked randomly.')
+    parser.add_argument('--eval-max', dest='evalmax', type=int, default=sys.maxsize, help='Restrict the number of regions designated for evaluation. They will be picked randomly.')
+    parser.add_argument('--fg-max', dest='fgmax', type=int, default=sys.maxsize, help='Restrict the number of regions designated to create the foreground model. They will be picked randomly.')
+    parser.add_argument('--bg-max', dest='bgmax', type=int, default=sys.maxsize, help='Restrict the number of regions designated to create the background model. They will be picked randomly.')
     parser.add_argument('--suffix', help='A suffix for the created testbed pickle file.')
     group_strict = parser.add_argument_group('strict mode only')
     group_strict.add_argument('--fg-mask', dest='fgmask', help='Mask image containg the foureground markers.')
@@ -301,13 +301,13 @@ def  __load(picklefile, original, label):
     
     # load testbed
     with open(picklefile, 'r') as f:
-        model_fg_ids = cPickle.load(f)
-        model_bg_ids = cPickle.load(f)
-        eval_ids = cPickle.load(f)
-        truth_fg = cPickle.load(f)
-        truth_bg = cPickle.load(f)
-        bdr_fg = cPickle.load(f)
-        bdr_bg = cPickle.load(f)
+        model_fg_ids = pickle.load(f)
+        model_bg_ids = pickle.load(f)
+        eval_ids = pickle.load(f)
+        truth_fg = pickle.load(f)
+        truth_bg = pickle.load(f)
+        bdr_fg = pickle.load(f)
+        bdr_bg = pickle.load(f)
             
     return original_image_d, label_image_d, bounding_boxes, model_fg_ids, model_bg_ids, eval_ids, truth_fg, truth_bg, bdr_fg, bdr_bg
     

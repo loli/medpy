@@ -14,7 +14,7 @@ without needing to rebuild the documented module.
 .. [1] http://code.google.com/p/pydocweb
 
 """
-from __future__ import division, absolute_import, print_function
+
 
 import imp, sys, compiler, types, os, inspect, re
 
@@ -134,7 +134,7 @@ def import_phantom_module(xml_file):
             if sys.version_info[0] >= 3:
                 obj.__name__ = funcname
             else:
-                obj.func_name = funcname
+                obj.__name__ = funcname
             obj.__name__ = name
             obj.__doc__ = doc
             if inspect.isclass(object_cache[parent]):

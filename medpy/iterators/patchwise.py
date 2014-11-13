@@ -160,16 +160,16 @@ class CentredPatchIterator():
                    (ps - r % ps) % ps) for (l, r), ps in zip(remainder, self.psize)]
             
         # determine slice-points for each dimension and initialize internal slice-point iterator
-        slicepoints = [range(-l, s + r, ps) for s, ps, (l, r) in zip(self.array.shape, self.psize, padding)]
+        slicepoints = [list(range(-l, s + r, ps)) for s, ps, (l, r) in zip(self.array.shape, self.psize, padding)]
         self.__slicepointiter = product(*slicepoints)
         
         # initialize internal grid-id iterator
-        self.__grididiter = product(*[range(len(sps)) for sps in slicepoints])
+        self.__grididiter = product(*[list(range(len(sps))) for sps in slicepoints])
         
     def __iter__(self):
         return self
     
-    def next(self):
+    def __next__(self):
         """
         Yields the next patch.
         
@@ -185,8 +185,8 @@ class CentredPatchIterator():
             A list of `slice()` instances definind the patch.
         """ 
         # trigger internal iterators
-        spointset = self.__slicepointiter.next() # will raise StopIteration when empty
-        gridid = self.__grididiter.next()
+        spointset = next(self.__slicepointiter) # will raise StopIteration when empty
+        gridid = next(self.__grididiter)
         # compute slicer object and padder tuples
         slicer = []
         padder = []
@@ -294,7 +294,7 @@ class CentredPatchIterator():
             patches = []
             gridids = []
             pmasks = []
-            for groupid, group in groups.iteritems():
+            for groupid, group in groups.items():
                 patches.append(numpy.concatenate([p for p, _, _ in sorted(group, key=itemgetter(2))], d))
                 pmasks.append(numpy.concatenate([m for _, m, _ in sorted(group, key=itemgetter(2))], d))
                 gridids.append(groupid)

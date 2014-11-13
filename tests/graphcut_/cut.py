@@ -129,9 +129,9 @@ class TestCut(unittest.TestCase):
         # build graph cut graph from graph
         gcgraph = GraphDouble(len(graph_new.get_nodes()), len(graph_new.get_nweights()))
         gcgraph.add_node(len(graph_new.get_nodes()))
-        for node, weight in graph_new.get_tweights().iteritems():
+        for node, weight in graph_new.get_tweights().items():
             gcgraph.add_tweights(int(node - 1), weight[0], weight[1])
-        for edge, weight in graph_new.get_nweights().iteritems():
+        for edge, weight in graph_new.get_nweights().items():
             gcgraph.add_edge(int(edge[0] - 1), int(edge[1] - 1), weight[0], weight[1])    
         
         # execute min-cut / executing BK_MFMC
@@ -150,10 +150,11 @@ class TestCut(unittest.TestCase):
         self.assertSequenceEqual(label_image.tolist(), self.__result, 'The resulting cut is wrong. Expected\n {}\n got\n{}'.format(scipy.asarray(self.__result, dtype=scipy.bool_), label_image))
         
     @staticmethod
-    def __boundary_term(label_image, (boundary_term_args)):
+    def __boundary_term(label_image, xxx_todo_changeme):
         "The boundary term function used for this tests."
+        (boundary_term_args) = xxx_todo_changeme
         dic = TestCut.__get_mapping()
-        for key, value in dic.iteritems():
+        for key, value in dic.items():
             dic[key] = (value, value)
         return dic
         

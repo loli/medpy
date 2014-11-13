@@ -49,7 +49,7 @@ def image_new(data, filename):
     # extract suffix and return apropriate image
     suffix = filename.split('.')[-1].lower()
     if not suffix in __suffix_to_type:
-        suffix = '.'.join(map(lambda x: x.lower(), filename.split('.')[-2:]))
+        suffix = '.'.join([x.lower() for x in filename.split('.')[-2:]])
         if not suffix in __suffix_to_type:
             image = SpatialImage(data, None)
             image.update_header()

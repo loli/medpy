@@ -174,7 +174,7 @@ class TestIOFacilities(unittest.TestCase):
         try:
             for ndim in __ndims:
                 logger.debug('Testing for dimension {}...'.format(ndim))
-                arr_base = scipy.random.randint(0, 10, range(10, ndim + 10))
+                arr_base = scipy.random.randint(0, 10, list(range(10, ndim + 10)))
                 for dtype in __dtypes:
                     arr_save = arr_base.astype(dtype)
                     for suffix in __suffixes:
@@ -212,29 +212,29 @@ class TestIOFacilities(unittest.TestCase):
             raise
         
         if supported:
-            print '\nsave() and load() support (at least) the following image configurations:'
-            print 'type\tndim\tdtypes'
+            print('\nsave() and load() support (at least) the following image configurations:')
+            print('type\tndim\tdtypes')
             for suffix in valid_types:
-                for ndim, dtypes in valid_types[suffix].iteritems():
+                for ndim, dtypes in valid_types[suffix].items():
                     if list == type(dtypes) and not 0 == len(dtypes):
-                        print '{}\t{}D\t{}'.format(suffix, ndim, map(lambda x: str(x).split('.')[-1][:-2], dtypes))
+                        print('{}\t{}D\t{}'.format(suffix, ndim, [str(x).split('.')[-1][:-2] for x in dtypes]))
         if notsupported:
-            print '\nthe following configurations are not supported:'
-            print 'type\tndim\tdtype\t\terror'
+            print('\nthe following configurations are not supported:')
+            print('type\tndim\tdtype\t\terror')
             for suffix in unsupported_type:
                 for ndim in unsupported_type[suffix]:
-                    for dtype, msg in unsupported_type[suffix][ndim].iteritems():
+                    for dtype, msg in unsupported_type[suffix][ndim].items():
                         if msg:
-                            print '{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg)
+                            print('{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg))
             
         if inconsistent:
-            print '\nthe following configurations show inconsistent saving and loading behaviour:'
-            print 'type\tndim\tdtype\t\terror'
+            print('\nthe following configurations show inconsistent saving and loading behaviour:')
+            print('type\tndim\tdtype\t\terror')
             for suffix in invalid_types:
                 for ndim in invalid_types[suffix]:
-                    for dtype, msg in invalid_types[suffix][ndim].iteritems():
+                    for dtype, msg in invalid_types[suffix][ndim].items():
                         if msg:
-                            print '{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg)
+                            print('{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg))
         
     def __diff(self, arr1, arr2):
         """

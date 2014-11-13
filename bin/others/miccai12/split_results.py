@@ -47,50 +47,50 @@ def main():
 
     # print results
     if args.csv:
-        print 'Inner contours'
+        print('Inner contours')
         csvPrintResults(results_i)
-        print 'Outer contours'
+        print('Outer contours')
         csvPrintResults(results_o)
     else:
-        print "########## Inner contours ##########"
+        print("########## Inner contours ##########")
         prettyPrintResults(results_i)
-        print "####################################"
-        print
+        print("####################################")
+        print()
         
-        print "########## Outer contours ##########"
+        print("########## Outer contours ##########")
         prettyPrintResults(results_o)
-        print "####################################"
+        print("####################################")
     
 def csvPrintResults(results):
     """
     Prints the results in a CSV format, using ":" as deliminator.
     """
-    print ';;DM;HD'
-    print 'Basal;ED;{};{}'.format(results[0]['ed'][0], results[0]['ed'][1])
-    print ';ES;{};{}'.format(results[0]['es'][0], results[0]['es'][1])
-    print 'Mid;ED;{};{}'.format(results[1]['ed'][0], results[1]['ed'][1])
-    print ';ES;{};{}'.format(results[1]['es'][0], results[1]['es'][1])
-    print 'Apical;ED;{};{}'.format(results[2]['ed'][0], results[2]['ed'][1])
-    print ';ES;{};{}'.format(results[2]['es'][0], results[2]['es'][1])
+    print(';;DM;HD')
+    print('Basal;ED;{};{}'.format(results[0]['ed'][0], results[0]['ed'][1]))
+    print(';ES;{};{}'.format(results[0]['es'][0], results[0]['es'][1]))
+    print('Mid;ED;{};{}'.format(results[1]['ed'][0], results[1]['ed'][1]))
+    print(';ES;{};{}'.format(results[1]['es'][0], results[1]['es'][1]))
+    print('Apical;ED;{};{}'.format(results[2]['ed'][0], results[2]['ed'][1]))
+    print(';ES;{};{}'.format(results[2]['es'][0], results[2]['es'][1]))
     
 def prettyPrintResults(results):
     """
     Prints the results for all slice types in a pretty formated way.
     """
-    print 'Basal (first three) slices:'
+    print('Basal (first three) slices:')
     _prettyPrintResults(results[0])
-    print 'Mid slices:'
+    print('Mid slices:')
     _prettyPrintResults(results[1])
-    print 'Apical (last three) slices:'
+    print('Apical (last three) slices:')
     _prettyPrintResults(results[2])
     
 def _prettyPrintResults(results):
     """
     Prints the results for a slice type in a pretty formated way.
     """
-    print '\t{:>12}\t{:>12}'.format('DM', 'HD')
-    print 'ED:\t{:12.4f}\t{:12.4f}'.format(results['ed'][0], results['ed'][1])
-    print 'ES:\t{:12.4f}\t{:12.4f}'.format(results['es'][0], results['es'][1])
+    print('\t{:>12}\t{:>12}'.format('DM', 'HD'))
+    print('ED:\t{:12.4f}\t{:12.4f}'.format(results['ed'][0], results['ed'][1]))
+    print('ES:\t{:12.4f}\t{:12.4f}'.format(results['es'][0], results['es'][1]))
     
 def splitResults(results):
     """

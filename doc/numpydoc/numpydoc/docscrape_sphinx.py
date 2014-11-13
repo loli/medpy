@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import, print_function
+
 
 import sys, re, inspect, textwrap, pydoc
 import sphinx
@@ -8,7 +8,7 @@ from .docscrape import NumpyDocString, FunctionDoc, ClassDoc
 if sys.version_info[0] >= 3:
     sixu = lambda s: s
 else:
-    sixu = lambda s: unicode(s, 'unicode_escape')
+    sixu = lambda s: str(s, 'unicode_escape')
 
 
 class SphinxDocString(NumpyDocString):
@@ -109,7 +109,7 @@ class SphinxDocString(NumpyDocString):
 
                 # Check if the referenced member can have a docstring or not
                 param_obj = getattr(self._obj, param, None)
-                if not (callable(param_obj)
+                if not (isinstance(param_obj, collections.Callable)
                         or isinstance(param_obj, property)
                         or inspect.isgetsetdescriptor(param_obj)):
                     param_obj = None
@@ -172,7 +172,7 @@ class SphinxDocString(NumpyDocString):
             return out
 
         out += ['.. index:: %s' % idx.get('default','')]
-        for section, references in idx.items():
+        for section, references in list(idx.items()):
             if section == 'default':
                 continue
             elif section == 'refguide':

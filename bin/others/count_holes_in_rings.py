@@ -22,14 +22,14 @@ def main():
     ring_difficult_w1hole = scipy.squeeze(load('ring_difficult_w1hole.nii').get_data()).astype(scipy.bool_)[:,:,98]
     
     # algorithm
-    print 'ring_closed', alg(ring_closed), alg2(ring_closed)
-    print 'ring_closed_w1hole', alg(ring_closed_w1hole), alg2(ring_closed_w1hole)
-    print 'ring_closed_wholes', alg(ring_closed_wholes), alg2(ring_closed_wholes)
-    print 'ring_open', alg(ring_open), alg2(ring_open)
-    print 'ring_open_w1hole', alg(ring_open_w1hole), alg2(ring_open_w1hole)
-    print 'ring_open_wholes', alg(ring_open_wholes), alg2(ring_open_wholes)
-    print 'ring_difficult', alg(ring_difficult), alg2(ring_difficult)
-    print 'ring_difficult_w1hole', alg(ring_difficult_w1hole), alg2(ring_difficult_w1hole)
+    print('ring_closed', alg(ring_closed), alg2(ring_closed))
+    print('ring_closed_w1hole', alg(ring_closed_w1hole), alg2(ring_closed_w1hole))
+    print('ring_closed_wholes', alg(ring_closed_wholes), alg2(ring_closed_wholes))
+    print('ring_open', alg(ring_open), alg2(ring_open))
+    print('ring_open_w1hole', alg(ring_open_w1hole), alg2(ring_open_w1hole))
+    print('ring_open_wholes', alg(ring_open_wholes), alg2(ring_open_wholes))
+    print('ring_difficult', alg(ring_difficult), alg2(ring_difficult))
+    print('ring_difficult_w1hole', alg(ring_difficult_w1hole), alg2(ring_difficult_w1hole))
     
 def extract_holes(ring):
     """

@@ -68,20 +68,20 @@ def main():
         
 def printInfo(data, header):
     # print image information
-    print '\nInformations obtained from image header:'
-    print 'header type={}'.format(type(header))
+    print('\nInformations obtained from image header:')
+    print('header type={}'.format(type(header)))
     try:
-        print 'voxel spacing={}'.format(get_pixel_spacing(header))
+        print('voxel spacing={}'.format(get_pixel_spacing(header)))
     except AttributeError:
-        print 'Failed to retrieve voxel spacing.'
+        print('Failed to retrieve voxel spacing.')
     try:
-        print 'offset={}'.format(get_offset(header))
+        print('offset={}'.format(get_offset(header)))
     except AttributeError:
-        print 'Failed to retrieve offset.'    
+        print('Failed to retrieve offset.')    
     
-    print '\nInformations obtained from image array:'
-    print 'datatype={},dimensions={},shape={}'.format(data.dtype, data.ndim, data.shape)
-    print 'first and last element: {} / {}'.format(data.flatten()[0], data.flatten()[-1])
+    print('\nInformations obtained from image array:')
+    print('datatype={},dimensions={},shape={}'.format(data.dtype, data.ndim, data.shape))
+    print('first and last element: {} / {}'.format(data.flatten()[0], data.flatten()[-1]))
         
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."

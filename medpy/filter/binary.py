@@ -19,7 +19,7 @@
 # status Release
 
 # build-in modules
-from operator import  lt, le, gt, ge, ne, eq
+from operator import lt, le, gt, ge, ne, eq
 
 # third-party modules
 import numpy 
@@ -74,7 +74,7 @@ def size_threshold(img, thr, comp='lt', structure = None):
     
     img = numpy.asarray(img).astype(numpy.bool)
     if comp not in operators:
-        raise ValueError("comp must be one of {}".format(operators.keys()))
+        raise ValueError("comp must be one of {}".format(list(operators.keys())))
     comp = operators[comp]
     
     labeled_array, num_features = label(img, structure)

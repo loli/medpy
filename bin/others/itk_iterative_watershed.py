@@ -124,7 +124,7 @@ def main():
                         region_pointer -= 1
                         logger.info('Skipping this region as threshold lowering did not lead to the production of more than 100 labels...')
                     else:
-                        threshold = threshold / 2.
+                        threshold /= 2.
                         if threshold < 0.001: threshold = 0.0
                         logger.info('Lowering threshold for next region to {} ...'.format(threshold))
                 else:
@@ -136,7 +136,7 @@ def main():
                     region_pointer -= 1
                     logger.warning('Watershed processing terminated with error {}. Skipping this region as threshold lowering did not succeed.'.format(error))
                 else:
-                    threshold = threshold / 2
+                    threshold /= 2
                     if threshold < 0.001: threshold = 0.0
                     logger.warning('Watershed processing terminated with error {}. Lowering threshold to {}.'.format(error, threshold))
             
@@ -145,7 +145,7 @@ def main():
             statistics = LabelImageStatistics(image_label_final_array, original_image_array)
             
             # check medium region size and if stop condition reached, break
-            sizes = sorted(statistics.get_sizes().iteritems(), key=lambda x: x[1]) # get sizes sorted (biggest region last)
+            sizes = sorted(iter(statistics.get_sizes().items()), key=lambda x: x[1]) # get sizes sorted (biggest region last)
             if __IDEAL_REGION_SIZE >= sizes[region_pointer][1]:
                 logger.info('Stopping condition {} with a maximum region size of {} reached: Stopping processing...'.format(__IDEAL_REGION_SIZE, sizes[region_pointer][1]))
                 break

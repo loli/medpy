@@ -172,7 +172,7 @@ def load(image):
         # determine two suffixes (the second one of the compound of the two last elements)
         suffix = image.split('.')[-1].lower()
         if not suffix in suffix_to_type:
-            suffix = '.'.join(map(lambda x: x.lower(), image.split('.')[-2:]))
+            suffix = '.'.join([x.lower() for x in image.split('.')[-2:]])
             if not suffix in suffix_to_type: # otherwise throw an Exception that will be caught later on
                 raise KeyError()
         # determine image type by ending
@@ -187,7 +187,7 @@ def load(image):
         except Exception as e:
             err = ImageLoadingError('Failes to load image {} as {}. Reason signaled by third-party module: {}'.format(image, type_to_string[image_type], e))
     except KeyError:
-        err = ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(image.split('.')[-1], image, type_to_string.values()))
+        err = ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(image.split('.')[-1], image, list(type_to_string.values())))
 
     # Try brute force
     logger.debug('Normal loading failed. Entering brute force mode.')

@@ -61,7 +61,7 @@ def main():
     elif args.verbose: logger.setLevel(logging.INFO)
         
     # write header line
-    print 'image;labels\n'
+    print('image;labels\n')
     
     # iterate over input images
     for image in args.images:
@@ -74,7 +74,7 @@ def main():
         count = len(numpy.unique(image_data)) 
         
         # count number of labels and write
-        print '{};{}\n'.format(image.split('/')[-1], count)
+        print('{};{}\n'.format(image.split('/')[-1], count))
         
         sys.stdout.flush()
             

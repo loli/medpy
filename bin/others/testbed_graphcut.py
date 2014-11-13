@@ -61,9 +61,9 @@ def main():
     logger.info('Generating BK_MFMC C++ graph...')
     gcgraph = graphcut.GraphDouble(len(gr.get_nodes()), len(gr.get_nweights()))
     gcgraph.add_node(len(gr.get_nodes()))
-    for node, weight in gr.get_tweights().iteritems():
+    for node, weight in gr.get_tweights().items():
         gcgraph.add_tweights(int(node - 1), weight[0], weight[1])
-    for edge, weight in gr.get_nweights().iteritems():
+    for edge, weight in gr.get_nweights().items():
         gcgraph.add_edge(int(edge[0] - 1), int(edge[1] - 1), weight[0], weight[1])    
     
     # execute min-cut

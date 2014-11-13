@@ -1,1 +1,1 @@
-from gradient import TestItkVtkGradient
+from .gradient import TestItkVtkGradient

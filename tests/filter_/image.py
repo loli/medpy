@@ -126,7 +126,7 @@ class TestMetrics(unittest.TestCase):
         r, _ = ssd(m, s, normalized=False, signed=False, footprint=fp, mode='mirror')
         numpy.testing.assert_allclose(r, e, err_msg='using footprint failed')      
         
-        e = e / 3.
+        e /= 3.
         r, _ = ssd(m, s, normalized=True, signed=False, footprint=fp, mode='mirror')
         numpy.testing.assert_allclose(r, e, err_msg='normalized=True using footprint failed')
         
