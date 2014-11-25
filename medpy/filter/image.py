@@ -355,7 +355,7 @@ def otsu (img, bins=64):
         
     Returns
     -------
-    otsu : intger
+    otsu : float
         The otsu threshold to separate the input image into fore- and background.
     """
     # cast bins parameter to int
@@ -438,6 +438,10 @@ def resample(img, hdr, target_spacing, bspline_order):
             The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.
         bspline_order : int
             The bspline order used for interpolation.
+            
+        Warning
+        -------
+        Voxel-spacing of input header will be modified in-place!
             
         Returns
         -------
