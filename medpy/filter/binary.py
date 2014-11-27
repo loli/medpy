@@ -114,3 +114,21 @@ def largest_connected_component(img, structure = None):
     out = numpy.zeros(img.shape, numpy.bool)  
     out[labeled_array == largest_component_idx] = True
     return out
+
+def bounding_box(img):
+    r"""
+    Return the bounding box incorporating all non-zero values in the image.
+    
+    Parameters
+    ----------
+    img : array_like
+        An array containing non-zero objects.
+        
+    Returns
+    -------
+    bbox : a list of slicer objects defining the bounding box
+    """
+    locations = numpy.argwhere(img)
+    mins = locations.min(0)
+    maxs = locations.max(0) + 1
+    return [slice(x, y) for x, y in zip(mins, maxs)]
