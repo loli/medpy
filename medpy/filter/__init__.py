@@ -28,6 +28,7 @@ Binary image manipulation.
     
     size_threshold
     largest_connected_component
+    bounding_box
 
 Image :mod:`medpy.filter.image`
 =================================
@@ -124,7 +125,7 @@ A learning method to align the intensity ranges of images.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # if __all__ is not set, only the following, explicit import statements are executed
-from .binary import largest_connected_component, size_threshold
+from .binary import largest_connected_component, size_threshold, bounding_box
 from .image import sls, ssd, average_filter, sum_filter, otsu, local_minima, resample
 from .smoothing import anisotropic_diffusion, gauss_xminus1d
 from .label import fit_labels_to_mask, relabel, relabel_map, relabel_non_zero
