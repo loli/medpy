@@ -31,6 +31,7 @@ from scipy.ndimage.morphology import distance_transform_edt
 
 # own modules
 from medpy.core import Logger
+from medpy.filter import resample, bounding_box
 from medpy.utilities import argparseu
 from medpy.io import load, save, header
 
@@ -89,7 +90,7 @@ def main():
     rcss = [int(y // x - 1) for x, y in zip(args.spacing, vs)] # TODO: For option b, remove the - 1; better: no option b, since I am rounding later anyway
     
     # remove negatives and round up to next even number
-    rcss = [x if x > 0 else x for x in rcss]
+    rcss = [x if x > 0 else 0 for x in rcss]
     rcss = [x if 0 == x % 2 else x + 1 for x in rcss]
     logger.debug('intermediate slices to add per dimension: {}'.format(rcss))
     
@@ -108,13 +109,7 @@ def main():
     
     # interpolate with nearest neighbour
     logger.info('Re-sampling the image with a b-spline order of {}.'.format(args.order))
-    zoom_factors = [y / float(x) for x, y in zip(args.spacing, nvs)]
-    logger.debug('zoom-factors: {}'.format(zoom_factors))
-    img = zoom(img, zoom_factors, order=args.order, mode='nearest')
-    logger.debug('new image shape: {}'.format(img.shape))
-    
-    # set new voxel spacing
-    header.set_pixel_spacing(hdr, args.spacing)
+    img, hdr = resample(img, hdr, args.spacing, args.order, mode='nearest')
     
     # saving the resulting image
     save(img, args.output, hdr, args.force)
@@ -152,7 +147,6 @@ def shape_based_slice_interpolation(img, dim, nslices):
      
     for sl1, sl2 in zip(numpy.rollaxis(img, dim)[:-1], numpy.rollaxis(img, dim)[1:]):
         if 0 == numpy.count_nonzero(sl1) and 0 == numpy.count_nonzero(sl2):
-
             chunk = numpy.zeros(chunk_full_shape, dtype=numpy.bool)
         else:
             chunk = shape_based_slice_insertation(sl1, sl2, dim, nslices)
@@ -165,10 +159,10 @@ def shape_based_slice_interpolation(img, dim, nslices):
     out = numpy.concatenate((out, sl2[slicer]), dim)
     
     slicer[dim] = slice(0, 1)
-    for _ in range(nslices / 2):
+    for _ in range(nslices // 2):
         out = numpy.concatenate((img[slicer], out), dim)
     slicer[dim] = slice(-1, None)
-    for _ in range(nslices / 2):
+    for _ in range(nslices // 2):
         out = numpy.concatenate((out, img[slicer]), dim)
         
     return out
@@ -197,15 +191,18 @@ def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
         A binary image of size `sl1`.shape() extend by `nslices`+2 along the new
         dimension `dim`. The border slices are the original slices `sl1` and `sl2`.
     """
-    dt1 = distance_transform_edt(~sl1.astype(numpy.bool))
-    dt2 = distance_transform_edt(~sl2.astype(numpy.bool))
+    sl1 = sl1.astype(numpy.bool)
+    sl2 = sl2.astype(numpy.bool)
+    dt1 = distance_transform_edt(~sl1) - distance_transform_edt(sl1)
+    dt2 = distance_transform_edt(~sl2) - distance_transform_edt(sl2)
+    
     slicer = [slice(None)] * dt1.ndim
     slicer = slicer[:dim] + [numpy.newaxis] + slicer[dim:]
     out = numpy.concatenate((dt1[slicer], dt2[slicer]), axis=dim)
     zoom_factors = [1] * dt1.ndim
     zoom_factors = zoom_factors[:dim] + [(nslices + 2)/2.] + zoom_factors[dim:]
     out = zoom(out, zoom_factors, order=order)
-    return out <= .5
+    return out <= 0
     
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
