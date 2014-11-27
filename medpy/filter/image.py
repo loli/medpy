@@ -424,7 +424,7 @@ def local_minima(img, min_distance = 4):
     order = good_fits.argsort()
     return good_indices[order], good_fits[order]
 
-def resample(img, hdr, target_spacing, bspline_order):
+def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
         """
         Re-sample an image to a new voxel-spacing.
         
@@ -438,6 +438,8 @@ def resample(img, hdr, target_spacing, bspline_order):
             The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.
         bspline_order : int
             The bspline order used for interpolation.
+        mode : str
+            Points outside the boundaries of the input are filled according to the given mode ('constant', 'nearest', 'reflect' or 'wrap'). Default is 'constant'.
             
         Warning
         -------
@@ -457,7 +459,7 @@ def resample(img, hdr, target_spacing, bspline_order):
         zoom_factors = [old / float(new) for new, old in zip(target_spacing, header.get_pixel_spacing(hdr))]
     
         # zoom image
-        img = zoom(img, zoom_factors, order=bspline_order)
+        img = zoom(img, zoom_factors, order=bspline_order, mode=mode)
         
         # set new voxel spacing
         header.set_pixel_spacing(hdr, target_spacing)
