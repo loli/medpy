@@ -35,106 +35,101 @@ class CentredPatchIterator():
     r"""
     Iterated patch-wise over the array, where the central patch is centred on the
     image centre.
+    
+    All yielded patches will be of size ``psize``. Areas outside of the array are
+    filled with ``cval``. Besides the patch, a patch mask is returned, that denoted
+    the outside values. Additionally, the n-dimensional grid id and a slicer object
+    are returned.
+    
+    To extract the same patch from another array of the same size as ``array``, use
+    the `applyslicer` method.
+    
+    The following schematic overview explains the behaviour to expect for even and odd
+    images respectively patches. All ``O`` denote image voxels, ``|`` the patch
+    borders and ``#`` padded voxels.
+    
+    One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5::
+    
+        |O|O|O|O|O|
+        
+        |#O|OO|OO|
+        
+        |##O|OOO|O##|
+        
+        |OOOO|O###|
+        
+        |OOOOO|
+    
+    One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4::
+    
+        |O|O|O|O|
+        
+        |#O|OO|O#|
+        
+        |OOO|O##|
+        
+        |OOOO|
+    
+    
+    Parameters
+    ----------
+    array : array_like
+        A n-dimensional array.
+    psize : int or sequence
+        The patch size. If a single integer interpreted as hyper-cube.
+    cval : number
+        Value to fill undefined positions.
+        
+    Examples
+    --------
+    >>> import numpy
+    >>> from medpy.iterators import CentredPatchIterator
+    >>> arr = numpy.arange(0, 25).reshape((5,5))
+    >>> arr
+    array([[ 0,  1,  2,  3,  4],
+           [ 5,  6,  7,  8,  9],
+           [10, 11, 12, 13, 14],
+           [15, 16, 17, 18, 19],
+           [20, 21, 22, 23, 24]])
+    >>> patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))
+    Total number of patches:
+    >>> len(patches)
+    9
+    Central patch:
+    >>> patches[4]
+    array([[ 6,  7,  8],
+           [11, 12, 13],
+           [16, 17, 18]])
+    Bottom-right corner patch:
+    >>> patches[-1]
+    array([[24,  0,  0],
+           [ 0,  0,  0],
+           [ 0,  0,  0]])
+    And its definition mask:
+    >>> pmasks[-1]
+    array([[ True, False, False],
+           [False, False, False],
+           [False, False, False]], dtype=bool)
+    One dimensional behaviour examples:
+    >>> arr = range(1, 5)
+    >>> len(arr)
+    4
+    >>> patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))
+    >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))
+    >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))
+    >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([1, 2, 3, 4]),))
+    
     """
     
     def __init__(self, array, psize, cval = 0):
-        r"""
-        Iterated patch-wise over the array, where the central patch is centred on the
-        image centre.
-        
-        All yielded patches will be of size ``psize``. Areas outside of the array are
-        filled with ``cval``. Besides the patch, a patch mask is returned, that denoted
-        the outside values. Additionally, the n-dimensional grid id and a slicer object
-        are returned.
-        
-        To extract the same patch from another array of the same size as ``array``, use
-        the `applyslicer` method.
-        
-        The following schematic overview explains the behaviour to expect for even and odd
-        images respectively patches. All ``O`` denote image voxels, ``|`` the patch
-        borders and ``#`` padded voxels.
-        
-        One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5:
-        
-            |O|O|O|O|O|
-            
-            |#O|OO|OO|
-            
-            |##O|OOO|O##|
-            
-            |OOOO|O###|
-            
-            |OOOOO|
-        
-        One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4: 
-        
-            |O|O|O|O|
-            
-            |#O|OO|O#|
-            
-            |OOO|O##|
-            
-            |OOOO|
-        
-        
-        Parameters
-        ----------
-        array : array_like
-            A n-dimensional array.
-        psize : int or sequence
-            The patch size. If a single integer interpreted as hyper-cube.
-        cval : number
-            Value to fill undefined positions.
-            
-        Examples
-        --------
-        >>> import numpy
-        >>> from medpy.iterators import CentredPatchIterator
-        >>> arr = numpy.arange(0, 25).reshape((5,5))
-        >>> arr
-        array([[ 0,  1,  2,  3,  4],
-               [ 5,  6,  7,  8,  9],
-               [10, 11, 12, 13, 14],
-               [15, 16, 17, 18, 19],
-               [20, 21, 22, 23, 24]])
-        >>> patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))
-        Total number of patches:
-        >>> len(patches)
-        9
-        Central patch:
-        >>> patches[4]
-        array([[ 6,  7,  8],
-               [11, 12, 13],
-               [16, 17, 18]])
-        Bottom-right corner patch:
-        >>> patches[-1]
-        array([[24,  0,  0],
-               [ 0,  0,  0],
-               [ 0,  0,  0]])
-        And its definition mask:
-        >>> pmasks[-1]
-        array([[ True, False, False],
-               [False, False, False],
-               [False, False, False]], dtype=bool)
-               
-        One dimensional behaviour examples:
-        >>> arr = range(1, 5)
-        >>> len(arr)
-        4
-        >>> patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))
-        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))
-        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))
-        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([1, 2, 3, 4]),))
-        
-        """
         # process arguments
         self.array = numpy.asarray(array)
         if is_integer(psize):
@@ -307,108 +302,103 @@ class CentredPatchIteratorOverlapping():
     r"""
     Iterated patch-wise over the array, where the central patch is centred on the
     image centre.
+    
+    All yielded patches will be of size ``psize``. Areas outside of the array are
+    filled with ``cval``. Besides the patch, a patch mask is returned, that denoted
+    the outside values. Additionally, the n-dimensional grid id and a slicer object
+    are returned.
+    
+    To extract the same patch from another array of the same size as ``array``, use
+    the `applyslicer` method.
+    
+    The following schematic overview explains the behaviour to expect for even and odd
+    images respectively patches. All ``O`` denote image voxels, ``|`` the patch
+    borders and ``#`` padded voxels.
+    
+    One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5::
+    
+        |O|O|O|O|O|
+        
+        |#O|OO|OO|
+        
+        |##O|OOO|O##|
+        
+        |OOOO|O###|
+        
+        |OOOOO|
+    
+    One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4::
+    
+        |O|O|O|O|
+        
+        |#O|OO|O#|
+        
+        |OOO|O##|
+        
+        |OOOO|
+    
+    
+    Parameters
+    ----------
+    array : array_like
+        A n-dimensional array.
+    psize : int or sequence of ints
+        The patch size. If a single integer interpreted as hyper-cube.
+    offset : None, int or sequence of ints
+        The patch offset. If None interpreted as non-overlapping patches. If a single integer interpreted as hyper-cube.
+    cval : number
+        Value to fill undefined positions.
+        
+    Examples
+    --------
+    >>> import numpy
+    >>> from medpy.iterators import CentredPatchIterator
+    >>> arr = numpy.arange(0, 25).reshape((5,5))
+    >>> arr
+    array([[ 0,  1,  2,  3,  4],
+           [ 5,  6,  7,  8,  9],
+           [10, 11, 12, 13, 14],
+           [15, 16, 17, 18, 19],
+           [20, 21, 22, 23, 24]])
+    >>> patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))
+    Total number of patches:
+    >>> len(patches)
+    9
+    Central patch:
+    >>> patches[4]
+    array([[ 6,  7,  8],
+           [11, 12, 13],
+           [16, 17, 18]])
+    Bottom-right corner patch:
+    >>> patches[-1]
+    array([[24,  0,  0],
+           [ 0,  0,  0],
+           [ 0,  0,  0]])
+    And its definition mask:
+    >>> pmasks[-1]
+    array([[ True, False, False],
+           [False, False, False],
+           [False, False, False]], dtype=bool)
+    One dimensional behaviour examples:
+    >>> arr = range(1, 5)
+    >>> len(arr)
+    4
+    >>> patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))
+    >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))
+    >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))
+    >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))
+    >>> arr, patches
+    ([1, 2, 3, 4], (array([1, 2, 3, 4]),))
+    
     """
     
     def __init__(self, array, psize, offset=None, cval = 0):
-        r"""
-        Iterated patch-wise over the array, where the central patch is centred on the
-        image centre.
-        
-        All yielded patches will be of size ``psize``. Areas outside of the array are
-        filled with ``cval``. Besides the patch, a patch mask is returned, that denoted
-        the outside values. Additionally, the n-dimensional grid id and a slicer object
-        are returned.
-        
-        To extract the same patch from another array of the same size as ``array``, use
-        the `applyslicer` method.
-        
-        The following schematic overview explains the behaviour to expect for even and odd
-        images respectively patches. All ``O`` denote image voxels, ``|`` the patch
-        borders and ``#`` padded voxels.
-        
-        One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5:
-        
-            |O|O|O|O|O|
-            
-            |#O|OO|OO|
-            
-            |##O|OOO|O##|
-            
-            |OOOO|O###|
-            
-            |OOOOO|
-        
-        One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4: 
-        
-            |O|O|O|O|
-            
-            |#O|OO|O#|
-            
-            |OOO|O##|
-            
-            |OOOO|
-        
-        
-        Parameters
-        ----------
-        array : array_like
-            A n-dimensional array.
-        psize : int or sequence of ints
-            The patch size. If a single integer interpreted as hyper-cube.
-        offset : None, int or sequence of ints
-            The patch offset. If None interpreted as non-overlapping patches. If a single integer interpreted as hyper-cube.
-        cval : number
-            Value to fill undefined positions.
-            
-        Examples
-        --------
-        >>> import numpy
-        >>> from medpy.iterators import CentredPatchIterator
-        >>> arr = numpy.arange(0, 25).reshape((5,5))
-        >>> arr
-        array([[ 0,  1,  2,  3,  4],
-               [ 5,  6,  7,  8,  9],
-               [10, 11, 12, 13, 14],
-               [15, 16, 17, 18, 19],
-               [20, 21, 22, 23, 24]])
-        >>> patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))
-        Total number of patches:
-        >>> len(patches)
-        9
-        Central patch:
-        >>> patches[4]
-        array([[ 6,  7,  8],
-               [11, 12, 13],
-               [16, 17, 18]])
-        Bottom-right corner patch:
-        >>> patches[-1]
-        array([[24,  0,  0],
-               [ 0,  0,  0],
-               [ 0,  0,  0]])
-        And its definition mask:
-        >>> pmasks[-1]
-        array([[ True, False, False],
-               [False, False, False],
-               [False, False, False]], dtype=bool)
-               
-        One dimensional behaviour examples:
-        >>> arr = range(1, 5)
-        >>> len(arr)
-        4
-        >>> patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))
-        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))
-        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))
-        >>> patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))
-        >>> arr, patches
-        ([1, 2, 3, 4], (array([1, 2, 3, 4]),))
-        
-        """
         # process arguments
         self.array = numpy.asarray(array)
         if is_integer(psize):

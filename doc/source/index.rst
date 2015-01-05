@@ -18,7 +18,18 @@ Installation
     installation/developmentmode
     installation/uninstall
     installation/graphcutsupport
-    installation/itkwrapper
+    installation/itkwrapper4.7
+    installation/itkwrapper3.2    
+
+Docker
+------
+
+.. toctree::
+    :glob:
+    :maxdepth: 1
+    
+    docker/*
+
 
 Information
 -----------

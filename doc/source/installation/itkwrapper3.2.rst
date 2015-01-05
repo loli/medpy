@@ -1,6 +1,6 @@
-==================================
-Installing ITK wrappers for Python
-==================================
+==========================================
+Installing ITK wrappers for Python (ITKv3)
+==========================================
 This is quite some work and absolutely not fail-save. Only try it, if you must (or are bored with too much time at hand).
 
 1. Installing ITK with Python binding on Ubuntu (>= 10.04)
