@@ -14,7 +14,10 @@ Iterators to extract patches from images.
 .. autosummary::
     :toctree: generated/
     
+    SlidingWindowIterator
     CentredPatchIterator
+    CentredPatchIteratorOverlapping
+    
     
 """
 
@@ -34,7 +37,7 @@ Iterators to extract patches from images.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-from .patchwise import CentredPatchIterator
+from .patchwise import CentredPatchIterator, CentredPatchIteratorOverlapping, SlidingWindowIterator
 
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]
