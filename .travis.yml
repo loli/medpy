@@ -13,3 +13,4 @@ before_install:
 install:
   # gcut version
   - "sudo pip install ."
+script: true
