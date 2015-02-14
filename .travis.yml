@@ -8,5 +8,10 @@ python:
   - "3.4"
 # command to install dependencies
 install:
+  # non gcut version
+  - "apt-get install libopenblas-base libatlas3-base libgfortran libumfpack5.4.0 build-essential"
+  - "pip install ."
+  # gcut version
+  - "apt-get install libboost-python-dev"
   - "pip install ."
 # command to run tests
