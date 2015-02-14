@@ -6,12 +6,12 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
-# command to install dependencies
+before_install:
+  - "sudo apt-get install libopenblas-base libatlas3-base libgfortran build-essential"
+  - "sudo apt-get install libumfpack5.4.0"
 install:
   # non gcut version
-  - "apt-get install libopenblas-base libatlas3-base libgfortran libumfpack5.4.0 build-essential"
-  - "pip install ."
+  - "sudo pip install ."
   # gcut version
-  - "apt-get install libboost-python-dev"
-  - "pip install ."
-# command to run tests
+  #- "apt-get install libboost-python-dev"
+  #- "pip install ."
