@@ -24,6 +24,10 @@
 import numpy
 
 # own modules
+
+# code
+
+
 def normalize(vector, cutoffp = (0, 100), model = False):
     r"""
     Returns a feature-wise normalized version of the supplied vector. Normalization is
