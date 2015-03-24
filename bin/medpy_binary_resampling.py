@@ -27,7 +27,8 @@ import argparse
 # third-party modules
 import numpy
 from scipy.ndimage.interpolation import zoom
-from scipy.ndimage.morphology import distance_transform_edt
+from scipy.ndimage.morphology import distance_transform_edt, binary_erosion
+from scipy.ndimage.measurements import label
 
 # own modules
 from medpy.core import Logger
@@ -149,7 +150,7 @@ def shape_based_slice_interpolation(img, dim, nslices):
         if 0 == numpy.count_nonzero(sl1) and 0 == numpy.count_nonzero(sl2):
             chunk = numpy.zeros(chunk_full_shape, dtype=numpy.bool)
         else:
-            chunk = shape_based_slice_insertation(sl1, sl2, dim, nslices)
+            chunk = shape_based_slice_insertation_object_wise(sl1, sl2, dim, nslices)
         if out is None:
             out = numpy.delete(chunk, -1, dim)
         else:
@@ -166,11 +167,31 @@ def shape_based_slice_interpolation(img, dim, nslices):
         out = numpy.concatenate((out, img[slicer]), dim)
         
     return out
+
+def shape_based_slice_insertation_object_wise(sl1, sl2, dim, nslices, order=3):
+    """
+    Wrapper to apply `shape_based_slice_insertation()` for each binary object
+    separately to ensure correct extrapolation behaviour.
+    """
+    out = None
+    sandwich = numpy.concatenate((sl1[numpy.newaxis], sl2[numpy.newaxis]), 0)
+    label_image, n_labels = label(sandwich)
+    for lid in range(1, n_labels + 1):
+        _sl1, _sl2 = label_image == lid
+        _out = shape_based_slice_insertation(_sl1, _sl2, dim, nslices, order=3)
+        if out is None:
+            out = _out
+        else:
+            out |= _out
+    return out
     
 def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
     """
     Insert `nslices` new slices between `sl1` and `sl2` along dimension `dim` using shape
     based binary interpolation.
+    
+    Extrapolation is handled adding `nslices`/2 step-wise eroded copies of the last slice
+    in each direction.
     
     Parameters
     ----------
@@ -193,6 +214,27 @@ def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
     """
     sl1 = sl1.astype(numpy.bool)
     sl2 = sl2.astype(numpy.bool)
+    
+    # extrapolation through erosion
+    if 0 == numpy.count_nonzero(sl1):
+        slices = [sl1]
+        for _ in range(nslices / 2):
+            slices.append(numpy.zeros_like(sl1))
+        for i in range(1, nslices / 2 + nslices % 2 + 1)[::-1]:
+            slices.append(binary_erosion(sl2, iterations=i))
+        slices.append(sl2)
+        return numpy.asarray([sl.T for sl in slices]).T
+    elif 0 ==numpy.count_nonzero(sl2):
+        slices = [sl1]
+        for i in range(1, nslices / 2 + 1):
+            slices.append(binary_erosion(sl1, iterations=i))
+        for _ in range(0, nslices / 2 + nslices % 2):
+            slices.append(numpy.zeros_like(sl2))
+        slices.append(sl2)
+        return numpy.asarray([sl.T for sl in slices]).T
+    
+    # interpolation shape based 
+    # note: distance_transform_edt shows strange behaviour for ones-arrays
     dt1 = distance_transform_edt(~sl1) - distance_transform_edt(sl1)
     dt2 = distance_transform_edt(~sl2) - distance_transform_edt(sl2)
     
@@ -202,6 +244,7 @@ def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
     zoom_factors = [1] * dt1.ndim
     zoom_factors = zoom_factors[:dim] + [(nslices + 2)/2.] + zoom_factors[dim:]
     out = zoom(out, zoom_factors, order=order)
+    
     return out <= 0
     
 def getArguments(parser):
