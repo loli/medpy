@@ -11,8 +11,9 @@ Created on Aug 25, 2014
 
 
 # build-in modules
-import pylab
+
 from scipy.ndimage.measurements import label, histogram
+
 from scipy.ndimage.morphology import binary_dilation
 from copy import deepcopy
 
@@ -38,26 +39,26 @@ def close_gaps(labeled_cen, av, pixel_spacing, vesselness_image, ori_cen, zwisch
         vesselness_image: vesselness of the mra image
         ori_cen: original centerline, die moegliche Weiterfuehrungsaeste beinhaltet 
     '''
+    ##################################################
+    counter=0
+    ##################################################
     
     #Ermitteln aller Endpunkte der Centerline
     all_endboints = numpy.nonzero(1 == count_neighbor(labeled_cen ,numpy.ones((3,3,3))))
     
     return_image = numpy.zeros(labeled_cen.shape, numpy.bool) 
-    image_gapclosing_points = numpy.zeros(labeled_cen.shape, numpy.bool) 
-    
+        
     return_cone_image = numpy.zeros(labeled_cen.shape, numpy.bool) 
-    
     
     #Ueber alle Endpunkte iterieren 
     for tmp in range( numpy.size(all_endboints[0]) ):
         
         end_point = (all_endboints[0][tmp],all_endboints[1][tmp],all_endboints[2][tmp]) #aktuell zu bearbeitender Endpunkt
-        
+        end_point_speicher = end_point
         if zwischenspeicher[end_point[0]][end_point[1]][end_point[2]] == 1:
    
             return_image = return_image | ori_cen
             continue
-        
         
         list_of_branchpoints = last_n_points_of_branch(labeled_cen , end_point, 5)   #die letzten 5 Punkte des Aterienastes (maximal 5 Punkte)
     
@@ -68,7 +69,12 @@ def close_gaps(labeled_cen, av, pixel_spacing, vesselness_image, ori_cen, zwisch
         
         cone_image = numpy.zeros(labeled_cen.shape, numpy.bool) 
         end_point = numpy.asarray(end_point)
-       
+        
+        #Berechnung des Vesselschwellwertes
+        
+        schwellwert = return_value(list_of_branchpoints, vesselness_image)
+        schwellwert = 0.3*numpy.mean(schwellwert)
+        
         #Erzeugung der Box um den letzten Arterienpunkt     
         for i in range(max(0, end_point[0]-av), min(labeled_cen.shape[0] - 1, end_point[0]+av+1)):
             for j in range(max(0, end_point[1]-av), min(labeled_cen.shape[1] - 1, end_point[1]+av+1)):
@@ -89,56 +95,112 @@ def close_gaps(labeled_cen, av, pixel_spacing, vesselness_image, ori_cen, zwisch
         zwischenspeicher[end_point[0]][end_point[1]][end_point[2]] = 1
         #Suche nach Fortsetzungspunkten fuer moegliche Lueckenfuellung
         if numpy.max(cone_image & ori_cen):
+
             next_points = numpy.nonzero(cone_image & ori_cen)
-            nearest_point = numpy.asarray((next_points[0][0],next_points[1][0],next_points[2][0]))
-            
-            
+
             alle_punkte = []
             
             #suche den dichtesten Punkt
-            for index in range(numpy.size(next_points[0])):
-                test_point = numpy.asarray((next_points[0][index],next_points[1][index],next_points[2][index]))
+            for index1 in range(numpy.size(next_points[0])):
+                alle_punkte.append((next_points[0][index1],next_points[1][index1],next_points[2][index1]))
+            alle_punkte2=alle_punkte
+            #FUNKTION SCHREIBEN solange wie punkte in nearest_point wird gesucht, jedoch nur solange, wie image_gapclosing_points ueberall null ist
+            for index in alle_punkte2:
+                end_point = end_point_speicher
+                end_point = numpy.asarray(end_point)
+                if 0 == len(alle_punkte2):
+                    image_gapclosing_points = numpy.zeros(labeled_cen.shape, numpy.bool)
+                    break                
+                nearest_point = nearest_neigbor(end_point, alle_punkte2,pixel_spacing)
                 
-                alle_punkte.append((next_points[0][index],next_points[1][index],next_points[2][index]))
-                
-                if dist(end_point,nearest_point,pixel_spacing) > dist(end_point,test_point,pixel_spacing):
-                    nearest_point = test_point
             
             #while schleife die solange laeuft bis einer der next_points erreicht wird und entlang der vesselness in eine bestimmte richtung geht
             #diese richtung wird aus dem zuletzt gesetzten punkt und dem Punkt (nearest_point) ermittelt
-
-            while not (end_point.tolist() in alle_punkte) and not check_ob_nachbar(end_point,nearest_point) :
-          
-                #Berechnung des naechsten Punktes
+                image_gapclosing_points = numpy.zeros(labeled_cen.shape, numpy.bool) 
                 
-                vesselness = 0
-                direction = calc_direction(end_point,nearest_point)
-                
-                for x in range(-1,2):
-                    for y in range(-1,2):
-                        for z in range(-1,2):
-                            if not(0==x and 0==y and 0==z):
-                                
-                                next_possible_point = numpy.asarray((end_point[0]+x, end_point[1]+y, end_point[2]+z))
-                                if check_inside(vesselness_image, next_possible_point):
-                                    if vesselness <= vesselness_image[next_possible_point[0]][next_possible_point[1]][next_possible_point[2]]\
-                                    and 60 >= calc_angle( direction, calc_direction(end_point, next_possible_point) ):
-                                        
-                                        vesselness = vesselness_image[next_possible_point[0]][next_possible_point[1]][next_possible_point[2]]
-                                        set_point = next_possible_point
-         
-                #diese Zeile muss so sein... =) 
-                end_point = set_point                    
-               
-                #punkt setzten        
+                while (not check_nachbar_list(end_point, alle_punkte)) and (not check_ob_nachbar(end_point,nearest_point)) :
+              
+                    #Berechnung des naechsten Punktes
+                    
+                    vesselness = 0
+                    direction = calc_direction(end_point,nearest_point)
+                    
+                    for x in range(-1,2):
+                        for y in range(-1,2):
+                            for z in range(-1,2):
+                                if not(0==x and 0==y and 0==z):
+                                    
+                                    next_possible_point = numpy.asarray((end_point[0]+x, end_point[1]+y, end_point[2]+z))
+                                    if check_inside(vesselness_image, next_possible_point):
+                                        if vesselness <= vesselness_image[next_possible_point[0]][next_possible_point[1]][next_possible_point[2]]:
+                                            
+                                            #print direction
+                                            #print calc_direction(end_point, next_possible_point)
+                                            
+                                            if (direction == calc_direction(end_point, next_possible_point)).all() \
+                                            or (direction == calc_direction(next_possible_point,end_point)).all() :
+                                                vesselness = vesselness_image[next_possible_point[0]][next_possible_point[1]][next_possible_point[2]]
+                                                set_point = next_possible_point
+                                            elif 60 >= calc_angle( direction, calc_direction(end_point, next_possible_point) ):
+                                                vesselness = vesselness_image[next_possible_point[0]][next_possible_point[1]][next_possible_point[2]]
+                                                set_point = next_possible_point
 
-                image_gapclosing_points[end_point[0]][end_point[1]][end_point[2]] = True
-                return_image = return_image | image_gapclosing_points
+             
+                    #diese Zeile muss so sein... =) 
+                    end_point = set_point                    
+                   
+                    #punkt setzten        
+    
+                    image_gapclosing_points[end_point[0]][end_point[1]][end_point[2]] = True
+                
+                #schwellwert_image = schwellwert_image | image_gapclosing_points
             
+            #Vesselschwellwertkontrolle
+                if image_gapclosing_points.max():#Absicherung, dass was in image_gapclosing_points auf TRUE ist
+                    schwellwert_points = numpy.nonzero(image_gapclosing_points)
+                    min_schwellwert = numpy.min(vesselness_image[schwellwert_points])
+                
+                    if min_schwellwert < schwellwert:
+                        image_gapclosing_points = numpy.zeros(labeled_cen.shape, numpy.bool)
+                        alle_punkte2.remove(nearest_point)
+                        
+                        #print 'zu kleiner Schwellwert: '
+                        #print schwellwert_points
+                        continue
+                    else:
+                        #print 'es wird gefuellt: '
+                        zwischenspeicher[nearest_point[0]][nearest_point[1]][nearest_point[2]] = 1
+                        #print schwellwert_points
+                        
+                        ##################################################
+                        counter = counter+1
+                        ##################################################
+                        
+                        break
+                else:
+                    image_gapclosing_points = numpy.zeros(labeled_cen.shape, numpy.bool)
+                    alle_punkte2.remove(nearest_point)
+                    #print 'Anderes esle'
+                    continue
+            return_image = return_image | image_gapclosing_points
             return_image = return_image | ori_cen
             
-    return return_image, zwischenspeicher
+    return return_image, zwischenspeicher, counter
 
+def check_nachbar_list(punkt, liste):
+    for i in liste:
+        if check_ob_nachbar(punkt, i):
+            return True
+    return False
+
+def nearest_neigbor(end_point,alle_punkte,pixel_spacing):
+    nearest_point = alle_punkte[0]
+    for index in alle_punkte:        
+        if dist(end_point,nearest_point,pixel_spacing) > dist(end_point,index,pixel_spacing):
+            nearest_point = index
+    return nearest_point
+    
+    
 def check_inside(image, point):
     #checks if point is in image
     for i in range(3):
@@ -151,10 +213,10 @@ def component_size_label(image, structure):
     labeled_array, num_features = label(image,structure)
     temp = labeled_array.copy()
     counter=0
-    print num_features
+    #print num_features
     for i in range(1,num_features+1):
         labeled_array[ numpy.nonzero( temp == i )] = ( numpy.count_nonzero( temp == i ))
-        print counter
+        #print counter
         counter=counter+1
 
     return labeled_array
@@ -181,7 +243,7 @@ def branch_extension_initial(thin, vessel, anzahl_verlaengerung):
                 liste_branchend = numpy.asarray(liste_branchend)
     return thin          
       
-def branch_extension( thin, vessel, initiale_richtung, liste_branchend):
+def branch_extension( thin, vessel, brainmask, initiale_richtung, liste_branchend):
     
     last_point = liste_branchend[0]
     vorgaenger = liste_branchend[1]
@@ -193,10 +255,12 @@ def branch_extension( thin, vessel, initiale_richtung, liste_branchend):
                 if not(i==0 and j==0 and k==0):
                     potential_punkt = (last_point[0]+i, last_point[1]+j, last_point[2]+k)
                     vector_last_point_and_potential_punkt = calc_direction(last_point, potential_punkt)
-                
+                    
+                    #if not brainmask[potential_punkt[0]][potential_punkt[1]][potential_punkt[2]]:
+                    #    continue
                     if value <= vessel[potential_punkt[0]][potential_punkt[1]][potential_punkt[2]]\
                     and not check_ob_nachbar(potential_punkt,vorgaenger)\
-                    and 61 >= calc_angle(initiale_richtung, vector_last_point_and_potential_punkt):
+                    and 60 >= calc_angle(initiale_richtung, vector_last_point_and_potential_punkt):
                         if number_of_neighbors(thin,potential_punkt,1) < 1 :
                             
                             value = vessel[last_point[0]+i][last_point[1]+j][last_point[2]+k]
@@ -250,169 +314,311 @@ def check_ob_nachbar(point1, point2):
     else:
         return True
    
-def gradient_branch(thin, value, number_of_points, seg, brainmask, voxelspacing, occlusionpoint=0):
+def gradient_branch(thin, value, number_of_points, seg, brainmask, voxelspacing, out2, occlusionpoint=0):
     endpoints_of_branches = numpy.nonzero(1 == count_neighbor(thin ,numpy.ones((3,3,3)))) #alle Endpunkte ermitteln
-
-    alle_vesselness_aufsummiert = 0
-    gesamtanzahl_der_punkte = 0
+    
+    f = open(str(out2)+'/Okklusion.txt','w')
+    f.write(str(out2))
+    f.write('\n')
+    f.write('\n')
+    f.write('Anzahl vorher: {}\n'.format(len(endpoints_of_branches[0])))
+    f.write('\n')
+    print 'Anzahl vorher: {}'.format(len(endpoints_of_branches[0]))
+    
+    liste_branch_values_innen = []
+    liste_branch_values_aussen = []
+    all_values_innen = []
     
     
+    return_thin_for_extension = numpy.zeros(thin.shape)
     occlusion_image = numpy.zeros(thin.shape)
-    speicher=[]
     
-    #calculating skin of mask
-    maskskin=count_neighbor(brainmask, numpy.ones((3,3,3)))
-    maskskin[maskskin>=26]=0
-    maskskin[maskskin>=1]=1
+    all_max_gra=[]
+    all_max_gra_with_points = []
     
+    
+    anzahl_gradient=0
+    anzahl_median=0
+    anzahl_mean=0
+    anzahl_durchmesser=0
+    
+    lange=len(endpoints_of_branches[0])
+    gradient_array = numpy.zeros(lange)
+    median_array = numpy.zeros(lange)
+    mean_array = numpy.zeros(lange)
+    durchmesser_array = numpy.zeros(lange)
+    
+    
+    
+    #for tmp1 in range(3):
     for tmp1 in range(numpy.size(endpoints_of_branches[0])):
-
-        point = (endpoints_of_branches[0][tmp1],endpoints_of_branches[1][tmp1],endpoints_of_branches[2][tmp1])
+        #print tmp1
         
-        branch_points = last_n_points_of_branch(thin , point, number_of_points) #alle Astpunkte vom Ende bis maximale Anzahl oder bis inklusive Kreuzpunkt
-        branch_values = return_value(branch_points,value)
-        
-        gra = numpy.diff(branch_values)
-        speicher.append(max(gra))
+        tmp_point = (endpoints_of_branches[0][tmp1],endpoints_of_branches[1][tmp1],endpoints_of_branches[2][tmp1])
 
-       
         
-        if occlusionpoint in branch_points.tolist():
-            print 'Occlusionpoints'
-            print branch_values
-       
-       
-        if not check_border(branch_points[0], thin): #wenn am Rand des Bildes die Punkte liegen, dann soll nicht weiter gerechnet werden
-            continue
+        
+        #Suche der letzten "number_of_points" inneren Astpunkte
+        bild_armpunkt = numpy.zeros(thin.shape)
+        vergleichs_bild = numpy.zeros(thin.shape)
+        bild_armpunkt[tmp_point[0]][tmp_point[1]][tmp_point[2]]=1
 
-        alle_vesselness_aufsummiert += numpy.sum(branch_values)
-        gesamtanzahl_der_punkte += len(branch_values)
-        #print numpy.sum(branch_values)
-    durchschnittliche_vesselness = alle_vesselness_aufsummiert/gesamtanzahl_der_punkte #Problem?: hier werden auch die Vesselwerte ausserhalb der Arterie beruecksichtigt
-    
-    #print ''
-    schwellwert=numpy.mean(speicher)
-    print 'meangra: {}'.format(numpy.mean(speicher))
-    print 'Anzahl vorher: {}'.format(numpy.size(endpoints_of_branches[0]))
-    #print 'Durchschnittliche Vesselness aller Endbranches ohne Randkandidaten {}'.format( durchschnittliche_vesselness )
-    #print ''
-    ######################################
-    a=0
-    b=0
-    c=0
+        while (number_of_points > numpy.count_nonzero(bild_armpunkt) and not (vergleichs_bild == bild_armpunkt).all()):
+            vergleichs_bild = bild_armpunkt
+            bild_armpunkt = binary_dilation(bild_armpunkt, structure=numpy.ones((3,3,3)), iterations=1, mask=thin)
+
+        #print 'Anzahl der inneren Astpunkte: {}'.format(numpy.count_nonzero(bild_armpunkt))
+        
+        branch_values_innen = (value[numpy.nonzero(bild_armpunkt)] )
+        liste_branch_values_innen.append(tmp_point)
+        liste_branch_values_innen.append(branch_values_innen) #Alle Vesselwerte mit zugehoerigem Punkt davor
+        all_values_innen.extend(branch_values_innen) #Alle Vesselwerte ueber alle inneren Voxelpunkte
+        
+        #Verlaengerung des Arms um number_of_points
+        liste_branchend = last_n_points_of_branch(thin , tmp_point, number_of_points) #alle Astpunkte vom Ende bis maximale Anzahl oder bis inklusive Kreuzpunkt
+
+        
+        laenge_vorher = len(liste_branchend) #Laenge des Armes vor der Extention
+        thin_for_extension = deepcopy(thin)
+
+            
+        if 2 <= len(liste_branchend):
+            initiale_richtung = calc_direction(liste_branchend[1], liste_branchend[0]) 
+        
+            for i in range(0,2*number_of_points):
+       
+
+                if not check_border(liste_branchend[0], thin):
+                    #print 'check border'
+                    #print 'Randpunkt: {}'.format(liste_branchend[0])
+                    break
+                
+                
+                next_point = branch_extension(thin_for_extension, value,brainmask, initiale_richtung,liste_branchend)
+                if next_point==0:
+                    break
+                
+                thin_for_extension[next_point[0]][next_point[1]][next_point[2]] = 1
+                liste_branchend = liste_branchend.tolist()
+                liste_branchend.insert(0, next_point)
+                liste_branchend = numpy.asarray(liste_branchend)
+        return_thin_for_extension = return_thin_for_extension + thin_for_extension
+        zwischenspeicher=[]
+        if 0 < len(liste_branchend)-laenge_vorher: #wenn es eine Verlaengerung gab, sonst wenn keine Verlaengerung moeglich, dann keine weitere Betrachtung
+            liste_branch_values_aussen.append(tmp_point)
+            branch_values = return_value(liste_branchend,value)
+            for index1 in range (0,len(liste_branchend)-laenge_vorher):
+                zwischenspeicher.append(branch_values[index1])
+            liste_branch_values_aussen.append(zwischenspeicher)
+            
+            
+
+            gra = numpy.diff(branch_values)
+            all_max_gra.append(max(gra))
+        
+            all_max_gra_with_points.append(tmp_point)
+            all_max_gra_with_points.append([max(gra),-1,-1])
+
+        
+        
     d=0
-    m=0
-    high_ves=0
 
-    liste_mean_values=[]    
-
-    for tmp2 in range(numpy.size(endpoints_of_branches[0])):
-
-        point = (endpoints_of_branches[0][tmp2],endpoints_of_branches[1][tmp2],endpoints_of_branches[2][tmp2])
+    mean_all_values_innen = numpy.mean(all_values_innen)   
+    mean_gra = numpy.mean(all_max_gra)
     
-        branch_points = last_n_points_of_branch(thin , point, number_of_points) #alle Astpunkte vom Ende bis maximale Anzahl oder bis inklusive Kreuzpunkt
-        branch_values = return_value(branch_points,value)
-        
-      
-        liste_mean_values.append(numpy.mean(branch_values))
-        
-        
-        #check if point in mask
-        if not check_border(branch_points[0], thin):
-            continue
-        
-        
-        if not check_inside_mask(branch_points,brainmask):
-            continue
-        
-        
-        distance = 2
-        if not check_distance_mask(branch_points[0], maskskin, voxelspacing, distance):
-            continue
-        
+    
+    
+    #for tmp2 in range(3):
+    for tmp2 in range(numpy.size(endpoints_of_branches[0])):
         
 
+        tmp_point = (endpoints_of_branches[0][tmp2],endpoints_of_branches[1][tmp2],endpoints_of_branches[2][tmp2])
         
-        #Gradientbestimmung
-        if len(branch_values) <= 11:
-            print ''
-            print len(branch_values)
-            print branch_points[0]
-            print ''
-            continue        
         
-        insidevalues=(branch_values[-1]+branch_values[-2]+branch_values[-3]+branch_values[-4]+branch_values[-5]+branch_values[-6])/6
-        outsidevalues=(branch_values[0]+branch_values[1])/2
-        differ = insidevalues - outsidevalues
+        if 1 == liste_branch_values_innen.count(tmp_point):
+            point_index1 = liste_branch_values_innen.index(tmp_point)
+            insidevalues= liste_branch_values_innen[point_index1 + 1]
+            
+        else:
+            continue
+        
+        if 1 == liste_branch_values_aussen.count(tmp_point):
+            point_index2 = liste_branch_values_aussen.index(tmp_point)
+            outsidevalues = liste_branch_values_aussen[point_index2 + 1]
+            
+        else:
+            #print 'Fehler aussen: {}'.format(tmp_point)
+            #print liste_branch_values_aussen.count(tmp_point)
+            continue
+        
 
+        if 1 == all_max_gra_with_points.count(tmp_point):
+            point_index3 = all_max_gra_with_points.index(tmp_point)
+            tmp_max_gra = all_max_gra_with_points[point_index3 + 1]
+            tmp_max_gra = tmp_max_gra[0]
+             
+        else:
+            continue
         
-        gra = numpy.diff(branch_values)
+        #############################################################
+        if numpy.median(outsidevalues) <= numpy.median(insidevalues)*0.3:
+            anzahl_median=anzahl_median+1
+            median_array[tmp2]=1
+            
+        if mean_all_values_innen <= numpy.mean(insidevalues):      
+            anzahl_mean=anzahl_mean+1
+            mean_array[tmp2]=1
+            
+        if tmp_max_gra >= mean_gra:
+            anzahl_gradient=anzahl_gradient+1
+            gradient_array[tmp2]=1
+            
+        branch_points = last_n_points_of_branch(thin , tmp_point, number_of_points)
+        zaehler = 0
+        cou=0.0
+        
+        if len(branch_points)>=2:
+            for index5 in range(0,len(branch_points)-1):
+                zaehler = zaehler + checkrechtwinkel(branch_points[index5+1],branch_points[index5], seg,2)     #   continue
+                cou=cou+1.0
+        else:
+            print 'len low'       
+        if cou > 0.0:
+            zaehler=zaehler/cou
+        else:
+            print 'counter low'
+        if zaehler < 4.0:
+            anzahl_durchmesser=anzahl_durchmesser+1
+            durchmesser_array[tmp2]=1
+            
+        if numpy.median(outsidevalues) <= numpy.median(insidevalues)*0.3 \
+            and mean_all_values_innen <= numpy.mean(insidevalues) \
+            and tmp_max_gra >= mean_gra:
+            
 
-        #gra=numpy.delete(gra,-1)
-        #gra=numpy.delete(gra,-1)
-        
-        if outsidevalues <= insidevalues*0.3 \
-            and durchschnittliche_vesselness*2/3.<= numpy.mean(branch_values) \
-            and max(gra)>=3/2.*schwellwert \
-            and check_durchmesser(seg,branch_points[-1]):
+            if zaehler < 4.0:
+                continue
+            #and mean_all_values_innen*2/3.<= numpy.mean(insidevalues) 
+            #and check_durchmesser(seg,branch_points[-1]):
             #and min(gra)>-15:
-            arg=branch_points[0]
-            occlusion_image[arg[0]-3:arg[0]+4,arg[1]-3:arg[1]+4,arg[2]-3:arg[2]+4]=1
+        
+
             
-            if occlusionpoint in branch_points.tolist():
-                print '#######'
-                print 'Occlusion'
-                print '#######'
+
+            #else: 
             
-            print branch_points[0]
-            print branch_values
+            #    continue
+            
+           
+            #MARKIERUNG DER OKKLUSION
+            tempocc = numpy.zeros(occlusion_image.shape)
+            for bpoin in last_n_points_of_branch(thin , tmp_point, 20):
+                tempocc[bpoin[0]][bpoin[1]][bpoin[2]]=1
+            tempocc = binary_dilation(tempocc, iterations=5, mask=seg)
+            
+            occlusion_image[tempocc >= 1] = 1
+
+            #if occlusionpoint in branch_points.tolist():
+            #    print '#######'
+            #    print 'Occlusion'
+            #    print '#######'
+                
+            
+            
+            print 'Okklusion bei: {}'.format(tmp_point)
+                        
+            print 'numpy.median(outsidevalues): {}'.format(numpy.median(outsidevalues))
+            print 'numpy.median(insidevalues)*0.2: {}'.format(numpy.median(insidevalues)*0.2)
+            
+            print 'mean_all_values_innen: {}'.format(mean_all_values_innen)
+            print 'numpy.mean(insidevalues): {}'.format(numpy.mean(insidevalues))
+            
+            print 'tmp_max_gra: {}'.format(tmp_max_gra)
+            print '1.0*mean_gra: {}'.format(mean_gra)
+            
+            
+            print 'zaehler: {}'.format(zaehler)
+            print ''
+            
+            f.write('outsidevalues: {}\n'.format(outsidevalues))
+            f.write('insidevalues: {}\n'.format(insidevalues))
+            
+            
+            f.write('Okklusion bei: {}\n'.format(tmp_point))
+            f.write('numpy.median(outsidevalues): {}\n'.format(numpy.median(outsidevalues)))
+            f.write('numpy.median(insidevalues)*0.3: {}\n'.format(numpy.median(insidevalues)*0.3))
+            f.write('mean_all_values_innen: {}\n'.format(mean_all_values_innen))
+            f.write('numpy.mean(insidevalues): {}\n'.format(numpy.mean(insidevalues)))
+            f.write('tmp_max_gra: {}\n'.format(tmp_max_gra))
+            f.write('mean_gra: {}\n'.format(mean_gra))
+            f.write('Nachbarschaftsdurchschnitt: {}\n'.format(zaehler))
+            f.write(' \n')
+            
             
             d=d+1
-    
+        else:
+            kgfd=0
+            #print 'sonst {} Points: {}'.format(stage, branch_points[0])
     
     print 'Anzahl Okklusionskandidaten: {}'.format(d)
     print''
-    return occlusion_image
-    #print punktr
-    #print high_ves
+    f.write('Anzahl Okklusionskandidaten: {}\n'.format(d))
+    print 'Anzahl vorher: {}\n'.format(len(endpoints_of_branches[0]))
+    print 'Anzahl der Okklusionen durch Gradienten: {}\n'.format(anzahl_gradient)
+    print 'Anzahl der Okklusionen durch Median: {}\n'.format(anzahl_median)
+    print 'Anzahl der Okklusionen durch Mean: {}\n'.format(anzahl_mean)
+    print 'Anzahl der Geloeschten durch Durchmesser: {}\n'.format(anzahl_durchmesser)
     
-    #liste_branches=[]
+    f.write('Anzahl vorher: {}\n'.format(len(endpoints_of_branches[0])))
+    f.write('Anzahl der Okklusionen durch Gradienten: {}\n'.format(anzahl_gradient))
+    f.write('Anzahl der Okklusionen durch Median: {}\n'.format(anzahl_median))
+    f.write('Anzahl der Okklusionen durch Mean: {}\n'.format(anzahl_mean))
+    f.write('Anzahl der Geloeschten durch Durchmesser: {}\n'.format(anzahl_durchmesser))
+    
+    f.close()
+    
+    numpy.save(str(out2)+'/01_gradient.npy', gradient_array)
+    numpy.save(str(out2)+'/02_median.npy', median_array)
+    numpy.save(str(out2)+'/03_mean.npy', mean_array)
+    numpy.save(str(out2)+'/04_durchmesser.npy', durchmesser_array)
+    
+    return occlusion_image,return_thin_for_extension
      
-
-        ############
-        
-    '''
-    c=0
-    for tmp in range(0,numpy.size(endpoints_of_branches[0])):
-        point = (endpoints_of_branches[0][tmp],endpoints_of_branches[1][tmp],endpoints_of_branches[2][tmp])
-        branch_points = last_n_points_of_branch(thin , point, number_of_points)
-        branch_values = return_value(branch_points,value)
-
-        if (126, 167, 74) in branch_points:
-            print 'Occlusionpoints'
-            print return_value(branch_points,value)
-            print numpy.mean(return_value(branch_points,value))
- 
-        #Gradientbestimmung
-
-        
-        if check_border(branch_points[0], thin):
-            
-            if numpy.mean(branch_values) >= 0.7*numpy.mean(liste_mean_values2):
-                
-                branch_values = numpy.asarray(branch_values)
-                gra = numpy.diff(branch_values)
-                #print 'Gradient: {}'.format(gra)
-                #print 'Points: {}'.format(branch_points)
-                c=c+1
-
-    print c
-       '''
+       
 def check_durchmesser(seg, point):
-    if 26 <= number_of_neighbors(seg,point,1): #bei 26 werden in den ersten Datensaetzen die Okklusionen nicht erkannt
+    if 19 <= number_of_neighbors(seg,point,1): #bei 26 werden in den ersten Datensaetzen die Okklusionen nicht erkannt
         return True
     else:    
         return False
+
+def checkrechtwinkel(point1,point2,seg,iterations):
+    x = numpy.array(point1)
+    y = numpy.array(point2)
+    
+    vektor = y-x
+
+    vektoren=[]
+    if not (numpy.asarray(numpy.cross(vektor, [1,0,0])) == [0, 0, 0]).all():
+        vektoren.append(numpy.cross(vektor, [1,0,0]))
+        vektoren.append(numpy.cross([1,0,0],vektor))
+    elif not (numpy.asarray(numpy.cross(vektor, [0,1,0])) == [0, 0, 0]).all():
+        vektoren.append(numpy.cross(vektor, [0,1,0]))
+        vektoren.append(numpy.cross([0,1,0],vektor))
+    else:
+        vektoren.append(numpy.cross(vektor, [0,0,1]))
+        vektoren.append(numpy.cross([0,0,1],vektor))
+    
+    vektoren.append(numpy.cross(vektor, vektoren[0]))
+    vektoren.append(numpy.cross(vektoren[0],vektor))
+    
+    counter=0
+    for itera in range(1,iterations+1):
+        for i in vektoren:
+            point=point1+(i*itera)
+            if check_inside(seg, point) and seg[point[0]][point[1]][point[2]]:
+                counter+=1
+
+    return counter
     
 def check_inside_mask(branchpoints, mask):
     'Returns False, if points of branch are not inside mask'
@@ -446,8 +652,8 @@ def check_distance_mask(branch_point, brainmask, voxelspacing, distance):
     
     else:
         #Zu dicht am Rand, kein Okklusionskadidat
-        print 'Zu dicht am Maskenrand'
-        print branch_point
+        #print 'Zu dicht am Maskenrand'
+        #print branch_point
         return False
     '''
     image = numpy.zeros(brainmask.shape)
@@ -502,6 +708,7 @@ def largest_n_components(cen, n):
 
 def last_n_points_of_branch(thinned_image,branch_endpoint,length):
     'returns a list with the last points of a branch (maximal as long as length, inclusive intersection point), needed input: thinned image and last branchpoint' 
+    
     pointlist=[branch_endpoint]
     tmp_point=branch_endpoint
     
@@ -540,11 +747,15 @@ def return_value(listed_points, value_image):
     value_list = []
     for i in range(0,listed_points.__len__()):
         point = listed_points[i]
-        value_list.append( pylab.round_( value_image[ point[0] ][ point[1] ][ point[2] ] ) )
+        value_list.append(( value_image[ point[0] ][ point[1] ][ point[2] ] ) )
     return value_list        
 
 def remove_short_branch_vesselness(thinned_image, vesselness, branches_shorter_than):
     #ueberpruefung der centerline auf datentyp
+    
+    unter4=0
+    unter10=0
+    
     if thinned_image.max != 1 or thinned_image.dtype == numpy.bool: 
         thinned_image = numpy.asarray(thinned_image, dtype=numpy.bool)
         thinned_image = numpy.asarray(thinned_image, dtype=numpy.int)
@@ -561,12 +772,14 @@ def remove_short_branch_vesselness(thinned_image, vesselness, branches_shorter_t
     for iterate_branches in range(0,numpy.size(kreuzungspunkte,1)): 
         temp_kreuzungspunkt = ( kreuzungspunkte[0][iterate_branches] , kreuzungspunkte[1][iterate_branches] , kreuzungspunkte[2][iterate_branches])
         #Liste die die einzelnen, abzwigenden Arme beinhaltet
-        gelistete_seitenarme = return_short_branches( thinned_image , image_neighbor , temp_kreuzungspunkt , 4*branches_shorter_than )
+        gelistete_seitenarme = return_short_branches( thinned_image , image_neighbor , temp_kreuzungspunkt , 10 )
 
         #ueber die moeglichen Seitenarme iterieren
+
         for temp_seitenarme in range(0, len( gelistete_seitenarme ) ):
             #wenn die Minimallaenge unterschritten wird, dann wird auf jeden fall geloescht
             if len( gelistete_seitenarme [ temp_seitenarme ]) <= branches_shorter_than:
+                unter4=unter4+1
                 for number_of_branchpoints in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
                     thinned_image2[ gelistete_seitenarme [ temp_seitenarme ][ number_of_branchpoints ] ] = 0
             #sonst ueberpruefe die Vesselness vom Seitenarme und den anderen Armen, die vom gleichen Kreuzungspunkt ausgehen
@@ -593,16 +806,15 @@ def remove_short_branch_vesselness(thinned_image, vesselness, branches_shorter_t
                 if not 0 == numpy.count_nonzero(values):
                     vesselvalue2 = sum(sum(sum(values)))/numpy.count_nonzero(values)
 
-                if ((not vesselvalue2 == 0) and vesselvalue2*(1/2.) >= vesselvalue1):
+                if ((not vesselvalue2 == 0) and (vesselvalue2*(0.3) >= vesselvalue1)):
                     #print 'ES WIRD GELOESCHTTTTTT'
                     #print list_branch_points [ number_of_branches ]
-                    if (296,168,42) in gelistete_seitenarme [ temp_seitenarme ]:
-                        print 'es wird geloescht'
-                    print 'es wird geloescht'
+                    unter10=unter10+1
+                    
                     for number_of_branchpoints in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
                         thinned_image2[ gelistete_seitenarme [ temp_seitenarme ][ number_of_branchpoints ] ] = 0
                 
-    return thinned_image2
+    return thinned_image2, unter4, unter10
 
 
 def remove_short_branch(thinned_image, branches_shorter_than):

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 """
-
+Takes a brain TOF-MRA and finds vessel-occlusion by using a vesselness-image and a skeleton of the vessel-tree.
 """
 
 # build-in modules
@@ -25,7 +25,7 @@ from medpy.utilities.argparseu import sequenceOfIntegersGe
 from medpy.occlusion.filters import *
 
 # information
-__author__ = "Albrecht Kleinfeld"
+__author__ = "Albrecht Kleinfeld and Oskar Maier"
 __version__ = "r0.1.0, 2014-08-25"
 __email__ = "albrecht.kleinfeld@gmx.de"
 __status__ = ""
@@ -55,7 +55,7 @@ def main():
     '''
     if args.dtype:
         mra, mra_h = load(args.mra)
-        mra = numpy.asarray(mra, dtype = numpy.uint16)
+        mra = numpy.asarray(mra, dtype = numpy.int16)
         save(mra, args.out, mra_h, args.force)
         sys.exit()
     
@@ -122,17 +122,39 @@ def main():
         vesselness, vesselness_h = load(args.ves)
         
         vorher = numpy.zeros(thin.shape)
+        
+        #############Args.out2 hinzufuegen in die Shell
+        f = open(str(args.out2)+'/RemoveBranches.txt','w')
+        f.write(str(args.out2))
+        f.write('\n')
+        f.write('\n')
+        ##########################
+        
         counter = 0
         
         while not (vorher==thin).all():
             counter = counter + 1
-            print ' '
+            #print ' '
             print 'Counter WHILE-SCHLEIFE - Remove Algorithm: {}'.format(counter)
-            
+
             
             vorher = deepcopy(thin)
-            thin = remove_short_branch_vesselness(thin, vesselness, rem)
+            thin, unter4, unter10= remove_short_branch_vesselness(thin, vesselness, rem)
+            
+            ####################################
+            f.write('Counter WHILE-SCHLEIFE : {}\n'.format(counter))
+            f.write('Unter 4 geloescht : {}\n'.format(unter4))
+            f.write('Unter 10 Schwellwert geloescht : {}\n'.format(unter10))
+            f.write('\n')
+            ###########################
 
+            if (unter4==0) and (unter10==0):
+                break
+            
+        ######################################################
+        f.close()
+        ######################################################
+            
         thin = numpy.asarray(thin, dtype=numpy.bool)
    
         save(thin, args.out, thin_h, args.force)
@@ -162,10 +184,15 @@ def main():
         
         
         print 'Vesselness: '
-        bild=gradient_branch(thin, numpy.asarray(value,numpy.float32), laenge_des_branch, seg, msk, get_pixel_spacing(mra_h), branchp)
+        #Original
+        bild,return_thin_for_extension=gradient_branch(thin, numpy.asarray(value,numpy.float32), laenge_des_branch, seg, msk, get_pixel_spacing(mra_h), args.out2, branchp)
+        #bild,return_thin_for_extension=gradient_branch(thin, numpy.asarray(mra,numpy.float32), laenge_des_branch, seg, msk, get_pixel_spacing(mra_h), args.out2, branchp)
+        
         #print 'MRA: '
         #gradient_branch(thin, numpy.asarray(mra,value.dtype), laenge_des_branch)
         save(bild, args.out, mra_h, args.force)
+        save(return_thin_for_extension, args.out2+"/centerline_verlaengert_um20.nii.gz", mra_h, args.force)
+        
         sys.exit()
 
     #verlaengert die Centerline am Ende der Arme
@@ -206,20 +233,20 @@ def main():
         ori_cen, ori_cen_h = load(args.ori_cen)
         ori_cen == numpy.asarray(ori_cen, numpy.bool)
         ori_cen = component_size_label(ori_cen, numpy.ones((3,3,3)))
-        ori_cen[ori_cen<3] = 0
+        ori_cen[ori_cen<5] = 0
         ori_cen[ori_cen>0] = 1
         
+        #############Args.out2 hinzufuegen in die Shell
+        f = open(str(args.out2)+'/Gapsfill.txt','w')
+        f.write(str(args.out2))
+        f.write('\n')
+        f.write('\n')
+        ##########################
         
         
-        comp = int(args.com) 
-        
+        #comp = int(args.com) 
+        comp = 5
         vessel, vessel_h = load(args.ves)
-
-        #koennen die nasechsten drei Zeilen weg?!
-        
-        #labeled_cen = component_size_label(cen, numpy.ones((3,3,3)))
-        #labeled_cen=cen
-
         
         anzahl_verlaengerungsschritte = 20
         
@@ -231,8 +258,8 @@ def main():
         
         while 1:
             counter=counter+1
-            print 'Counter WHILE-SCHLEIFE: {}'.format(counter)
-            print ' '
+            print 'Counter WHILE-SCHLEIFE - Fillgaps: {}'.format(counter)
+            #print ' '
             
             out_cen_zuvor = deepcopy(out_cen)
             #labeled_cen = largest_connected_component(out_cen, numpy.ones((3,3,3)))
@@ -243,16 +270,30 @@ def main():
             
             
             
-            out_cen, zwischenspeicher = close_gaps(cen, anzahl_verlaengerungsschritte,  get_pixel_spacing(cen_h), vessel, ori_cen, zwischenspeicher,ori_cen_h)
+            ###########################
+            out_cen, zwischenspeicher, closed = close_gaps(cen, anzahl_verlaengerungsschritte,  get_pixel_spacing(cen_h), vessel, ori_cen, zwischenspeicher,ori_cen_h)
             ori_cen = out_cen
+             
+            
+            f.write('Counter WHILE-SCHLEIFE : {}\n'.format(counter))
+            f.write('Number closed Gaps : {}\n'.format(closed))
+            f.write('\n')
+            ###########################
+            
+            if 0==closed:
+                break
+            
             if (out_cen==out_cen_zuvor).all():
-                print 'gleich'
+                #print 'gleich'
                 break
         
-        
+        ######################################################
+        f.close()
+        ######################################################
+    
             
         out_cen = component_size_label(out_cen, numpy.ones((3,3,3)))
-        out_cen[out_cen<comp] = 0
+        out_cen[out_cen<5] = 0
         out_cen[out_cen>0] = 1      
         
         save(out_cen, args.out, cen_h, args.force)
@@ -292,7 +333,8 @@ def getParser():
     parser.add_argument('-rem', help='Minimal length of branches.')
     parser.add_argument('-ori_cen', help='original centerline')
     parser.add_argument('-out', help='The target file for the created output.')
-
+    parser.add_argument('-out2', help='The target file for the created output2.')
+    
     parser.add_argument('-branchp', type=sequenceOfIntegersGe, help='The occlusiontest, supplied as comma-separated coordinates e.g. x,y,z.')
     
     parser.add_argument('-t', dest='dtype', action='store_true', help='Control of data type - uint16')
