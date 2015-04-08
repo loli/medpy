@@ -148,6 +148,7 @@ def run_setup(with_compilation):
             'bin/medpy_extract_sub_volume_auto.py',     
             'bin/medpy_extract_sub_volume_by_example.py',        
             'bin/medpy_extract_sub_volume.py',
+            'bin/medpy_fit_into_shape.py',
             'bin/medpy_gradient.py',
             'bin/medpy_graphcut_label_bgreduced.py',   
             'bin/medpy_graphcut_label_w_regional.py', 
