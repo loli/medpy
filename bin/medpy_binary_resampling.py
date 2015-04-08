@@ -223,7 +223,8 @@ def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
         for i in range(1, nslices / 2 + nslices % 2 + 1)[::-1]:
             slices.append(binary_erosion(sl2, iterations=i))
         slices.append(sl2)
-        return numpy.asarray([sl.T for sl in slices]).T
+        return numpy.rollaxis(numpy.asarray(slices), 0, dim + 1)
+        #return numpy.asarray([sl.T for sl in slices]).T
     elif 0 ==numpy.count_nonzero(sl2):
         slices = [sl1]
         for i in range(1, nslices / 2 + 1):
@@ -231,7 +232,8 @@ def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
         for _ in range(0, nslices / 2 + nslices % 2):
             slices.append(numpy.zeros_like(sl2))
         slices.append(sl2)
-        return numpy.asarray([sl.T for sl in slices]).T
+        return numpy.rollaxis(numpy.asarray(slices), 0, dim + 1)
+        #return numpy.asarray([sl.T for sl in slices]).T
     
     # interpolation shape based 
     # note: distance_transform_edt shows strange behaviour for ones-arrays
