@@ -8,10 +8,11 @@ Takes a brain TOF-MRA and finds vessel-occlusion by using a vesselness-image and
 import argparse
 import logging
 import os
-import sys
+
 
 # third-party modules
 from scipy import ndimage
+import numpy
 
 # path changes
 
@@ -21,7 +22,7 @@ from medpy.io import load, save
 from medpy.io.header import get_pixel_spacing
 
 
-from medpy.occlusion.filters import *
+from medpy.occlusion.filters import occlusion_detection
 
 # information
 __author__ = "Albrecht Kleinfeld and Oskar Maier"
@@ -45,11 +46,12 @@ __description__ = """
 def main():
     parser = getParser()
     args = getArguments(parser)
-
+    
     # prepare logger
     logger = Logger.getInstance()
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
+
 
     # load input vesselness and apply gaussian filter
     logger.info('Loading tof-mra image {}...'.format(args.image))
@@ -80,9 +82,12 @@ def main():
     # save resulting image with occlusion-markers
     logger.info('Saving resulting image with occlusion-markers as {}.'.format(args.output))
     save(image_occlusion.astype(numpy.bool), args.output, image_skeleton_data_header, args.force)
-
+    
+    
+    
     logger.info('Successfully terminated.')
-    #sys.exit()
+
+
 
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
@@ -110,7 +115,6 @@ def getParser():
    
     return parser    
     
-
     
 if __name__ == "__main__":
     main()
