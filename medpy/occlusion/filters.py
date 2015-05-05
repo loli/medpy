@@ -64,12 +64,8 @@ def occlusion_detection(vesselness, centerline, segmentation, voxelspacing, logg
         process_store.append(p)
     
     '''
-    switch = 1
-    while switch:
-        for i in range(cpus):
-            a = process_store[i]
-            if not a. is_alive():
-                switch = 0
+    while not 1 == sum(item.is_alive() for item in process_store):
+        True
     ''' 
 
     for i in range(cpus):
@@ -231,14 +227,14 @@ def occlusion_calc_process(centerline, vesselness, lock, queue, queue2):
             switch = 0
 
 def count_neighbor(image, structure):
-    'returns image, where the current voxelvalue is the number of its neigbors'
+    'returns image, where the current value of the voxel is the number of its neighbors'
     image = image.astype(numpy.bool)
     sumimage = sum_filter(image, footprint=structure, mode="constant", cval=0.0, output=numpy.uint)
     sumimage[~image] = 0
     return sumimage - image
 
 def give_branch_points(thinned_image, branch_endpoint, length):
-    'returns a list with the last points of a branch (maximal as long as length, inclusive intersection point) needed input: thinned image and last point of current branch' 
+    'returns a list with the last points of a branch (maximal as long as length, inclusive intersection point), needed input: thinned image and last point of current branch' 
     pointlist = [branch_endpoint]
     tmp_point = branch_endpoint
     
@@ -320,7 +316,7 @@ def thickness_of_segmentation(point1, point2, segmentation, iterations):
     return counter
 
 def check_inside(image, point):
-    # checks if point is in image
+    'checks if point is in image'
     for i in range(3):
         if((point[i] < 0) | (point[i] >= image.shape[i])):
             return 0
@@ -333,9 +329,9 @@ def number_of_neighbors(image, point):
     tmp_image[ slicers ] = 1
     tmp_image[ point[0], point[1], point[2]] = 0
     return numpy.count_nonzero(image * tmp_image) 
-
+ 
 def calc_angle(vector1, vector2):
-    
+    'calculates the angle between two vectors'
     x_mod = numpy.sqrt((vector1 * vector1).sum())
     y_mod = numpy.sqrt((vector2 * vector2).sum())
     
@@ -351,6 +347,7 @@ def calc_angle(vector1, vector2):
     return angle * 360 / 2 / numpy.pi
 
 def check_if_neigbor(point1, point2):
+    'checks if two points are neigbors'
     max_value = numpy.max([point1[0] - point2[0], point1[1] - point2[1] , point1[2] - point2[2]])
     min_value = numpy.min([point1[0] - point2[0], point1[1] - point2[1] , point1[2] - point2[2]]) 
     
@@ -360,7 +357,7 @@ def check_if_neigbor(point1, point2):
         return True
       
 def give_branch_extension(skeleton, vesselness, list_of_branch_points, tmp_point):
-    
+    'gives the next point of a extended branch'
     tmp_point = [tmp_point[0], tmp_point[1], tmp_point[2]]
     last_point = list_of_branch_points[ 0 ] 
     initial_direction = calc_direction(tmp_point, last_point) 
@@ -386,3 +383,230 @@ def give_branch_extension(skeleton, vesselness, list_of_branch_points, tmp_point
             tmp_vesselness[ potential_point[0], potential_point[1], potential_point[2] ] = 0
    
     return 0
+
+
+def remove_short_branches( centerline, vesselness, minimal_branch_length, logger):
+   
+
+    enhanced_centerline = numpy.copy( centerline )
+        
+    image_neighbor = count_neighbor( centerline, numpy.ones((3,3,3)) )
+
+    intersection_points = numpy.nonzero( 3 <= image_neighbor ) 
+    intersection_points = zip(intersection_points[0], intersection_points[1], intersection_points[2])
+    logger.info(('To be checked number of intersection_points: {}').format(len(intersection_points)))
+
+    try:
+        cpus = multiprocessing.cpu_count()
+    except NotImplementedError:
+        cpus = 2
+    cpus = min(cpus, 8) - 1
+    
+    lock = multiprocessing.Lock()
+    
+    queue = multiprocessing.Queue()  
+    queue.put(enhanced_centerline)
+    
+    queue2 = multiprocessing.Queue()
+    queue2.put(intersection_points)
+      
+    process_store = []
+    for i in range(cpus):
+        p = multiprocessing.Process(target=process_remove_short_branch, args=( centerline, vesselness, image_neighbor, minimal_branch_length, lock, queue, queue2 ))
+        p.start()
+        process_store.append(p)
+        
+
+
+    while not 1 == sum(item.is_alive() for item in process_store):
+        True
+
+    
+    enhanced_centerline = queue.get()
+    return enhanced_centerline
+        
+        
+def process_remove_short_branch( centerline, vesselness, image_neighbor, minimal_branch_length, lock, queue, queue2 ):
+        
+        
+    switch = 1
+    
+    while switch:
+    
+        lock.acquire()
+        intersection_points = queue2.get()
+        print len(intersection_points)
+        
+        if intersection_points:
+            
+            tmp_intersection = intersection_points[0]
+            intersection_points.remove( tmp_intersection )
+            queue2.put( intersection_points )
+            lock.release()
+    
+            list_short_branches = give_short_surrounding_branches( centerline, image_neighbor, tmp_intersection, 10 )
+
+            for iterator in range( len( list_short_branches ) ):
+            
+                if len( list_short_branches [ iterator ]) <= minimal_branch_length:
+                    print 'remove'
+                    lock.acquire()
+                    enhanced_centerline = queue.get()
+                    
+                    for tmp_nbr in range( len( list_short_branches [ iterator ] )):
+                        enhanced_centerline[ list_short_branches [ iterator ][ tmp_nbr ] ] = 0
+                    
+                    queue.put(enhanced_centerline) 
+                    lock.release()
+                    
+                #sonst ueberpruefe die Vesselness vom Seitenarme und den anderen Armen, die vom gleichen Kreuzungspunkt ausgehen
+                '''
+                else:
+                    #Bestimmen der Durchschnittsvesselness der letzten 3 Punkte
+                    vesselvalue1 = []
+                    for index in range(-3,0):
+                        vesselvalue1.append(vesselness[ gelistete_seitenarme [ temp_seitenarme ][ index ] ])
+                    #Durchschnittliche Vesselness der letzten drei Astpunkte des zu ueberpruefenden Seitenarmes
+                    vesselvalue1 = numpy.mean(vesselvalue1) 
+                                   
+                    
+                    zu_delitieren = numpy.zeros(thinned_image.shape)
+                    zu_delitieren[temp_kreuzungspunkt[0]][temp_kreuzungspunkt[1]][temp_kreuzungspunkt[2]]=1
+                    
+                    zu_delitieren = binary_dilation(zu_delitieren, structure=numpy.ones((3,3,3)), iterations=5, mask=thinned_image,)
+                    
+                    for index4 in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
+                        zu_delitieren[ gelistete_seitenarme [ temp_seitenarme ][ index4 ] ] = 0
+                    
+                    values=zu_delitieren*vesselness
+    
+                    vesselvalue2 = 0
+                    if not 0 == numpy.count_nonzero(values):
+                        vesselvalue2 = sum(sum(sum(values)))/numpy.count_nonzero(values)
+    
+                    if ((not vesselvalue2 == 0) and (vesselvalue2*(0.3) >= vesselvalue1)):
+                        #print 'ES WIRD GELOESCHTTTTTT'
+                        #print list_branch_points [ number_of_branches ]
+                        unter10=unter10+1
+                        
+                        for number_of_branchpoints in range(0, len( gelistete_seitenarme [ temp_seitenarme ] )):
+                            thinned_image2[ gelistete_seitenarme [ temp_seitenarme ][ number_of_branchpoints ] ] = 0
+                 '''   
+        else:        
+            queue2.put(intersection_points) 
+            
+            lock.release()
+            switch = 0
+    
+def give_short_surrounding_branches(centerline, image_neighbor, tmp_intersection, max_branch_length):
+    'returns a list with all branches ensuing from the temporary intersectionpoint of the centerline, which are shorter than max_branch_length'
+    list_surrounding_neighbors = return_neighbor(centerline, tmp_intersection)
+    return_list = []
+    
+    for iterator in range(len(list_surrounding_neighbors)):
+        
+        tmp_branch_points = [tmp_intersection]
+        tmp_branch_points = search_branch( centerline, image_neighbor, tmp_branch_points, list_surrounding_neighbors[iterator], max_branch_length)        
+        
+        if tmp_branch_points:
+            return_list.append(tmp_branch_points)
+   
+    return return_list
+    
+def search_branch( centerline, image_neighbor, list_point, next_point, max_branch_length):
+    'returns a list with all branch_points if the length of the branch is shorter than max_branch_length'
+    list_point.append(next_point)
+        
+    if(1 == max_branch_length):
+        
+        if(1 ==  image_neighbor[next_point]):
+            list_point.pop(0)
+            return list_point
+        else:
+            return
+           
+    else:
+        if(2 ==  image_neighbor[next_point]):
+        
+            nachbarn = return_neighbor(centerline, next_point)
+            
+            
+            if(nachbarn[0] not in list_point):
+                return search_branch(centerline, image_neighbor, list_point,nachbarn[0], max_branch_length-1)
+                  
+            elif(nachbarn[1] not in list_point):
+                return search_branch(centerline, image_neighbor, list_point,nachbarn[1], max_branch_length-1)
+            
+            else:
+                return
+        
+        elif(1 ==  image_neighbor[next_point]):
+            list_point.pop(0)
+            return list_point
+        
+        else:
+            return
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+from scipy.ndimage.measurements import label, histogram
+
+def component_size_label(image, structure):
+#returns image where all connected binary objects (structure like in function label) are labeled with the size of its region
+    '''
+    structuring element is::
+
+            [[1,1,1],
+             [1,1,1],
+             [1,1,1]]
+        
+    np.ones((3,3,3))
+    '''
+
+    '''
+    TODO eventuell noch die einzelnen Values zurueckgeben???
+    '''
+    labeled_array, num_features = label(image,structure)
+    temp = labeled_array.copy()
+    counter=0
+    print num_features
+    for i in range(1,num_features+1):
+        labeled_array[ numpy.nonzero( temp == i )] = ( numpy.count_nonzero( temp == i ))
+        print counter
+        counter=counter+1
+
+    liste = []
+    temp = numpy.copy(labeled_array)
+    while(numpy.max(temp)):
+        liste.append(numpy.max(temp))
+        temp[numpy.nonzero(temp == numpy.max(temp))]=0
+    #hier noch nen sort(liste)  ???
+    return labeled_array, liste
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

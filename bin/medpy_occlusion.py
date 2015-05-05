@@ -1,7 +1,10 @@
 #!/usr/bin/python
 
 """
-Takes a brain TOF-MRA and finds vessel-occlusion by using a vesselness-image and a skeleton of the vessel-tree.
+Copyright (C) 2014 Albrecht Kleinfeld and Oskar Maier
+This program comes with ABSOLUTELY NO WARRANTY; This is free software,
+and you are welcome to redistribute it under certain conditions; see
+the LICENSE file or <http://www.gnu.org/licenses/> for details. 
 """
 
 # build-in modules
@@ -30,16 +33,8 @@ __version__ = "r0.2.0, 2014-08-25"
 __email__ = "albrecht.kleinfeld@gmx.de"
 __status__ = ""
 __description__ = """
-                  input:
-                    cen: centerline
-                    ves: vesselness of the brain
-                    mra: tof-mra image of the brain
-                    com: length of branchend
-                      
-                  Copyright (C) 2014 Albrecht Kleinfeld and Oskar Maier
-                  This program comes with ABSOLUTELY NO WARRANTY; This is free software,
-                  and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  Takes a brain TOF-MRA and finds occlusions in vessel 
+                  by using a vesselness-image and a skeleton of the vessel-tree.
                   """
 
 # code
@@ -76,15 +71,22 @@ def main():
     if not args.force:
         if os.path.exists(args.output):
             logger.warning('The output image {} already exists.'.format(args.output))
+    
+    #loading a mask of the brain
+    if args.mask:
+        logger.info('Loading the mask of the brain {}...'.format(args.segmentation))
+        image_brainmask_data, image_segmentation_data_header = load(args.mask)
+        image_brainmask_data = image_brainmask_data.astype(numpy.bool)
         
+        image_skeleton_data = image_skeleton_data * image_brainmask_data
+        image_segmentation_data = image_segmentation_data * image_brainmask_data
+
     image_occlusion = occlusion_detection(image_vesselness_data, image_skeleton_data, image_segmentation_data, get_pixel_spacing(image__data_header), logger)
 
     # save resulting image with occlusion-markers
     logger.info('Saving resulting image with occlusion-markers as {}.'.format(args.output))
     save(image_occlusion.astype(numpy.bool), args.output, image_skeleton_data_header, args.force)
-    
-    
-    
+
     logger.info('Successfully terminated.')
 
 
@@ -92,8 +94,8 @@ def main():
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
-    if not args.image and not args.vesselness and not args.skeleton and not args.segmentation:
-        parser.error('needs a tof-mra image, a vesselness image, the skeleton of the vascular tree, the segmentation of the vascular tree')
+    if not args.image and not args.vesselness and not args.skeleton and not args.segmentation and not args.output:
+        parser.error('needs a tof-mra image, a vesselness image, the skeleton of the vascular tree, the segmentation of the vascular tree and a path for the output image. An additional mask of the brain could enhance the result.')
     
     return args
 
