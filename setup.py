@@ -70,6 +70,7 @@ setup(name='MedPy',
     'medpy.itkvtk.filter',
     'medpy.itkvtk.utilities',
     'medpy.metric',
+    'medpy.occlusion',
     'medpy.utilities'
       ],
       
