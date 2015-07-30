@@ -15,7 +15,7 @@ def read(fname):
 maxflow = Extension('medpy.graphcut.maxflow',
                     define_macros = [('MAJOR_VERSION', '0'),
                                      ('MINOR_VERSION', '1')],
-		    sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
+            sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
                     libraries = ['boost_python'],
                     extra_compile_args = ['-O0'])
 
@@ -41,7 +41,7 @@ setup(name='MedPy',
           #'Operating System :: MacOS :: MacOS X',
           #'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
-	  'Operating System :: Unix',
+      'Operating System :: Unix',
           'Programming Language :: Python',
           'Programming Language :: C++',
           'Topic :: Scientific/Engineering :: Medical Science Apps.',
@@ -49,28 +49,28 @@ setup(name='MedPy',
           ],
 
       install_requires=[
-       	"scipy >= 0.9.0",
+           "scipy >= 0.9.0",
         "numpy >= 1.6.1",
       ],
 
       extras_require = {
-	'Nifti/Analyze':  ["nibabel >= 1.3.0", "RXP"],
-	'Dicom': ["pydicom >= 0.9.7"],
-	'Additional image formats' : ["itk >= 3.16.0"]
+    'Nifti/Analyze':  ["nibabel >= 1.3.0", "RXP"],
+    'Dicom': ["pydicom >= 0.9.7"],
+    'Additional image formats' : ["itk >= 3.16.0"]
       },
 
       packages = [
-	'medpy',
-	'medpy.core',
-	'medpy.features',
-	'medpy.filter',
-	'medpy.graphcut',
-	'medpy.io',
-	'medpy.itkvtk',
-	'medpy.itkvtk.filter',
-	'medpy.itkvtk.utilities',
-	'medpy.metric',
-	'medpy.utilities'
+    'medpy',
+    'medpy.core',
+    'medpy.features',
+    'medpy.filter',
+    'medpy.graphcut',
+    'medpy.io',
+    'medpy.itkvtk',
+    'medpy.itkvtk.filter',
+    'medpy.itkvtk.utilities',
+    'medpy.metric',
+    'medpy.utilities'
       ],
       
       scripts=[
