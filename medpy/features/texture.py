@@ -163,7 +163,7 @@ def contrast(image, mask = slice(None)):
     
     return Fcon
 
-def directionality(image, voxelspacing = None, mask = slice(None),min_distance = 4, threshold = 0.1):
+def directionality(image, min_distance = 4, threshold = 0.1, voxelspacing = None, mask = slice(None)):
     r"""
     Takes a simple or multi-spectral image and returns the directionality of the image texture.
     It is just a value representing the strength of directionality, not the specific direction. 
