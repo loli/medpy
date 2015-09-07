@@ -40,7 +40,7 @@ from medpy.filter import IntensityRangeStandardization
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2013-10-11"
+__version__ = "r0.1.1, 2013-10-11"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -108,13 +108,13 @@ def main():
             trained_model = pickle.load(f)
             if not isinstance(trained_model, IntensityRangeStandardization):
                 raise ArgumentError('{} does not seem to be a valid pickled instance of an IntensityRangeStandardization object'.format(args.lmodel))
-            transformed_images = [trained_model.transform(i[m]) for i, m in zip(images, masks)]
+            transformed_images = [trained_model.transform(i[m], surpress_mapping_check = args.ignore) for i, m in zip(images, masks)]
             
     # in in training mode, train the model, apply it to the images and save it
     else:
         logger.info('Training the average intensity model...')
         irs = IntensityRangeStandardization()
-        trained_model, transformed_images = irs.train_transform([i[m] for i, m in zip(images, masks)])
+        trained_model, transformed_images = irs.train_transform([i[m] for i, m in zip(images, masks)], surpress_mapping_check = args.ignore)
         logger.info('Saving the trained model as {}...'.format(args.smodel))
         with open(args.smodel, 'wb') as f:
                 pickle.dump(trained_model, f)
@@ -183,6 +183,7 @@ def getParser():
     shared_group.add_argument('--save-images', dest='simages', default=False, help='Save the transformed images under this location. Required for the application mode, optional for the learning mode.')
     shared_group.add_argument('--threshold', type=float, default=0, help='All voxel with an intensity > threshold are considered as foreground. Supply either this or a mask for each image.')
     shared_group.add_argument('--masks', nargs='+', help='A number of binary foreground mask, one for each image. Alternative to supplying a threshold. Overrides the threshold parameter if supplied.')
+    shared_group.add_argument('--ignore', dest='ignore', action='store_true', help='Ignore possible loss of information during the intensity transformation. Should only be used when you know what you are doing.')
     
     parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Verbose output')
     parser.add_argument('-d', '--debug', dest='debug', action='store_true', help='Display debug information.')
