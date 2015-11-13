@@ -334,11 +334,11 @@ def gaussian_gradient_magnitude(image, sigma = 5, voxelspacing = None, mask = sl
 
     Returns
     -------
-    guassian_gradient_magnitude : ndarray
+    gaussian_gradient_magnitude : ndarray
         The gaussian gradient magnitude of the supplied image.
     
     """
-    return _extract_feature(_extract_guassian_gradient_magnitude, image, mask, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(_extract_gaussian_gradient_magnitude, image, mask, sigma = sigma, voxelspacing = voxelspacing)
 
 def median(image, size = 5, voxelspacing = None, mask = slice(None)):
     """
