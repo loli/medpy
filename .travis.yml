@@ -8,6 +8,7 @@ python:
   - "3.4"
 before_install:
   - "sudo apt-get install build-essential"
+  - "sudo apt-get update"
   - "sudo apt-get install python-scipy"
   - "sudo apt-get install libboost-python-dev"
 install:
