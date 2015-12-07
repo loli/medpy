@@ -477,7 +477,7 @@ def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_pla
     Note that the supplied gaussian kernel sizes (sigmas) are sensitive to the images
     voxel spacing.
     
-    Note: if the number of slices along the cut-plane is odd, the central slice is
+    If the number of slices along the cut-plane is odd, the central slice is
     interpolated from the two hemisphere difference images when stitching them back
     together.
     
@@ -507,7 +507,10 @@ def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_pla
     Returns
     -------
     hemispheric_difference : ndarray
-        The intensity differences between the locally smoothed hemispheres of the image.    
+        The intensity differences between the locally smoothed hemispheres of the image.
+        The resulting voxel value's magnitude denotes symmetrical its asymmetry. The
+        direction is revealed by the sign. That means that the resulting image will be
+        symmetric in absolute values, but differ in sign. 
 
     Raises
     ------
