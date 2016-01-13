@@ -389,7 +389,10 @@ def __is_header_itk(hdr):
         hdr = hdr.GetPointer()
     except Exception:
         pass
-    # see if itk header type
+    # see if itk header type (ITK v3.X)
     for cl in itk.Image.__template__.itervalues():
         if cl in type(hdr).__bases__: return True
+    # see if itk header type (ITK v4.X)
+    for cl in itk.Image.__template__.itervalues():
+        if cl == type(hdr): return True
     return False

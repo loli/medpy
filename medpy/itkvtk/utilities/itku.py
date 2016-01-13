@@ -335,16 +335,16 @@ def getImageTypeFromFile(image): # tested
                      itk.IPLCommonImageIO,
                      itk.JPEGImageIO,
                      itk.GEAdwImageIO,
-                     itk.AnalyzeImageIO,
-                     itk.Brains2MaskImageIO,
+                     #itk.AnalyzeImageIO, # missing starting from ITK 4.X
+                     #itk.Brains2MaskImageIO, # missing starting from ITK 4.X
                      itk.TIFFImageIO,
                      itk.VTKImageIO,
                      itk.GDCMImageIO,
                      itk.GE5ImageIO,
                      itk.GiplImageIO,
                      itk.MetaImageIO,
-                     itk.StimulateImageIO,
-                     itk.DICOMImageIO2]
+                     itk.StimulateImageIO]
+                     #itk.DICOMImageIO2 # missing starting from ITK 4.X
     
     # try to find an image loader who feels responsible for the image
     # Note: All used methods are based on the common parent class ImageIOBase
