@@ -26,6 +26,8 @@ Compare two binary objects
     assd
     precision
     recall
+    sensitivity
+    specificity
     ravd
     
 Compare two sets of binary objects
@@ -101,7 +103,7 @@ Histogram metrics (:mod:`medpy.metric.histogram`)
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-from .binary import dc, hd, asd, assd, precision, recall, ravd, obj_tpr, obj_fpr, obj_asd, obj_assd
+from .binary import dc, hd, asd, assd, precision, recall, ravd, obj_tpr, obj_fpr, obj_asd, obj_assd, sensitivity, specificity
 from .histogram import chebyshev, chebyshev_neg, chi_square, correlate, correlate_1, cosine,\
      cosine_1, cosine_2, cosine_alt, euclidean, fidelity_based, histogram_intersection,\
      histogram_intersection_1, jensen_shannon, kullback_leibler, manhattan, minowski, noelle_1,\

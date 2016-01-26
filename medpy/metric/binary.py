@@ -212,6 +212,66 @@ def recall(input1, input2):
     
     return recall
 
+def sensitivity(input1, input2):
+    """
+    Sensitivity (or recall).
+    See :func:`recall` for a detailed description.
+    
+    See also
+    --------
+    :func:`specificity` 
+    """
+    return recall(input1, input2)
+
+def specificity(input1, input2):
+    """
+    Specificity (or true negative rate).
+    In case of evaluation, pass the ground truth as second and the classification results
+    as first argument.
+    
+    Parameters
+    ----------
+    input1 : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    input2 : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    
+    Returns
+    -------
+    specificity : float
+        The specificity between two binary datasets, here mostly binary objects in images,
+        which denotes the fraction of correctly returned negatives. The
+        specificity is not symmetric.
+    
+    See also
+    --------
+    :func:`sensitivity`
+    
+    Notes
+    -----
+    Not symmetric. The completment of the specificity is :func:`sensitivity`.
+    High recall means that an algorithm returned most of the irrelevant results.
+    
+    References
+    ----------
+    .. [1] https://en.wikipedia.org/wiki/Sensitivity_and_specificity
+    .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion
+    """
+    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
+    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+       
+    tn = numpy.count_nonzero(~input1 & ~input2)
+    fp = numpy.count_nonzero(input1 & ~input2)
+
+    try:
+        specificity = tn / float(tn + fp)
+    except ZeroDivisionError:
+        specificity = 0.0
+    
+    return specificity
+
 def hd(input1, input2, voxelspacing=None, connectivity=1):
     """
     Hausdorff Distance.
