@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# version: 0.2.4
+# version: 0.2.5
 # Many thanks to simplejson for the idea on how to install c++-extention module optionally!
 # https://pypi.python.org/pypi/simplejson/
 
@@ -21,6 +21,7 @@ PACKAGES= [
     'medpy.core',
     'medpy.features',
     'medpy.filter',
+    'medpy.graphcut',
     'medpy.io',
     'medpy.itkvtk',
     'medpy.itkvtk.filter',
@@ -93,7 +94,7 @@ def run_setup(with_compilation):
 
     setup(
           name='MedPy',
-          version='0.2.2', # major.minor.micro
+          version='0.3.0', # major.minor.micro
           description='Medical image processing in Python',
           author='Oskar Maier',
           author_email='oskar.maier@googlemail.com',
@@ -122,8 +123,8 @@ def run_setup(with_compilation):
           ],
         
           install_requires=[
-           	"scipy >= 0.9.0",
-            "numpy >= 1.6.1",
+           	"scipy >= 0.13.0",
+            "numpy >= 1.7.0",
           ],
         
           extras_require = {
@@ -137,6 +138,7 @@ def run_setup(with_compilation):
           scripts=[
             'bin/medpy_anisotropic_diffusion.py',
             'bin/medpy_apparent_diffusion_coefficient.py',
+            'bin/medpy_binary_resampling.py',
             'bin/medpy_check_marker_intersection.py',
             'bin/medpy_convert.py',       
             'bin/medpy_create_empty_volume_by_example.py',
