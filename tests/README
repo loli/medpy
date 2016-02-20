@@ -8,11 +8,11 @@ for instructions.
 
 Run all
 -------
-nosetests .
+nosetests *
 
 Run for sub-module
 ------------------
-nosetests <submodule>_
+nosetests <submodule>_/*
 
 Check support for image formats
 -------------------------------
