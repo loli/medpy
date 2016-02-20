@@ -1,0 +1,19 @@
+###############
+MedPy unittests
+###############
+
+Part of the MedPy functionality is covered by unittests in various states
+of development which can be found in this folder. See instructions below
+for instructions.
+
+Run all
+-------
+nosetests *
+
+Run for sub-module
+------------------
+nosetests <submodule>_/*
+
+Check support for image formats
+-------------------------------
+./support.py

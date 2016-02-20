@@ -1,3 +1,2 @@
 from houghtransform import TestHoughTransform
 from IntensityRangeStandardization import TestIntensityRangeStandardization
-from LabelImageStatistics import TestLabelImageStatistics
