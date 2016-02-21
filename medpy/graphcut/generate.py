@@ -27,6 +27,7 @@ import scipy
 # own modules
 from ..core import Logger
 from .graph import GCGraph
+from medpy.graphcut.energy_label import __check_label_image
 
 def graph_from_voxels(fg_markers,
                         bg_markers,
@@ -242,9 +243,7 @@ def graph_from_labels(label_image,
     fg_markers = scipy.asarray(fg_markers, dtype=scipy.bool_)
     bg_markers = scipy.asarray(bg_markers, dtype=scipy.bool_)
     
-    # check supplied labels image
-    if not 1 == min(label_image.flat):
-        raise AttributeError('The supplied label image does either not contain any regions or they are not labeled consecutively starting from 1.')
+    __check_label_image(label_image)
     
     # set dummy functions if not supplied
     if not regional_term: regional_term = __regional_term_label
