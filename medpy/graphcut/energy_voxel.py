@@ -90,21 +90,21 @@ def boundary_maximum_linear(graph, (gradient_image, spacing)):
     """
     gradient_image = scipy.asarray(gradient_image)
     
-    # compute maximum (possible) intensity difference
-    max_intensity_difference = float(abs(gradient_image.max() - gradient_image.min()))
+    # compute maximum intensity to encounter
+    max_intensity = float(numpy.abs(gradient_image).max())
     
     def boundary_term_linear(intensities):
         """
         Implementation of a linear boundary term computation over an array.
         """
         # normalize the intensity distances to the interval (0, 1]
-        intensities /= max_intensity_difference
+        intensities /= max_intensity
         #difference_to_neighbour[difference_to_neighbour > 1] = 1 # this line should not be required, but might be due to rounding errors
         intensities = (1. - intensities) # reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge
         intensities[intensities == 0.] = sys.float_info.min # required to avoid zero values
         return intensities
     
-    __skeleton_maximum(graph, gradient_image, boundary_term_linear)
+    __skeleton_maximum(graph, gradient_image, boundary_term_linear, spacing)
 
 def boundary_difference_linear(graph, (original_image, spacing)):
     r"""
@@ -173,7 +173,7 @@ def boundary_difference_linear(graph, (original_image, spacing)):
         intensities[intensities == 0.] = sys.float_info.min # required to avoid zero values
         return intensities
     
-    __skeleton_difference(graph, original_image, boundary_term_linear)
+    __skeleton_difference(graph, original_image, boundary_term_linear, spacing)
 
 def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing)):
     r"""
@@ -218,7 +218,7 @@ def boundary_maximum_exponential(graph, (gradient_image, sigma, spacing)):
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
     
-    __skeleton_maximum(graph, gradient_image, boundary_term_exponential)    
+    __skeleton_maximum(graph, gradient_image, boundary_term_exponential, spacing)    
 
 def boundary_difference_exponential(graph, (original_image, sigma, spacing)):
     r"""
@@ -323,7 +323,7 @@ def boundary_maximum_division(graph, (gradient_image, sigma, spacing)):
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
     
-    __skeleton_difference(graph, gradient_image, boundary_term_division)
+    __skeleton_difference(graph, gradient_image, boundary_term_division, spacing)
     
 def boundary_difference_division(graph, (original_image, sigma, spacing)):
     r"""
@@ -375,7 +375,7 @@ def boundary_difference_division(graph, (original_image, sigma, spacing)):
     
     def boundary_term_division(intensities):
         """
-        Implementation of a exponential boundary term computation over an array.
+        Implementation of a division boundary term computation over an array.
         """
         # apply 1 / (1  + x/sigma)
         intensities /= sigma
@@ -383,7 +383,7 @@ def boundary_difference_division(graph, (original_image, sigma, spacing)):
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
     
-    __skeleton_difference(graph, original_image, boundary_term_division)
+    __skeleton_difference(graph, original_image, boundary_term_division, spacing)
     
 def boundary_maximum_power(graph, (gradient_image, sigma, spacing)):
     """
@@ -416,9 +416,9 @@ def boundary_maximum_power(graph, (gradient_image, sigma, spacing)):
     """
     gradient_image = scipy.asarray(gradient_image)
     
-    def boundary_term_division(intensities):
+    def boundary_term_power(intensities):
         """
-        Implementation of a exponential boundary term computation over an array.
+        Implementation of a power boundary term computation over an array.
         """
         # apply (1 / (1  + x))^sigma
         intensities = 1. / (intensities + 1)
@@ -426,7 +426,7 @@ def boundary_maximum_power(graph, (gradient_image, sigma, spacing)):
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
     
-    __skeleton_maximum(graph, gradient_image, boundary_term_division)       
+    __skeleton_maximum(graph, gradient_image, boundary_term_power, spacing)       
     
     
 def boundary_difference_power(graph, (original_image, sigma, spacing)):
@@ -477,7 +477,7 @@ def boundary_difference_power(graph, (original_image, sigma, spacing)):
     """
     original_image = scipy.asarray(original_image)
     
-    def boundary_term_division(intensities):
+    def boundary_term_power(intensities):
         """
         Implementation of a exponential boundary term computation over an array.
         """
@@ -487,7 +487,7 @@ def boundary_difference_power(graph, (original_image, sigma, spacing)):
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
     
-    __skeleton_difference(graph, original_image, boundary_term_division)   
+    __skeleton_difference(graph, original_image, boundary_term_power, spacing)   
 
 def __skeleton_maximum(graph, image, boundary_term, spacing):
     """
@@ -527,7 +527,7 @@ def __skeleton_maximum(graph, image, boundary_term, spacing):
         """
         return scipy.maximum(neighbour_one, neighbour_two)
         
-    __skeleton_base(graph, image, boundary_term, intensity_maximum, spacing)
+    __skeleton_base(graph, numpy.abs(image), boundary_term, intensity_maximum, spacing)
     
 
 def __skeleton_difference(graph, image, boundary_term, spacing):
