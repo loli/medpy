@@ -123,8 +123,8 @@ def run_setup(with_compilation):
           ],
         
           install_requires=[
-           	"scipy >= 0.13.0",
-            "numpy >= 1.7.0",
+            "scipy >= 0.9.0",
+            "numpy >= 1.6.1"
           ],
         
           extras_require = {
