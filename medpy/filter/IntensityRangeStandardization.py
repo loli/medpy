@@ -521,12 +521,14 @@ class IntensityRangeStandardization (object):
         return [float(x) for x in s]
     
     @staticmethod
-    def linear_model((x1, x2), (y1, y2)):
+    def linear_model(x, y):
         """
         Returns a linear model transformation function fitted on the two supplied points.
         y = m*x + b
         Note: Assumes that slope > 0, otherwise division through zero might occur.
         """
+        x1, x2 = x
+        y1, y2 = y
         m = (y2 - y1) / (x2 - x1)
         b = y1 - (m * x1)
         return lambda x: m * x + b
