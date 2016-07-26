@@ -30,7 +30,7 @@ from scipy.ndimage.measurements import label, find_objects
 # own modules
 
 # code
-def dc(input1, input2):
+def dc(result, reference):
     r"""
     Dice coefficient
     
@@ -47,30 +47,30 @@ def dc(input1, input2):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
     Returns
     -------
     dc : float
-        The Dice coefficient between the object(s) in ```input1``` and the
-        object(s) in ```input2```. It ranges from 0 (no overlap) to 1 (perfect overlap).
+        The Dice coefficient between the object(s) in ```result``` and the
+        object(s) in ```reference```. It ranges from 0 (no overlap) to 1 (perfect overlap).
         
     Notes
     -----
-    This is a real metric.
+    This is a real metric. The binary images can therefore be supplied in any order.
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
     
-    intersection = numpy.count_nonzero(input1 & input2)
+    intersection = numpy.count_nonzero(result & reference)
     
-    size_i1 = numpy.count_nonzero(input1)
-    size_i2 = numpy.count_nonzero(input2)
+    size_i1 = numpy.count_nonzero(result)
+    size_i2 = numpy.count_nonzero(reference)
     
     try:
         dc = 2. * intersection / float(size_i1 + size_i2)
@@ -79,7 +79,7 @@ def dc(input1, input2):
     
     return dc
 
-def jc(input1, input2):
+def jc(result, reference):
     """
     Jaccard coefficient
     
@@ -87,45 +87,43 @@ def jc(input1, input2):
     
     Parameters
     ----------
-    input1: array_like
+    result: array_like
             Input data containing objects. Can be any type but will be converted
             into binary: background where 0, object everywhere else.
-    input2: array_like
+    reference: array_like
             Input data containing objects. Can be any type but will be converted
             into binary: background where 0, object everywhere else.
 
     Returns
     -------
     jc: float
-        The Jaccard coefficient between the object(s) in `input1` and the
-        object(s) in `input2`. It ranges from 0 (no overlap) to 1 (perfect overlap).
+        The Jaccard coefficient between the object(s) in `result` and the
+        object(s) in `reference`. It ranges from 0 (no overlap) to 1 (perfect overlap).
     
     Notes
     -----
-    This is a real metric.
+    This is a real metric. The binary images can therefore be supplied in any order.
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
     
-    intersection = numpy.count_nonzero(input1 & input2)
-    union = numpy.count_nonzero(input1 | input2)
+    intersection = numpy.count_nonzero(result & reference)
+    union = numpy.count_nonzero(result | reference)
     
     jc = float(intersection) / float(union)
     
     return jc
 
-def precision(input1, input2):
+def precision(result, reference):
     """
     Precison.
-    In case of evaluation, pass the ground truth as second and the classification results
-    as first argument.
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
@@ -150,11 +148,11 @@ def precision(input1, input2):
     .. [1] http://en.wikipedia.org/wiki/Precision_and_recall
     .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
         
-    tp = numpy.count_nonzero(input1 & input2)
-    fp = numpy.count_nonzero(input1 & ~input2)
+    tp = numpy.count_nonzero(result & reference)
+    fp = numpy.count_nonzero(result & ~reference)
     
     try:
         precision = tp / float(tp + fp)
@@ -163,18 +161,16 @@ def precision(input1, input2):
     
     return precision
 
-def recall(input1, input2):
+def recall(result, reference):
     """
-    Recall (or sensitivity).
-    In case of evaluation, pass the ground truth as second and the classification results
-    as first argument.
+    Recall.
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
@@ -199,11 +195,11 @@ def recall(input1, input2):
     .. [1] http://en.wikipedia.org/wiki/Precision_and_recall
     .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
         
-    tp = numpy.count_nonzero(input1 & input2)
-    fn = numpy.count_nonzero(~input1 & input2)
+    tp = numpy.count_nonzero(result & reference)
+    fn = numpy.count_nonzero(~result & reference)
 
     try:
         recall = tp / float(tp + fn)
@@ -212,29 +208,27 @@ def recall(input1, input2):
     
     return recall
 
-def sensitivity(input1, input2):
+def sensitivity(result, reference):
     """
-    Sensitivity (or recall).
-    See :func:`recall` for a detailed description.
+    Sensitivity.
+    Same as :func:`recall`, see there for a detailed description.
     
     See also
     --------
     :func:`specificity` 
     """
-    return recall(input1, input2)
+    return recall(result, reference)
 
-def specificity(input1, input2):
+def specificity(result, reference):
     """
-    Specificity (or true negative rate).
-    In case of evaluation, pass the ground truth as second and the classification results
-    as first argument.
+    Specificity.
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     
@@ -259,11 +253,11 @@ def specificity(input1, input2):
     .. [1] https://en.wikipedia.org/wiki/Sensitivity_and_specificity
     .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
        
-    tn = numpy.count_nonzero(~input1 & ~input2)
-    fp = numpy.count_nonzero(input1 & ~input2)
+    tn = numpy.count_nonzero(~result & ~reference)
+    fp = numpy.count_nonzero(result & ~reference)
 
     try:
         specificity = tn / float(tn + fp)
@@ -272,7 +266,43 @@ def specificity(input1, input2):
     
     return specificity
 
-def hd(input1, input2, voxelspacing=None, connectivity=1):
+def true_negative_rate(result, reference):
+    """
+    True negative rate.
+    Same as :func:`sensitivity`, see there for a detailed description.
+    
+    See also
+    --------
+    :func:`true_positive_rate` 
+    :func:`positive_predictive_value`
+    """
+    return sensitivity(result, reference)
+
+def true_positive_rate(result, reference):
+    """
+    True positive rate.
+    Same as :func:`recall`, see there for a detailed description.
+    
+    See also
+    --------
+    :func:`positive_predictive_value` 
+    :func:`true_negative_rate`
+    """
+    return recall(result, reference)
+
+def positive_predictive_value(result, reference):
+    """
+    Positive predictive value.
+    Same as :func:`precision`, see there for a detailed description.
+    
+    See also
+    --------
+    :func:`true_positive_rate`
+    :func:`true_negative_rate`
+    """
+    return precision(result, reference)
+
+def hd(result, reference, voxelspacing=None, connectivity=1):
     """
     Hausdorff Distance.
     
@@ -281,10 +311,10 @@ def hd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     voxelspacing : float or sequence of floats, optional
@@ -301,8 +331,8 @@ def hd(input1, input2, voxelspacing=None, connectivity=1):
     Returns
     -------
     hd : float
-        The symmetric Hausdorff Distance between the object(s) in ```input1``` and the
-        object(s) in ```input2```. The distance unit is the same as for the spacing of 
+        The symmetric Hausdorff Distance between the object(s) in ```result``` and the
+        object(s) in ```reference```. The distance unit is the same as for the spacing of 
         elements along each dimension, which is usually given in mm.
         
     See also
@@ -312,14 +342,14 @@ def hd(input1, input2, voxelspacing=None, connectivity=1):
     
     Notes
     -----
-    This is a real metric.
+    This is a real metric. The binary images can therefore be supplied in any order.
     """
-    hd1 = __surface_distances(input1, input2, voxelspacing, connectivity).max()
-    hd2 = __surface_distances(input2, input1, voxelspacing, connectivity).max()
+    hd1 = __surface_distances(result, reference, voxelspacing, connectivity).max()
+    hd2 = __surface_distances(reference, result, voxelspacing, connectivity).max()
     hd = max(hd1, hd2)
     return hd
 
-def assd(input1, input2, voxelspacing=None, connectivity=1):
+def assd(result, reference, voxelspacing=None, connectivity=1):
     """
     Average symmetric surface distance.
     
@@ -328,10 +358,10 @@ def assd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     voxelspacing : float or sequence of floats, optional
@@ -349,8 +379,8 @@ def assd(input1, input2, voxelspacing=None, connectivity=1):
     Returns
     -------
     assd : float
-        The average symmetric surface distance between the object(s) in ``input1`` and the
-        object(s) in ``input2``. The distance unit is the same as for the spacing of 
+        The average symmetric surface distance between the object(s) in ``result`` and the
+        object(s) in ``reference``. The distance unit is the same as for the spacing of 
         elements along each dimension, which is usually given in mm.
         
     See also
@@ -362,17 +392,18 @@ def assd(input1, input2, voxelspacing=None, connectivity=1):
     -----
     This is a real metric, obtained by calling and averaging
     
-    >>> asd(input1, input2)
+    >>> asd(result, reference)
     
     and
     
-    >>> asd(input2, input1)
+    >>> asd(reference, result)
     
+    The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (asd(input1, input2, voxelspacing, connectivity), asd(input2, input1, voxelspacing, connectivity)) )
+    assd = numpy.mean( (asd(result, reference, voxelspacing, connectivity), asd(reference, result, voxelspacing, connectivity)) )
     return assd
 
-def asd(input1, input2, voxelspacing=None, connectivity=1):
+def asd(result, reference, voxelspacing=None, connectivity=1):
     """
     Average surface distance metric.
     
@@ -380,10 +411,10 @@ def asd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     voxelspacing : float or sequence of floats, optional
@@ -401,8 +432,8 @@ def asd(input1, input2, voxelspacing=None, connectivity=1):
     Returns
     -------
     asd : float
-        The average surface distance between the object(s) in ``input1`` and the
-        object(s) in ``input2``. The distance unit is the same as for the spacing
+        The average surface distance between the object(s) in ``result`` and the
+        object(s) in ``reference``. The distance unit is the same as for the spacing
         of elements along each dimension, which is usually given in mm.
         
     See also
@@ -477,11 +508,11 @@ def asd(input1, input2, voxelspacing=None, connectivity=1):
     due to the center of the cross being considered surface as well.
     
     """
-    sds = __surface_distances(input1, input2, voxelspacing, connectivity)
+    sds = __surface_distances(result, reference, voxelspacing, connectivity)
     asd = sds.mean()
     return asd
 
-def ravd(input1, input2):
+def ravd(result, reference):
     """
     Relative absolute volume difference.
     
@@ -490,18 +521,18 @@ def ravd(input1, input2):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
         
     Returns
     -------
     ravd : float
-        The relative absolute volume difference between the object(s) in ``input1``
-        and the object(s) in ``input2``. This is a percentage value in the range
+        The relative absolute volume difference between the object(s) in ``result``
+        and the object(s) in ``reference``. This is a percentage value in the range
         :math:`[-1.0, +inf]` for which a :math:`0` denotes an ideal score.
         
     Raises
@@ -517,10 +548,8 @@ def ravd(input1, input2):
     
     Notes
     -----
-    This is not a real metric, as it is directed. Whatever object is considered as
-    reference should be passed second. Negative values denote a smaller and positive
-    values a larger volume than the reference.
-    
+    This is not a real metric, as it is directed. Negative values denote a smaller
+    and positive values a larger volume than the reference.
     This implementation does not check, whether the two supplied arrays are of the same
     size.
     
@@ -559,18 +588,18 @@ def ravd(input1, input2):
     0.0
     
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
         
-    vol1 = numpy.count_nonzero(input1)
-    vol2 = numpy.count_nonzero(input2)
+    vol1 = numpy.count_nonzero(result)
+    vol2 = numpy.count_nonzero(reference)
     
     if 0 == vol2:
         raise RuntimeError('The second supplied array does not contain any binary object.')
-
-    return vol1 - vol2 / float(vol2)
     
-def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
+    return (vol1 - vol2) / float(vol2)
+    
+def obj_assd(result, reference, voxelspacing=None, connectivity=1):
     """
     Average symmetric surface distance.
     
@@ -579,10 +608,10 @@ def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     voxelspacing : float or sequence of floats, optional
@@ -602,7 +631,7 @@ def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
     -------
     assd : float
         The average symmetric surface distance between all mutually existing distinct
-        binary object(s) in ``input1`` and ``input2``. The distance unit is the same as for
+        binary object(s) in ``result`` and ``reference``. The distance unit is the same as for
         the spacing of elements along each dimension, which is usually given in mm.
         
     See also
@@ -613,31 +642,32 @@ def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
     -----
     This is a real metric, obtained by calling and averaging
     
-    >>> obj_asd(input1, input2)
+    >>> obj_asd(result, reference)
     
     and
     
-    >>> obj_asd(input2, input1)
+    >>> obj_asd(reference, result)
     
+    The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (obj_asd(input1, input2, voxelspacing, connectivity), obj_asd(input2, input1, voxelspacing, connectivity)) )
+    assd = numpy.mean( (obj_asd(result, reference, voxelspacing, connectivity), obj_asd(reference, result, voxelspacing, connectivity)) )
     return assd
     
     
-def obj_asd(input1, input2, voxelspacing=None, connectivity=1):
+def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     """
     Average surface distance between objects.
     
-    First correspondences between distinct binary objects in input2 and input1 are
+    First correspondences between distinct binary objects in reference and result are
     established. Then the average surface distance is only computed between corresponding
     objects. Correspondence is defined as unique and at least one voxel overlap.
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     voxelspacing : float or sequence of floats, optional
@@ -657,7 +687,7 @@ def obj_asd(input1, input2, voxelspacing=None, connectivity=1):
     -------
     asd : float
         The average surface distance between all mutually existing distinct binary
-        object(s) in ``input1`` and ``input2``. The distance unit is the same as for the
+        object(s) in ``result`` and ``reference``. The distance unit is the same as for the
         spacing of elements along each dimension, which is usually given in mm.
         
     See also
@@ -755,7 +785,7 @@ def obj_asd(input1, input2, voxelspacing=None, connectivity=1):
     surface voxels.
     """
     sds = list()
-    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(input1, input2, connectivity)
+    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(result, reference, connectivity)
     slicers1 = find_objects(labelmap1)
     slicers2 = find_objects(labelmap2)
     for lid2, lid1 in mapping.iteritems():
@@ -766,7 +796,7 @@ def obj_asd(input1, input2, voxelspacing=None, connectivity=1):
     asd = numpy.mean(sds)
     return asd
     
-def obj_fpr(input1, input2, connectivity=1):
+def obj_fpr(result, reference, connectivity=1):
     """
     The false positive rate of distinct binary object detection.
     
@@ -780,10 +810,10 @@ def obj_fpr(input1, input2, connectivity=1):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     connectivity : int
@@ -796,8 +826,8 @@ def obj_fpr(input1, input2, connectivity=1):
     Returns
     -------
     tpr : float
-        A percentage measure of how many distinct binary objects in ``input2`` have no
-        corresponding binary object in ``input2``. It has the range :math:`[0, 1]`, where a :math:`0`
+        A percentage measure of how many distinct binary objects in ``results`` have no
+        corresponding binary object in ``reference``. It has the range :math:`[0, 1]`, where a :math:`0`
         denotes an ideal score.
         
     Raises
@@ -812,20 +842,20 @@ def obj_fpr(input1, input2, connectivity=1):
     Notes
     -----
     This is not a real metric, as it is directed. Whatever array is considered as
-    reference should be passed first. A perfect score of :math:`0` tells that there are no
+    reference should be passed second. A perfect score of :math:`0` tells that there are no
     distinct binary objects in the second array that do not exists also in the reference
     array, but does not reveal anything about objects in the reference array also
     existing in the second array (use :func:`obj_tpr` for this).
     
     Examples
     --------
-    >>> arr1 = numpy.asarray([[1,0,0],[1,0,1],[0,0,1]])
-    >>> arr2 = numpy.asarray([[0,0,1],[1,0,1],[0,0,1]])
-    >>> arr1
+    >>> arr2 = numpy.asarray([[1,0,0],[1,0,1],[0,0,1]])
+    >>> arr1 = numpy.asarray([[0,0,1],[1,0,1],[0,0,1]])
+    >>> arr2
     array([[1, 0, 0],
            [1, 0, 1],
            [0, 0, 1]])
-    >>> arr2
+    >>> arr1
     array([[0, 0, 1],
            [1, 0, 1],
            [0, 0, 1]])
@@ -836,8 +866,8 @@ def obj_fpr(input1, input2, connectivity=1):
     
     Example of directedness:
     
-    >>> arr1 = numpy.asarray([1,0,1,0,1])
-    >>> arr2 = numpy.asarray([1,0,1,0,0])
+    >>> arr2 = numpy.asarray([1,0,1,0,1])
+    >>> arr1 = numpy.asarray([1,0,1,0,0])
     >>> obj_fpr(arr1, arr2)
     0.0
     >>> obj_fpr(arr2, arr1)
@@ -845,26 +875,26 @@ def obj_fpr(input1, input2, connectivity=1):
     
     Examples of multiple overlap treatment:
     
-    >>> arr1 = numpy.asarray([1,0,1,0,1,1,1])
-    >>> arr2 = numpy.asarray([1,1,1,0,1,0,1])
+    >>> arr2 = numpy.asarray([1,0,1,0,1,1,1])
+    >>> arr1 = numpy.asarray([1,1,1,0,1,0,1])
     >>> obj_fpr(arr1, arr2)
     0.3333333333333333
     >>> obj_fpr(arr2, arr1)
     0.3333333333333333
     
-    >>> arr1 = numpy.asarray([1,0,1,1,1,0,1])
-    >>> arr2 = numpy.asarray([1,1,1,0,1,1,1])
+    >>> arr2 = numpy.asarray([1,0,1,1,1,0,1])
+    >>> arr1 = numpy.asarray([1,1,1,0,1,1,1])
     >>> obj_fpr(arr1, arr2)
     0.0
     >>> obj_fpr(arr2, arr1)
     0.3333333333333333
     
-    >>> arr1 = numpy.asarray([[1,0,1,0,0],
+    >>> arr2 = numpy.asarray([[1,0,1,0,0],
                               [1,0,0,0,0],
                               [1,0,1,1,1],
                               [0,0,0,0,0],
                               [1,0,1,0,0]])
-    >>> arr2 = numpy.asarray([[1,1,1,0,0],
+    >>> arr1 = numpy.asarray([[1,1,1,0,0],
                               [0,0,0,0,0],
                               [1,1,1,0,1],
                               [0,0,0,0,0],
@@ -874,10 +904,10 @@ def obj_fpr(input1, input2, connectivity=1):
     >>> obj_fpr(arr2, arr1)
     0.2    
     """
-    _, _, _, n_obj_input2, mapping = __distinct_binary_object_correspondences(input1, input2, connectivity)
-    return (n_obj_input2 - len(mapping)) / float(n_obj_input2)
+    _, _, _, n_obj_reference, mapping = __distinct_binary_object_correspondences(reference, result, connectivity)
+    return (n_obj_reference - len(mapping)) / float(n_obj_reference)
     
-def obj_tpr(input1, input2, connectivity=1):
+def obj_tpr(result, reference, connectivity=1):
     """
     The true positive rate of distinct binary object detection.
     
@@ -891,10 +921,10 @@ def obj_tpr(input1, input2, connectivity=1):
     
     Parameters
     ----------
-    input1 : array_like
+    result : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
-    input2 : array_like
+    reference : array_like
         Input data containing objects. Can be any type but will be converted
         into binary: background where 0, object everywhere else.
     connectivity : int
@@ -907,8 +937,8 @@ def obj_tpr(input1, input2, connectivity=1):
     Returns
     -------
     tpr : float
-        A percentage measure of how many distinct binary objects in ``input1`` also exists
-        in ``input2``. It has the range :math:`[0, 1]`, where a :math:`1` denotes an ideal score.
+        A percentage measure of how many distinct binary objects in ``result`` also exists
+        in ``reference``. It has the range :math:`[0, 1]`, where a :math:`1` denotes an ideal score.
         
     Raises
     ------
@@ -922,20 +952,20 @@ def obj_tpr(input1, input2, connectivity=1):
     Notes
     -----
     This is not a real metric, as it is directed. Whatever array is considered as
-    reference should be passed first. A perfect score of :math:`1` tells that all distinct
-    binary objects in the reference array also exist in the second array, but does not
-    reveal anything about additional binary objects in the second array
+    reference should be passed second. A perfect score of :math:`1` tells that all distinct
+    binary objects in the reference array also exist in the result array, but does not
+    reveal anything about additional binary objects in the result array
     (use :func:`obj_fpr` for this).
     
     Examples
     --------
-    >>> arr1 = numpy.asarray([[1,0,0],[1,0,1],[0,0,1]])
-    >>> arr2 = numpy.asarray([[0,0,1],[1,0,1],[0,0,1]])
-    >>> arr1
+    >>> arr2 = numpy.asarray([[1,0,0],[1,0,1],[0,0,1]])
+    >>> arr1 = numpy.asarray([[0,0,1],[1,0,1],[0,0,1]])
+    >>> arr2
     array([[1, 0, 0],
            [1, 0, 1],
            [0, 0, 1]])
-    >>> arr2
+    >>> arr1
     array([[0, 0, 1],
            [1, 0, 1],
            [0, 0, 1]])
@@ -946,8 +976,8 @@ def obj_tpr(input1, input2, connectivity=1):
     
     Example of directedness:
     
-    >>> arr1 = numpy.asarray([1,0,1,0,1])
-    >>> arr2 = numpy.asarray([1,0,1,0,0])
+    >>> arr2 = numpy.asarray([1,0,1,0,1])
+    >>> arr1 = numpy.asarray([1,0,1,0,0])
     >>> obj_tpr(arr1, arr2)
     0.6666666666666666
     >>> obj_tpr(arr2, arr1)
@@ -955,26 +985,26 @@ def obj_tpr(input1, input2, connectivity=1):
     
     Examples of multiple overlap treatment:
     
-    >>> arr1 = numpy.asarray([1,0,1,0,1,1,1])
-    >>> arr2 = numpy.asarray([1,1,1,0,1,0,1])
+    >>> arr2 = numpy.asarray([1,0,1,0,1,1,1])
+    >>> arr1 = numpy.asarray([1,1,1,0,1,0,1])
     >>> obj_tpr(arr1, arr2)
     0.6666666666666666
     >>> obj_tpr(arr2, arr1)
     0.6666666666666666
     
-    >>> arr1 = numpy.asarray([1,0,1,1,1,0,1])
-    >>> arr2 = numpy.asarray([1,1,1,0,1,1,1])
+    >>> arr2 = numpy.asarray([1,0,1,1,1,0,1])
+    >>> arr1 = numpy.asarray([1,1,1,0,1,1,1])
     >>> obj_tpr(arr1, arr2)
     0.6666666666666666
     >>> obj_tpr(arr2, arr1)
     1.0
     
-    >>> arr1 = numpy.asarray([[1,0,1,0,0],
+    >>> arr2 = numpy.asarray([[1,0,1,0,0],
                               [1,0,0,0,0],
                               [1,0,1,1,1],
                               [0,0,0,0,0],
                               [1,0,1,0,0]])
-    >>> arr2 = numpy.asarray([[1,1,1,0,0],
+    >>> arr1 = numpy.asarray([[1,1,1,0,0],
                               [0,0,0,0,0],
                               [1,1,1,0,1],
                               [0,0,0,0,0],
@@ -984,30 +1014,30 @@ def obj_tpr(input1, input2, connectivity=1):
     >>> obj_tpr(arr2, arr1)
     1.0    
     """
-    _, _, n_obj_input1, _, mapping = __distinct_binary_object_correspondences(input1, input2, connectivity)
-    return len(mapping) / float(n_obj_input1)
+    _, _, n_obj_result, _, mapping = __distinct_binary_object_correspondences(reference, result, connectivity)
+    return len(mapping) / float(n_obj_result)
 
-def __distinct_binary_object_correspondences(input1, input2, connectivity=1):
+def __distinct_binary_object_correspondences(reference, result, connectivity=1):
     """
     Determines all distinct (where connectivity is defined by the connectivity parameter
     passed to scipy's `generate_binary_structure`) binary objects in both of the input
-    parameters and returns a 1to1 mapping from the labelled objects in input2 to the
+    parameters and returns a 1to1 mapping from the labelled objects in reference to the
     corresponding (whereas a one-voxel overlap suffices for correspondence) objects in
-    input1.
+    result.
     
     All stems from the problem, that the relationship is non-surjective many-to-many.
     
     @return (labelmap1, labelmap2, n_lables1, n_labels2, labelmapping2to1)
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
     
     # binary structure
-    footprint = generate_binary_structure(input1.ndim, connectivity)
+    footprint = generate_binary_structure(result.ndim, connectivity)
     
     # label distinct binary objects
-    labelmap1, n_obj_input1 = label(input1, footprint)
-    labelmap2, n_obj_input2 = label(input2, footprint)
+    labelmap1, n_obj_result = label(result, footprint)
+    labelmap2, n_obj_reference = label(reference, footprint)
     
     # find all overlaps from labelmap2 to labelmap1; collect one-to-one relationships and store all one-two-many for later processing
     slicers = find_objects(labelmap2) # get windows of labelled objects
@@ -1039,39 +1069,39 @@ def __distinct_binary_object_correspondences(input1, input2, connectivity=1):
         used_labels.add(l2id) # mark target label as used
         one_to_many = one_to_many[1:] # delete the processed set from all sets
     
-    return labelmap1, labelmap2, n_obj_input1, n_obj_input2, mapping
+    return labelmap1, labelmap2, n_obj_result, n_obj_reference, mapping
     
-def __surface_distances(input1, input2, voxelspacing=None, connectivity=1):
+def __surface_distances(result, reference, voxelspacing=None, connectivity=1):
     """
-    The distances between the surface voxel of binary objects in input1 and their
-    nearest partner surface voxel of a binary object in input2.
+    The distances between the surface voxel of binary objects in result and their
+    nearest partner surface voxel of a binary object in reference.
     """
-    input1 = numpy.atleast_1d(input1.astype(numpy.bool))
-    input2 = numpy.atleast_1d(input2.astype(numpy.bool))
+    result = numpy.atleast_1d(result.astype(numpy.bool))
+    reference = numpy.atleast_1d(reference.astype(numpy.bool))
     if voxelspacing is not None:
-        voxelspacing = _ni_support._normalize_sequence(voxelspacing, input1.ndim)
+        voxelspacing = _ni_support._normalize_sequence(voxelspacing, result.ndim)
         voxelspacing = numpy.asarray(voxelspacing, dtype=numpy.float64)
         if not voxelspacing.flags.contiguous:
             voxelspacing = voxelspacing.copy()
             
     # binary structure
-    footprint = generate_binary_structure(input1.ndim, connectivity)
+    footprint = generate_binary_structure(result.ndim, connectivity)
     
     # test for emptiness
-    if 0 == numpy.count_nonzero(input1): 
+    if 0 == numpy.count_nonzero(result): 
         raise RuntimeError('The first supplied array does not contain any binary object.')
-    if 0 == numpy.count_nonzero(input2): 
+    if 0 == numpy.count_nonzero(reference): 
         raise RuntimeError('The second supplied array does not contain any binary object.')    
             
     # extract only 1-pixel border line of objects
-    input1_border = input1 - binary_erosion(input1, structure=footprint, iterations=1)
-    input2_border = input2 - binary_erosion(input2, structure=footprint, iterations=1)
+    result_border = result - binary_erosion(result, structure=footprint, iterations=1)
+    reference_border = reference - binary_erosion(reference, structure=footprint, iterations=1)
     
     # compute average surface distance        
     # Note: scipys distance transform is calculated only inside the borders of the
     #       foreground objects, therefore the input has to be reversed
-    dt = distance_transform_edt(~input2_border, sampling=voxelspacing)
-    sds = dt[input1_border]
+    dt = distance_transform_edt(~reference_border, sampling=voxelspacing)
+    sds = dt[result_border]
     
     return sds
 

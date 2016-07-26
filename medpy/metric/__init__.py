@@ -21,6 +21,7 @@ Compare two binary objects
     :toctree: generated/
     
     dc
+    jc
     hd
     asd
     assd
@@ -28,6 +29,9 @@ Compare two binary objects
     recall
     sensitivity
     specificity
+    true_positive_rate
+    true_negative_rate
+    positive_predictive_value
     ravd
     
 Compare two sets of binary objects
