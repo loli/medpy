@@ -518,7 +518,7 @@ def ravd(input1, input2):
     Notes
     -----
     This is not a real metric, as it is directed. Whatever object is considered as
-    reference should be passed first. Negative values denote a smaller and positive
+    reference should be passed second. Negative values denote a smaller and positive
     values a larger volume than the reference.
     
     This implementation does not check, whether the two supplied arrays are of the same
@@ -565,10 +565,10 @@ def ravd(input1, input2):
     vol1 = numpy.count_nonzero(input1)
     vol2 = numpy.count_nonzero(input2)
     
-    if 0 == vol1:
-        raise RuntimeError('The first supplied array does not contain any binary object.')
+    if 0 == vol2:
+        raise RuntimeError('The second supplied array does not contain any binary object.')
 
-    return (vol2 - vol1) / float(vol1)
+    return vol1 - vol2 / float(vol2)
     
 def obj_assd(input1, input2, voxelspacing=None, connectivity=1):
     """
