@@ -25,7 +25,8 @@ import numpy
 from scipy.ndimage import _ni_support
 from scipy.ndimage.morphology import distance_transform_edt, binary_erosion,\
     generate_binary_structure
-from scipy.ndimage.measurements import label, find_objects    
+from scipy.ndimage.measurements import label, find_objects
+from scipy.stats import pearsonr
 
 # own modules
 
@@ -598,6 +599,77 @@ def ravd(result, reference):
         raise RuntimeError('The second supplied array does not contain any binary object.')
     
     return (vol1 - vol2) / float(vol2)
+
+def volume_correlation(results, references):
+    r"""
+    Volume correlation.
+    
+    Computes the linear correlation in binary object volume between the
+    contents of the successive binary images supplied. Measured through
+    the Pearson product-moment correlation coefficient. 
+    
+    Parameters
+    ----------
+    results : sequence of array_like
+        Ordered list of input data containing objects. Each array_like will be
+        converted into binary: background where 0, object everywhere else.
+    references : sequence of array_like
+        Ordered list of input data containing objects. Each array_like will be
+        converted into binary: background where 0, object everywhere else.
+        The order must be the same as for ``results``.
+    
+    Returns
+    -------
+    r : float
+        The correlation coefficient between -1 and 1.
+    p : float
+        The two-side p value.
+        
+    """
+    results = numpy.atleast_2d(numpy.array(results).astype(numpy.bool))
+    references = numpy.atleast_2d(numpy.array(references).astype(numpy.bool))
+    
+    results_volumes = [numpy.count_nonzero(r) for r in results]
+    references_volumes = [numpy.count_nonzero(r) for r in references]
+    
+    return pearsonr(results_volumes, references_volumes) # returns (Pearson'
+
+def volume_change_correlation(results, references):
+    r"""
+    Volume change correlation.
+    
+    Computes the linear correlation of change in binary object volume between
+    the contents of the successive binary images supplied. Measured through
+    the Pearson product-moment correlation coefficient. 
+    
+    Parameters
+    ----------
+    results : sequence of array_like
+        Ordered list of input data containing objects. Each array_like will be
+        converted into binary: background where 0, object everywhere else.
+    references : sequence of array_like
+        Ordered list of input data containing objects. Each array_like will be
+        converted into binary: background where 0, object everywhere else.
+        The order must be the same as for ``results``.
+    
+    Returns
+    -------
+    r : float
+        The correlation coefficient between -1 and 1.
+    p : float
+        The two-side p value.
+        
+    """
+    results = numpy.atleast_2d(numpy.array(results).astype(numpy.bool))
+    references = numpy.atleast_2d(numpy.array(references).astype(numpy.bool))
+    
+    results_volumes = numpy.asarray([numpy.count_nonzero(r) for r in results])
+    references_volumes = numpy.asarray([numpy.count_nonzero(r) for r in references])
+    
+    results_volumes_changes = results_volumes[1:] - results_volumes[:-1]
+    references_volumes_changes = references_volumes[1:] - references_volumes[:-1] 
+    
+    return pearsonr(results_volumes_changes, references_volumes_changes) # returns (Pearson's correlation coefficient, 2-tailed p-value)
     
 def obj_assd(result, reference, voxelspacing=None, connectivity=1):
     """
