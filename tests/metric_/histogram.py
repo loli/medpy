@@ -29,8 +29,12 @@ semi_metric_list = [
 
 all_func_medpy_histogram = metric_list + semi_metric_list + similarity_func + unknown_prop_list + still_under_dev
 
+# need to figure out a way to set up tests over a fixed range
+# arbitrary_length = np.random.randint(100, 1000)
+# num_bins = np.random.randint(20, 200) # 100
+
 arbitrary_length = np.random.randint(100, 1000)
-num_bins = np.random.randint(20, 200) # 100
+num_bins = 20
 
 def within_tolerance(x, y):
     "Function to indicate acceptable level of tolerance in numerical differences"
