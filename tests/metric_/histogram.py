@@ -7,6 +7,7 @@ Unittest for medpy.metric.histogram
 import unittest
 import numpy as np
 from pytest import raises, warns, set_trace
+from hypothesis import given, strategies, note
 
 from medpy.metric import histogram
 
@@ -30,21 +31,24 @@ semi_metric_list = [
 all_func_medpy_histogram = metric_list + semi_metric_list + similarity_func + unknown_prop_list + still_under_dev
 
 # need to figure out a way to set up tests over a fixed range
-# arbitrary_length = np.random.randint(100, 1000)
-# num_bins = np.random.randint(20, 200) # 100
+# default_feature_dim = np.random.randint(100, 1000)
+# default_num_bins = np.random.randint(20, 200) # 100
 
-arbitrary_length = np.random.randint(100, 1000)
-num_bins = 20
+default_feature_dim = 1000
+default_num_bins = 20
+
+range_feature_dim = [10, 1000]
+range_num_bins = [5, 200]
 
 def within_tolerance(x, y):
     "Function to indicate acceptable level of tolerance in numerical differences"
 
     return np.allclose(x, y, rtol=1e-3, atol=np.finfo(float).eps)
 
-def make_random_histogram(length = arbitrary_length):
+def make_random_histogram(length = default_feature_dim, num_bins = default_num_bins):
     "Returns a sequence of histogram density values that sum to 1.0"
 
-    hist, bin_edges = np.histogram(np.random.random(arbitrary_length),
+    hist, bin_edges = np.histogram(np.random.random(length),
                                    bins = num_bins, density=True)
 
     if len(hist) < 2:
@@ -52,19 +56,25 @@ def make_random_histogram(length = arbitrary_length):
 
     return hist
 
-def test_indiscernibility_metric():
 
-    h1 = make_random_histogram()
+@given(strategies.integers(range_feature_dim[0], range_feature_dim[1]),
+       strategies.integers(range_num_bins[0], range_num_bins[1]))
+def test_indiscernibility_metric(feat_dim, num_bins):
+
+    h1 = make_random_histogram(feat_dim, num_bins)
 
     for method_str in metric_list:
         method = getattr(histogram, method_str)
         is_indiscernible = within_tolerance(method(h1, h1), 0.0)
         assert is_indiscernible
 
-def test_symmetry_metric():
 
-    h1 = make_random_histogram()
-    h2 = make_random_histogram()
+@given(strategies.integers(range_feature_dim[0], range_feature_dim[1]),
+       strategies.integers(range_num_bins[0], range_num_bins[1]))
+def test_symmetry_metric(feat_dim, num_bins):
+
+    h1 = make_random_histogram(feat_dim, num_bins)
+    h2 = make_random_histogram(feat_dim, num_bins)
 
     for method_str in metric_list:
         method = getattr(histogram, method_str)
@@ -81,20 +91,26 @@ def test_symmetry_metric():
             print h2
         assert within_tolerance(d12, d21)
 
-def test_nonnegativity_metric():
 
-    h1 = make_random_histogram()
-    h2 = make_random_histogram()
+@given(strategies.integers(range_feature_dim[0], range_feature_dim[1]),
+       strategies.integers(range_num_bins[0], range_num_bins[1]))
+def test_nonnegativity_metric(feat_dim, num_bins):
+
+    h1 = make_random_histogram(feat_dim, num_bins)
+    h2 = make_random_histogram(feat_dim, num_bins)
 
     for method_str in metric_list:
         method = getattr(histogram, method_str)
         assert method(h1,h2) >= 0.0
 
-def test_triangle_inequality_metric():
 
-    h1 = make_random_histogram()
-    h2 = make_random_histogram()
-    h3 = make_random_histogram()
+@given(strategies.integers(range_feature_dim[0], range_feature_dim[1]),
+       strategies.integers(range_num_bins[0], range_num_bins[1]))
+def test_triangle_inequality_metric(feat_dim, num_bins):
+
+    h1 = make_random_histogram(feat_dim, num_bins)
+    h2 = make_random_histogram(feat_dim, num_bins)
+    h3 = make_random_histogram(feat_dim, num_bins)
 
     for method_str in metric_list:
         method = getattr(histogram, method_str)
