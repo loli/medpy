@@ -440,8 +440,6 @@ def local_histogram(image, bins=19, rang="image", cutoffp=(0.0, 100.0), size=Non
         The ``mode`` parameter determines how the array borders are handled. Default is 'ignore'
     origin : number
         The ``origin`` parameter controls the placement of the filter. Default 0.
-    voxelspacing : sequence of floats
-        The side-length of each voxel.
     mask : array_like
         A binary mask for the image.
         
