@@ -327,7 +327,7 @@ def hd(result, reference, voxelspacing=None, connectivity=1):
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
         `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
-        Presumably does not influence the result in the case of the Hausdorff distance.
+        Note that the connectivity influences the result in the case of the Hausdorff distance.
         
     Returns
     -------
