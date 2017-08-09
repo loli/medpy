@@ -408,7 +408,7 @@ def relative_bin_deviation(h1, h2): # 79 us @array, 104 us @list \w 100 bins
     
     *Attributes:*
 
-    - semimetric (triangle equation satisfied?)
+    - a real metric
     
     *Attributes for normalized histograms:*
 
