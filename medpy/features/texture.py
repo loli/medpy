@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # author Alexander Ruesch
-# version r0.1.0
+# version r0.1.1
 # since 2013-08-24
 # status Release
 
@@ -82,7 +82,7 @@ def coarseness(image, voxelspacing = None, mask = slice(None)):
         print "Voxel spacing and image dimensions do not fit."
         return None
     # set padding for image border control
-    padSize = tuple((numpy.rint((2**5.0) * voxelspacing[jj]),0) for jj in xrange(image.ndim))        
+    padSize = numpy.asarray([(numpy.rint((2**5.0) * voxelspacing[jj]),0) for jj in xrange(image.ndim)]).astype(numpy.int)
     Apad = numpy.pad(image,pad_width=padSize, mode='reflect')
 
     # Allocate memory
