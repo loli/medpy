@@ -14,10 +14,7 @@ Run for sub-module
 ------------------
 nosetests <submodule>_/*
 
-Run for metric_/ sub-module
----------------------------
-Requires: pytest and hypothesis
-pytest metric_/histogram.py
+Note: metric_/ sub-module requires hypothesis package
 
 Check support for image formats
 -------------------------------
