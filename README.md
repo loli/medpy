@@ -10,3 +10,5 @@ See <https://pypi.python.org/pypi/medpy/> or the README.txt for more details on 
 For installation instructions, tutorials and the API documentation have a look at <http://pythonhosted.org//MedPy/>.
 
 Docker containers are available at <https://registry.hub.docker.com/u/loli/medpy/>.
+
+DOI from latest release: [![DOI](https://zenodo.org/badge/4295983.svg)](https://zenodo.org/badge/latestdoi/4295983)

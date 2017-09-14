@@ -12,7 +12,6 @@ Unittest for medpy.features.texture.
 import unittest
 
 # third-party modules
-import scipy
 
 # own modules
 from medpy.features.texture import *

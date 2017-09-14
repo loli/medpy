@@ -14,6 +14,12 @@ Run for sub-module
 ------------------
 nosetests <submodule>_/*
 
+Note: metric_/ sub-module requires hypothesis package
+
 Check support for image formats
 -------------------------------
-./support.py
+python support.py
+
+WARNING
+-------
+graphcut_/ tests are faulty.

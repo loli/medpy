@@ -2,7 +2,7 @@
 Unittest for medpy.features.intensity.
 
 @author Oskar Maier
-@version d0.2.1
+@version d0.2.2
 @since 2013-08-26
 @status Development
 """
@@ -53,7 +53,7 @@ class TestIntensityFeatures(unittest.TestCase):
         m = [[False, False, False],
              [False, True, False],
              [False, False, False]]
-        e = e[numpy.asarray(m).flatten()]
+        e = e[:9][numpy.asarray(m).flatten()]
         r = local_histogram(i, bins=2, size=3, rang=(0, 1), mask=m)
         self.assertEqual(len(r), 1, 'local histogram: 2D local range masked failed')
         numpy.testing.assert_allclose(r, e, err_msg = 'local histogram: 2D local range masked failed')

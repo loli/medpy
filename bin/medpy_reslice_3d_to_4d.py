@@ -98,7 +98,8 @@ def main():
             data_4d[idx][idx_to] = data_3d[idx_from]
         
     # flip dimensions such that the newly created is the last
-    data_4d = scipy.swapaxes(data_4d, 0, 3)
+    data_4d = scipy.swapaxes(data_4d, 0, args.dimension + 1)
+    data_4d = scipy.rollaxis(data_4d, 0, 4)
         
     # save resulting 4D volume
     save(data_4d, args.output, header_3d, args.force)
