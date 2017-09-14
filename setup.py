@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# version: 0.2.4
+# version: 0.2.5
 # Many thanks to simplejson for the idea on how to install c++-extention module optionally!
 # https://pypi.python.org/pypi/simplejson/
 
@@ -39,7 +39,7 @@ maxflow = Extension('medpy.graphcut.maxflow',
                     define_macros = [('MAJOR_VERSION', '0'),
                                      ('MINOR_VERSION', '1')],
                     sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
-                    libraries = ['boost_python'],
+                    libraries = ['boost_python-py' + str(sys.version_info.major) + str(sys.version_info.minor)],
                     extra_compile_args = ['-O0'])
 
 ### FUNCTIONALITY FOR CONDITIONAL C++ BUILD
