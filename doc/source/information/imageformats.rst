@@ -1,6 +1,11 @@
 ===============================
 Supported medical image formats
 ===============================
+
+.. note::
+
+  You can check you currently supported image formats by running *tests/support.py* from `Github <https://github.com/loli/medpy>`_.
+
 MedPy builds on 3rd party modules to load and save images. Currently
 implemented are the usages of
 
