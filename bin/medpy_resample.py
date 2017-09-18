@@ -96,8 +96,8 @@ def main():
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
-    if args.order < 1 or args.order > 5:
-        parser.error('The order has to be a number between 1 and 5.')   
+    if args.order < 0 or args.order > 5:
+        parser.error('The order has to be a number between 0 and 5.')   
     return args
 
 def getParser():
@@ -106,7 +106,7 @@ def getParser():
     parser.add_argument('input', help='the input image')
     parser.add_argument('output', help='the output image')
     parser.add_argument('spacing', type=argparseu.sequenceOfFloatsGt, help='the desired voxel spacing in colon-separated values, e.g. 1.2,1.2,5.0')
-    parser.add_argument('-o', '--order', type=int, default=2, dest='order', help='the bspline order, default is 2')
+    parser.add_argument('-o', '--order', type=int, default=2, dest='order', help='the bspline order, default is 2;  means nearest neighbours; see also medpy_binary_resampling.py')
     
     #group = parser.add_mutually_exclusive_group(required=False)
     #group.add_argument('--binary', action='store_true', dest='binary', help='enforce binary output image')

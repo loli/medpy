@@ -20,10 +20,11 @@
 
 # build-in modules
 import math
+import sys
 
 # third-party modules
 import scipy.ndimage
-import sys
+import numpy
 
 # own modules
 
@@ -77,6 +78,8 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
     
     if label_image.flags['F_CONTIGUOUS']: # strangely one this one is required to be ctype ordering
         label_image = scipy.ascontiguousarray(label_image)
+        
+    __check_label_image(label_image)
     
     # create a lookup-table that translates from a label id to its position in the sorted unique vector
     labels_unique = scipy.unique(label_image)
@@ -97,12 +100,12 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
     # compute the difference of means for each adjunct region and add it as a tuple to the dictionary
     if 0. == max_difference: # special case when the divider is zero and therefore all values can be assured to equal zero
         for edge in edges:
-            graph.add_nweight(edge[0] - 1, edge[1] - 1, sys.float_info.min, sys.float_info.min)
+            graph.set_nweight(edge[0] - 1, edge[1] - 1, sys.float_info.min, sys.float_info.min)
     else:    
         # compute the difference of means for each adjunct region and add it as a tuple to the dictionary
         for edge in edges:
             value = max(1. - abs(means[edge[0]] - means[edge[1]]) / max_difference, sys.float_info.min)
-            graph.add_nweight(edge[0] - 1, edge[1] - 1, value, value)
+            graph.set_nweight(edge[0] - 1, edge[1] - 1, value, value)
 
 
 def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
@@ -140,7 +143,7 @@ def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is n
     graph : GCGraph
         The graph to add the weights to.
     label_image : ndarray
-        The label image.
+        The label image. Must contain consecutively labelled regions starting from index 1.
     gradient_image : ndarray
         The gradient image.
     
@@ -162,29 +165,32 @@ def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is n
     label_image = scipy.asarray(label_image)
     gradient_image = scipy.asarray(gradient_image)
     
-    if label_image.flags['F_CONTIGUOUS']: # strangely one this one is required to be ctype ordering
+    if label_image.flags['F_CONTIGUOUS']: # strangely, this one is required to be ctype ordering
         label_image = scipy.ascontiguousarray(label_image)
-    
-    def addition(key1, key2, v1, v2):
-        "Takes a key defined by two uints, two voxel intensities and adds to the function wide graph a new nweight."
-        if not key1 == key2:
-            weight = math.pow(1./(1. + max(abs(v1), abs(v2))), 2) # weight contribution of a single pixel
-            graph.set_nweight(min(key1, key2) - 1, max(key1, key2) - 1, weight, weight)
-                                                  
-    # vectorize the function to achieve a speedup
-    vaddition = scipy.vectorize(addition)
-    
-    # iterate over each dimension
+        
+    __check_label_image(label_image)
+        
     for dim in range(label_image.ndim):
-        slices_x = []
-        slices_y = []
-        for di in range(label_image.ndim):
-            slices_x.append(slice(None, -1 if di == dim else None))
-            slices_y.append(slice(1 if di == dim else None, None))
-        vaddition(label_image[slices_x],
-                  label_image[slices_y],
-                  gradient_image[slices_x],
-                  gradient_image[slices_y])
+        # prepare slicer for all minus last and all minus first "row"
+        slicer_from = [slice(None)] * label_image.ndim
+        slicer_to = [slice(None)] * label_image.ndim
+        slicer_from[dim] = slice(None, -1)
+        slicer_to[dim] = slice(1, None)
+        # slice views of keys
+        keys_from = label_image[slicer_from]
+        keys_to = label_image[slicer_to]
+        # determine not equal keys
+        valid_edges = keys_from != keys_to
+        # determine largest gradient
+        gradient_max = numpy.maximum(numpy.abs(gradient_image[slicer_from]), numpy.abs(gradient_image[slicer_to]))[valid_edges]
+        # determine key order
+        keys_max = numpy.maximum(keys_from, keys_to)[valid_edges]
+        keys_min = numpy.minimum(keys_from, keys_to)[valid_edges]
+        # set edges / nweights
+        for k1, k2, val in zip(keys_min, keys_max, gradient_max):
+            weight = math.pow(1./(1. + val), 2) # weight contribution of a single pixel
+            weight = max(weight, sys.float_info.min)
+            graph.set_nweight(k1 - 1 , k2 - 1, weight, weight)
 
 
 def boundary_stawiaski_directed(graph, label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
@@ -237,7 +243,7 @@ def boundary_stawiaski_directed(graph, label_image, (gradient_image, directednes
     graph : GCGraph
         The graph to add the weights to.
     label_image : ndarray
-        The label image.
+        The label image.  Must contain consecutively labelled regions starting from index 1.
     gradient_image : ndarray
         The gradient image.
     directedness : integer
@@ -265,6 +271,8 @@ def boundary_stawiaski_directed(graph, label_image, (gradient_image, directednes
     
     if label_image.flags['F_CONTIGUOUS']: # strangely one this one is required to be ctype ordering
         label_image = scipy.ascontiguousarray(label_image)
+        
+    __check_label_image(label_image)
         
     beta = abs(directedness)
         
@@ -338,6 +346,10 @@ def regional_atlas(graph, label_image, (probability_map, alpha)): # label image 
     
     This function is tested on 2D and 3D images and theoretically works for all dimensionalities.    
     """
+    label_image = scipy.asarray(label_image)
+    probability_map = scipy.asarray(probability_map)
+    __check_label_image(label_image)
+    
     # finding the objects in the label image (bounding boxes around regions)
     objects = scipy.ndimage.find_objects(label_image)
     
@@ -390,3 +402,11 @@ def __compute_edges_nd(label_image):
         vappend(label_image[slices_x], label_image[slices_y])
         
     return Er
+
+def __check_label_image(label_image):
+    """Check the label image for consistent labelling starting from 1."""
+    encountered_indices = scipy.unique(label_image)
+    expected_indices = scipy.arange(1, label_image.max() + 1)
+    if not encountered_indices.size == expected_indices.size or \
+       not (encountered_indices == expected_indices).all():
+        raise AttributeError('The supplied label image does either not contain any regions or they are not labeled consecutively starting from 1.')

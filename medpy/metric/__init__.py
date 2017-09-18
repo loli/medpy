@@ -21,6 +21,7 @@ Compare two binary objects
     :toctree: generated/
     
     dc
+    jc
     hd
     asd
     assd
@@ -28,6 +29,9 @@ Compare two binary objects
     recall
     sensitivity
     specificity
+    true_positive_rate
+    true_negative_rate
+    positive_predictive_value
     ravd
     
 Compare two sets of binary objects
@@ -40,6 +44,15 @@ Compare two sets of binary objects
     obj_fpr
     obj_asd
     obj_assd
+    
+Compare to sequences of binary objects
+**************************************
+
+.. autosummary::
+    :toctree: generated/
+    
+    volume_correlation
+    volume_change_correlation
     
 Image metrics (:mod:`medpy.metric.image`)
 =========================================
@@ -103,7 +116,9 @@ Histogram metrics (:mod:`medpy.metric.histogram`)
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-from .binary import dc, hd, asd, assd, precision, recall, ravd, obj_tpr, obj_fpr, obj_asd, obj_assd, sensitivity, specificity
+from .binary import asd, assd, dc, hd, jc, positive_predictive_value, precision, ravd, recall, sensitivity, specificity, true_negative_rate, true_positive_rate
+from .binary import obj_asd, obj_assd, obj_fpr, obj_tpr
+from .binary import volume_change_correlation, volume_correlation
 from .histogram import chebyshev, chebyshev_neg, chi_square, correlate, correlate_1, cosine,\
      cosine_1, cosine_2, cosine_alt, euclidean, fidelity_based, histogram_intersection,\
      histogram_intersection_1, jensen_shannon, kullback_leibler, manhattan, minowski, noelle_1,\

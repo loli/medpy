@@ -23,6 +23,10 @@ MedPy.egg-info/
 _*.py
 !__init__.py
 
+# Backup files #
+################
+*.bak
+
 # Compiled source #
 ###################
 *.com
