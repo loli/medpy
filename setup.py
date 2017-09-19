@@ -124,12 +124,12 @@ def run_setup(with_compilation):
         
           install_requires=[
             "scipy >= 0.9.0",
-            "numpy >= 1.6.1"
+            "numpy >= 1.6.1",
+            "nibabel >= 1.3.0",
+            "pydicom >= 0.9.7"
           ],
         
           extras_require = {
-            'NIfTI/Analyze':  ["nibabel >= 1.3.0"],
-            'Dicom': ["pydicom >= 0.9.7"],
             'Additional image formats' : ["itk >= 3.16.0"]
           },
         
