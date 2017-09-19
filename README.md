@@ -1,5 +1,3 @@
-.. -*- mode: rst -*-
-
 ![travis auto-build](https://travis-ci.org/loli/medpy.svg?branch=master)
 [![DOI](https://zenodo.org/badge/4295983.svg)](https://zenodo.org/badge/latestdoi/4295983)
 
