@@ -38,7 +38,7 @@ __version__ = "r0.1.0, 2012-06-04"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
-                  Manually add pixel spacing to an image file.
+                  Change an image's pixel spacing in-place.
                   
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
@@ -56,14 +56,14 @@ def main():
     elif args.verbose: logger.setLevel(logging.INFO)
     
     # load input
-    data_input, header_input = load(args.input)
+    data_input, header_input = load(args.image)
     
     # change pixel spacing
     logger.info('Setting pixel spacing along {} to {}...'.format(data_input.shape, args.spacing))
     header.set_pixel_spacing(header_input, args.spacing)
     
     # save file
-    save(data_input, args.output, header_input, args.force)
+    save(data_input.copy(), args.image, header_input, True)
     
     logger.info("Successfully terminated.")    
     
@@ -74,12 +74,10 @@ def getArguments(parser):
 def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
-    parser.add_argument('input', help='Source volume.')
-    parser.add_argument('output', help='Target volume.')
+    parser.add_argument('image', help='Image volume.')
     parser.add_argument('spacing', type=float, nargs='+', help='The spacing values.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
-    parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
     return parser    
 
 if __name__ == "__main__":
