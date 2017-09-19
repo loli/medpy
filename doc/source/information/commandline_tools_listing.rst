@@ -43,8 +43,6 @@ Basic image manipulation
 
 	Manually set the pixel/voxel spacing of an image.
 
-.. todo:: Change script, such that it can work on an image directly
-
 .. topic:: medpy_diff.py
 
 	Compares the meta-data and intensity values of two images.
@@ -79,6 +77,15 @@ Image volume manipulation
 .. topic:: medpy_extract_sub_volume_by_example.py
 
 	Takes an image and a second image containing a binary mask, then extracts the sub volume of the first image defined by the bounding box of the foreground object in the binary image.
+	
+.. topic:: medpy_fit_into_shape.py
+	
+	Fit an existing image into a new shape by either extending or cutting all dimensions symmetrically.
+	
+.. topic:: medpy_intersection.py
+	
+  Extracts the intersecting parts of two volumes regarding offset and voxel-
+spacing.	
 
 .. topic:: medpy_join_xd_to_xplus1d.py
 
@@ -118,6 +125,18 @@ Image volume manipulation
 Binary image manipulation
 =========================
 :ref:`↑top <top>`
+
+.. topic:: medpy_binary_resampling.py
+
+  Re-samples a binary image according to a supplied voxel spacing using shape based interpolation where necessary.
+
+.. topic:: medpy_extract_contour.py
+
+  Converts a binary volume into a surface contour.
+
+.. topic:: medpy_join_masks.py
+  
+  Joins a number of binary images into a single conjunction using sum, avg, max or min.
 
 .. topic:: medpy_merge.py
 
@@ -230,13 +249,7 @@ Others
 ======
 :ref:`↑top <top>`
 
-.. topic:: medpy_check_marker_intersection.py
 
-	Special marker intersection check for the MICCAI'12 cardiac segmentation challenge.
-
-.. topic:: medpy_evaluate_miccai2007.py
-
-	Performs binary segmentation evaluation according to the MICCAI'07 SLiver challenge.
 
 References
 ==========

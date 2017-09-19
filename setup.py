@@ -139,7 +139,6 @@ def run_setup(with_compilation):
             'bin/medpy_anisotropic_diffusion.py',
             'bin/medpy_apparent_diffusion_coefficient.py',
             'bin/medpy_binary_resampling.py',
-            'bin/medpy_check_marker_intersection.py',
             'bin/medpy_convert.py',       
             'bin/medpy_create_empty_volume_by_example.py',
             'bin/medpy_dicom_slices_to_volume.py',    
