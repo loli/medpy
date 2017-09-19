@@ -18,6 +18,7 @@ Installation
     installation/developmentmode
     installation/uninstall
     installation/graphcutsupport
+    installation/itkwrapper4.12.2    
     installation/itkwrapper4.7
     installation/itkwrapper3.2    
 
