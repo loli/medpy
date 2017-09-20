@@ -17,6 +17,7 @@ Installation
     installation/asuser
     installation/developmentmode
     installation/uninstall
+    installation/python3
     installation/graphcutsupport
     installation/itkwrapper4.12.2    
     installation/itkwrapper4.7

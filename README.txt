@@ -9,6 +9,8 @@ Its main contributions are n-dimensional versions of popular **image filters**, 
 
 **Found a bug?** https://github.com/loli/medpy/issues
 
+**Too many depoendencies?** Try our docker images https://registry.hub.docker.com/u/loli/medpy/ (release) and https://registry.hub.docker.com/u/loli/medpy-autobuilds/ (development)
+
 
 Installing MedPy the fast way (Ubuntu and derivatives)
 ======================================================
@@ -21,6 +23,13 @@ Then::
     sudo pip install nibabel pydicom medpy
  
 Done. More installation instructions can be found in the `documentation <http://pythonhosted.org/MedPy/>`_.
+
+Using Python 3?
+---------------
+Try::
+
+  sudo pip install nibabel pydicom
+  sudo pip install https://github.com/user/repository/archive/Release_0.3.0p3.zip
 
 
 Getting started with the library
@@ -119,7 +128,7 @@ Code
 You can find our sources and single-click downloads:
 
 * `Main repository <https://github.com/loli/medpy>`_ on Github.
-* API documentation for all releases and current development tree can be created using `Doxygen <http://www.doxygen.org>`_
+* API documentation for all releases and current development tree can be created using `Sphinx <http://www.sphinx-doc.org>`_
 * Download as a zip file the `current trunk <https://github.com/loli/medpy/archive/master.zip>`_.
 
 
@@ -136,9 +145,6 @@ Dependencies
 
 * `scipy <http://www.scipy.org/>`_ >= 0.9.0
 * `numpy <http://www.numpy.org/>`_ >= 1.6.1
-
-Recommendations
----------------
 * `nibabel <http://nipy.sourceforge.net/nibabel//>`_ >= 1.3.0 (enables support for NIfTI and Analyze image formats)
 * `pydicom <http://code.google.com/p/pydicom/>`_ >= 0.9.7 (enables support for DICOM image format)
 
