@@ -128,7 +128,7 @@ def main():
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
-    args.func = map(int, args.func.split(','))
+    args.func = list(map(int, args.func.split(',')))
     return args
 
 def getParser():

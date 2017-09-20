@@ -93,21 +93,21 @@ def main():
         # create temp files for matrix processing
         # plot
         image_plot = Gnuplot.GridData(sl_image,
-                                      range(sl_image.shape[0]),
-                                      range(sl_image.shape[1]),
+                                      list(range(sl_image.shape[0])),
+                                      list(range(sl_image.shape[1])),
                                       title='data outside mask',
                                       binary=0)
         #image_plot = Gnuplot.Data(sl_image, title='data out of mask')
         highlighted_plot = Gnuplot.GridData(sl_highlighted,
-                                            range(sl_highlighted.shape[0]),
-                                            range(sl_highlighted.shape[1]),
+                                            list(range(sl_highlighted.shape[0])),
+                                            list(range(sl_highlighted.shape[1])),
                                             title='data inside mask',
                                             binary=0)
         #highlighted_plot = Gnuplot.Data(sl_highlighted, title='data inside mask')
         g.splot(image_plot, highlighted_plot)
         
         # wait for key
-        print "d/a = slices +/-; s/w = dimension +/-; e/q = slices +/- 10; ESC = exit\n"
+        print("d/a = slices +/-; s/w = dimension +/-; e/q = slices +/- 10; ESC = exit\n")
         ch = getch()
         
         # check key pressed
@@ -138,7 +138,7 @@ def getArguments(parser):
         sample = int(args.sample)
         args.sample = (sample, sample, sample)
     except ValueError as e:
-        args.sample = map(int, args.sample.split(','))
+        args.sample = list(map(int, args.sample.split(',')))
     return args
 
 def getParser():

@@ -53,7 +53,7 @@ def graph_to_dimacs(g, f):
     
     # write terminal arcs (t-weights)
     f.write('c terminal arcs (t-weights)\n')
-    for node, weight in g.get_tweights().iteritems():
+    for node, weight in g.get_tweights().items():
         # Note: the nodes ids of the graph start from 1, but 1 and 2 are reserved for source and sink respectively, therefore add 2
         if not 0 == weight[0]: # 0 weights are implicit
             f.write('a 1 {} {}\n'.format(node + 2, weight[0]))
@@ -62,7 +62,7 @@ def graph_to_dimacs(g, f):
     
     # write inter-node arcs (n-weights)
     f.write('c inter-node arcs (n-weights)\n')
-    for edge, weight in g.get_nweights().iteritems():
+    for edge, weight in g.get_nweights().items():
         if not 0 == weight[0]: # 0 weights are implicit
             f.write('a {} {} {}\n'.format(edge[0] + 2, edge[1] + 2, weight[0]))
         # reversed weights have to follow directly in the next line

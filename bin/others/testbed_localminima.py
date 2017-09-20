@@ -17,7 +17,7 @@ def main():
     
     minimas, labels = extracts_minima_areas(a)
     while len(minimas) > k:
-        print len(minimas)
+        print(len(minimas))
         minimas = minimas[:-k]
         for minima in minimas:
             idx = minima[1]
@@ -25,7 +25,7 @@ def main():
             mask = labels[sl] == idx
             a[sl][mask] = max(a[sl].max(), a[sl][mask][0] + 1)
         minimas, labels = extracts_minima_areas(a)
-    print len(minimas)
+    print(len(minimas))
     
 def extracts_minima_areas(arr):
     neighborhood = morphology.generate_binary_structure(len(arr.shape),2)
@@ -72,7 +72,7 @@ def local_minima_fixed(fits, window=15):
         if fit == minfit:
             minima_and_indices.append([fit, i])
     minima_and_indices.sort()
-    good_fits, good_indices = zip(*minima_and_indices)
+    good_fits, good_indices = list(zip(*minima_and_indices))
     return good_indices, good_fits
 
 def local_minima_fancy(fits, window=15):
@@ -99,7 +99,7 @@ def detect_local_minima(arr):
     # in their neighborhood are set to 1
     # http://www.scipy.org/doc/api_docs/SciPy.ndimage.filters.html#minimum_filter
     local_min = (filters.minimum_filter(arr, footprint=neighborhood)==arr)
-    print local_min
+    print(local_min)
     # local_min is a mask that contains the peaks we are 
     # looking for, but also the background.
     # In order to isolate the peaks we must remove the background from the mask.

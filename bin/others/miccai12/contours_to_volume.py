@@ -87,7 +87,7 @@ def main():
                 line = line.strip()
                 if 0 == len(line) or '#' == line[0]: continue
                 # extract contour coordinates and round to full number
-                x, y = map(int, map(round, map(float, line.split(' '))))
+                x, y = list(map(int, list(map(round, list(map(float, line.split(' ')))))))
                 # paint contours
                 result_data[slice_number, x, y] = colour
                 # paint additional contours if jump was to large

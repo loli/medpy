@@ -170,4 +170,4 @@ class TestEnergyVoxel(unittest.TestCase):
         for i in range(n):
             for j in range(i, n):
                 if not i == j:
-                    print i, j, graph.get_edge(i, j)
+                    print(i, j, graph.get_edge(i, j))

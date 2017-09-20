@@ -63,7 +63,7 @@ def main():
     coa, con, dir = tamura(dir, 5)
     
     for i in range(5):
-        print "k=", i+1, " with ", len((coa == i).nonzero()[0])
+        print("k=", i+1, " with ", len((coa == i).nonzero()[0]))
     
 if __name__ == "__main__":
     main()       

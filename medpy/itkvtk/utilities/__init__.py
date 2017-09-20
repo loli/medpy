@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-import itku
+from . import itku
 #import vtku
                         
 # import all sub-modules in the __all__ variable

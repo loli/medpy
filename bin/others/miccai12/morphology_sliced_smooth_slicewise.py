@@ -122,7 +122,7 @@ def xd_iterator_add(arr, view, fun, add):
         raise AttributeError('The view should contain less entries than the array dimensionality.')
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):
@@ -151,7 +151,7 @@ def xd_iterator(arr, view, fun):
         raise AttributeError('The view should contain less entries than the array dimensionality.')
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):

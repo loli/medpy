@@ -78,7 +78,7 @@ def sequenceOfIntegers(string):
     >>> parser.add_argument('argname', type=sequenceOfIntegers, help='help')
 
     """
-    value = map(int, string.split(','))
+    value = list(map(int, string.split(',')))
     return value
 
 def sequenceOfIntegersGt(string):
@@ -150,7 +150,7 @@ def sequenceOfFloats(string):
     >>> parser.add_argument('argname', type=sequenceOfFloats, help='help')
 
     """
-    value = map(float, string.split(','))
+    value = list(map(float, string.split(',')))
     return value
 
 def sequenceOfFloatsGt(string):
@@ -238,15 +238,15 @@ def __sequenceLe(l):
 def __sequenceAscendingStrict(l):
     "Test a sequences values to be in strictly ascending order."
     it = iter(l)
-    it.next()
-    if not all(b > a for a, b in itertools.izip(l, it)):
+    next(it)
+    if not all(b > a for a, b in zip(l, it)):
         raise argparse.ArgumentTypeError('All values must be given in strictly ascending order.')
     return l
 
 def __sequenceDescendingStrict(l):
     "Test a sequences values to be in strictly descending order."
     it = iter(l)
-    it.next()
-    if not all(b < a for a, b in itertools.izip(l, it)):
+    next(it)
+    if not all(b < a for a, b in zip(l, it)):
         raise argparse.ArgumentTypeError('All values must be given in strictly descending order.')
     return l

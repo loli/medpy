@@ -5,7 +5,7 @@
 # build-in modules
 import argparse
 import logging
-import cPickle
+import pickle
 import sys
 import os
 
@@ -121,11 +121,11 @@ def  __load(picklefile, label):
     
     # load testbed
     with open(picklefile, 'r') as f:
-        model_fg_ids = cPickle.load(f)
-        model_bg_ids = cPickle.load(f)
-        cPickle.load(f) # eval ids
-        truth_fg = cPickle.load(f)
-        truth_bg = cPickle.load(f)
+        model_fg_ids = pickle.load(f)
+        model_bg_ids = pickle.load(f)
+        pickle.load(f) # eval ids
+        truth_fg = pickle.load(f)
+        truth_bg = pickle.load(f)
             
     return label_image_d, label_image, bounding_boxes, model_fg_ids, model_bg_ids, truth_fg, truth_bg
     

@@ -203,8 +203,8 @@ from .maxflow import GraphDouble, GraphFloat, GraphInt # this always triggers an
 from .graph import Graph, GCGraph
 from .write import graph_to_dimacs
 from .generate import graph_from_labels, graph_from_voxels
-import energy_label
-import energy_voxel
+from . import energy_label
+from . import energy_voxel
 
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]

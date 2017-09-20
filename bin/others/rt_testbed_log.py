@@ -6,7 +6,7 @@ import sys
 import logging
 import math
 import argparse
-import cPickle
+import pickle
 
 # third-party modules
 from nibabel.loadsave import load
@@ -184,11 +184,11 @@ def  __load(picklefile, original, label):
     
     # load testbed
     with open(picklefile, 'r') as f:
-        model_fg_ids = cPickle.load(f)
-        cPickle.load(f) # model_bg_ids
-        eval_ids = cPickle.load(f)
-        truth_fg = cPickle.load(f)
-        truth_bg = cPickle.load(f)
+        model_fg_ids = pickle.load(f)
+        pickle.load(f) # model_bg_ids
+        eval_ids = pickle.load(f)
+        truth_fg = pickle.load(f)
+        truth_bg = pickle.load(f)
             
     return original_image_d, label_image_d, bounding_boxes, model_fg_ids, eval_ids, truth_fg, truth_bg
     

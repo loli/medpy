@@ -76,7 +76,7 @@ def main():
             break
         
     if None == contour_data_es:
-        print "[ERROR] No ED phase detected in contour {}. Exiting.".format(args.atlas)
+        print("[ERROR] No ED phase detected in contour {}. Exiting.".format(args.atlas))
         exit(-1)
         
     # erode mask created from atlas if requested

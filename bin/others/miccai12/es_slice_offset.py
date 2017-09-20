@@ -28,7 +28,7 @@ def main():
         for line in f.readlines():
             sliceno = int(line.split('\\')[-1].split('-')[1])
             if not 0 == sliceno % 20:
-                print sliceno % 20
+                print(sliceno % 20)
                 return
     
 def getArguments(parser):

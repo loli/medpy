@@ -4,7 +4,7 @@
 
 # build-in modules
 import logging
-import cPickle
+import pickle
 import argparse
 
 # third-party modules
@@ -126,42 +126,42 @@ def main():
     
     __print_result_headline()
         
-    print '{:<30}'.format('regional_term'),
+    print('{:<30}'.format('regional_term'), end=' ')
     __print_rating(reg_tp, reg_fp, reg_tn, reg_fn)
     
-    print '{:<30}'.format('boundary_term'),
+    print('{:<30}'.format('boundary_term'), end=' ')
     __print_rating(bdr_tp, bdr_fp, bdr_tn, bdr_fn)
     
-    print '{:<30}'.format('best_mixture'),
+    print('{:<30}'.format('best_mixture'), end=' ')
     __print_rating(best_tp, best_fp, best_tn, best_fn)
     
-    print '{:<30}'.format('medium_mixture'),
+    print('{:<30}'.format('medium_mixture'), end=' ')
     __print_rating(medium_tp, medium_fp, medium_tn, medium_fn)
     
-    print '{:<30}'.format('worst_mixture'),
+    print('{:<30}'.format('worst_mixture'), end=' ')
     __print_rating(worst_tp, worst_fp, worst_tn, worst_fn)
     
     if len(truth_fg) > len(truth_bg): bsl_fg, bsl_bg = eval_ids, []
     else: bsl_fg, bsl_bg = [], eval_ids
-    print '{:<30}'.format('statistical_baseline'),
+    print('{:<30}'.format('statistical_baseline'), end=' ')
     __print_rating(*__compute_statistics(bsl_fg, bsl_bg, truth_fg, truth_bg))
     
     best_mix_fscore, best_mix_accuracy = __calculate_rating(best_tp, best_fp, best_tn, best_fn)
-    print '{:<30}'.format('best_mix_against_stat_bsl'),
+    print('{:<30}'.format('best_mix_against_stat_bsl'), end=' ')
     bsl_fscore, bsl_accuracy = __calculate_rating(*__compute_statistics(bsl_fg, bsl_bg, truth_fg, truth_bg))
-    print '{:>+15.4f}{:>+15.4f}'.format(best_mix_accuracy - bsl_accuracy, best_mix_fscore - bsl_fscore)
+    print('{:>+15.4f}{:>+15.4f}'.format(best_mix_accuracy - bsl_accuracy, best_mix_fscore - bsl_fscore))
     
-    print '{:<30}'.format('best_mix_against_bnd_term'),
+    print('{:<30}'.format('best_mix_against_bnd_term'), end=' ')
     bdr_fscore, bdr_accuracy = __calculate_rating(bdr_tp, bdr_fp, bdr_tn, bdr_fn)
-    print '{:>+15.4f}{:>+15.4f}'.format(best_mix_accuracy - bdr_accuracy, best_mix_fscore - bdr_fscore)
+    print('{:>+15.4f}{:>+15.4f}'.format(best_mix_accuracy - bdr_accuracy, best_mix_fscore - bdr_fscore))
     
     medium_mix_fscore, medium_mix_accuracy = __calculate_rating(medium_tp, medium_fp, medium_tn, medium_fn)
-    print '{:<30}'.format('medium_mix_against_bnd_term'),
-    print '{:>+15.4f}{:>+15.4f}'.format(medium_mix_accuracy - bdr_accuracy, medium_mix_fscore - bdr_fscore)
+    print('{:<30}'.format('medium_mix_against_bnd_term'), end=' ')
+    print('{:>+15.4f}{:>+15.4f}'.format(medium_mix_accuracy - bdr_accuracy, medium_mix_fscore - bdr_fscore))
     
     worst_mix_fscore, worst_mix_accuracy = __calculate_rating(worst_tp, worst_fp, worst_tn, worst_fn)
-    print '{:<30}'.format('worst_mix_against_bnd_term'),
-    print '{:>+15.4f}{:>+15.4f}'.format(worst_mix_accuracy - bdr_accuracy, worst_mix_fscore - bdr_fscore)
+    print('{:<30}'.format('worst_mix_against_bnd_term'), end=' ')
+    print('{:>+15.4f}{:>+15.4f}'.format(worst_mix_accuracy - bdr_accuracy, worst_mix_fscore - bdr_fscore))
     
     logger.info('Successfully terminated.')
 
@@ -210,12 +210,12 @@ __DISTANCES = {'chebyshev': chebyshev,
 
 def __print_result_headline():
     """Print the headline of the results printed with @link __print_rating()."""
-    print '# RESULTS:'
-    print '# (Problem defined as binary classification if fg or not.)'
-    print '# (Precision is the fraction of retrieved instances that are relevant, while recall is the fraction of relevant instances that are retrieved.)'
-    print '# (Every dataline denotes the performance of the designated model.)'
-    print '#'
-    print '#{:<31}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}'.format('Model', 'Accuracy', 'F-score', 'Specificity', 'Precision', 'Recall', 'true-positive', 'false-positive', 'true-negative', 'false-negative') 
+    print('# RESULTS:')
+    print('# (Problem defined as binary classification if fg or not.)')
+    print('# (Precision is the fraction of retrieved instances that are relevant, while recall is the fraction of relevant instances that are retrieved.)')
+    print('# (Every dataline denotes the performance of the designated model.)')
+    print('#')
+    print('#{:<31}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}{:^15}'.format('Model', 'Accuracy', 'F-score', 'Specificity', 'Precision', 'Recall', 'true-positive', 'false-positive', 'true-negative', 'false-negative')) 
 
 def __print_rating(tp, fp, tn, fn):
     tp = float(tp)
@@ -225,12 +225,12 @@ def __print_rating(tp, fp, tn, fn):
     p = 0 if 0 == (tp + fp) else tp / (tp + fp)
     r = 0 if 0 == (tp + fn) else tp / (tp + fn)
     s = '{:>+15.4f}{:>+15.4f}{:>+15.4f}{:>+15.4f}{:>+15.4f}{:>+15,}{:>+15,}{:>+15,}{:>+15,}'
-    print s.format(0 if 0 == (tp + tn + fp + fn) else (tp + tn) / (tp + tn + fp + fn), # accuracy
+    print(s.format(0 if 0 == (tp + tn + fp + fn) else (tp + tn) / (tp + tn + fp + fn), # accuracy
                    0 if 0 == (p + r) else 2 * (p * r)/(p + r), #f-score
                    0 if 0 == (tn + fp) else tn / (tn + fp), # specificity
                    p, # precision
                    r, # recall,
-                   tp, fp, tn, fn)
+                   tp, fp, tn, fn))
     
 def __calculate_rating(tp, fp, tn, fn):
     """
@@ -306,13 +306,13 @@ def  __load(picklefile, original, label):
     
     # load testbed
     with open(picklefile, 'r') as f:
-        model_fg_ids = cPickle.load(f)
-        model_bg_ids = cPickle.load(f)
-        eval_ids = cPickle.load(f)
-        truth_fg = cPickle.load(f)
-        truth_bg = cPickle.load(f)
-        bdr_fg = cPickle.load(f)
-        bdr_bg = cPickle.load(f)
+        model_fg_ids = pickle.load(f)
+        model_bg_ids = pickle.load(f)
+        eval_ids = pickle.load(f)
+        truth_fg = pickle.load(f)
+        truth_bg = pickle.load(f)
+        bdr_fg = pickle.load(f)
+        bdr_bg = pickle.load(f)
             
     return original_image_d, label_image_d, bounding_boxes, model_fg_ids, model_bg_ids, eval_ids, truth_fg, truth_bg, bdr_fg, bdr_bg
     
@@ -326,8 +326,8 @@ def getParser():
     parser.add_argument('original', help='The original image.')
     parser.add_argument('label', help='The label image.')
     parser.add_argument('testbench', help='The testbench to test the regional term agains.')
-    parser.add_argument('distance', default='cosine', choices=__DISTANCES.keys(), help='The distance measure to use.')
-    parser.add_argument('--histogram', dest='histogram', default='standard', choices=__HISTOGRAMS.keys(), help='The type of histogram to use (all except standard are fuzzy).')
+    parser.add_argument('distance', default='cosine', choices=list(__DISTANCES.keys()), help='The distance measure to use.')
+    parser.add_argument('--histogram', dest='histogram', default='standard', choices=list(__HISTOGRAMS.keys()), help='The type of histogram to use (all except standard are fuzzy).')
     parser.add_argument('--hsize', dest='hsize', type=int, default=100, help='The size of the histogram to use.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')

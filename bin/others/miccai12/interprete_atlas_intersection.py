@@ -65,7 +65,7 @@ def main():
                 
                 if '"' == line[0]: continue # title line
             
-                values = map(float, line.split(';'))
+                values = list(map(float, line.split(';')))
                 slid = int(values[0])
             
                 if not esmode:
@@ -137,12 +137,12 @@ def print_optimal(phase, data, rating):
     
     # dertemine maximu length
     maxl = 0
-    for l in data.itervalues():
+    for l in data.values():
         if len(l) > maxl: maxl = len(l)
     
-    print 'Optimal settings according to the selection registration approach:'
-    print '{} phase:'.format(phase)
-    print 'slid\tthr\trating\t\tvalues (rightly classified (%), wrongly classified, undefined (%))'
+    print('Optimal settings according to the selection registration approach:')
+    print('{} phase:'.format(phase))
+    print('slid\tthr\trating\t\tvalues (rightly classified (%), wrongly classified, undefined (%))')
     ratings = []
     for slid in range(maxl):
         best_value = False
@@ -163,9 +163,9 @@ def print_optimal(phase, data, rating):
                     sbest_value = data[thr][slid]
                     sbest_thr = thr
         ratings.append(rating(best_value))
-        print '{}\t{}\t{:.3f}\t\t{:.3f}\t{:.3f}\t{:.3f} (first)'.format(slid, best_thr, rating(best_value), *best_value)
-        print '\t{}\t{:.3f}\t\t{:.3f}\t{:.3f}\t{:.3f} (second)'.format(sbest_thr, rating(sbest_value), *sbest_value)
-    print 'average rating: {}'.format(sum(ratings)/float(len(ratings)))    
+        print('{}\t{}\t{:.3f}\t\t{:.3f}\t{:.3f}\t{:.3f} (first)'.format(slid, best_thr, rating(best_value), *best_value))
+        print('\t{}\t{:.3f}\t\t{:.3f}\t{:.3f}\t{:.3f} (second)'.format(sbest_thr, rating(sbest_value), *sbest_value))
+    print('average rating: {}'.format(sum(ratings)/float(len(ratings))))    
     
 def make_csv(name, edstats, esstats):
     """

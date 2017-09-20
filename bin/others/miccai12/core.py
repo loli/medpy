@@ -36,7 +36,7 @@ def xd_iterator_pool(arr, view, fun, processes = None):
     worker_pool = multiprocessing.Pool(processes)
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
     
     # prepare views on array (subvolumes)
     slicers = [[slice(None) if idx is None else slice(idx, idx + 1) for idx in indices] for indices in itertools.product(*iterations)]
@@ -46,7 +46,7 @@ def xd_iterator_pool(arr, view, fun, processes = None):
     # excecute subprocesses
     result_subvolumes = worker_pool.map(fun, subvolumes)
     
-    for slicer, result_subvolume in itertools.izip(slicers, result_subvolumes):
+    for slicer, result_subvolume in zip(slicers, result_subvolumes):
         arr[slicer] = result_subvolume.reshape(reference_shape)
 
 def xd_iterator_add(arr, view, fun, add):
@@ -61,7 +61,7 @@ def xd_iterator_add(arr, view, fun, add):
         raise AttributeError('The view should contain less entries than the array dimensionality.')
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):
@@ -90,7 +90,7 @@ def xd_iterator(arr, view, fun):
         raise AttributeError('The view should contain less entries than the array dimensionality.')
     
     # create list of iterations
-    iterations = [[None] if dim in view else range(arr.shape[dim]) for dim in range(arr.ndim)]
+    iterations = [[None] if dim in view else list(range(arr.shape[dim])) for dim in range(arr.ndim)]
      
     # iterate, create slicer, execute function and collect results
     for indices in itertools.product(*iterations):

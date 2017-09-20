@@ -63,8 +63,8 @@ def main():
     turn_point = (turn_point[0] * spacing[0], turn_point[1] * spacing[1])
     
     # print results
-    print '//angle: {}'.format(math.degrees(angle))
-    print transform_string(shift, angle, turn_point)
+    print('//angle: {}'.format(math.degrees(angle)))
+    print(transform_string(shift, angle, turn_point))
     
     # paint in the points and other stuff
     #data_input[tuple(fixed_basep)] = 2

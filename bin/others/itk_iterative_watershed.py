@@ -145,7 +145,7 @@ def main():
             statistics = LabelImageStatistics(image_label_final_array, original_image_array)
             
             # check medium region size and if stop condition reached, break
-            sizes = sorted(statistics.get_sizes().iteritems(), key=lambda x: x[1]) # get sizes sorted (biggest region last)
+            sizes = sorted(iter(statistics.get_sizes().items()), key=lambda x: x[1]) # get sizes sorted (biggest region last)
             if __IDEAL_REGION_SIZE >= sizes[region_pointer][1]:
                 logger.info('Stopping condition {} with a maximum region size of {} reached: Stopping processing...'.format(__IDEAL_REGION_SIZE, sizes[region_pointer][1]))
                 break

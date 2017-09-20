@@ -29,7 +29,7 @@ import numpy
 # own modules
 
 # code
-def boundary_difference_of_means(graph, label_image, (original_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_difference_of_means(graph, label_image, xxx_todo_changeme): # label image is not required to hold continuous ids or to start from 1
     r"""
     Boundary term based on the difference of means between adjacent image regions.
     
@@ -72,7 +72,7 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
     
     This function is tested on 2D and 3D images and theoretically works for all dimensionalities. 
     """
-    # convert to arrays if necessary
+    (original_image) = xxx_todo_changeme
     label_image = scipy.asarray(label_image)
     original_image = scipy.asarray(original_image)
     
@@ -92,7 +92,7 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
     max_difference = float(abs(min(means) - max(means)))
 
     # create a lookup table that relates region ids to their respective intensity values
-    means = dict(zip(labels_unique, means))
+    means = dict(list(zip(labels_unique, means)))
 
     # get the adjuncancy of the labels
     edges = __compute_edges(label_image)
@@ -108,7 +108,7 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
             graph.set_nweight(edge[0] - 1, edge[1] - 1, value, value)
 
 
-def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_stawiaski(graph, label_image, xxx_todo_changeme1): # label image is not required to hold continuous ids or to start from 1
     r"""
     Boundary term based on the sum of border voxel pairs differences.
      
@@ -161,7 +161,7 @@ def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is n
     .. [1] Stawiaski J., Decenciere E., Bidlaut F. "Interactive Liver Tumor Segmentation
            Using Graph-cuts and watershed" MICCAI 2008 participation
     """
-    # convert to arrays if necessary
+    (gradient_image) = xxx_todo_changeme1
     label_image = scipy.asarray(label_image)
     gradient_image = scipy.asarray(gradient_image)
     
@@ -193,7 +193,7 @@ def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is n
             graph.set_nweight(k1 - 1 , k2 - 1, weight, weight)
 
 
-def boundary_stawiaski_directed(graph, label_image, (gradient_image, directedness)): # label image is not required to hold continuous ids or to start from 1
+def boundary_stawiaski_directed(graph, label_image, xxx_todo_changeme2): # label image is not required to hold continuous ids or to start from 1
     r"""
     Boundary term based on the sum of border voxel pairs differences, directed version.
     
@@ -265,7 +265,7 @@ def boundary_stawiaski_directed(graph, label_image, (gradient_image, directednes
     .. [1] Stawiaski J., Decenciere E., Bidlaut F. "Interactive Liver Tumor Segmentation
            Using Graph-cuts and watershed" MICCAI 2008 participation    
     """
-    # convert to arrays if necessary
+    (gradient_image, directedness) = xxx_todo_changeme2
     label_image = scipy.asarray(label_image)
     gradient_image = scipy.asarray(gradient_image)
     
@@ -316,7 +316,7 @@ def boundary_stawiaski_directed(graph, label_image, (gradient_image, directednes
                   gradient_image[slices_x],
                   gradient_image[slices_y])
 
-def regional_atlas(graph, label_image, (probability_map, alpha)): # label image is required to hold continuous ids starting from 1
+def regional_atlas(graph, label_image, xxx_todo_changeme3): # label image is required to hold continuous ids starting from 1
     r"""
     Regional term based on a probability atlas.
     
@@ -346,6 +346,7 @@ def regional_atlas(graph, label_image, (probability_map, alpha)): # label image 
     
     This function is tested on 2D and 3D images and theoretically works for all dimensionalities.    
     """
+    (probability_map, alpha) = xxx_todo_changeme3
     label_image = scipy.asarray(label_image)
     probability_map = scipy.asarray(probability_map)
     __check_label_image(label_image)
