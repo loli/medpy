@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Extracts the intersecting parts of two volumes regarding offset and voxel-spacing. 

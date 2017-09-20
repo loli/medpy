@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Converts a collection of DICOM slices into a proper image volume.

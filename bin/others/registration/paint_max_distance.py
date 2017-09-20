@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 "Computes max distance and paints it into the basal slice."
 

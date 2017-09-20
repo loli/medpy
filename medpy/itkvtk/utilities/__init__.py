@@ -15,7 +15,7 @@
 
 # import all functions/methods/classes into the module
 import itku
-import vtku
+#import vtku
                         
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]

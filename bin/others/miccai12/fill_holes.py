@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Fill the wholes in the contour files. Creates two output files for each input file."""
 

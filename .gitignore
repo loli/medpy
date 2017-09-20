@@ -12,6 +12,10 @@ doc/build/
 doc/generated/
 doc/source/generated/
 
+# Notebooks dirs #
+##################
+.ipynb_checkpoints
+
 # BUILD dirs #
 ##############
 build/

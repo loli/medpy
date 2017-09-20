@@ -1,6 +1,6 @@
-==========================================
-Installing ITK wrappers for Python (ITKv4)
-==========================================
+============================================
+Installing ITK wrappers for Python (ITKv4.7)
+============================================
 The switch from ITKv3 to ITKv4 includes a large number of changes, also affecting the way the Python wrappers are to be compiled. Here you can find a thorough step-by-step description on how to compile them with ITKv4 (more precisely 4.7) on POSIX/Unix platforms (more precisely Ubuntu14.04).
 This is quite some work and absolutely not fail-save. Only try it, if you must (or are bored with too much time at hand).
 

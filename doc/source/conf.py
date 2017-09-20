@@ -54,16 +54,16 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MedPy'
-copyright = u'2014, Oskar Maier'
+copyright = u'2016, Oskar Maier'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '0.2'
+version = '0.3'
 # The full version, including alpha/beta/rc tags.
-release = '0.2.2'
+release = '0.3.0'
 
 # Automatically created autosummary entries (thus no need to call sphinx-autogen)
 autosummary_generate = True
@@ -120,7 +120,8 @@ if os.path.isdir(themedir):
         "sidebar": "left",
         "scipy_org_logo": False,
         "rootlinks": [('https://github.com/loli/medpy/', 'GitHub'),
-                      ('https://pypi.python.org/pypi/MedPy/', 'PyPi')],
+                      ('https://pypi.python.org/pypi/MedPy/', 'PyPi'),
+                      ('https://hub.docker.com/r/loli/medpy/', 'Docker')],
         "navigation_links": True
     }
         
@@ -291,7 +292,7 @@ texinfo_documents = [
 epub_title = u'MedPy'
 epub_author = u'Oskar Maier'
 epub_publisher = u'Oskar Maier'
-epub_copyright = u'2014, Oskar Maier'
+epub_copyright = u'2016, Oskar Maier'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'MedPy'

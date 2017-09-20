@@ -21,6 +21,7 @@ PACKAGES= [
     'medpy.core',
     'medpy.features',
     'medpy.filter',
+    'medpy.graphcut',
     'medpy.io',
     'medpy.itkvtk',
     'medpy.itkvtk.filter',
@@ -93,7 +94,7 @@ def run_setup(with_compilation):
 
     setup(
           name='MedPy',
-          version='0.2.2', # major.minor.micro
+          version='0.3.0', # major.minor.micro
           description='Medical image processing in Python',
           author='Oskar Maier',
           author_email='oskar.maier@googlemail.com',
@@ -115,20 +116,22 @@ def run_setup(with_compilation):
               #'Operating System :: Microsoft :: Windows',
               'Operating System :: POSIX',
               'Operating System :: Unix',
-              'Programming Language :: Python',
+              'Programming Language :: Python :: 2',
+              'Programming Language :: Python :: 2.6',
+              'Programming Language :: Python :: 2.7',
               'Programming Language :: C++',
               'Topic :: Scientific/Engineering :: Medical Science Apps.',
               'Topic :: Scientific/Engineering :: Image Recognition'
           ],
         
           install_requires=[
-           	"scipy >= 0.9.0",
+            "scipy >= 0.9.0",
             "numpy >= 1.6.1",
+            "nibabel >= 1.3.0",
+            "pydicom >= 0.9.7"
           ],
         
           extras_require = {
-            'NIfTI/Analyze':  ["nibabel >= 1.3.0"],
-            'Dicom': ["pydicom >= 0.9.7"],
             'Additional image formats' : ["itk >= 3.16.0"]
           },
         
@@ -137,7 +140,7 @@ def run_setup(with_compilation):
           scripts=[
             'bin/medpy_anisotropic_diffusion.py',
             'bin/medpy_apparent_diffusion_coefficient.py',
-            'bin/medpy_check_marker_intersection.py',
+            'bin/medpy_binary_resampling.py',
             'bin/medpy_convert.py',       
             'bin/medpy_create_empty_volume_by_example.py',
             'bin/medpy_dicom_slices_to_volume.py',    

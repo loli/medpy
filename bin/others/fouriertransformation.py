@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Executes a discrete fast Fourier transformation over an image."""
 

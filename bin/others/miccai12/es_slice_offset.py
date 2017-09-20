@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Simply returns the offset of the ES slices for a dataset."""
 

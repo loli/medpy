@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Takes a contour text file and an original sized image and through hem pads a cut image."""
 

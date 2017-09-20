@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Executes a reduce operation taking a mask and a number of label images as input.

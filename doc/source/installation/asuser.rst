@@ -67,7 +67,7 @@ First, install `numpy <http://www.numpy.org/>`_, `scipy <http://www.scipy.org/>`
 `nibabel <http://nipy.org/nibabel/>`_ and `pydicom <https://code.google.com/p/pydicom/>`_
 from source (see there respective webpages for details) as user.
 
-The download the sources from https://pypi.python.org/pypi/MedPy/, unpack them, enter the directory and run::
+The download the sources from https://pypi.python.org/pypi/MedPy/, unpack them, enter the directory and run
 
 .. code-block:: bash
 

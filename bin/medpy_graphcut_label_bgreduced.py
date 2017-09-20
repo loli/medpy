@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Execute a graph cut on a region image based on some foreground and background markers.

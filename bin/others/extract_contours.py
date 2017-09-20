@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Extracts per-slice surface contours from a binary object image."""
 

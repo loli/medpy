@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Viscous post-morphology operations with arbitrary discrete functions."""
 

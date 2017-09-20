@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Executes morphological operations over a gradient image on different levels."""
 

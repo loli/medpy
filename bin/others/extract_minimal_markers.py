@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Creates minimal foreground and background markers for a volume through its reference mask."""
 

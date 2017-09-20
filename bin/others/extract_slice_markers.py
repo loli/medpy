@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Creates slice background markers for a volume through its reference mask."""
 

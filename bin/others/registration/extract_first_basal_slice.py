@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 "Extracts the first basal slice from a massive 3/4D RV volume."
 

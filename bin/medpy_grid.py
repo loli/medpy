@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Creates an image volume containing a regular grid that can e.g. be used to visualize
