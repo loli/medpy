@@ -35,12 +35,12 @@ from skimage.morphology import watershed
 # own modules
 from medpy.io import load, save
 from medpy.core import Logger, ArgumentError
-from medpy.filter.MinimaExtraction import local_minima
+from medpy.filter import local_minima
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2013-12-11"
+__version__ = "r0.1.1, 2013-12-11"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
