@@ -7,7 +7,7 @@ With *pip*
 
 .. code-block:: bash
 
-    (sudo) pip install https://github.com/user/repository/archive/Release_0.3.0p3.zip
+    (sudo) pip install https://github.com/loli/medpy/archive/Release_0.3.0p3.zip
     
 With *git*
 
