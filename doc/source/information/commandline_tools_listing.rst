@@ -23,15 +23,15 @@ Basic image manipulation
 ========================
 :ref:`↑top <top>`
 
-.. topic:: medpy_info.py
+.. topic:: medpy_info.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_info.py.ipynb>`_)
 
 	Prints basic information about an image to the stdout.
 
-.. topic:: medpy_convert.py
+.. topic:: medpy_convert.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_convert.py.ipynb>`_)
 
 	Converts between two image formats. Alternatively can be used to create an empty image by example.
 
-.. topic:: medpy_create_empty_volume_by_example.py
+.. topic:: medpy_create_empty_volume_by_example.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_create_empty_volume_by_example.py.ipynb>`_)
 
 	Can be used to create an empty image by example.
 
@@ -43,7 +43,7 @@ Basic image manipulation
 
 	Manually set the pixel/voxel spacing of an image.
 
-.. topic:: medpy_diff.py
+.. topic:: medpy_diff.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_diff.py.ipynb>`_)
 
 	Compares the meta-data and intensity values of two images.
 
@@ -66,7 +66,7 @@ Image volume manipulation
 =========================
 :ref:`↑top <top>`
 
-.. topic:: medpy_extract_sub_volume.py
+.. topic:: medpy_extract_sub_volume.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_extract_sub_volume.py.ipynb>`_)
 
 	Extracts a sub volume from an image.
 
@@ -74,7 +74,7 @@ Image volume manipulation
 
 	Splits a volume into a number of sub volumes along a given dimension. 
 
-.. topic:: medpy_extract_sub_volume_by_example.py
+.. topic:: medpy_extract_sub_volume_by_example.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_extract_sub_volume_by_example.py.ipynb>`_)
 
 	Takes an image and a second image containing a binary mask, then extracts the sub volume of the first image defined by the bounding box of the foreground object in the binary image.
 	
@@ -130,7 +130,7 @@ Binary image manipulation
 
   Re-samples a binary image according to a supplied voxel spacing using shape based interpolation where necessary.
 
-.. topic:: medpy_extract_contour.py
+.. topic:: medpy_extract_contour.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_extract_contour.py.ipynb>`_)
 
   Converts a binary volume into a surface contour.
 
@@ -149,7 +149,7 @@ Image filters
 =============
 :ref:`↑top <top>`
 
-.. topic:: medpy_gradient.py
+.. topic:: medpy_gradient.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_gradient.py.ipynb>`_)
 
 	Gradient magnitude image filter. Output is float.
 
@@ -157,11 +157,11 @@ Image filters
 
 	Apply binary morphology (dilation, erosion, opening or closing) to a binary image.
 
-.. topic:: medpy_anisotropic_diffusion.py
+.. topic:: medpy_anisotropic_diffusion.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_anisotropic_diffusion.py.ipynb>`_)
 
 	Apply the edge preserving anisotropic diffusion filter to an image.
 
-.. topic:: medpy_watershed.py
+.. topic:: medpy_watershed.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_watershed.py.ipynb>`_)
 
     Applies a watershed filter, results in a label map / region image.
 
@@ -172,7 +172,7 @@ Magnetic resonance (MR) related
 ===============================
 :ref:`↑top <top>`
 
-.. topic:: medpy_apparent_diffusion_coefficient.py
+.. topic:: medpy_apparent_diffusion_coefficient.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_apparent_diffusion_coefficient.py.ipynb>`_)
 
 	Computes the apparent diffusion coefficient (ADC) map from two diffusion weight (DW) volumes acquired with different b-values.
 
@@ -189,11 +189,11 @@ Graph-cut
 
 GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algorithm, version 3.01 [1]_.
 
-.. topic:: medpy_graphcut_voxel.py
+.. topic:: medpy_graphcut_voxel.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_graphcut_voxel.py.ipynb>`_)
 
 	Executes a voxel based graph cut. Only supports the boundary term.
 
-.. topic:: medpy_graphcut_label.py
+.. topic:: medpy_graphcut_label.py (`notebook <https://github.com/loli/medpy/blob/Release_0.3.0/notebooks/scripts/medpy_graphcut_label.py.ipynb>`_)
 
 	Executes a label based graph cut. Only supports the boundary term.
 
