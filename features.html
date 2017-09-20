@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Image feature extraction and manipulation (medpy.features) &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
+    <link rel="stylesheet" href="_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="index.html" >
+    <link rel="next" title="medpy.features.intensity.intensities" href="generated/medpy.features.intensity.intensities.html" >
+    <link rel="prev" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange" href="generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="index.html">MedPy 0.3.0 documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="generated/medpy.features.intensity.intensities.html" title="medpy.features.intensity.intensities"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange.html" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image feature extraction and manipulation (<code class="docutils literal"><span class="pre">medpy.features</span></code>)</a><ul>
+<li><a class="reference internal" href="#intensity-medpy-features-intensity">Intensity <code class="docutils literal"><span class="pre">medpy.features.intensity</span></code></a><ul>
+<li><a class="reference internal" href="#feature-representation">Feature representation</a></li>
+<li><a class="reference internal" href="#multi-spectral-images">Multi-spectral images</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#utilities-medpy-feature-utilities">Utilities <code class="docutils literal"><span class="pre">medpy.feature.utilities</span></code></a></li>
+<li><a class="reference internal" href="#histogram-medy-features-histogram">Histogram <code class="docutils literal"><span class="pre">medy.features.histogram</span></code></a><ul>
+<li><a class="reference internal" href="#available-membership-functions">Available membership functions</a></li>
+<li><a class="reference internal" href="#the-smoothness-term">The smoothness term</a></li>
+<li><a class="reference internal" href="#boundary-effect-the-guarantee-parameter">Boundary effect / the guarantee parameter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange.html"
+                        title="previous chapter">medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/medpy.features.intensity.intensities.html"
+                        title="next chapter">medpy.features.intensity.intensities</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="_sources/features.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <span class="target" id="module-medpy.features"></span><div class="section" id="image-feature-extraction-and-manipulation-medpy-features">
+<h1>Image feature extraction and manipulation (<a class="reference internal" href="#module-medpy.features" title="medpy.features"><code class="xref py py-mod docutils literal"><span class="pre">medpy.features</span></code></a>)<a class="headerlink" href="#image-feature-extraction-and-manipulation-medpy-features" title="Permalink to this headline">¶</a></h1>
+<p>This package contains various functions for feature extraction and
+manipulation in medical images.</p>
+<div class="section" id="intensity-medpy-features-intensity">
+<h2>Intensity <a class="reference internal" href="#module-medpy.features.intensity" title="medpy.features.intensity"><code class="xref py py-mod docutils literal"><span class="pre">medpy.features.intensity</span></code></a><a class="headerlink" href="#intensity-medpy-features-intensity" title="Permalink to this headline">¶</a></h2>
+<p>Functions to extracts intensity based features. Ready to be
+manipulated with <a class="reference internal" href="#module-medpy.features.utilities" title="medpy.features.utilities"><code class="xref py py-mod docutils literal"><span class="pre">medpy.features.utilities</span></code></a> and used in
+<a class="reference external" href="http://scikit-learn.org/">scikit-learn</a>.</p>
+<span class="target" id="module-medpy.features.intensity"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.intensity.intensities.html#medpy.features.intensity.intensities" title="medpy.features.intensity.intensities"><code class="xref py py-obj docutils literal"><span class="pre">intensities</span></code></a>(image[,&nbsp;mask])</td>
+<td>Takes a simple or multi-spectral image and returns its voxel-wise intensities.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.intensity.centerdistance.html#medpy.features.intensity.centerdistance" title="medpy.features.intensity.centerdistance"><code class="xref py py-obj docutils literal"><span class="pre">centerdistance</span></code></a>(image[,&nbsp;voxelspacing,&nbsp;mask])</td>
+<td>Takes a simple or multi-spectral image and returns its voxel-wise center distance in mm.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.intensity.centerdistance_xdminus1.html#medpy.features.intensity.centerdistance_xdminus1" title="medpy.features.intensity.centerdistance_xdminus1"><code class="xref py py-obj docutils literal"><span class="pre">centerdistance_xdminus1</span></code></a>(image,&nbsp;dim[,&nbsp;...])</td>
+<td>Implementation of <a class="reference internal" href="generated/medpy.features.intensity.centerdistance.html#medpy.features.intensity.centerdistance" title="medpy.features.intensity.centerdistance"><code class="xref py py-obj docutils literal"><span class="pre">centerdistance</span></code></a> that allows to compute sub-volume wise centerdistances.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.intensity.indices.html#medpy.features.intensity.indices" title="medpy.features.intensity.indices"><code class="xref py py-obj docutils literal"><span class="pre">indices</span></code></a>(image[,&nbsp;voxelspacing,&nbsp;mask])</td>
+<td>Takes an image and returns the voxels ndim-indices as voxel-wise feature.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.intensity.shifted_mean_gauss.html#medpy.features.intensity.shifted_mean_gauss" title="medpy.features.intensity.shifted_mean_gauss"><code class="xref py py-obj docutils literal"><span class="pre">shifted_mean_gauss</span></code></a>(image[,&nbsp;offset,&nbsp;sigma,&nbsp;...])</td>
+<td>The approximate mean over a small region at an offset from each voxel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.intensity.mask_distance.html#medpy.features.intensity.mask_distance" title="medpy.features.intensity.mask_distance"><code class="xref py py-obj docutils literal"><span class="pre">mask_distance</span></code></a>(image[,&nbsp;voxelspacing,&nbsp;mask])</td>
+<td>Computes the distance of each point under the mask to the mask border taking the voxel-spacing into account.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.intensity.local_mean_gauss.html#medpy.features.intensity.local_mean_gauss" title="medpy.features.intensity.local_mean_gauss"><code class="xref py py-obj docutils literal"><span class="pre">local_mean_gauss</span></code></a>(image[,&nbsp;sigma,&nbsp;...])</td>
+<td>Takes a simple or multi-spectral image and returns the approximate mean over a small region around each voxel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.intensity.gaussian_gradient_magnitude.html#medpy.features.intensity.gaussian_gradient_magnitude" title="medpy.features.intensity.gaussian_gradient_magnitude"><code class="xref py py-obj docutils literal"><span class="pre">gaussian_gradient_magnitude</span></code></a>(image[,&nbsp;sigma,&nbsp;...])</td>
+<td>Computes the gradient magnitude (edge-detection) of the supplied image using gaussian derivates and returns the intensity values.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.intensity.median.html#medpy.features.intensity.median" title="medpy.features.intensity.median"><code class="xref py py-obj docutils literal"><span class="pre">median</span></code></a>(image[,&nbsp;size,&nbsp;voxelspacing,&nbsp;mask])</td>
+<td>Computes the multi-dimensional median filter and returns the resulting values per voxel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.intensity.local_histogram.html#medpy.features.intensity.local_histogram" title="medpy.features.intensity.local_histogram"><code class="xref py py-obj docutils literal"><span class="pre">local_histogram</span></code></a>(image[,&nbsp;bins,&nbsp;rang,&nbsp;...])</td>
+<td>Computes multi-dimensional histograms over a region around each voxel.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.intensity.hemispheric_difference.html#medpy.features.intensity.hemispheric_difference" title="medpy.features.intensity.hemispheric_difference"><code class="xref py py-obj docutils literal"><span class="pre">hemispheric_difference</span></code></a>(image[,&nbsp;...])</td>
+<td>Computes the hemispheric intensity difference between the brain hemispheres of an brain image.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="feature-representation">
+<h3>Feature representation<a class="headerlink" href="#feature-representation" title="Permalink to this headline">¶</a></h3>
+<p>Features can be one or more dimensional and are kept in the following
+structures:</p>
+<div class="highlight-python"><div class="highlight"><pre>===== | == == =====
+s1    | s2 s3 [...]
+f1.1  | 
+f1.2  | 
+f2.1  | 
+f3.1  | 
+f3.2  | 
+[...] | 
+===== | == == =====
+</pre></div>
+</div>
+<p>, where each column sX denotes a single sample (voxel) and each row
+a features element e.g. f1 is constitutes a 2-dimensional features
+and occupies therefore two rows, while f2 is a single element
+features with a single row. Entries of this array are of type float.
+These feature representation forms are processable by the
+<a class="reference external" href="http://scikit-learn.org/">scikit-learn</a> methods.</p>
+</div>
+<div class="section" id="multi-spectral-images">
+<h3>Multi-spectral images<a class="headerlink" href="#multi-spectral-images" title="Permalink to this headline">¶</a></h3>
+<p>This package was originally designed for MR images and is therefore
+suited to handle multi-spectral data such as RGB and MR images.
+Each feature extraction function can be supplied with list/tuple of
+images instead of an image. in which case they are considered
+co-registered and the feature is extracted from all of them
+independently.</p>
+</div>
+</div>
+<div class="section" id="utilities-medpy-feature-utilities">
+<h2>Utilities <code class="xref py py-mod docutils literal"><span class="pre">medpy.feature.utilities</span></code><a class="headerlink" href="#utilities-medpy-feature-utilities" title="Permalink to this headline">¶</a></h2>
+<p>A number of utilities to manipulate feature vectors created with <a class="reference internal" href="#module-medpy.features.intensity" title="medpy.features.intensity"><code class="xref py py-obj docutils literal"><span class="pre">medpy.features.intensity</span></code></a>.</p>
+<span class="target" id="module-medpy.features.utilities"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.utilities.normalize.html#medpy.features.utilities.normalize" title="medpy.features.utilities.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>(vector[,&nbsp;cutoffp,&nbsp;model])</td>
+<td>Returns a feature-wise normalized version of the supplied vector.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.utilities.normalize_with_model.html#medpy.features.utilities.normalize_with_model" title="medpy.features.utilities.normalize_with_model"><code class="xref py py-obj docutils literal"><span class="pre">normalize_with_model</span></code></a>(vector,&nbsp;model)</td>
+<td>Normalize as with <a class="reference internal" href="generated/medpy.features.utilities.normalize.html#medpy.features.utilities.normalize" title="medpy.features.utilities.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>, but not based on the data of the passed feature vector, but rather on a learned model created with <a class="reference internal" href="generated/medpy.features.utilities.normalize.html#medpy.features.utilities.normalize" title="medpy.features.utilities.normalize"><code class="xref py py-obj docutils literal"><span class="pre">normalize</span></code></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.utilities.append.html#medpy.features.utilities.append" title="medpy.features.utilities.append"><code class="xref py py-obj docutils literal"><span class="pre">append</span></code></a>(*vectors)</td>
+<td>Takes an arbitrary number of vectors containing features and append them (horizontally).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.utilities.join.html#medpy.features.utilities.join" title="medpy.features.utilities.join"><code class="xref py py-obj docutils literal"><span class="pre">join</span></code></a>(*vectors)</td>
+<td>Takes an arbitrary number of aligned vectors of the same length and combines them into a single vector (vertically).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="histogram-medy-features-histogram">
+<h2>Histogram <code class="xref py py-mod docutils literal"><span class="pre">medy.features.histogram</span></code><a class="headerlink" href="#histogram-medy-features-histogram" title="Permalink to this headline">¶</a></h2>
+<p>Functions to create various kinds of fuzzy histograms with the fuzzy_histogram function.</p>
+<span class="target" id="module-medpy.features.histogram"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.histogram.fuzzy_histogram.html#medpy.features.histogram.fuzzy_histogram" title="medpy.features.histogram.fuzzy_histogram"><code class="xref py py-obj docutils literal"><span class="pre">fuzzy_histogram</span></code></a>(a[,&nbsp;bins,&nbsp;range,&nbsp;normed,&nbsp;...])</td>
+<td>Compute a fuzzy histogram.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.histogram.triangular_membership.html#medpy.features.histogram.triangular_membership" title="medpy.features.histogram.triangular_membership"><code class="xref py py-obj docutils literal"><span class="pre">triangular_membership</span></code></a>(bin_center,&nbsp;bin_width)</td>
+<td>Create a triangular membership function for a fuzzy histogram bin.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.histogram.trapezoid_membership.html#medpy.features.histogram.trapezoid_membership" title="medpy.features.histogram.trapezoid_membership"><code class="xref py py-obj docutils literal"><span class="pre">trapezoid_membership</span></code></a>(bin_center,&nbsp;bin_width,&nbsp;...)</td>
+<td>Create a trapezium membership function for a fuzzy histogram bin.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.features.histogram.gaussian_membership.html#medpy.features.histogram.gaussian_membership" title="medpy.features.histogram.gaussian_membership"><code class="xref py py-obj docutils literal"><span class="pre">gaussian_membership</span></code></a>(bin_center,&nbsp;bin_width,&nbsp;...)</td>
+<td>Create a gaussian membership function for a fuzzy histogram bin.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.features.histogram.sigmoidal_difference_membership.html#medpy.features.histogram.sigmoidal_difference_membership" title="medpy.features.histogram.sigmoidal_difference_membership"><code class="xref py py-obj docutils literal"><span class="pre">sigmoidal_difference_membership</span></code></a>(bin_center,&nbsp;...)</td>
+<td>Create the difference of two sigmoids as membership function for a fuzzy histogram bin.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="available-membership-functions">
+<h3>Available membership functions<a class="headerlink" href="#available-membership-functions" title="Permalink to this headline">¶</a></h3>
+<p>function (string to pass to <em class="xref py py-obj">membership</em> argument of fuzzy_histogram)</p>
+<ul class="simple">
+<li>triangular_membership (triangular)</li>
+<li>trapezoid_membership (trapezoid)</li>
+<li>gaussian_membership (gaussian)</li>
+<li>sigmoidal_difference_membership (sigmoid)</li>
+</ul>
+</div>
+<div class="section" id="the-smoothness-term">
+<h3>The smoothness term<a class="headerlink" href="#the-smoothness-term" title="Permalink to this headline">¶</a></h3>
+<p>The smoothness term determines the affected neighbourhood, e.g., when set to 2, all
+values in the range (2 * bin_width + 1/2 bin_wdith) to the left and right of this bin
+(center) contribute to this bin. Therefore it determines the smoothing factor of this
+fuzzy membership function.
+More clearly the smoothness term determines how much the function reaches into the
+adjunct bins.</p>
+<p>An example of the smoothness parameter:</p>
+<div class="highlight-python"><div class="highlight"><pre>              ____________ ________ ____________ ________ ____________
+             /          / \        / \       /  \        / \          \ 
+            /          /   \      /   \     /    \      /   \          \ 
+           /          /     \    /     \   /      \    /     \          \ 
+---|----------|----------|----------|----------|----------|----------|----------|----
+        x-3        x-2        x-1        x          x+1        x+2        x+3
+              |-nbh      |          |crisp bin |          |      +nbh|
+</pre></div>
+</div>
+<p>The considered value v is associated with the bin x using crisp (i.e. standard)
+histograms. For fuzzy histograms with a smoothness of 2, its membership value for
+the bins x-smoothness (x-2) until x+smoothness (x+2) is computed. While it also
+might have a membership values for bins further away from x, these are considered to
+be only marginal and are therefore nor computed. This leads to a speed-up that is
+especially important when a great number of fuzzy histograms have to be computed.</p>
+</div>
+<div class="section" id="boundary-effect-the-guarantee-parameter">
+<h3>Boundary effect / the guarantee parameter<a class="headerlink" href="#boundary-effect-the-guarantee-parameter" title="Permalink to this headline">¶</a></h3>
+<p>Values near the left and right border of the histogram might
+not contribute with a full value of 1 to the histogram, as part of their contribution
+lies outside of the histogram range. To avoid this affect (which can be quite strong
+for histograms with few bins and a height smoothness term), set &#8216;guarantee&#8217; to True.
+The histogram size is then selected to be (left_side - smoothness * bin_width till
+right_side + smoothness * bin_width) and therefore neglect all boundary effects.</p>
+<p>Plots of the membership functions can e.g. be found at <a class="reference external" href="http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html">http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html</a> .</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

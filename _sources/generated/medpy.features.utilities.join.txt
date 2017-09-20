@@ -1,0 +1,6 @@
+medpy.features.utilities.join
+=============================
+
+.. currentmodule:: medpy.features.utilities
+
+.. autofunction:: join

@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphInt.__init__
+========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphInt.__init__

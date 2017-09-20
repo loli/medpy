@@ -1,0 +1,6 @@
+medpy.metric.image.mutual_information
+=====================================
+
+.. currentmodule:: medpy.metric.image
+
+.. autofunction:: mutual_information

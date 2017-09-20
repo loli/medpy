@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphInt.get_arc_num
+===========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphInt.get_arc_num

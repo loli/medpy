@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphFloat.get_node_num
+==============================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphFloat.get_node_num

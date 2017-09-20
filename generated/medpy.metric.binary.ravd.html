@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.metric.binary.ravd &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="up" title="Metric measures (medpy.metric)" href="../metric.html" >
+    <link rel="next" title="medpy.metric.binary.obj_tpr" href="medpy.metric.binary.obj_tpr.html" >
+    <link rel="prev" title="medpy.metric.binary.positive_predictive_value" href="medpy.metric.binary.positive_predictive_value.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../metric.html" accesskey="U">Metric measures (<code class="docutils literal"><span class="pre">medpy.metric</span></code>)</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="medpy.metric.binary.obj_tpr.html" title="medpy.metric.binary.obj_tpr"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="medpy.metric.binary.positive_predictive_value.html" title="medpy.metric.binary.positive_predictive_value"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="medpy.metric.binary.positive_predictive_value.html"
+                        title="previous chapter">medpy.metric.binary.positive_predictive_value</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="medpy.metric.binary.obj_tpr.html"
+                        title="next chapter">medpy.metric.binary.obj_tpr</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/generated/medpy.metric.binary.ravd.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="medpy-metric-binary-ravd">
+<h1>medpy.metric.binary.ravd<a class="headerlink" href="#medpy-metric-binary-ravd" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="medpy.metric.binary.ravd">
+<code class="descclassname">medpy.metric.binary.</code><code class="descname">ravd</code><span class="sig-paren">(</span><em>result</em>, <em>reference</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/metric/binary.html#ravd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.metric.binary.ravd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relative absolute volume difference.</p>
+<p>Compute the relative absolute volume difference between the (joined) binary objects
+in the two images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>result</strong> : array_like</p>
+<blockquote>
+<div><p>Input data containing objects. Can be any type but will be converted
+into binary: background where 0, object everywhere else.</p>
+</div></blockquote>
+<p><strong>reference</strong> : array_like</p>
+<blockquote>
+<div><p>Input data containing objects. Can be any type but will be converted
+into binary: background where 0, object everywhere else.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ravd</strong> : float</p>
+<blockquote>
+<div><p>The relative absolute volume difference between the object(s) in <code class="docutils literal"><span class="pre">result</span></code>
+and the object(s) in <code class="docutils literal"><span class="pre">reference</span></code>. This is a percentage value in the range
+<span class="math">\([-1.0, +inf]\)</span> for which a <span class="math">\(0\)</span> denotes an ideal score.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>RuntimeError</strong></p>
+<blockquote class="last">
+<div><p>If the reference object is empty.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="medpy.metric.binary.dc.html#medpy.metric.binary.dc" title="medpy.metric.binary.dc"><code class="xref py py-func docutils literal"><span class="pre">dc</span></code></a>, <a class="reference internal" href="medpy.metric.binary.precision.html#medpy.metric.binary.precision" title="medpy.metric.binary.precision"><code class="xref py py-func docutils literal"><span class="pre">precision</span></code></a>, <a class="reference internal" href="medpy.metric.binary.recall.html#medpy.metric.binary.recall" title="medpy.metric.binary.recall"><code class="xref py py-func docutils literal"><span class="pre">recall</span></code></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>This is not a real metric, as it is directed. Negative values denote a smaller
+and positive values a larger volume than the reference.
+This implementation does not check, whether the two supplied arrays are of the same
+size.</p>
+<p class="rubric">Examples</p>
+<p>Considering the following inputs</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr1</span>
+<span class="go">array([[0, 1, 0],</span>
+<span class="go">       [1, 1, 1],</span>
+<span class="go">       [0, 1, 0]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr2</span>
+<span class="go">array([[0, 1, 0],</span>
+<span class="go">       [1, 0, 1],</span>
+<span class="go">       [0, 1, 0]])</span>
+</pre></div>
+</div>
+<p>comparing <em class="xref py py-obj">arr1</em> to <em class="xref py py-obj">arr2</em> we get</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ravd</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">)</span>
+<span class="go">-0.2</span>
+</pre></div>
+</div>
+<p>and reversing the inputs the directivness of the metric becomes evident</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ravd</span><span class="p">(</span><span class="n">arr2</span><span class="p">,</span> <span class="n">arr1</span><span class="p">)</span>
+<span class="go">0.25</span>
+</pre></div>
+</div>
+<p>It is important to keep in mind that a perfect score of <em class="xref py py-obj">0</em> does not mean that the
+binary objects fit exactely, as only the volumes are compared:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">arr1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ravd</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

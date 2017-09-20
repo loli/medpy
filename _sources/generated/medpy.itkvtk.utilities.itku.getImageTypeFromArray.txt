@@ -1,0 +1,6 @@
+medpy.itkvtk.utilities.itku.getImageTypeFromArray
+=================================================
+
+.. currentmodule:: medpy.itkvtk.utilities.itku
+
+.. autofunction:: getImageTypeFromArray

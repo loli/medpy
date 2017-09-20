@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphFloat.mark_node
+===========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphFloat.mark_node

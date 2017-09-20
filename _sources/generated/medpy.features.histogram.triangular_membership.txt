@@ -1,0 +1,6 @@
+medpy.features.histogram.triangular_membership
+==============================================
+
+.. currentmodule:: medpy.features.histogram
+
+.. autofunction:: triangular_membership

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.io.save &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.io.save</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.1</span>
+<span class="c1"># since 2012-05-28</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+<span class="c1"># own modules</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ImageTypeError</span><span class="p">,</span> <span class="n">DependencyError</span><span class="p">,</span>\
+    <span class="n">ImageSavingError</span>
+<span class="kn">from</span> <span class="nn">.header</span> <span class="kn">import</span> <span class="n">__update_header_from_array_nibabel</span><span class="p">,</span>\
+    <span class="n">__is_header_itk</span><span class="p">,</span> <span class="n">__is_header_nibabel</span><span class="p">,</span> <span class="n">copy_meta_data</span>
+
+<span class="c1"># !TODO: Change to not work with the Exceptions anymore, as these hides bugs!</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../../generated/medpy.io.save.save.html#medpy.io.save.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">hdr</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">force</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Save the image ``arr`` as filename using information encoded in ``hdr``. The target image</span>
+<span class="sd">    format is determined by the ``filename`` suffix. If the ``force`` parameter is set to true,</span>
+<span class="sd">    an already existing image is overwritten silently. Otherwise an error is thrown.</span>
+<span class="sd">    </span>
+<span class="sd">    The header (``hdr``) object is the one returned by `~medpy.io.load.load` and is only used</span>
+<span class="sd">    if the source and target image formats are the same.</span>
+<span class="sd">    </span>
+<span class="sd">    Generally this function does not guarantee, that metadata other than the image shape</span>
+<span class="sd">    and pixel data type are kept.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    The supported file formats depend on the installed third party modules. This method</span>
+<span class="sd">    includes support for the NiBabel package and for ITK python wrappers created with</span>
+<span class="sd">    WrapITK. Note that for the later it is import how it has been compiled.</span>
+<span class="sd">    </span>
+<span class="sd">    NiBabel enables support for:</span>
+<span class="sd">    </span>
+<span class="sd">        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</span>
+<span class="sd">        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</span>
+<span class="sd">        - and some others (http://nipy.sourceforge.net/nibabel/)</span>
+<span class="sd">        </span>
+<span class="sd">    WrapITK enables support for:</span>
+<span class="sd">    </span>
+<span class="sd">        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</span>
+<span class="sd">        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</span>
+<span class="sd">        - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</span>
+<span class="sd">        - Itk/Vtk MetaImage (.mhd, .mha/.raw)</span>
+<span class="sd">        - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</span>
+<span class="sd">        - and many others (http://www.cmake.org/Wiki/ITK/File_Formats)</span>
+<span class="sd">        </span>
+<span class="sd">    Generally we advise to use the nibabel third party tool, which is implemented in pure</span>
+<span class="sd">    python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent</span>
+<span class="sd">    and comprehensive.</span>
+<span class="sd">        </span>
+<span class="sd">    For informations about which image formats, dimensionalities and pixel data types</span>
+<span class="sd">    your current configuration supports, see :mod:`test.io.loadsave` . There you can</span>
+<span class="sd">    find an automated test method.</span>
+<span class="sd">                </span>
+<span class="sd">    Some known restrictions are explicit, independent of the third party modules or how</span>
+<span class="sd">    they were compiled:</span>
+<span class="sd">    </span>
+<span class="sd">        - DICOM does not support images of 4 or more dimensions (Danger: ITK actually</span>
+<span class="sd">          saves the image without signaling an error. But the dimensionality is reduced</span>
+<span class="sd">          to 3 dimensions).</span>
+<span class="sd">        - DICOM does not support pixel data of uint32/64 and float32/64/128.</span>
+<span class="sd">        - ITK does not support images with less than 2 dimensions.</span>
+<span class="sd">        - ITK does not support pixel data of uint64, int64 and float128.</span>
+<span class="sd">        - JPEG, PIC are unstable in the sense, that differences between the saved and the</span>
+<span class="sd">          loaded data can occure.</span>
+<span class="sd">        - GIPL images are always loaded as 3D, even if they have been saved as 2D images.</span>
+<span class="sd">        - PNG images are always loaded as 2D, even if they have been saved as 3D images.</span>
+<span class="sd">    </span>
+<span class="sd">    Further information:</span>
+<span class="sd">    </span>
+<span class="sd">        - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module</span>
+<span class="sd">        - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK</span>
+<span class="sd">        - http://code.google.com/p/pydicom/ : The PyDicom python module</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : array_like</span>
+<span class="sd">        The image data.</span>
+<span class="sd">    filename : string</span>
+<span class="sd">        Where to save the image; path and filename including the image suffix.</span>
+<span class="sd">    hdr : object</span>
+<span class="sd">        The image header containing the metadata.</span>
+<span class="sd">    force : bool</span>
+<span class="sd">        Set to True to overwrite already exiting image silently.</span>
+<span class="sd">    </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImageTypeError</span>
+<span class="sd">        If attempting to save as an unsupported image type.</span>
+<span class="sd">    DependencyError</span>
+<span class="sd">        If an required third party module is not existent or has been</span>
+<span class="sd">        compiled without support for the target image format</span>
+<span class="sd">    ImageSavingError</span>
+<span class="sd">        If the image could not be saved due to various reasons</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">###############################</span>
+    <span class="c1"># responsibility dictionaries #</span>
+    <span class="c1">###############################</span>
+    <span class="c1"># These dictionaries determine which third-party module is responsible to save which</span>
+    <span class="c1"># image type. For extending the loaders functionality, just create the required</span>
+    <span class="c1"># private loader functions (__save_&lt;name&gt;) and register them here.</span>
+    <span class="n">suffix_to_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nii&#39;</span><span class="p">:</span> <span class="s1">&#39;nifti&#39;</span><span class="p">,</span> <span class="c1"># mapping from file suffix to type string</span>
+                      <span class="s1">&#39;nii.gz&#39;</span><span class="p">:</span> <span class="s1">&#39;nifti&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;hdr&#39;</span><span class="p">:</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;img&#39;</span><span class="p">:</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;img.gz&#39;</span><span class="p">:</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;dcm&#39;</span><span class="p">:</span> <span class="s1">&#39;dicom&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;dicom&#39;</span><span class="p">:</span> <span class="s1">&#39;dicom&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;mhd&#39;</span><span class="p">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;mha&#39;</span><span class="p">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;nrrd&#39;</span><span class="p">:</span> <span class="s1">&#39;nrrd&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;nhdr&#39;</span><span class="p">:</span> <span class="s1">&#39;nrrd&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="s1">&#39;png&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bmp&#39;</span><span class="p">:</span> <span class="s1">&#39;bmp&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;tif&#39;</span><span class="p">:</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;tiff&#39;</span><span class="p">:</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;jpg&#39;</span><span class="p">:</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;jpeg&#39;</span><span class="p">:</span> <span class="s1">&#39;jpg&#39;</span><span class="p">}</span>
+    
+    <span class="n">type_to_string</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nifti&#39;</span><span class="p">:</span> <span class="s1">&#39;NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)&#39;</span><span class="p">,</span> <span class="c1"># mapping from type string to description string</span>
+                      <span class="s1">&#39;analyze&#39;</span><span class="p">:</span> <span class="s1">&#39;Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;dicom&#39;</span><span class="p">:</span> <span class="s1">&#39;Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="s1">&#39;Itk/Vtk MetaImage (.mhd, .mha/.raw)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;nrrd&#39;</span><span class="p">:</span> <span class="s1">&#39;Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="s1">&#39;Portable Network Graphics (.png)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bmp&#39;</span><span class="p">:</span> <span class="s1">&#39;Bitmap Image File (.bmp)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;tif&#39;</span><span class="p">:</span> <span class="s1">&#39;Tagged Image File Format (.tif,.tiff)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;jpg&#39;</span><span class="p">:</span> <span class="s1">&#39;Joint Photographic Experts Group (.jpg, .jpeg)&#39;</span><span class="p">}</span>
+    
+    <span class="n">type_to_function</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nifti&#39;</span><span class="p">:</span> <span class="n">__save_nibabel</span><span class="p">,</span> <span class="c1"># mapping from type string to responsible loader function</span>
+                        <span class="s1">&#39;analyze&#39;</span><span class="p">:</span> <span class="n">__save_nibabel</span><span class="p">,</span>
+                        <span class="s1">&#39;dicom&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">,</span>
+                        <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">,</span>
+                        <span class="s1">&#39;nrrd&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">,</span>
+                        <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">,</span>
+                        <span class="s1">&#39;bmp&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">,</span>
+                        <span class="s1">&#39;tif&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">,</span>
+                        <span class="s1">&#39;jpg&#39;</span><span class="p">:</span> <span class="n">__save_itk</span><span class="p">}</span>
+    
+    <span class="n">save_fallback_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">__save_nibabel</span><span class="p">,</span> <span class="n">__save_itk</span><span class="p">]</span> <span class="c1"># list and order of loader function to use in case of fallback to brute-force</span>
+    
+    <span class="c1">########</span>
+    <span class="c1"># code #</span>
+    <span class="c1">########</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving image as {}...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    
+    <span class="c1"># Check image file existence</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ImageSavingError</span><span class="p">(</span><span class="s1">&#39;The target file {} already exists.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    
+    <span class="c1"># Try normal saving</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># determine two suffixes (the second one of the compound of the two last elements)</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffix_to_type</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffix_to_type</span><span class="p">:</span> <span class="c1"># otherwise throw an Exception that will be caught later on</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">()</span>
+        <span class="c1"># determine image type by ending</span>
+        <span class="n">image_type</span> <span class="o">=</span> <span class="n">suffix_to_type</span><span class="p">[</span><span class="n">suffix</span><span class="p">]</span>
+        <span class="c1"># determine responsible function</span>
+        <span class="n">saver</span> <span class="o">=</span> <span class="n">type_to_function</span><span class="p">[</span><span class="n">image_type</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># load the image</span>
+            <span class="k">return</span> <span class="n">saver</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;Saving images of type {} requires a third-party module that could not be encountered. Reason: {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ImageSavingError</span><span class="p">(</span><span class="s1">&#39;Failed to save image {} as type {}. Reason signaled by third-party module: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ImageTypeError</span><span class="p">(</span><span class="s1">&#39;The ending {} of {} could not be associated with any known image type. Supported types are: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">filename</span><span class="p">,</span> <span class="n">type_to_string</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        
+    <span class="c1"># Try brute force</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Normal saving failed. Entering brute force mode.&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">saver</span> <span class="ow">in</span> <span class="n">save_fallback_order</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">saver</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module {} signaled error: {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">saver</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+    
+    <span class="k">raise</span> <span class="n">err</span></div>
+
+<span class="k">def</span> <span class="nf">__save_itk</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Image saver using the third-party module itk.</span>
+<span class="sd">    @param arr the image data</span>
+<span class="sd">    @param hdr the image header with met-information</span>
+<span class="sd">    @param filename the target location</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">itk</span>
+    <span class="kn">from</span> <span class="nn">medpy.itkvtk.utilities</span> <span class="kn">import</span> <span class="n">itku</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Saving image as {} with Itk...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+
+    <span class="c1"># determine image type from array</span>
+    <span class="n">image_type</span> <span class="o">=</span> <span class="n">itku</span><span class="o">.</span><span class="n">getImageTypeFromArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+    <span class="c1"># convert array to itk image</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">itku</span><span class="o">.</span><span class="n">getImageFromArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;The itk python PyBuffer transition object was compiled without support for image of type {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_type</span><span class="p">))</span>
+
+    <span class="c1"># if original image object was provided with hdr, try to use it for creating the image object</span>
+    <span class="k">if</span> <span class="n">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
+        <span class="c1"># save original image shape / largest possible region</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">GetLargestPossibleRegion</span><span class="p">()</span><span class="o">.</span><span class="n">GetImageDimension</span><span class="p">()):</span>
+            <span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">GetLargestPossibleRegion</span><span class="p">()</span><span class="o">.</span><span class="n">GetSize</span><span class="p">()</span><span class="o">.</span><span class="n">GetElement</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+        <span class="c1"># copy meta data</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">CopyInformation</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetPointer</span><span class="p">())</span>
+            <span class="c1"># reset largest possible region / shape to original value</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)):</span>
+                <span class="n">img</span><span class="o">.</span><span class="n">GetLargestPossibleRegion</span><span class="p">()</span><span class="o">.</span><span class="n">GetSize</span><span class="p">()</span><span class="o">.</span><span class="n">SetElement</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> <span class="c1"># raised when the meta data information could not be copied (e.g. when the two images ndims differ)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;The meta-information could not be copied form the old header. CopyInformation signaled: {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">pass</span>
+        
+    <span class="k">elif</span> <span class="n">hdr</span><span class="p">:</span> <span class="c1"># otherwise copy meta-data information as far as possible</span>
+        <span class="n">copy_meta_data</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">hdr</span><span class="p">)</span>
+    
+    <span class="c1"># save the image</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">itk</span><span class="o">.</span><span class="n">ImageFileWriter</span><span class="p">[</span><span class="n">image_type</span><span class="p">]</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">GetPointer</span><span class="p">())</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+    
+<span class="k">def</span> <span class="nf">__save_nibabel</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Image saver using the third-party module nibabel.</span>
+<span class="sd">    @param arr the image data</span>
+<span class="sd">    @param hdr the image header with met-information</span>
+<span class="sd">    @param filename the target location</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">nibabel</span>
+    <span class="kn">from</span> <span class="nn">..utilities</span> <span class="kn">import</span> <span class="n">nibabelu</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Saving image as {} with NiBabel...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    
+    <span class="c1"># convert type bool to int8</span>
+    <span class="k">if</span> <span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span> <span class="o">==</span> <span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    
+    <span class="c1"># if original image object was provided with hdr, try to use it for creating the image object</span>
+    <span class="k">if</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="n">__is_header_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>        
+        <span class="n">__update_header_from_array_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">nibabelu</span><span class="o">.</span><span class="n">image_like</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">hdr</span><span class="p">)</span>
+    <span class="c1"># if not, create new image object and copy meta data as far as possible</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">nibabelu</span><span class="o">.</span><span class="n">image_new</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">hdr</span><span class="p">:</span> <span class="n">copy_meta_data</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">hdr</span><span class="p">)</span>
+        
+    <span class="c1"># save image</span>
+    <span class="n">nibabel</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

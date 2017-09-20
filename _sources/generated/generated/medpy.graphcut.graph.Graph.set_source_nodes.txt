@@ -1,0 +1,6 @@
+medpy.graphcut.graph.Graph.set_source_nodes
+===========================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: Graph.set_source_nodes

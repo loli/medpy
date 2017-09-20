@@ -1,0 +1,6 @@
+medpy.graphcut.graph.GCGraph.set_tweight
+========================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: GCGraph.set_tweight

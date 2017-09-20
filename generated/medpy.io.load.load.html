@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.io.load.load &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="up" title="Image I/O functionalities (medpy.io)" href="../io.html" >
+    <link rel="next" title="medpy.io.save.save" href="medpy.io.save.save.html" >
+    <link rel="prev" title="Image I/O functionalities (medpy.io)" href="../io.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../io.html" accesskey="U">Image I/O functionalities (<code class="docutils literal"><span class="pre">medpy.io</span></code>)</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="medpy.io.save.save.html" title="medpy.io.save.save"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="../io.html" title="Image I/O functionalities (medpy.io)"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../io.html"
+                        title="previous chapter">Image I/O functionalities (<code class="docutils literal"><span class="pre">medpy.io</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="medpy.io.save.save.html"
+                        title="next chapter">medpy.io.save.save</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/generated/medpy.io.load.load.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="medpy-io-load-load">
+<h1>medpy.io.load.load<a class="headerlink" href="#medpy-io-load-load" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="medpy.io.load.load">
+<code class="descclassname">medpy.io.load.</code><code class="descname">load</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/load.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.load.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the <code class="docutils literal"><span class="pre">image</span></code> and returns a ndarray with the image&#8217;s pixel content as well as
+an image format specific header object.</p>
+<p>The type of the returned header object depends on the third party module used to load
+the image. It can, with restrictions, be used to extract additional meta-information
+about the image (e.g. using the methods in <a class="reference internal" href="../io.html#module-medpy.io.header" title="medpy.io.header"><code class="xref py py-mod docutils literal"><span class="pre">medpy.io.header</span></code></a>). Additionally it serves
+as meta-data container that can be passes to <a class="reference internal" href="medpy.io.save.save.html#medpy.io.save.save" title="medpy.io.save.save"><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></a> when the altered
+image is saved to the hard drive again. Note that the transfer of meta-data is only
+possible, and even then not guaranteed, when the source and target image formats are
+the same.</p>
+<p>The supported file formats depend on the installed third party modules. This method
+includes support for the NiBabel package and for ITK python wrappers created with
+WrapITK. Note that for the later it is import how it has been compiled.</p>
+<p>NiBabel enables support for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
+<li>and some others (<a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a>)</li>
+</ul>
+</div></blockquote>
+<p>PyDicom:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
+</ul>
+</div></blockquote>
+<p>WrapITK enables support for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
+<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
+<li>Itk/Vtk MetaImage (.mhd, .mha/.raw)</li>
+<li>Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</li>
+<li>and many others (<a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a>)</li>
+</ul>
+</div></blockquote>
+<p>Generally we advise to use the nibabel third party tool, which is implemented in pure
+python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
+and comprehensive.</p>
+<p>For informations about which image formats, dimensionalities and pixel data types
+your current configuration supports, see <code class="xref py py-mod docutils literal"><span class="pre">tests.io.loadsave</span></code>. There you can
+find an automated test method.</p>
+<p>Further information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a> : The NiBabel python module</li>
+<li><a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a> : Supported file formats and data types by ITK</li>
+<li><a class="reference external" href="http://code.google.com/p/pydicom/">http://code.google.com/p/pydicom/</a> : The PyDicom python module</li>
+</ul>
+</div></blockquote>
+<p>Internally first tries to figure out the image type and the associated loader to use.
+If this fails due to some reason, a brute-force approach is chosen. In some cases a
+third party module might be able to load an image for which it is not registered as
+responsible.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>image</strong> : string</p>
+<blockquote>
+<div><p>Path to the image to load.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>image_data</strong> : ndarray</p>
+<blockquote>
+<div><p>The image data as numpy array.</p>
+</div></blockquote>
+<p><strong>image_header</strong> : object</p>
+<blockquote>
+<div><p>The image metadata as header object to be processed with the methods in <a class="reference internal" href="../io.html#module-medpy.io.header" title="medpy.io.header"><code class="xref py py-mod docutils literal"><span class="pre">medpy.io.header</span></code></a>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ImageLoadingError</strong></p>
+<blockquote>
+<div><p>If the image could not be loaded due to some reason.</p>
+</div></blockquote>
+<p><strong>ImageTypeError</strong></p>
+<blockquote>
+<div><p>If the image type is not supported.</p>
+</div></blockquote>
+<p><strong>DependencyError</strong></p>
+<blockquote class="last">
+<div><p>If a required third-party module is missing or has been
+compiled without the required support</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

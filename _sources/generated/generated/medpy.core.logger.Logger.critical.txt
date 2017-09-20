@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.critical
+=================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.critical

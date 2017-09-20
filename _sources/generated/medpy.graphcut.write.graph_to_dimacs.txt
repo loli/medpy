@@ -1,0 +1,6 @@
+medpy.graphcut.write.graph_to_dimacs
+====================================
+
+.. currentmodule:: medpy.graphcut.write
+
+.. autofunction:: graph_to_dimacs

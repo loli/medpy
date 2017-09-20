@@ -1,0 +1,6 @@
+medpy.metric.histogram.euclidean
+================================
+
+.. currentmodule:: medpy.metric.histogram
+
+.. autofunction:: euclidean

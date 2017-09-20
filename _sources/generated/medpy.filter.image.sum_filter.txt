@@ -1,0 +1,6 @@
+medpy.filter.image.sum_filter
+=============================
+
+.. currentmodule:: medpy.filter.image
+
+.. autofunction:: sum_filter

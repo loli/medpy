@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.removeHandler
+======================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.removeHandler

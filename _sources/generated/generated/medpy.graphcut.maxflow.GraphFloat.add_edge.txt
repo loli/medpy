@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphFloat.add_edge
+==========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphFloat.add_edge

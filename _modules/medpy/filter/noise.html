@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.filter.noise &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.filter.noise</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.0</span>
+<span class="c1"># since 2014-03-20</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">_ni_support</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">convolve1d</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="immerkaer_local"><a class="viewcode-back" href="../../../generated/medpy.filter.noise.immerkaer_local.html#medpy.filter.noise.immerkaer_local">[docs]</a><span class="k">def</span> <span class="nf">immerkaer_local</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Estimate the local noise.</span>
+<span class="sd">    </span>
+<span class="sd">    The input image is assumed to have additive zero mean Gaussian noise. The Immerkaer</span>
+<span class="sd">    noise estimation is applied to the image locally over a N-dimensional cube of</span>
+<span class="sd">    side-length size. The size of the region should be sufficiently high for a stable</span>
+<span class="sd">    noise estimation.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : array_like</span>
+<span class="sd">        Array of which to estimate the noise.</span>
+<span class="sd">    size : integer</span>
+<span class="sd">        The local region&#39;s side length.</span>
+<span class="sd">    output : ndarray, optional</span>
+<span class="sd">        The `output` parameter passes an array in which to store the</span>
+<span class="sd">        filter output.        </span>
+<span class="sd">    mode : {&#39;reflect&#39;, &#39;constant&#39;, &#39;nearest&#39;, &#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The `mode` parameter determines how the array borders are</span>
+<span class="sd">        handled, where `cval` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if `mode` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0        </span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sigmas : array_like</span>
+<span class="sd">        Map of the estimated standard deviation of the images Gaussian noise per voxel.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Does not take the voxel spacing into account.</span>
+<span class="sd">    Works good with medium to strong noise. Tends to underestimate for low noise levels.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    immerkaer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span><span class="p">,</span> <span class="n">return_value</span> <span class="o">=</span> <span class="n">_ni_support</span><span class="o">.</span><span class="n">_get_output</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+    <span class="n">footprint</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span>
+    
+    <span class="c1"># build nd-kernel to acquire square root of sum of squared elements</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">divider</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kernel</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="c1"># 36 for 1d, 216 for 3D, etc.</span>
+    
+    <span class="c1"># compute laplace of input</span>
+    <span class="n">laplace</span> <span class="o">=</span> <span class="n">separable_convolution</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">double</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">)</span>
+    
+    <span class="c1"># compute factor</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">divider</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">footprint</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">laplace</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="p">)</span>
+    
+    <span class="c1"># locally sum laplacian values</span>
+    <span class="n">separable_convolution</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">laplace</span><span class="p">),</span> <span class="n">footprint</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">)</span>
+    
+    <span class="n">output</span> <span class="o">*=</span> <span class="n">factor</span>
+    
+    <span class="k">return</span> <span class="n">return_value</span>    </div>
+
+<div class="viewcode-block" id="immerkaer"><a class="viewcode-back" href="../../../generated/medpy.filter.noise.immerkaer.html#medpy.filter.noise.immerkaer">[docs]</a><span class="k">def</span> <span class="nf">immerkaer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Estimate the global noise.</span>
+<span class="sd">    </span>
+<span class="sd">    The input image is assumed to have additive zero mean Gaussian noise. Using a</span>
+<span class="sd">    convolution with a Laplacian operator and a subsequent averaging the standard</span>
+<span class="sd">    deviation sigma of this noise is estimated. This estimation is global i.e. the</span>
+<span class="sd">    noise is assumed to be globally homogeneous over the image.</span>
+<span class="sd">    </span>
+<span class="sd">    Implementation based on [1]_.</span>
+<span class="sd">    </span>
+<span class="sd">        </span>
+<span class="sd">    Immerkaer suggested a Laplacian-based 2D kernel::</span>
+<span class="sd">    </span>
+<span class="sd">        [[ 1, -2,  1],</span>
+<span class="sd">         [-2,  4, -1],</span>
+<span class="sd">         [ 1, -2, 1]]</span>
+
+<span class="sd">    , which is separable and can therefore be applied by consecutive convolutions with</span>
+<span class="sd">    the one dimensional kernel [1, -2, 1].</span>
+<span class="sd">    </span>
+<span class="sd">    We generalize from this 1D-kernel to an ND-kernel by applying N consecutive</span>
+<span class="sd">    convolutions with the 1D-kernel along all N dimensions.</span>
+<span class="sd">    </span>
+<span class="sd">    This is equivalent with convolving the image with an ND-kernel constructed by calling</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; kernel1d = numpy.asarray([1, -2, 1])</span>
+<span class="sd">    &gt;&gt;&gt; kernel = kernel1d.copy()</span>
+<span class="sd">    &gt;&gt;&gt; for _ in range(input.ndim):</span>
+<span class="sd">    &gt;&gt;&gt;     kernel = numpy.tensordot(kernel, kernel1d, 0)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : array_like</span>
+<span class="sd">        Array of which to estimate the noise.</span>
+<span class="sd">    mode : {&#39;reflect&#39;, &#39;constant&#39;, &#39;nearest&#39;, &#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The `mode` parameter determines how the array borders are</span>
+<span class="sd">        handled, where `cval` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if `mode` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0        </span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The estimated standard deviation of the images Gaussian noise.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Does not take the voxel spacing into account.</span>
+<span class="sd">    Works good with medium to strong noise. Tends to underestimate for low noise levels.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    immerkaer_local</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] John Immerkaer, &quot;Fast Noise Variance Estimation&quot;, Computer Vision and Image</span>
+<span class="sd">           Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># build nd-kernel to acquire square root of sum of squared elements</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">divider</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kernel</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="c1"># 36 for 1d, 216 for 3D, etc.</span>
+    
+    <span class="c1"># compute laplace of input and derive noise sigma</span>
+    <span class="n">laplace</span> <span class="o">=</span> <span class="n">separable_convolution</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">)</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">divider</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">laplace</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">laplace</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">sigma</span></div>
+    
+<div class="viewcode-block" id="separable_convolution"><a class="viewcode-back" href="../../../generated/medpy.filter.noise.separable_convolution.html#medpy.filter.noise.separable_convolution">[docs]</a><span class="k">def</span> <span class="nf">separable_convolution</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Calculate a n-dimensional convolution of a separable kernel to a n-dimensional input.</span>
+<span class="sd">    </span>
+<span class="sd">    Achieved by calling convolution1d along the first axis, obtaining an intermediate</span>
+<span class="sd">    image, on which the next convolution1d along the second axis is called and so on.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : array_like</span>
+<span class="sd">        Array of which to estimate the noise.</span>
+<span class="sd">    weights : ndarray</span>
+<span class="sd">        One-dimensional sequence of numbers.          </span>
+<span class="sd">    output : array, optional</span>
+<span class="sd">        The `output` parameter passes an array in which to store the</span>
+<span class="sd">        filter output.</span>
+<span class="sd">    mode : {&#39;reflect&#39;, &#39;constant&#39;, &#39;nearest&#39;, &#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The `mode` parameter determines how the array borders are</span>
+<span class="sd">        handled, where `cval` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if `mode` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0</span>
+<span class="sd">    origin : scalar, optional</span>
+<span class="sd">        The `origin` parameter controls the placement of the filter.</span>
+<span class="sd">        Default 0.0.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output : ndarray</span>
+<span class="sd">        Input image convolved with the supplied kernel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">output</span><span class="p">,</span> <span class="n">return_value</span> <span class="o">=</span> <span class="n">_ni_support</span><span class="o">.</span><span class="n">_get_output</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">convolve1d</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)):</span>
+            <span class="n">convolve1d</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axes</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">return_value</span></div>
+    
+    
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

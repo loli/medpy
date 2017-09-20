@@ -1,0 +1,6 @@
+medpy.core.exceptions.ImageLoadingError
+=======================================
+
+.. currentmodule:: medpy.core.exceptions
+
+.. autoexception:: ImageLoadingError

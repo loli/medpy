@@ -1,0 +1,6 @@
+medpy.itkvtk.utilities.itku.getInformationWithScalarRange
+=========================================================
+
+.. currentmodule:: medpy.itkvtk.utilities.itku
+
+.. autofunction:: getInformationWithScalarRange

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.io.save.save &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="up" title="Image I/O functionalities (medpy.io)" href="../io.html" >
+    <link rel="next" title="medpy.io.header.get_pixel_spacing" href="medpy.io.header.get_pixel_spacing.html" >
+    <link rel="prev" title="medpy.io.load.load" href="medpy.io.load.load.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../io.html" accesskey="U">Image I/O functionalities (<code class="docutils literal"><span class="pre">medpy.io</span></code>)</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="medpy.io.header.get_pixel_spacing.html" title="medpy.io.header.get_pixel_spacing"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="medpy.io.load.load.html" title="medpy.io.load.load"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="medpy.io.load.load.html"
+                        title="previous chapter">medpy.io.load.load</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="medpy.io.header.get_pixel_spacing.html"
+                        title="next chapter">medpy.io.header.get_pixel_spacing</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/generated/medpy.io.save.save.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="medpy-io-save-save">
+<h1>medpy.io.save.save<a class="headerlink" href="#medpy-io-save-save" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="medpy.io.save.save">
+<code class="descclassname">medpy.io.save.</code><code class="descname">save</code><span class="sig-paren">(</span><em>arr</em>, <em>filename</em>, <em>hdr=False</em>, <em>force=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/save.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.save.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the image <code class="docutils literal"><span class="pre">arr</span></code> as filename using information encoded in <code class="docutils literal"><span class="pre">hdr</span></code>. The target image
+format is determined by the <code class="docutils literal"><span class="pre">filename</span></code> suffix. If the <code class="docutils literal"><span class="pre">force</span></code> parameter is set to true,
+an already existing image is overwritten silently. Otherwise an error is thrown.</p>
+<p>The header (<code class="docutils literal"><span class="pre">hdr</span></code>) object is the one returned by <a class="reference internal" href="medpy.io.load.load.html#medpy.io.load.load" title="medpy.io.load.load"><code class="xref py py-obj docutils literal"><span class="pre">load</span></code></a> and is only used
+if the source and target image formats are the same.</p>
+<p>Generally this function does not guarantee, that metadata other than the image shape
+and pixel data type are kept.</p>
+<p>The supported file formats depend on the installed third party modules. This method
+includes support for the NiBabel package and for ITK python wrappers created with
+WrapITK. Note that for the later it is import how it has been compiled.</p>
+<p>NiBabel enables support for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
+<li>and some others (<a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a>)</li>
+</ul>
+</div></blockquote>
+<p>WrapITK enables support for:</p>
+<blockquote>
+<div><ul class="simple">
+<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
+<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
+<li>Itk/Vtk MetaImage (.mhd, .mha/.raw)</li>
+<li>Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</li>
+<li>and many others (<a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a>)</li>
+</ul>
+</div></blockquote>
+<p>Generally we advise to use the nibabel third party tool, which is implemented in pure
+python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
+and comprehensive.</p>
+<p>For informations about which image formats, dimensionalities and pixel data types
+your current configuration supports, see <code class="xref py py-mod docutils literal"><span class="pre">test.io.loadsave</span></code> . There you can
+find an automated test method.</p>
+<p>Some known restrictions are explicit, independent of the third party modules or how
+they were compiled:</p>
+<blockquote>
+<div><ul class="simple">
+<li>DICOM does not support images of 4 or more dimensions (Danger: ITK actually
+saves the image without signaling an error. But the dimensionality is reduced
+to 3 dimensions).</li>
+<li>DICOM does not support pixel data of uint32/64 and float32/64/128.</li>
+<li>ITK does not support images with less than 2 dimensions.</li>
+<li>ITK does not support pixel data of uint64, int64 and float128.</li>
+<li>JPEG, PIC are unstable in the sense, that differences between the saved and the
+loaded data can occure.</li>
+<li>GIPL images are always loaded as 3D, even if they have been saved as 2D images.</li>
+<li>PNG images are always loaded as 2D, even if they have been saved as 3D images.</li>
+</ul>
+</div></blockquote>
+<p>Further information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a> : The NiBabel python module</li>
+<li><a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a> : Supported file formats and data types by ITK</li>
+<li><a class="reference external" href="http://code.google.com/p/pydicom/">http://code.google.com/p/pydicom/</a> : The PyDicom python module</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>arr</strong> : array_like</p>
+<blockquote>
+<div><p>The image data.</p>
+</div></blockquote>
+<p><strong>filename</strong> : string</p>
+<blockquote>
+<div><p>Where to save the image; path and filename including the image suffix.</p>
+</div></blockquote>
+<p><strong>hdr</strong> : object</p>
+<blockquote>
+<div><p>The image header containing the metadata.</p>
+</div></blockquote>
+<p><strong>force</strong> : bool</p>
+<blockquote>
+<div><p>Set to True to overwrite already exiting image silently.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ImageTypeError</strong></p>
+<blockquote>
+<div><p>If attempting to save as an unsupported image type.</p>
+</div></blockquote>
+<p><strong>DependencyError</strong></p>
+<blockquote>
+<div><p>If an required third party module is not existent or has been
+compiled without support for the target image format</p>
+</div></blockquote>
+<p><strong>ImageSavingError</strong></p>
+<blockquote class="last">
+<div><p>If the image could not be saved due to various reasons</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

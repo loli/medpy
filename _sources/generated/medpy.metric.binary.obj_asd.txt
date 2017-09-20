@@ -1,0 +1,6 @@
+medpy.metric.binary.obj_asd
+===========================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: obj_asd

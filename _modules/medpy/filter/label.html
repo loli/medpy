@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.filter.label &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.filter.label</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.1</span>
+<span class="c1"># since 2012-02-07</span>
+<span class="c1"># status Development</span>
+
+<span class="c1"># build-in modules</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+<span class="c1"># own modules</span>
+<span class="kn">from</span> <span class="nn">..core.exceptions</span> <span class="kn">import</span> <span class="n">ArgumentError</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="relabel_map"><a class="viewcode-back" href="../../../generated/medpy.filter.label.relabel_map.html#medpy.filter.label.relabel_map">[docs]</a><span class="k">def</span> <span class="nf">relabel_map</span><span class="p">(</span><span class="n">label_image</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span><span class="p">]):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Relabel an image using the supplied mapping.</span>
+<span class="sd">    </span>
+<span class="sd">    The ``mapping`` can be any kind of subscriptable object. The respective region id is used</span>
+<span class="sd">    to access the new value from the ``mapping``. The ``key`` keyword parameter can be used to</span>
+<span class="sd">    supply another access function. The ``key`` function must have the signature</span>
+<span class="sd">    key(mapping, region-id) and return the new region-id to assign.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label_image : array_like</span>
+<span class="sd">        A nD label map.</span>
+<span class="sd">    mapping : dictionary or subscriptable object</span>
+<span class="sd">        A mapping object.</span>
+<span class="sd">    key : function</span>
+<span class="sd">        Can be used to defined the key-access to the ``mapping`` object.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    relabel_map : ndarray</span>
+<span class="sd">        A label map with new region ids.</span>
+<span class="sd">    </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ArgumentError</span>
+<span class="sd">        If a region id is missing in the supplied mapping</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="n">label_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">label_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_map</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">key</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s1">&#39;No conversion for region id {} found in the supplied mapping. Error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+    
+    <span class="n">vmap</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">_map</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">label_image</span><span class="o">.</span><span class="n">dtype</span><span class="p">])</span>
+         
+    <span class="k">return</span> <span class="n">vmap</span><span class="p">(</span><span class="n">label_image</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="relabel"><a class="viewcode-back" href="../../../generated/medpy.filter.label.relabel.html#medpy.filter.label.relabel">[docs]</a><span class="k">def</span> <span class="nf">relabel</span><span class="p">(</span><span class="n">label_image</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Relabel the regions of a label image.</span>
+<span class="sd">    Re-processes the labels to make them consecutively and starting from start.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label_image : array_like</span>
+<span class="sd">        A nD label map.</span>
+<span class="sd">    start : integer</span>
+<span class="sd">        The id of the first label to assign</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    relabel_map : ndarray</span>
+<span class="sd">        The relabelled label map.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    relabel_non_zero</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">label_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">label_image</span><span class="p">)</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">rav</span> <span class="o">=</span> <span class="n">label_image</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rav</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rav</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
+            <span class="n">mapping</span><span class="p">[</span><span class="n">rav</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">start</span>
+            <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">rav</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">rav</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">rav</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">label_image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="relabel_non_zero"><a class="viewcode-back" href="../../../generated/medpy.filter.label.relabel_non_zero.html#medpy.filter.label.relabel_non_zero">[docs]</a><span class="k">def</span> <span class="nf">relabel_non_zero</span><span class="p">(</span><span class="n">label_image</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot; </span>
+<span class="sd">    Relabel the regions of a label image.</span>
+<span class="sd">    Re-processes the labels to make them consecutively and starting from start.</span>
+<span class="sd">    Keeps all zero (0) labels, as they are considered background.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label_image : array_like</span>
+<span class="sd">        A nD label map.</span>
+<span class="sd">    start : integer</span>
+<span class="sd">        The id of the first label to assign</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    relabel_map : ndarray</span>
+<span class="sd">        The relabelled label map.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    relabel  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s1">&#39;The starting value can not be 0 or lower.&#39;</span><span class="p">)</span>
+    
+    <span class="n">l</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">label_image</span><span class="p">))</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span><span class="p">)):</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
+    
+    <span class="k">return</span> <span class="n">relabel_map</span><span class="p">(</span><span class="n">label_image</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fit_labels_to_mask"><a class="viewcode-back" href="../../../generated/medpy.filter.label.fit_labels_to_mask.html#medpy.filter.label.fit_labels_to_mask">[docs]</a><span class="k">def</span> <span class="nf">fit_labels_to_mask</span><span class="p">(</span><span class="n">label_image</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Reduces a label images by overlaying it with a binary mask and assign the labels</span>
+<span class="sd">    either to the mask or to the background. The resulting binary mask is the nearest</span>
+<span class="sd">    expression the label image can form of the supplied binary mask.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label_image : array_like</span>
+<span class="sd">        A nD label map.</span>
+<span class="sd">    mask : array_like</span>
+<span class="sd">        A mask image, i.e., a binary image with False for background and True for foreground.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    best_fit : ndarray</span>
+<span class="sd">        The best fit of the labels to the mask.</span>
+<span class="sd">    </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------         </span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``label_image`` and ``mask`` are not of the same shape.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">label_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">label_image</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">label_image</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The input images must be of the same shape.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># prepare collection dictionaries</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">label_image</span><span class="p">)</span>
+    <span class="n">collection</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="n">collection</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[]]</span>  <span class="c1"># size, union, points</span>
+    
+    <span class="c1"># iterate over the label images pixels and collect position, size and union</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">label_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">label_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">label_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">entry</span> <span class="o">=</span> <span class="n">collection</span><span class="p">[</span><span class="n">label_image</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">]]</span>
+                <span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">mask</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">]:</span> <span class="n">entry</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">entry</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">))</span>
+                
+    <span class="c1"># select labels that are more than half in the mask</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">collection</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">&gt;=</span> <span class="n">collection</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">del</span> <span class="n">collection</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+                
+    <span class="c1"># image_result = numpy.zeros_like(mask) this is eq. to mask.copy().fill(0), which directly applied does not allow access to the rows and colums: Why?</span>
+    <span class="n">image_result</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">image_result</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>         
+
+    <span class="c1"># add labels to result mask</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">collection</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">image_result</span><span class="p">[</span><span class="n">point</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            
+    <span class="k">return</span> <span class="n">image_result</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

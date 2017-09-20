@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.addHandler
+===================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.addHandler

@@ -1,0 +1,6 @@
+medpy.graphcut.graph.GCGraph.__init__
+=====================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: GCGraph.__init__

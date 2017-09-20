@@ -1,0 +1,6 @@
+medpy.graphcut.graph.Graph.get_sink_nodes
+=========================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: Graph.get_sink_nodes

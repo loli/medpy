@@ -1,0 +1,42 @@
+medpy.graphcut.graph.Graph
+==========================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. autoclass:: Graph
+
+
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/
+   
+      ~Graph.__init__
+      ~Graph.add_tweights
+      ~Graph.get_edges
+      ~Graph.get_node_count
+      ~Graph.get_nodes
+      ~Graph.get_nweights
+      ~Graph.get_sink_nodes
+      ~Graph.get_source_nodes
+      ~Graph.get_tweights
+      ~Graph.inconsistent
+      ~Graph.set_nodes
+      ~Graph.set_nweights
+      ~Graph.set_sink_nodes
+      ~Graph.set_source_nodes
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/
+   
+      ~Graph.MAX
+   
+   

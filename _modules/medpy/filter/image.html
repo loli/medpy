@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.filter.image &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.filter.image</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.3.0</span>
+<span class="c1"># since 2013-11-29</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numbers</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">convolve</span><span class="p">,</span> <span class="n">gaussian_filter</span><span class="p">,</span> <span class="n">minimum_filter</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage._ni_support</span> <span class="kn">import</span> <span class="n">_get_output</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.interpolation</span> <span class="kn">import</span> <span class="n">zoom</span>
+
+<span class="c1"># own modules</span>
+<span class="kn">from</span> <span class="nn">.utilities</span> <span class="kn">import</span> <span class="n">pad</span><span class="p">,</span> <span class="n">__make_footprint</span>
+<span class="kn">from</span> <span class="nn">..io</span> <span class="kn">import</span> <span class="n">header</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="sls"><a class="viewcode-back" href="../../../generated/medpy.filter.image.sls.html#medpy.filter.image.sls">[docs]</a><span class="k">def</span> <span class="nf">sls</span><span class="p">(</span><span class="n">minuend</span><span class="p">,</span> <span class="n">subtrahend</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;ssd&quot;</span><span class="p">,</span> <span class="n">noise</span> <span class="o">=</span> <span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="n">signed</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">sn_size</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">sn_footprint</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">sn_mode</span> <span class="o">=</span> <span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">sn_cval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">pn_size</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">pn_footprint</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">pn_mode</span> <span class="o">=</span> <span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">pn_cval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Computes the signed local similarity between two images.</span>
+
+<span class="sd">    Compares a patch around each voxel of the minuend array to a number of patches</span>
+<span class="sd">    centered at the points of a search neighbourhood in the subtrahend. Thus, creates</span>
+<span class="sd">    a multi-dimensional measure of patch similarity between the minuend and a</span>
+<span class="sd">    corresponding search area in the subtrahend.</span>
+
+<span class="sd">    This filter can also be used to compute local self-similarity, obtaining a</span>
+<span class="sd">    descriptor similar to the one described in [1]_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    minuend : array_like</span>
+<span class="sd">        Input array from which to subtract the subtrahend.</span>
+<span class="sd">    subtrahend : array_like</span>
+<span class="sd">        Input array to subtract from the minuend.</span>
+<span class="sd">    metric : {&#39;ssd&#39;, &#39;mi&#39;, &#39;nmi&#39;, &#39;ncc&#39;}, optional</span>
+<span class="sd">        The `metric` parameter determines the metric used to compute the</span>
+<span class="sd">        filter output. Default is &#39;ssd&#39;.</span>
+<span class="sd">    noise : {&#39;global&#39;, &#39;local&#39;}, optional</span>
+<span class="sd">        The `noise` parameter determines how the noise is handled. If set</span>
+<span class="sd">        to &#39;global&#39;, the variance determining the noise is a scalar, if</span>
+<span class="sd">        set to &#39;local&#39;, it is a Gaussian smoothed field of estimated local</span>
+<span class="sd">        noise. Default is &#39;global&#39;.</span>
+<span class="sd">    signed : bool, optional</span>
+<span class="sd">        Whether the filter output should be signed or not. If set to &#39;False&#39;,</span>
+<span class="sd">        only the absolute values will be returned. Default is &#39;True&#39;.</span>
+<span class="sd">    sn_size : scalar or tuple, optional</span>
+<span class="sd">        See sn_footprint, below</span>
+<span class="sd">    sn_footprint : array, optional</span>
+<span class="sd">        The search neighbourhood.</span>
+<span class="sd">        Either `sn_size` or `sn_footprint` must be defined. `sn_size` gives</span>
+<span class="sd">        the shape that is taken from the input array, at every element</span>
+<span class="sd">        position, to define the input to the filter function.</span>
+<span class="sd">        `sn_footprint` is a boolean array that specifies (implicitly) a</span>
+<span class="sd">        shape, but also which of the elements within this shape will get</span>
+<span class="sd">        passed to the filter function. Thus ``sn_size=(n,m)`` is equivalent</span>
+<span class="sd">        to ``sn_footprint=np.ones((n,m))``. We adjust `sn_size` to the number</span>
+<span class="sd">        of dimensions of the input array, so that, if the input array is</span>
+<span class="sd">        shape (10,10,10), and `sn_size` is 2, then the actual size used is</span>
+<span class="sd">        (2,2,2).</span>
+<span class="sd">    sn_mode : {&#39;reflect&#39;, &#39;constant&#39;, &#39;nearest&#39;, &#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The `sn_mode` parameter determines how the array borders are</span>
+<span class="sd">        handled, where `sn_cval` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    sn_cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if `sn_mode` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0</span>
+<span class="sd">    pn_size : scalar or tuple, optional</span>
+<span class="sd">        See pn_footprint, below</span>
+<span class="sd">    pn_footprint : array, optional</span>
+<span class="sd">        The patch over which the distance measure is applied.</span>
+<span class="sd">        Either `pn_size` or `pn_footprint` must be defined. `pn_size` gives</span>
+<span class="sd">        the shape that is taken from the input array, at every element</span>
+<span class="sd">        position, to define the input to the filter function.</span>
+<span class="sd">        `pn_footprint` is a boolean array that specifies (implicitly) a</span>
+<span class="sd">        shape, but also which of the elements within this shape will get</span>
+<span class="sd">        passed to the filter function. Thus ``pn_size=(n,m)`` is equivalent</span>
+<span class="sd">        of dimensions of the input array, so that, if the input array is</span>
+<span class="sd">        shape (10,10,10), and `pn_size` is 2, then the actual size used is</span>
+<span class="sd">        (2,2,2).</span>
+<span class="sd">    pn_mode : {&#39;reflect&#39;, &#39;constant&#39;, &#39;nearest&#39;, &#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The `pn_mode` parameter determines how the array borders are</span>
+<span class="sd">        handled, where `pn_cval` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    pn_cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if `pn_mode` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sls : ndarray</span>
+<span class="sd">        The signed local similarity image between subtrahend and minuend.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    .. [1] Mattias P. Heinrich, Mark Jenkinson, Manav Bhushan, Tahreema Matin, Fergus V. Gleeson, Sir Michael Brady, Julia A. Schnabel</span>
+<span class="sd">           MIND: Modality independent neighbourhood descriptor for multi-modal deformable registration</span>
+<span class="sd">           Medical Image Analysis, Volume 16, Issue 7, October 2012, Pages 1423-1435, ISSN 1361-8415</span>
+<span class="sd">           http://dx.doi.org/10.1016/j.media.2012.05.008</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">minuend</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">minuend</span><span class="p">)</span>
+    <span class="n">subtrahend</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">subtrahend</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">minuend</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;complex type not supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">subtrahend</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;complex type not supported&#39;</span><span class="p">)</span>  
+    
+    <span class="n">mshape</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">minuend</span><span class="o">.</span><span class="n">shape</span> <span class="k">if</span> <span class="n">ii</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">sshape</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">subtrahend</span><span class="o">.</span><span class="n">shape</span> <span class="k">if</span> <span class="n">ii</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">mshape</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sshape</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;minuend and subtrahend must be of same shape&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">sm</span> <span class="o">==</span> <span class="n">ss</span> <span class="k">for</span> <span class="n">sm</span><span class="p">,</span> <span class="n">ss</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mshape</span><span class="p">,</span> <span class="n">sshape</span><span class="p">)]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;minuend and subtrahend must be of same shape&quot;</span><span class="p">)</span>
+    
+    <span class="n">sn_footprint</span> <span class="o">=</span> <span class="n">__make_footprint</span><span class="p">(</span><span class="n">minuend</span><span class="p">,</span> <span class="n">sn_size</span><span class="p">,</span> <span class="n">sn_footprint</span><span class="p">)</span>
+    <span class="n">sn_fshape</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">sn_footprint</span><span class="o">.</span><span class="n">shape</span> <span class="k">if</span> <span class="n">ii</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sn_fshape</span><span class="p">)</span> <span class="o">!=</span> <span class="n">minuend</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;search neighbourhood footprint array has incorrect shape.&#39;</span><span class="p">)</span>
+    
+    <span class="c1">#!TODO: Is this required?</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sn_footprint</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">contiguous</span><span class="p">:</span>
+        <span class="n">sn_footprint</span> <span class="o">=</span> <span class="n">sn_footprint</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># created a padded copy of the subtrahend, whereas the padding mode is always &#39;reflect&#39;  </span>
+    <span class="n">subtrahend</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">subtrahend</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">sn_footprint</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">sn_mode</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="n">sn_cval</span><span class="p">)</span>
+    
+    <span class="c1"># compute slicers for position where the search neighbourhood sn_footprint is TRUE</span>
+    <span class="n">slicers</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">!=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">sn_fshape</span><span class="p">]</span>
+    <span class="n">slicers</span> <span class="o">=</span> <span class="p">[</span><span class="n">sl</span> <span class="k">for</span> <span class="n">sl</span><span class="p">,</span> <span class="n">tv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">slicers</span><span class="p">),</span> <span class="n">sn_footprint</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span> <span class="k">if</span> <span class="n">tv</span><span class="p">]</span>
+    
+    <span class="c1"># compute difference images and sign images for search neighbourhood elements</span>
+    <span class="n">ssds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ssd</span><span class="p">(</span><span class="n">minuend</span><span class="p">,</span> <span class="n">subtrahend</span><span class="p">[</span><span class="n">slicer</span><span class="p">],</span> <span class="n">normalized</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="n">signed</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">pn_size</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">pn_footprint</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">pn_mode</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="n">pn_cval</span><span class="p">)</span> <span class="k">for</span> <span class="n">slicer</span> <span class="ow">in</span> <span class="n">slicers</span><span class="p">]</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ssds</span><span class="p">]</span>
+    <span class="n">distance_sign</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ssds</span><span class="p">]</span>
+
+    <span class="c1"># compute local variance, which constitutes an approximation of local noise, out of patch-distances over the neighbourhood structure</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">variance</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="c1">#!TODO: Figure out if a fixed sigma is desirable here... I think that yes</span>
+    <span class="k">if</span> <span class="s1">&#39;global&#39;</span> <span class="o">==</span> <span class="n">noise</span><span class="p">:</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="n">variance</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">variance</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="c1"># variance[variance &lt; variance_global / 10.] = variance_global / 10. #!TODO: Should I keep this i.e. regularizing the variance to be at least 10% of the global one?</span>
+    
+    <span class="c1"># compute sls</span>
+    <span class="n">sls</span> <span class="o">=</span> <span class="p">[</span><span class="n">dist_sign</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">dist</span> <span class="o">/</span> <span class="n">variance</span><span class="p">))</span> <span class="k">for</span> <span class="n">dist_sign</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">distance_sign</span><span class="p">,</span> <span class="n">distance</span><span class="p">)]</span>
+    
+    <span class="c1"># convert into sls image, swapping dimensions to have varying patches in the last dimension</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sls</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">minuend</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ssd"><a class="viewcode-back" href="../../../generated/medpy.filter.image.ssd.html#medpy.filter.image.ssd">[docs]</a><span class="k">def</span> <span class="nf">ssd</span><span class="p">(</span><span class="n">minuend</span><span class="p">,</span> <span class="n">subtrahend</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Computes the sum of squared difference (SSD) between patches of minuend and subtrahend.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    minuend : array_like</span>
+<span class="sd">        Input array from which to subtract the subtrahend.</span>
+<span class="sd">    subtrahend : array_like</span>
+<span class="sd">        Input array to subtract from the minuend.    </span>
+<span class="sd">    normalized : bool, optional</span>
+<span class="sd">        Whether the SSD of each patch should be divided through the filter size for</span>
+<span class="sd">        normalization. Default is &#39;True&#39;.</span>
+<span class="sd">    signed : bool, optional</span>
+<span class="sd">        Whether the accumulative sign of each patch should be returned as well. If</span>
+<span class="sd">        &#39;True&#39;, the second return value is a numpy.sign array, otherwise the scalar &#39;1&#39;.</span>
+<span class="sd">        Default is &#39;False&#39;.</span>
+<span class="sd">    size : scalar or tuple, optional</span>
+<span class="sd">        See footprint, below</span>
+<span class="sd">    footprint : array, optional</span>
+<span class="sd">        The patch over which to compute the SSD.</span>
+<span class="sd">        Either `size` or `footprint` must be defined. `size` gives</span>
+<span class="sd">        the shape that is taken from the input array, at every element</span>
+<span class="sd">        position, to define the input to the filter function.</span>
+<span class="sd">        `footprint` is a boolean array that specifies (implicitly) a</span>
+<span class="sd">        shape, but also which of the elements within this shape will get</span>
+<span class="sd">        passed to the filter function. Thus ``size=(n,m)`` is equivalent</span>
+<span class="sd">        to ``footprint=np.ones((n,m))``. We adjust `size` to the number</span>
+<span class="sd">        of dimensions of the input array, so that, if the input array is</span>
+<span class="sd">        shape (10,10,10), and `size` is 2, then the actual size used is</span>
+<span class="sd">        (2,2,2).</span>
+<span class="sd">    mode : {&#39;reflect&#39;, &#39;constant&#39;, &#39;nearest&#39;, &#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The `mode` parameter determines how the array borders are</span>
+<span class="sd">        handled, where `cval` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if `mode` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ssd : ndarray</span>
+<span class="sd">        The patchwise sum of squared differences between minuend and subtrahend.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">convolution_filter</span> <span class="o">=</span> <span class="n">average_filter</span> <span class="k">if</span> <span class="n">normalized</span> <span class="k">else</span> <span class="n">sum_filter</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float</span> <span class="k">if</span> <span class="n">normalized</span> <span class="k">else</span> <span class="n">minuend</span><span class="o">.</span><span class="n">dtype</span>
+    
+    <span class="k">if</span> <span class="n">signed</span><span class="p">:</span>
+        <span class="n">difference</span> <span class="o">=</span> <span class="n">minuend</span> <span class="o">-</span> <span class="n">subtrahend</span>
+        <span class="n">difference_squared</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">difference</span><span class="p">)</span>
+        <span class="n">distance_sign</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">convolution_filter</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">difference</span><span class="p">)</span> <span class="o">*</span> <span class="n">difference_squared</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="n">cval</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">))</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">convolution_filter</span><span class="p">(</span><span class="n">difference_squared</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="n">cval</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">convolution_filter</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">minuend</span> <span class="o">-</span> <span class="n">subtrahend</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="n">cval</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">distance_sign</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="n">distance</span><span class="p">,</span> <span class="n">distance_sign</span></div>
+
+<div class="viewcode-block" id="average_filter"><a class="viewcode-back" href="../../../generated/medpy.filter.image.average_filter.html#medpy.filter.image.average_filter">[docs]</a><span class="k">def</span> <span class="nf">average_filter</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Calculates a multi-dimensional average filter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : array-like</span>
+<span class="sd">        input array to filter</span>
+<span class="sd">    size : scalar or tuple, optional</span>
+<span class="sd">        See footprint, below</span>
+<span class="sd">    footprint : array, optional</span>
+<span class="sd">        Either `size` or `footprint` must be defined. `size` gives</span>
+<span class="sd">        the shape that is taken from the input array, at every element</span>
+<span class="sd">        position, to define the input to the filter function.</span>
+<span class="sd">        `footprint` is a boolean array that specifies (implicitly) a</span>
+<span class="sd">        shape, but also which of the elements within this shape will get</span>
+<span class="sd">        passed to the filter function. Thus ``size=(n,m)`` is equivalent</span>
+<span class="sd">        to ``footprint=np.ones((n,m))``. We adjust `size` to the number</span>
+<span class="sd">        of dimensions of the input array, so that, if the input array is</span>
+<span class="sd">        shape (10,10,10), and `size` is 2, then the actual size used is</span>
+<span class="sd">        (2,2,2).</span>
+<span class="sd">    output : array, optional</span>
+<span class="sd">        The ``output`` parameter passes an array in which to store the</span>
+<span class="sd">        filter output.</span>
+<span class="sd">    mode : {&#39;reflect&#39;,&#39;constant&#39;,&#39;nearest&#39;,&#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The ``mode`` parameter determines how the array borders are</span>
+<span class="sd">        handled, where ``cval`` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if ``mode`` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0</span>
+<span class="sd">    origin : scalar, optional</span>
+<span class="sd">        The ``origin`` parameter controls the placement of the filter.</span>
+<span class="sd">        Default 0</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    average_filter : ndarray</span>
+<span class="sd">        Returned array of same shape as `input`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Convenience implementation employing convolve.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    scipy.ndimage.filters.convolve : Convolve an image with a kernel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">footprint</span> <span class="o">=</span> <span class="n">__make_footprint</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">footprint</span><span class="p">)</span>
+    <span class="n">filter_size</span> <span class="o">=</span> <span class="n">footprint</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+    <span class="n">output</span><span class="p">,</span> <span class="n">return_value</span> <span class="o">=</span> <span class="n">_get_output</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+    <span class="n">sum_filter</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="n">cval</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">/=</span> <span class="n">filter_size</span>
+    <span class="k">return</span> <span class="n">return_value</span></div>
+
+
+<div class="viewcode-block" id="sum_filter"><a class="viewcode-back" href="../../../generated/medpy.filter.image.sum_filter.html#medpy.filter.image.sum_filter">[docs]</a><span class="k">def</span> <span class="nf">sum_filter</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;reflect&quot;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Calculates a multi-dimensional sum filter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : array-like</span>
+<span class="sd">        input array to filter</span>
+<span class="sd">    size : scalar or tuple, optional</span>
+<span class="sd">        See footprint, below</span>
+<span class="sd">    footprint : array, optional</span>
+<span class="sd">        Either `size` or `footprint` must be defined. `size` gives</span>
+<span class="sd">        the shape that is taken from the input array, at every element</span>
+<span class="sd">        position, to define the input to the filter function.</span>
+<span class="sd">        `footprint` is a boolean array that specifies (implicitly) a</span>
+<span class="sd">        shape, but also which of the elements within this shape will get</span>
+<span class="sd">        passed to the filter function. Thus ``size=(n,m)`` is equivalent</span>
+<span class="sd">        to ``footprint=np.ones((n,m))``. We adjust `size` to the number</span>
+<span class="sd">        of dimensions of the input array, so that, if the input array is</span>
+<span class="sd">        shape (10,10,10), and `size` is 2, then the actual size used is</span>
+<span class="sd">        (2,2,2).</span>
+<span class="sd">    output : array, optional</span>
+<span class="sd">        The ``output`` parameter passes an array in which to store the</span>
+<span class="sd">        filter output.</span>
+<span class="sd">    mode : {&#39;reflect&#39;,&#39;constant&#39;,&#39;nearest&#39;,&#39;mirror&#39;, &#39;wrap&#39;}, optional</span>
+<span class="sd">        The ``mode`` parameter determines how the array borders are</span>
+<span class="sd">        handled, where ``cval`` is the value when mode is equal to</span>
+<span class="sd">        &#39;constant&#39;. Default is &#39;reflect&#39;</span>
+<span class="sd">    cval : scalar, optional</span>
+<span class="sd">        Value to fill past edges of input if ``mode`` is &#39;constant&#39;. Default</span>
+<span class="sd">        is 0.0</span>
+<span class="sd">    origin : scalar, optional</span>
+<span class="sd">        The ``origin`` parameter controls the placement of the filter.</span>
+<span class="sd">        Default 0</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sum_filter : ndarray</span>
+<span class="sd">        Returned array of same shape as `input`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Convenience implementation employing convolve.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    scipy.ndimage.filters.convolve : Convolve an image with a kernel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">footprint</span> <span class="o">=</span> <span class="n">__make_footprint</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">footprint</span><span class="p">)</span>
+    <span class="n">slicer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="n">footprint</span><span class="o">.</span><span class="n">ndim</span> 
+    <span class="k">return</span> <span class="n">convolve</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">footprint</span><span class="p">[</span><span class="n">slicer</span><span class="p">],</span> <span class="n">output</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cval</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="otsu"><a class="viewcode-back" href="../../../generated/medpy.filter.image.otsu.html#medpy.filter.image.otsu">[docs]</a><span class="k">def</span> <span class="nf">otsu</span> <span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Otsu&#39;s method to find the optimal threshold separating an image into fore- and background.</span>
+<span class="sd">    </span>
+<span class="sd">    This rather expensive method iterates over a number of thresholds to separate the</span>
+<span class="sd">    images histogram into two parts with a minimal intra-class variance.</span>
+<span class="sd">    </span>
+<span class="sd">    An increase in the number of bins increases the algorithms specificity at the cost of</span>
+<span class="sd">    slowing it down.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        The image for which to determine the threshold.</span>
+<span class="sd">    bins : integer</span>
+<span class="sd">        The number of histogram bins.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    otsu : float</span>
+<span class="sd">        The otsu threshold to separate the input image into fore- and background.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># cast bins parameter to int</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+    
+    <span class="c1"># cast img parameter to scipy arrax</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    
+    <span class="c1"># check supplied parameters</span>
+    <span class="k">if</span> <span class="n">bins</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;At least a number two bins have to be provided.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># determine initial threshold and threshold step-length</span>
+    <span class="n">steplength</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">img</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">initial_threshold</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="n">steplength</span>
+    
+    <span class="c1"># initialize best value variables</span>
+    <span class="n">best_bcv</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">best_threshold</span> <span class="o">=</span> <span class="n">initial_threshold</span>
+    
+    <span class="c1"># iterate over the thresholds and find highest between class variance</span>
+    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">initial_threshold</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">steplength</span><span class="p">):</span>
+        <span class="n">mask_fg</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="n">mask_bg</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">)</span>
+        
+        <span class="n">wfg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask_fg</span><span class="p">)</span>
+        <span class="n">wbg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask_bg</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">wfg</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">wbg</span><span class="p">:</span> <span class="k">continue</span>
+        
+        <span class="n">mfg</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">mask_fg</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">mbg</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">mask_bg</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        
+        <span class="n">bcv</span> <span class="o">=</span> <span class="n">wfg</span> <span class="o">*</span> <span class="n">wbg</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">mbg</span> <span class="o">-</span> <span class="n">mfg</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">bcv</span> <span class="o">&gt;</span> <span class="n">best_bcv</span><span class="p">:</span>
+            <span class="n">best_bcv</span> <span class="o">=</span> <span class="n">bcv</span>
+            <span class="n">best_threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        
+    <span class="k">return</span> <span class="n">best_threshold</span></div>
+
+<div class="viewcode-block" id="local_minima"><a class="viewcode-back" href="../../../generated/medpy.filter.image.local_minima.html#medpy.filter.image.local_minima">[docs]</a><span class="k">def</span> <span class="nf">local_minima</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">min_distance</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns all local minima from an image.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        The image.</span>
+<span class="sd">    min_distance : integer</span>
+<span class="sd">        The minimal distance between the minimas in voxels. If it is less, only the lower minima is returned.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    indices : sequence</span>
+<span class="sd">        List of all minima indices.</span>
+<span class="sd">    values : sequence</span>
+<span class="sd">        List of all minima values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># @TODO: Write a unittest for this.</span>
+    <span class="n">fits</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">minfits</span> <span class="o">=</span> <span class="n">minimum_filter</span><span class="p">(</span><span class="n">fits</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">min_distance</span><span class="p">)</span> <span class="c1"># default mode is reflect</span>
+    <span class="n">minima_mask</span> <span class="o">=</span> <span class="n">fits</span> <span class="o">==</span> <span class="n">minfits</span>
+    <span class="n">good_indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">minima_mask</span><span class="o">.</span><span class="n">nonzero</span><span class="p">())</span>
+    <span class="n">good_fits</span> <span class="o">=</span> <span class="n">fits</span><span class="p">[</span><span class="n">minima_mask</span><span class="p">]</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">good_fits</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">good_indices</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">good_fits</span><span class="p">[</span><span class="n">order</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="resample"><a class="viewcode-back" href="../../../generated/medpy.filter.image.resample.html#medpy.filter.image.resample">[docs]</a><span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">target_spacing</span><span class="p">,</span> <span class="n">bspline_order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-sample an image to a new voxel-spacing.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        img : array_like</span>
+<span class="sd">            The image.</span>
+<span class="sd">        hdr : object</span>
+<span class="sd">            The image header.</span>
+<span class="sd">        target_spacing : number or sequence of numbers</span>
+<span class="sd">            The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.</span>
+<span class="sd">        bspline_order : int</span>
+<span class="sd">            The bspline order used for interpolation.</span>
+<span class="sd">        mode : str</span>
+<span class="sd">            Points outside the boundaries of the input are filled according to the given mode (&#39;constant&#39;, &#39;nearest&#39;, &#39;reflect&#39; or &#39;wrap&#39;). Default is &#39;constant&#39;.</span>
+<span class="sd">            </span>
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        Voxel-spacing of input header will be modified in-place!</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        img : ndarray</span>
+<span class="sd">            The re-sampled image.</span>
+<span class="sd">        hdr : object</span>
+<span class="sd">            The image header with the new voxel spacing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_spacing</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+            <span class="n">target_spacing</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_spacing</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">ndim</span>
+        
+        <span class="c1"># compute zoom values</span>
+        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">old</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">new</span><span class="p">)</span> <span class="k">for</span> <span class="n">new</span><span class="p">,</span> <span class="n">old</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_spacing</span><span class="p">,</span> <span class="n">header</span><span class="o">.</span><span class="n">get_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">))]</span>
+    
+        <span class="c1"># zoom image</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">zoom</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">zoom_factors</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">bspline_order</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+        
+        <span class="c1"># set new voxel spacing</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">set_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">target_spacing</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">hdr</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

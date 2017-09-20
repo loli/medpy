@@ -1,0 +1,6 @@
+medpy.core.exceptions.MetaDataError
+===================================
+
+.. currentmodule:: medpy.core.exceptions
+
+.. autoexception:: MetaDataError

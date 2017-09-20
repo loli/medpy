@@ -1,0 +1,6 @@
+medpy.metric.binary.dc
+======================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: dc

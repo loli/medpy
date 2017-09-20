@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.graphcut.energy_voxel &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.graphcut.energy_voxel</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.3.0</span>
+<span class="c1"># since 2012-03-23</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="regional_probability_map"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.regional_probability_map.html#medpy.graphcut.energy_voxel.regional_probability_map">[docs]</a><span class="k">def</span> <span class="nf">regional_probability_map</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">probability_map</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Regional term based on a probability atlas.</span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a regional term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    Takes an image/graph/map as input where each entry contains a probability value for</span>
+<span class="sd">    the corresponding GC graph node to belong to the foreground object. The probabilities</span>
+<span class="sd">    must be in the range :math:`[0, 1]`. The reverse weights are assigned to the sink</span>
+<span class="sd">    (which corresponds to the background).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    probability_map : ndarray</span>
+<span class="sd">        The label image.</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        The energy terms alpha value, balancing between boundary and regional term.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires a probability atlas image of the same shape as the original image</span>
+<span class="sd">    to be passed along. That means that `~medpy.graphcut.generate.graph_from_labels` has to</span>
+<span class="sd">    be called with ``regional_term_args`` set to the probability atlas image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">probability_map</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">probability_map</span><span class="p">)</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([(</span><span class="n">probability_map</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span>
+                                  <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">probability_map</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">flat</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">set_tweights_all</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boundary_maximum_linear"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_maximum_linear.html#medpy.graphcut.energy_voxel.boundary_maximum_linear">[docs]</a><span class="k">def</span> <span class="nf">boundary_maximum_linear</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">gradient_image</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels maximum value using a linear relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    The same as `boundary_difference_linear`, but working on the gradient image instead</span>
+<span class="sd">    of the original. See there for details.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    gradient_image : ndarray</span>
+<span class="sd">        The gradient image.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the gradient image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    gradient image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gradient_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gradient_image</span><span class="p">)</span>
+    
+    <span class="c1"># compute maximum intensity to encounter</span>
+    <span class="n">max_intensity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">gradient_image</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_linear</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a linear boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># normalize the intensity distances to the interval (0, 1]</span>
+        <span class="n">intensities</span> <span class="o">/=</span> <span class="n">max_intensity</span>
+        <span class="c1">#difference_to_neighbour[difference_to_neighbour &gt; 1] = 1 # this line should not be required, but might be due to rounding errors</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">intensities</span><span class="p">)</span> <span class="c1"># reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span> <span class="c1"># required to avoid zero values</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_maximum</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">gradient_image</span><span class="p">,</span> <span class="n">boundary_term_linear</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boundary_difference_linear"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_difference_linear.html#medpy.graphcut.energy_voxel.boundary_difference_linear">[docs]</a><span class="k">def</span> <span class="nf">boundary_difference_linear</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">original_image</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels difference value using a linear relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a regional term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    Finds all edges between all neighbours of the image and uses their normalized</span>
+<span class="sd">    difference in intensity values as edge weight.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights are linearly normalized using the maximum possible intensity difference</span>
+<span class="sd">    of the image. Formally, this value is computed as:</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        \sigma = |max I - \min I|</span>
+<span class="sd">    </span>
+<span class="sd">    , where :math:`\min I` constitutes the lowest intensity value in the image, while</span>
+<span class="sd">    :math:`\max I` constitutes the highest.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights between two neighbouring voxels :math:`(p, q)` is then computed as:</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        w(p,q) = 1 - \frac{|I_p - I_q|}{\sigma} + \epsilon</span>
+<span class="sd">    </span>
+<span class="sd">    , where :math:`\epsilon` is a infinitively small number and for which</span>
+<span class="sd">    :math:`w(p, q) \in (0, 1]` holds true.</span>
+<span class="sd">    </span>
+<span class="sd">    When the created edge weights should be weighted according to the slice distance,</span>
+<span class="sd">    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights</span>
+<span class="sd">    computed for the corresponding direction are divided by the respective slice</span>
+<span class="sd">    thickness. Set this parameter to `False` for equally weighted edges.     </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    original_image : ndarray</span>
+<span class="sd">        The original image.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the original image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    original image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">original_image</span><span class="p">)</span>
+    
+    <span class="c1"># compute maximum (possible) intensity difference</span>
+    <span class="n">max_intensity_difference</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">original_image</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">original_image</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_linear</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a linear boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># normalize the intensity distances to the interval (0, 1]</span>
+        <span class="n">intensities</span> <span class="o">/=</span> <span class="n">max_intensity_difference</span>
+        <span class="c1">#difference_to_neighbour[difference_to_neighbour &gt; 1] = 1 # this line should not be required, but might be due to rounding errors</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">intensities</span><span class="p">)</span> <span class="c1"># reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span> <span class="c1"># required to avoid zero values</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_difference</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">original_image</span><span class="p">,</span> <span class="n">boundary_term_linear</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boundary_maximum_exponential"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_maximum_exponential.html#medpy.graphcut.energy_voxel.boundary_maximum_exponential">[docs]</a><span class="k">def</span> <span class="nf">boundary_maximum_exponential</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">gradient_image</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels maximum value using an exponential relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    The same as `boundary_difference_exponential`, but working on the gradient image instead</span>
+<span class="sd">    of the original. See there for details.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    gradient_image : ndarray</span>
+<span class="sd">        The gradient image.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The sigma parameter to use in the boundary term.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the gradient image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    gradient image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gradient_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gradient_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_exponential</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a exponential boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># apply exp-(x**2/sigma**2)</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">intensities</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">intensities</span> <span class="o">/=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">intensities</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">intensities</span><span class="p">)</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_maximum</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">gradient_image</span><span class="p">,</span> <span class="n">boundary_term_exponential</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>    </div>
+
+<div class="viewcode-block" id="boundary_difference_exponential"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_difference_exponential.html#medpy.graphcut.energy_voxel.boundary_difference_exponential">[docs]</a><span class="k">def</span> <span class="nf">boundary_difference_exponential</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">original_image</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels difference value using an exponential relationship.</span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    Finds all edges between all neighbours of the image and uses their difference in</span>
+<span class="sd">    intensity values as edge weight.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights are normalized using an exponential function and a smoothing factor</span>
+<span class="sd">    :math:`\sigma`. The :math:`\sigma` value has to be supplied manually, since its</span>
+<span class="sd">    ideal settings differ greatly from application to application.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights between two neighbouring voxels :math:`(p, q)` is then computed as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        w(p,q) = \exp^{-\frac{|I_p - I_q|^2}{\sigma^2}}</span>
+<span class="sd">    </span>
+<span class="sd">    , for which :math:`w(p, q) \in (0, 1]` holds true.</span>
+<span class="sd">    </span>
+<span class="sd">    When the created edge weights should be weighted according to the slice distance,</span>
+<span class="sd">    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights</span>
+<span class="sd">    computed for the corresponding direction are divided by the respective slice</span>
+<span class="sd">    thickness. Set this parameter to `False` for equally weighted edges.     </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    original_image : ndarray</span>
+<span class="sd">        The original image.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The sigma parameter to use in the boundary term.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the original image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    original image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">original_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_exponential</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a exponential boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># apply exp-(x**2/sigma**2)</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">intensities</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">intensities</span> <span class="o">/=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">intensities</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">intensities</span><span class="p">)</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_difference</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">original_image</span><span class="p">,</span> <span class="n">boundary_term_exponential</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="boundary_maximum_division"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_maximum_division.html#medpy.graphcut.energy_voxel.boundary_maximum_division">[docs]</a><span class="k">def</span> <span class="nf">boundary_maximum_division</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">gradient_image</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels maximum value using a division relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    The same as `boundary_difference_division`, but working on the gradient image instead</span>
+<span class="sd">    of the original. See there for details.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    gradient_image : ndarray</span>
+<span class="sd">        The gradient image.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The sigma parameter to use in the boundary term.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the gradient image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    gradient image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gradient_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gradient_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_division</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a exponential boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># apply 1 / (1  + x/sigma)</span>
+        <span class="n">intensities</span> <span class="o">/=</span> <span class="n">sigma</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">intensities</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_difference</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">gradient_image</span><span class="p">,</span> <span class="n">boundary_term_division</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="boundary_difference_division"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_difference_division.html#medpy.graphcut.energy_voxel.boundary_difference_division">[docs]</a><span class="k">def</span> <span class="nf">boundary_difference_division</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">original_image</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels difference value using a division relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    Finds all edges between all neighbours of the image and uses their difference in</span>
+<span class="sd">    intensity values as edge weight.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights are normalized using an division function and a smoothing factor</span>
+<span class="sd">    :math:`\sigma`. The :math:`\sigma` value has to be supplied manually, since its ideal settings</span>
+<span class="sd">    differ greatly from application to application.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights between two neighbouring voxels :math:`(p, q)` is then computed as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        w(p,q) = \frac{1}{1 + \frac{|I_p - I_q|}{\sigma}}</span>
+<span class="sd">    </span>
+<span class="sd">    , for which :math:`w(p, q) \in (0, 1]` holds true.</span>
+<span class="sd">    </span>
+<span class="sd">    When the created edge weights should be weighted according to the slice distance,</span>
+<span class="sd">    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights</span>
+<span class="sd">    computed for the corresponding direction are divided by the respective slice</span>
+<span class="sd">    thickness. Set this parameter to `False` for equally weighted edges.     </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    original_image : ndarray</span>
+<span class="sd">        The original image.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The sigma parameter to use in the boundary term.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the original image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    original image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">original_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_division</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a division boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># apply 1 / (1  + x/sigma)</span>
+        <span class="n">intensities</span> <span class="o">/=</span> <span class="n">sigma</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">intensities</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_difference</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">original_image</span><span class="p">,</span> <span class="n">boundary_term_division</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="boundary_maximum_power"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_maximum_power.html#medpy.graphcut.energy_voxel.boundary_maximum_power">[docs]</a><span class="k">def</span> <span class="nf">boundary_maximum_power</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">gradient_image</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels maximum value using a power relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    The same as `boundary_difference_power`, but working on the gradient image instead</span>
+<span class="sd">    of the original. See there for details.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    gradient_image : ndarray</span>
+<span class="sd">        The gradient image.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The sigma parameter to use in the boundary term.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the gradient image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    gradient image.    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gradient_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gradient_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_power</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a power boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># apply (1 / (1  + x))^sigma</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">intensities</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">intensities</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_maximum</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">gradient_image</span><span class="p">,</span> <span class="n">boundary_term_power</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>       </div>
+    
+    
+<div class="viewcode-block" id="boundary_difference_power"><a class="viewcode-back" href="../../../generated/medpy.graphcut.energy_voxel.boundary_difference_power.html#medpy.graphcut.energy_voxel.boundary_difference_power">[docs]</a><span class="k">def</span> <span class="nf">boundary_difference_power</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="n">original_image</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Boundary term processing adjacent voxels difference value using a power relationship. </span>
+<span class="sd">    </span>
+<span class="sd">    An implementation of a boundary term, suitable to be used with the</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` function.</span>
+<span class="sd">    </span>
+<span class="sd">    Finds all edges between all neighbours of the image and uses their difference in</span>
+<span class="sd">    intensity values as edge weight.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights are normalized using an power function and a smoothing factor</span>
+<span class="sd">    :math:`\sigma`. The :math:`\sigma` value has to be supplied manually, since its</span>
+<span class="sd">    ideal settings differ greatly from application to application.</span>
+<span class="sd">    </span>
+<span class="sd">    The weights between two neighbouring voxels :math:`(p, q)` is then computed as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        w(p,q) = \frac{1}{1 + |I_p - I_q|}^\sigma</span>
+<span class="sd">    </span>
+<span class="sd">    , for which :math:`w(p, q) \in (0, 1]` holds true.</span>
+<span class="sd">    </span>
+<span class="sd">    When the created edge weights should be weighted according to the slice distance,</span>
+<span class="sd">    provide the list of slice thicknesses via the ``spacing`` parameter. Then all weights</span>
+<span class="sd">    computed for the corresponding direction are divided by the respective slice</span>
+<span class="sd">    thickness. Set this parameter to `False` for equally weighted edges.     </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : GCGraph</span>
+<span class="sd">        The graph to add the weights to.</span>
+<span class="sd">    original_image : ndarray</span>
+<span class="sd">        The original image.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        The sigma parameter to use in the boundary term.</span>
+<span class="sd">    spacing : sequence of float or False</span>
+<span class="sd">        A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">        computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">        `False`, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function requires the original image to be passed along. That means that</span>
+<span class="sd">    `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the</span>
+<span class="sd">    original image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">original_image</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">boundary_term_power</span><span class="p">(</span><span class="n">intensities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementation of a exponential boundary term computation over an array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># apply (1 / (1  + x))^sigma</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">intensities</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">intensities</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">intensities</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+        <span class="n">intensities</span><span class="p">[</span><span class="n">intensities</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">return</span> <span class="n">intensities</span>
+    
+    <span class="n">__skeleton_difference</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">original_image</span><span class="p">,</span> <span class="n">boundary_term_power</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>   </div>
+
+<span class="k">def</span> <span class="nf">__skeleton_maximum</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">boundary_term</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A skeleton for the calculation of maximum intensity based boundary terms.</span>
+<span class="sd">    </span>
+<span class="sd">    This function is equivalent to energy_voxel.__skeleton_difference(), but uses the</span>
+<span class="sd">    maximum intensity rather than the intensity difference of neighbouring voxels. It is</span>
+<span class="sd">    therefore suitable to be used with the gradient image, rather than the original</span>
+<span class="sd">    image.</span>
+<span class="sd">    </span>
+<span class="sd">    The computation of the edge weights follows</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        w(p,q) = g(max(I_p, I_q))</span>
+<span class="sd">    </span>
+<span class="sd">    ,where :math:`g(\cdot)` is the supplied boundary term function.</span>
+<span class="sd">    </span>
+<span class="sd">    @param graph An initialized graph.GCGraph object</span>
+<span class="sd">    @type graph.GCGraph</span>
+<span class="sd">    @param image The image to compute on</span>
+<span class="sd">    @type image numpy.ndarray</span>
+<span class="sd">    @param boundary_term A function to compute the boundary term over an array of</span>
+<span class="sd">                         maximum intensities</span>
+<span class="sd">    @type boundary_term function</span>
+<span class="sd">    @param spacing A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">                   computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">                   False, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">    @param spacing sequence | False    </span>
+<span class="sd">    </span>
+<span class="sd">    @see energy_voxel.__skeleton_difference() for more details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">intensity_maximum</span><span class="p">(</span><span class="n">neighbour_one</span><span class="p">,</span> <span class="n">neighbour_two</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes two voxel arrays constituting neighbours and computes the maximum between</span>
+<span class="sd">        their intensities.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">neighbour_one</span><span class="p">,</span> <span class="n">neighbour_two</span><span class="p">)</span>
+        
+    <span class="n">__skeleton_base</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">image</span><span class="p">),</span> <span class="n">boundary_term</span><span class="p">,</span> <span class="n">intensity_maximum</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
+    
+
+<span class="k">def</span> <span class="nf">__skeleton_difference</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">boundary_term</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A skeleton for the calculation of intensity difference based boundary terms.</span>
+<span class="sd">    </span>
+<span class="sd">    Iterates over the images dimensions and generates for each an array of absolute</span>
+<span class="sd">    neighbouring voxel :math:`(p, q)` intensity differences :math:`|I_p, I_q|`. These are</span>
+<span class="sd">    then passed to the supplied function :math:`g(\cdot)` for for boundary term</span>
+<span class="sd">    computation. Finally the returned edge weights are added to the graph.</span>
+<span class="sd">    </span>
+<span class="sd">    Formally for each edge :math:`(p, q)` of the image, their edge weight is computed as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        w(p,q) = g(|I_p - I_q|)</span>
+<span class="sd">    </span>
+<span class="sd">    ,where :math:`g(\cdot)` is the supplied boundary term function.</span>
+<span class="sd">    </span>
+<span class="sd">    The boundary term function has to take an array of intensity differences as only</span>
+<span class="sd">    parameter and return an array of the same shape containing the edge weights. For the</span>
+<span class="sd">    implemented function the condition :math:`g(\cdot)\in(0, 1]` must hold true, i.e., it</span>
+<span class="sd">    has to be strictly positive with :math:`1` as the upper limit.</span>
+<span class="sd">    </span>
+<span class="sd">    @note the underlying neighbourhood connectivity is 4 for 2D, 6 for 3D, etc. </span>
+<span class="sd">    </span>
+<span class="sd">    @note This function is able to work with images of arbitrary dimensions, but was only</span>
+<span class="sd">    tested for 2D and 3D cases.</span>
+<span class="sd">    </span>
+<span class="sd">    @param graph An initialized graph.GCGraph object</span>
+<span class="sd">    @type graph.GCGraph</span>
+<span class="sd">    @param image The image to compute on</span>
+<span class="sd">    @type image numpy.ndarray</span>
+<span class="sd">    @param boundary_term A function to compute the boundary term over an array of</span>
+<span class="sd">                         absolute intensity differences</span>
+<span class="sd">    @type boundary_term function</span>
+<span class="sd">    @param spacing A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">                   computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">                   False, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">    @param spacing sequence | False    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">intensity_difference</span><span class="p">(</span><span class="n">neighbour_one</span><span class="p">,</span> <span class="n">neighbour_two</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes two voxel arrays constituting neighbours and computes the absolute</span>
+<span class="sd">        intensity differences.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">neighbour_one</span> <span class="o">-</span> <span class="n">neighbour_two</span><span class="p">)</span>
+        
+    <span class="n">__skeleton_base</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">boundary_term</span><span class="p">,</span> <span class="n">intensity_difference</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">__skeleton_base</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">boundary_term</span><span class="p">,</span> <span class="n">neighbourhood_function</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base of the skeleton for voxel based boundary term calculation.</span>
+<span class="sd">    </span>
+<span class="sd">    This function holds the low level procedures shared by nearly all boundary terms.</span>
+<span class="sd">    </span>
+<span class="sd">    @param graph An initialized graph.GCGraph object</span>
+<span class="sd">    @type graph.GCGraph</span>
+<span class="sd">    @param image The image containing the voxel intensity values</span>
+<span class="sd">    @type image numpy.ndarray</span>
+<span class="sd">    @param boundary_term A function to compute the boundary term over an array of</span>
+<span class="sd">                           absolute intensity differences</span>
+<span class="sd">    @type boundary_term function</span>
+<span class="sd">    @param neighbourhood_function A function that takes two arrays of neighbouring pixels</span>
+<span class="sd">                                  and computes an intensity term from them that is</span>
+<span class="sd">                                  returned as a single array of the same shape</span>
+<span class="sd">    @type neighbourhood_function function</span>
+<span class="sd">    @param spacing A sequence containing the slice spacing used for weighting the</span>
+<span class="sd">                   computed neighbourhood weight value for different dimensions. If</span>
+<span class="sd">                   False, no distance based weighting of the graph edges is performed.</span>
+<span class="sd">    @param spacing sequence | False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">float_</span><span class="p">)</span>
+
+    <span class="c1"># iterate over the image dimensions and for each create the appropriate edges and compute the associated weights</span>
+    <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
+        <span class="c1"># construct slice-objects for the current dimension</span>
+        <span class="n">slices_exclude_last</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="n">slices_exclude_last</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">slices_exclude_first</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="n">slices_exclude_first</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="c1"># compute difference between all layers in the current dimensions direction</span>
+        <span class="n">neighbourhood_intensity_term</span> <span class="o">=</span> <span class="n">neighbourhood_function</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">slices_exclude_last</span><span class="p">],</span> <span class="n">image</span><span class="p">[</span><span class="n">slices_exclude_first</span><span class="p">])</span>
+        <span class="c1"># apply boundary term</span>
+        <span class="n">neighbourhood_intensity_term</span> <span class="o">=</span> <span class="n">boundary_term</span><span class="p">(</span><span class="n">neighbourhood_intensity_term</span><span class="p">)</span>
+        <span class="c1"># compute key offset for relative key difference</span>
+        <span class="n">offset_key</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">dim</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">ndim</span><span class="p">)]</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">__flatten_index</span><span class="p">(</span><span class="n">offset_key</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="c1"># generate index offset function for index dependent offset</span>
+        <span class="n">idx_offset_divider</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">offset</span>
+        <span class="n">idx_offset</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">idx_offset_divider</span><span class="p">)</span> <span class="o">*</span> <span class="n">offset</span>
+        
+        <span class="c1"># weight the computed distanced in dimension dim by the corresponding slice spacing provided</span>
+        <span class="k">if</span> <span class="n">spacing</span><span class="p">:</span> <span class="n">neighbourhood_intensity_term</span> <span class="o">/=</span> <span class="n">spacing</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">neighbourhood_intensity_term</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+            <span class="c1"># apply index dependent offset</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="n">idx_offset</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> 
+            <span class="c1"># add edges and set the weight</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">set_nweight</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">key</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>    
+    
+<span class="k">def</span> <span class="nf">__flatten_index</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a three dimensional index (x,y,z) and computes the index required to access the</span>
+<span class="sd">    same element in the flattened version of the array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">pi</span><span class="p">,</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">shape</span><span class="p">)):</span>
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">acc</span>
+        <span class="n">acc</span> <span class="o">*=</span> <span class="n">si</span>
+    <span class="k">return</span> <span class="n">res</span>
+    
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

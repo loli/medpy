@@ -1,0 +1,6 @@
+medpy.graphcut.graph.Graph.__init__
+===================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: Graph.__init__

@@ -1,0 +1,6 @@
+medpy.metric.histogram.kullback_leibler
+=======================================
+
+.. currentmodule:: medpy.metric.histogram
+
+.. autofunction:: kullback_leibler

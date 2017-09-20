@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphDouble.get_arc_num
+==============================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphDouble.get_arc_num

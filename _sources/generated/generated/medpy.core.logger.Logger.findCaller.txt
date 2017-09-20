@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.findCaller
+===================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.findCaller

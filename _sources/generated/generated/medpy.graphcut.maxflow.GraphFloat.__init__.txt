@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphFloat.__init__
+==========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphFloat.__init__

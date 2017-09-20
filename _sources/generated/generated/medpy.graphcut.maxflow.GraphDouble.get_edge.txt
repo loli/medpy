@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphDouble.get_edge
+===========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphDouble.get_edge

@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.filter
+===============================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.filter

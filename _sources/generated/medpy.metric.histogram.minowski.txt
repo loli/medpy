@@ -1,0 +1,6 @@
+medpy.metric.histogram.minowski
+===============================
+
+.. currentmodule:: medpy.metric.histogram
+
+.. autofunction:: minowski

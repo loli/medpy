@@ -1,0 +1,6 @@
+medpy.filter.image.average_filter
+=================================
+
+.. currentmodule:: medpy.filter.image
+
+.. autofunction:: average_filter

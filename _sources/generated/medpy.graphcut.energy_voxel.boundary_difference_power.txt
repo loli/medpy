@@ -1,0 +1,6 @@
+medpy.graphcut.energy_voxel.boundary_difference_power
+=====================================================
+
+.. currentmodule:: medpy.graphcut.energy_voxel
+
+.. autofunction:: boundary_difference_power

@@ -1,0 +1,6 @@
+medpy.io.header.copy_meta_data
+==============================
+
+.. currentmodule:: medpy.io.header
+
+.. autofunction:: copy_meta_data

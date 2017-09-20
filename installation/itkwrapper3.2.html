@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Installing ITK wrappers for Python (ITKv3) &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="next" title="MedPy docker containers" href="../docker/dockercontainers.html" >
+    <link rel="prev" title="Installing ITK wrappers for Python (ITKv4.7)" href="itkwrapper4.7.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="../docker/dockercontainers.html" title="MedPy docker containers"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="itkwrapper4.7.html" title="Installing ITK wrappers for Python (ITKv4.7)"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing ITK wrappers for Python (ITKv3)</a><ul>
+<li><a class="reference internal" href="#installing-itk-with-python-binding-on-ubuntu-10-04">1. Installing ITK with Python binding on Ubuntu (&gt;= 10.04)</a></li>
+<li><a class="reference internal" href="#installing-itk-with-python-binding-on-ubuntu-12-04">2. Installing ITK with Python binding on Ubuntu (= 12.04)</a></li>
+<li><a class="reference internal" href="#compiling-itk-with-python-bindings-on-posix-unix-platforms">3. Compiling ITK with Python bindings on POSIX/Unix platforms</a><ul>
+<li><a class="reference internal" href="#getting-itk">Getting ITK</a></li>
+<li><a class="reference internal" href="#configuring-itk">Configuring ITK</a></li>
+<li><a class="reference internal" href="#compiling-itk">Compiling ITK</a></li>
+<li><a class="reference internal" href="#installing-itk">Installing ITK</a></li>
+<li><a class="reference internal" href="#addditional-step">Addditional step</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="itkwrapper4.7.html"
+                        title="previous chapter">Installing ITK wrappers for Python (ITKv4.7)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../docker/dockercontainers.html"
+                        title="next chapter">MedPy docker containers</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/installation/itkwrapper3.2.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="installing-itk-wrappers-for-python-itkv3">
+<h1>Installing ITK wrappers for Python (ITKv3)<a class="headerlink" href="#installing-itk-wrappers-for-python-itkv3" title="Permalink to this headline">¶</a></h1>
+<p>This is quite some work and absolutely not fail-save. Only try it, if you must (or are bored with too much time at hand).</p>
+<div class="section" id="installing-itk-with-python-binding-on-ubuntu-10-04">
+<h2>1. Installing ITK with Python binding on Ubuntu (&gt;= 10.04)<a class="headerlink" href="#installing-itk-with-python-binding-on-ubuntu-10-04" title="Permalink to this headline">¶</a></h2>
+<p>The Ubuntu repositories provide a package which can simply be installed using:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get install python-insighttoolkit3
+</pre></div>
+</div>
+<p>But this package wraps only a subset of ITKs functionality and therefore does not unleash <strong>MedPy</strong> s complete power. The recommendation is to follow the second or third approach.</p>
+</div>
+<div class="section" id="installing-itk-with-python-binding-on-ubuntu-12-04">
+<h2>2. Installing ITK with Python binding on Ubuntu (= 12.04)<a class="headerlink" href="#installing-itk-with-python-binding-on-ubuntu-12-04" title="Permalink to this headline">¶</a></h2>
+<p>If you are running Ubuntu 12.04, you can simply contact the author who will provide you with a pre-compiled Ubuntu package.</p>
+</div>
+<div class="section" id="compiling-itk-with-python-bindings-on-posix-unix-platforms">
+<h2>3. Compiling ITK with Python bindings on POSIX/Unix platforms<a class="headerlink" href="#compiling-itk-with-python-bindings-on-posix-unix-platforms" title="Permalink to this headline">¶</a></h2>
+<p>All descriptions are for ITK 3.20 but might also be valid for newer versions.</p>
+<div class="section" id="getting-itk">
+<h3>Getting ITK<a class="headerlink" href="#getting-itk" title="Permalink to this headline">¶</a></h3>
+<p>Got to <a class="reference external" href="http://www.itk.org/ITK/resources/software.html">http://www.itk.org/ITK/resources/software.html</a> , download the <em>InsightToolkit-3.20.1.tar.gz</em> resp. <em>InsightToolkit-3.20.1.zip</em> archive and unpack it to a folder called somthing like <em>IKT3.20.1/src</em>.</p>
+</div>
+<div class="section" id="configuring-itk">
+<h3>Configuring ITK<a class="headerlink" href="#configuring-itk" title="Permalink to this headline">¶</a></h3>
+<p>Compiling ITK requires <em>cmake</em> which can be found for almost all platforms. Create a new directory <em>IKT3.20.1/build</em> and enter it. Then run:</p>
+<div class="highlight-bash"><div class="highlight"><pre>ccmake ../src
+</pre></div>
+</div>
+<p>and subsequently hit the <em>c</em> key to configure the build. When finished, hit the <em>t</em> key to toggle the advanced mode and activate the following options:</p>
+<div class="highlight-python"><div class="highlight"><pre>BUILD_SHARED_LIBS ON
+ITK_USE_REVIEW    ON
+USE_WRAP_ITK      ON
+</pre></div>
+</div>
+<p>, then <em>c</em> onfigure again. Ignore the warning by pressing <em>e</em>. Now set the following options:</p>
+<div class="highlight-python"><div class="highlight"><pre>WRAP_FFT            OFF
+WRAP_ITK_DIMS       2;3;4 (or more, if you require)
+WRAP_ITK_JAVA       OFF
+WRAP_ITK_PYTHON     ON
+WRAP_ITK_TCL        OFF
+
+WRAP_double         ON
+WRAP_float          ON
+WRAP_signed_char    ON
+WRAP_signed_long    ON
+WRAP_signed_short   ON
+WRAP_unsigned_char  ON
+WRAP_unsigned_long  ON
+WRAP_unsigned_short ON
+WRAP_&lt;datatype&gt;   Select yourself which more to activate.
+</pre></div>
+</div>
+<p>, and <em>c</em> onfigure another time. Finally press <em>g</em> to generate the make-file.</p>
+<p>If <em>cmake</em> signals any errors during the configuration process, try to resolve the dependencies from which they originate.</p>
+</div>
+<div class="section" id="compiling-itk">
+<h3>Compiling ITK<a class="headerlink" href="#compiling-itk" title="Permalink to this headline">¶</a></h3>
+<p>Now that the configuration is done, we can compile ITK. Run:</p>
+<div class="highlight-bash"><div class="highlight"><pre>make -j&lt;number-of-your-porcessors&gt;
+</pre></div>
+</div>
+<p>and wait. This will take some time, depending on your computer up to 2 days are not unlikely.</p>
+<p>If an error occurs, try to understand it and eventually re-run the previpous step with some options changed.</p>
+</div>
+<div class="section" id="installing-itk">
+<h3>Installing ITK<a class="headerlink" href="#installing-itk" title="Permalink to this headline">¶</a></h3>
+<p>Install ITK and its Python bindings simply by running:</p>
+<div class="highlight-bash"><div class="highlight"><pre>make install <span class="o">(</span>as root<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="addditional-step">
+<h3>Addditional step<a class="headerlink" href="#addditional-step" title="Permalink to this headline">¶</a></h3>
+<p>The ITK Python bindings require a third-party module called PyBuffer which is shipped with ITK but not automatically compiled. Furthermore it holds a small bug. After finishing the previous steps, create a folder called <em>PyBuffer/src</em> somewhere and copy all files and folders from <em>ITK/src/Wrapping/WrapITK/ExternalProjects/PyBuffer/</em> into it. Now open <em>itkPyBuffer.txx</em> with an text editor and change the line:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">dimensions</span><span class="p">[</span> <span class="n">ImageDimension</span> <span class="p">];</span>
+</pre></div>
+</div>
+<p>to:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">npy_intp</span> <span class="n">dimensions</span><span class="p">[</span> <span class="n">ImageDimension</span> <span class="p">];</span>
+</pre></div>
+</div>
+<p>(see <a class="reference external" href="http://code.google.com/p/wrapitk/issues/detail?id=39">http://code.google.com/p/wrapitk/issues/detail?id=39</a> for patch details). Then create a folder <em>PyBuffer/build</em>, enter it and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre>ccmake ../src
+</pre></div>
+</div>
+<p>After <em>c</em> onfiguring you will see some warnings. Set:</p>
+<div class="highlight-python"><div class="highlight"><pre>WrapITK_DIR     ITK/bin/Wrapping/WrapITK/
+</pre></div>
+</div>
+<p>In some cases you will also have to set:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">PYTHON_NUMARRAY_INCLUDE_DIR</span>     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">numpy</span>
+</pre></div>
+</div>
+<p>Now <em>c</em> onfigure again and <em>g</em> enerate. To finalize run:</p>
+<div class="highlight-python"><div class="highlight"><pre>.. code-block:: bash
+</pre></div>
+</div>
+<blockquote>
+<div>make
+make install (as root)</div></blockquote>
+<p>Congratulations, you are done compiling and installing ITK with Python wrappers.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

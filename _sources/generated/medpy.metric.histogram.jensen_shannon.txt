@@ -1,0 +1,6 @@
+medpy.metric.histogram.jensen_shannon
+=====================================
+
+.. currentmodule:: medpy.metric.histogram
+
+.. autofunction:: jensen_shannon

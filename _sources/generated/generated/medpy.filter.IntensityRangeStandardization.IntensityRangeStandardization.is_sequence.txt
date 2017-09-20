@@ -1,0 +1,6 @@
+medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence
+====================================================================================
+
+.. currentmodule:: medpy.filter.IntensityRangeStandardization
+
+.. automethod:: IntensityRangeStandardization.is_sequence

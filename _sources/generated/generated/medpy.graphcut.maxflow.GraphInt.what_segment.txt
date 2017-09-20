@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphInt.what_segment
+============================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphInt.what_segment

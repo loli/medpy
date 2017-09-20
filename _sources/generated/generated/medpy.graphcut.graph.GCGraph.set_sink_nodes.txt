@@ -1,0 +1,6 @@
+medpy.graphcut.graph.GCGraph.set_sink_nodes
+===========================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: GCGraph.set_sink_nodes

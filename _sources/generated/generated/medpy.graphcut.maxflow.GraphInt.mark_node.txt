@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphInt.mark_node
+=========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphInt.mark_node

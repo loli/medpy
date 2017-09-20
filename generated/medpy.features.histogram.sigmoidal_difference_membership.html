@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.features.histogram.sigmoidal_difference_membership &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="up" title="Image feature extraction and manipulation (medpy.features)" href="../features.html" >
+    <link rel="next" title="Image iterators (medpy.iterators)" href="../iterators.html" >
+    <link rel="prev" title="medpy.features.histogram.gaussian_membership" href="medpy.features.histogram.gaussian_membership.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../features.html" accesskey="U">Image feature extraction and manipulation (<code class="docutils literal"><span class="pre">medpy.features</span></code>)</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="../iterators.html" title="Image iterators (medpy.iterators)"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="medpy.features.histogram.gaussian_membership.html" title="medpy.features.histogram.gaussian_membership"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="medpy.features.histogram.gaussian_membership.html"
+                        title="previous chapter">medpy.features.histogram.gaussian_membership</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../iterators.html"
+                        title="next chapter">Image iterators (<code class="docutils literal"><span class="pre">medpy.iterators</span></code>)</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/generated/medpy.features.histogram.sigmoidal_difference_membership.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="medpy-features-histogram-sigmoidal-difference-membership">
+<h1>medpy.features.histogram.sigmoidal_difference_membership<a class="headerlink" href="#medpy-features-histogram-sigmoidal-difference-membership" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="medpy.features.histogram.sigmoidal_difference_membership">
+<code class="descclassname">medpy.features.histogram.</code><code class="descname">sigmoidal_difference_membership</code><span class="sig-paren">(</span><em>bin_center</em>, <em>bin_width</em>, <em>smoothness</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/features/histogram.html#sigmoidal_difference_membership"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.features.histogram.sigmoidal_difference_membership" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the difference of two sigmoids as membership function for a fuzzy histogram bin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>bin_center</strong> : number</p>
+<blockquote>
+<div><p>The center of the bin of which to compute the membership function.</p>
+</div></blockquote>
+<p><strong>bin_width</strong> : number</p>
+<blockquote>
+<div><p>The width of a single bin (all expected to be of equal width).</p>
+</div></blockquote>
+<p><strong>smoothness</strong> : number, optional</p>
+<blockquote>
+<div><p>The smoothness of the function; determines the neighbourhood affected.
+See below and <a class="reference internal" href="medpy.features.histogram.fuzzy_histogram.html#medpy.features.histogram.fuzzy_histogram" title="medpy.features.histogram.fuzzy_histogram"><code class="xref py py-obj docutils literal"><span class="pre">fuzzy_histogram</span></code></a> for a more detailed explanation</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sigmoidal_difference_membership</strong> : function</p>
+<blockquote class="last">
+<div><p>A sigmoidal difference membership function centered on the bin.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Since the sigmoidal membership function is infinite, it is
+not actually true that it does not contribute to bins outside of the neighbourhood
+range. But the contribution is so marginal (eps &lt;= 0.001 per value) that it can be
+safely ignored.</p>
+<p>The sigmoidal membership function is defined as</p>
+<div class="math">
+\[\mu_{sigmoid}(x) = \left[1+e^{-\alpha_1 (x-\zeta_1)}\right]^{-1} - \left[1+e^{-\alpha_2 (x-\zeta_2)}\right]^{-1}\]</div>
+<p>where <span class="math">\(\alpha_1 = \alpha_2 = \alpha\)</span> is computed throught the smoothness term
+and <span class="math">\(\zeta_1\)</span> and <span class="math">\(\zeta_2\)</span> constitute the left resp. right borders of the bin.</p>
+<p>The following figure shows three sigmoidal membership functions for bins at the
+centers -2, -0 and 2 with a bin width of 2 and a smoothness of 2:</p>
+<p>&#8220;Sigmoidal functions (1)&#8221;</p>
+<p>The central (green) membership functions extends to its up till the second bin
+(centered around -4) and the same to the right (until the bin centered around +4).
+Therefore all values from -5 to +5 are considered for membership in this bin. Values
+out of this range would only contribute marginally to this bin.
+Furthermore it is inteligable that the sum of all membership functions at each point
+is equal to 1, therefore all values are equally represented (i.e. contribute with 1
+to the overall histogram).</p>
+<p>The influence of the smoothness term can be observed in the following figure:</p>
+<p>&#8220;Sigmoidal functions (2)&#8221;</p>
+<p>Here smoothness has been chosen to be 1. The green function therefore extends just
+into the directly adjunct bins to its left and right.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

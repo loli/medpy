@@ -1,0 +1,6 @@
+medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform
+========================================================================================
+
+.. currentmodule:: medpy.filter.IntensityRangeStandardization
+
+.. automethod:: IntensityRangeStandardization.train_transform

@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.getEffectiveLevel
+==========================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.getEffectiveLevel

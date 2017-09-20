@@ -1,0 +1,6 @@
+medpy.iterators.patchwise.CentredPatchIterator.next
+===================================================
+
+.. currentmodule:: medpy.iterators.patchwise
+
+.. automethod:: CentredPatchIterator.next

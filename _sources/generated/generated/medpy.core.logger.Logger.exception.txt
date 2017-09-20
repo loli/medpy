@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.exception
+==================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.exception

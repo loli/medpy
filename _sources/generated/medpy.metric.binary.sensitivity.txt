@@ -1,0 +1,6 @@
+medpy.metric.binary.sensitivity
+===============================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: sensitivity

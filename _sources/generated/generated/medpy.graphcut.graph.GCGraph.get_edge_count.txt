@@ -1,0 +1,6 @@
+medpy.graphcut.graph.GCGraph.get_edge_count
+===========================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: GCGraph.get_edge_count

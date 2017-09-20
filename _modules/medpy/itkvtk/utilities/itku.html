@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.itkvtk.utilities.itku &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.itkvtk.utilities.itku</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.5.1</span>
+<span class="c1"># since 2011-11-25</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">itk</span>
+
+<span class="c1"># path changes</span>
+
+<span class="c1"># own modules</span>
+<span class="kn">from</span> <span class="nn">...core</span> <span class="kn">import</span> <span class="n">ImageLoadingError</span><span class="p">,</span> <span class="n">DependencyError</span><span class="p">,</span> <span class="n">ImageTypeError</span><span class="p">,</span> <span class="n">Logger</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="getInformation"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getInformation.html#medpy.itkvtk.utilities.itku.getInformation">[docs]</a><span class="k">def</span> <span class="nf">getInformation</span><span class="p">(</span><span class="n">image</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an information string about a ITK image in a compressed way.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : itk.Image</span>
+<span class="sd">        An ITK image as used by WrapITK.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    information : string</span>
+<span class="sd">        Pretty-formatted string with image metadata.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Performs UpdateOutputInformation() on the image, therefore triggering pipeline processing if necessary</span>
+<span class="sd">    Only works on 3D images.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># refresh information</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">UpdateOutputInformation</span><span class="p">()</span>
+    
+    <span class="c1"># request information and format string</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;itkImageData info:</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">scalar-type: {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">itk</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">GetLargestPossibleRegion</span><span class="p">()</span><span class="o">.</span><span class="n">GetSize</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">dimensions: {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">rs</span><span class="o">.</span><span class="n">GetElement</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">GetSizeDimension</span><span class="p">())])</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">spacing: {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">sp</span><span class="o">.</span><span class="n">GetElement</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">GetSizeDimension</span><span class="p">())])</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">origin: {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">o</span><span class="o">.</span><span class="n">GetElement</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">GetSizeDimension</span><span class="p">())])</span> 
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">data dim.: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">itk</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span> <span class="c1"># alternative impl. for when GetImageDimension() fails </span>
+    
+    <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="getInformationWithScalarRange"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getInformationWithScalarRange.html#medpy.itkvtk.utilities.itku.getInformationWithScalarRange">[docs]</a><span class="k">def</span> <span class="nf">getInformationWithScalarRange</span><span class="p">(</span><span class="n">image</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Behaves like `getInformation` but also computes the intensity range, which is computationally expensive.</span>
+<span class="sd">          </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : itk.Image</span>
+<span class="sd">        An ITK image as used by WrapITK.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    information : string</span>
+<span class="sd">        Pretty-formatted string with image metadata and intensity range.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Performs UpdateOutputInformation() on the image, therefore triggering pipeline processing if necessary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">getInformation</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    
+    <span class="c1"># refresh data</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+    
+    <span class="c1"># initiate max/min intensity value computer</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">itk</span><span class="o">.</span><span class="n">MinimumMaximumImageCalculator</span><span class="p">[</span><span class="n">getImageType</span><span class="p">(</span><span class="n">image</span><span class="p">)]</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">SetImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">Compute</span><span class="p">()</span>
+    
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">scalar-range: (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">GetMinimum</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">GetMaximum</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;)</span><span class="se">\n</span><span class="s1">&#39;</span>
+    
+    <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="saveImageMetaIO"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.saveImageMetaIO.html#medpy.itkvtk.utilities.itku.saveImageMetaIO">[docs]</a><span class="k">def</span> <span class="nf">saveImageMetaIO</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves the image data into a file as MetaIO format.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : itk.Image</span>
+<span class="sd">        An ITK image as used by WrapITK.</span>
+<span class="sd">    file_name : string</span>
+<span class="sd">        Path and file name (without suffix) where to save the image.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    A write operation will trigger the image pipeline to be processed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">saveImage</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.mhd&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="saveImage"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.saveImage.html#medpy.itkvtk.utilities.itku.saveImage">[docs]</a><span class="k">def</span> <span class="nf">saveImage</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves the image data into a file in the format specified by the file name suffix.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : itk.Image</span>
+<span class="sd">        An ITK image as used by WrapITK.</span>
+<span class="sd">    file_name : string</span>
+<span class="sd">        Path and file name (with suffix) where to save the image.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    A write operation will trigger the image pipeline to be processed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># retrieve image type</span>
+    <span class="n">image_type</span> <span class="o">=</span> <span class="n">getImageType</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">itk</span><span class="o">.</span><span class="n">ImageFileWriter</span><span class="p">[</span><span class="n">image_type</span><span class="p">]</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="getImageFromArray"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getImageFromArray.html#medpy.itkvtk.utilities.itku.getImageFromArray">[docs]</a><span class="k">def</span> <span class="nf">getImageFromArray</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">image_type</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an itk Image created from the supplied numpy ndarray.</span>
+<span class="sd">    If the ``image_type`` is supported, will be automatically transformed to that type,</span>
+<span class="sd">    otherwise the most suitable is selected.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : array_like</span>
+<span class="sd">        The image as numpy array.</span>
+<span class="sd">    image_type : itk.Image (template)</span>
+<span class="sd">        An itk image type.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    itk_image : itk.Image (instance)</span>
+<span class="sd">        An instance of itk.Image holding the array&#39;s data.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Always use this instead of directly the itk.PyBuffer, as that object transposes the image axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># The itk_py_converter transposes the image dimensions. This has to be countered.</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+    <span class="c1"># determine image type if not supplied</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">image_type</span><span class="p">:</span>
+        <span class="n">image_type</span> <span class="o">=</span> <span class="n">getImageTypeFromArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+    <span class="c1"># convert</span>
+    <span class="n">itk_py_converter</span> <span class="o">=</span> <span class="n">itk</span><span class="o">.</span><span class="n">PyBuffer</span><span class="p">[</span><span class="n">image_type</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">itk_py_converter</span><span class="o">.</span><span class="n">GetImageFromArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="getArrayFromImage"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getArrayFromImage.html#medpy.itkvtk.utilities.itku.getArrayFromImage">[docs]</a><span class="k">def</span> <span class="nf">getArrayFromImage</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a numpy ndarray created from the supplied itk image.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : itk.Image (instance)</span>
+<span class="sd">        An instance of itk.Image holding the array&#39;s data.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    arr : ndarray</span>
+<span class="sd">        The image as numpy array.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Always use this instead of directly the itk.PyBuffer, as that object transposes the image axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#convert</span>
+    <span class="n">itk_py_converter</span> <span class="o">=</span> <span class="n">itk</span><span class="o">.</span><span class="n">PyBuffer</span><span class="p">[</span><span class="n">getImageType</span><span class="p">(</span><span class="n">image</span><span class="p">)]</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">itk_py_converter</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    
+    <span class="c1">############</span>
+    <span class="c1"># !BUG: WarpITK is a very critical itk wrapper. Everything returned / created by it</span>
+    <span class="c1"># seems to exist only inside the scope of the current function (at least for </span>
+    <span class="c1"># ImageFileReader&#39;s image and PyBuffers&#39;s scipy array. The returned objects have</span>
+    <span class="c1"># therefore to be copied once, to survive outside the current scope.</span>
+    <span class="c1">############</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># The itk_py_converter transposes the image dimensions. This has to be countered.</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="getImageType"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getImageType.html#medpy.itkvtk.utilities.itku.getImageType">[docs]</a><span class="k">def</span> <span class="nf">getImageType</span><span class="p">(</span><span class="n">image</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the image type of the supplied image as itk.Image template.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : itk.Image (instance)</span>
+<span class="sd">        An instance of itk.Image.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    image_type : itk.Image (template)</span>
+<span class="sd">        An itk image type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="n">itk</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="n">image</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">,</span> <span class="s1">&#39;The python wrappers of ITK define no template class for this data type.&#39;</span></div>
+    
+<div class="viewcode-block" id="getImageTypeFromArray"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getImageTypeFromArray.html#medpy.itkvtk.utilities.itku.getImageTypeFromArray">[docs]</a><span class="k">def</span> <span class="nf">getImageTypeFromArray</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the image type of the supplied array as itk.Image template.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : array_like</span>
+<span class="sd">        The image as numpy array.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    image_type : itk.Image (template)</span>
+<span class="sd">        An itk image type.</span>
+<span class="sd">    </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    DependencyError</span>
+<span class="sd">        If the itk wrapper do not support the target image type</span>
+<span class="sd">    ImageTypeError</span>
+<span class="sd">        If the array dtype is unsupported</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># mapping from scipy to the possible itk types, in order from most to least suitable</span>
+    <span class="c1"># ! this assumes char=8bit, short=16bit and long=32bit (minimal values)</span>
+    <span class="n">scipy_to_itk_types</span> <span class="o">=</span> <span class="p">{</span><span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">SS</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">UC</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">US</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SS</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">UL</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">UC</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">US</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SS</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">UL</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">uint16</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">US</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">UL</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">uint32</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">UL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">uint64</span><span class="p">:</span> <span class="p">[],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">int8</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">SC</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SS</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">int16</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">SS</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">int32</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">int64</span><span class="p">:</span> <span class="p">[],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">itk</span><span class="o">.</span><span class="n">D</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">D</span><span class="p">],</span>
+                          <span class="n">scipy</span><span class="o">.</span><span class="n">float128</span><span class="p">:</span> <span class="p">[]}</span>
+    
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;Itk does not support images with less than 2 dimensions.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># chek for unknown array data type</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="n">scipy_to_itk_types</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ImageTypeError</span><span class="p">(</span><span class="s1">&#39;The array dtype {} could not be mapped to any itk image type.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+    
+    <span class="c1"># check if any valid conversion exists</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scipy_to_itk_types</span><span class="p">[</span><span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="n">ImageTypeError</span><span class="p">(</span><span class="s1">&#39;No valid itk type for the pixel data dtype {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+    
+    <span class="c1"># iterate and try out candidate templates</span>
+    <span class="n">ex</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">itk_type</span> <span class="ow">in</span> <span class="n">scipy_to_itk_types</span><span class="p">[</span><span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>                
+            <span class="k">return</span> <span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="p">[</span><span class="n">itk_type</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> <span class="c1"># pass raised exception, as a list of ordered possible itk pixel types is processed and some of them might not be compiled with the current itk wrapper module</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="k">pass</span>
+    <span class="c1"># if none fitted, examine error and eventually translate, otherwise rethrow</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span> <span class="o">==</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;The itk python wrappers were compiled without support the combination of {} dimensions and at least one of the following pixel data types (which are compatible with dtype {}): {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">scipy_to_itk_types</span><span class="p">[</span><span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span></div>
+
+    
+<div class="viewcode-block" id="getImageTypeFromFile"><a class="viewcode-back" href="../../../../generated/medpy.itkvtk.utilities.itku.getImageTypeFromFile.html#medpy.itkvtk.utilities.itku.getImageTypeFromFile">[docs]</a><span class="k">def</span> <span class="nf">getImageTypeFromFile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span> <span class="c1"># tested</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inconvenient but necessary implementation to load image with ITK whose component type</span>
+<span class="sd">    and number of dimensions are unknown.</span>
+<span class="sd">    </span>
+<span class="sd">    Holds functionalities to determine the voxel data type and dimensions of an unknown</span>
+<span class="sd">    image.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : string</span>
+<span class="sd">        Path to an image.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    image_type : itk.Image (template) or False</span>
+<span class="sd">        Either the correct image type (itk.Image template) associated with the image file or False if loading failed.</span>
+<span class="sd">    </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImageLoadingError</span>
+<span class="sd">        If the header of the supplied image could be recognized but is on an unsupported type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+    
+    <span class="c1"># list of component type strings (as returned by ImageIOBase.GetComponentTypeAsString() to itk component types</span>
+    <span class="n">string_to_component</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;char&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">SC</span><span class="p">,</span>
+                           <span class="s1">&#39;unsigned_char&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">UC</span><span class="p">,</span>
+                           <span class="s1">&#39;short&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">SS</span><span class="p">,</span>
+                           <span class="s1">&#39;unsigned_short&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">US</span><span class="p">,</span>
+                           <span class="s1">&#39;int&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">SI</span><span class="p">,</span>
+                           <span class="s1">&#39;unsigned_int&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">UI</span><span class="p">,</span>
+                           <span class="s1">&#39;long&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">SL</span><span class="p">,</span>
+                           <span class="s1">&#39;unsigned_long&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">UL</span><span class="p">,</span>
+                           <span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">F</span><span class="p">,</span>
+                           <span class="s1">&#39;double&#39;</span><span class="p">:</span> <span class="n">itk</span><span class="o">.</span><span class="n">D</span><span class="p">}</span>
+
+    <span class="c1"># List of all current itk image loaders</span>
+    <span class="n">image_loaders</span> <span class="o">=</span> <span class="p">[</span><span class="n">itk</span><span class="o">.</span><span class="n">GE4ImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">BMPImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">NiftiImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">PNGImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">BioRadImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">LSMImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">NrrdImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">SiemensVisionImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">IPLCommonImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">JPEGImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">GEAdwImageIO</span><span class="p">,</span>
+                     <span class="c1">#itk.AnalyzeImageIO, # missing starting from ITK 4.X</span>
+                     <span class="c1">#itk.Brains2MaskImageIO, # missing starting from ITK 4.X</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">TIFFImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">VTKImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">GDCMImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">GE5ImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">GiplImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">MetaImageIO</span><span class="p">,</span>
+                     <span class="n">itk</span><span class="o">.</span><span class="n">StimulateImageIO</span><span class="p">]</span>
+                     <span class="c1">#itk.DICOMImageIO2 # missing starting from ITK 4.X</span>
+    
+    <span class="c1"># try to find an image loader who feels responsible for the image</span>
+    <span class="c1"># Note: All used methods are based on the common parent class ImageIOBase</span>
+    <span class="k">for</span> <span class="n">loader_class</span> <span class="ow">in</span> <span class="n">image_loaders</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">loader_class</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">loader</span><span class="o">.</span><span class="n">CanReadFile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+            
+            <span class="c1"># load image header</span>
+            <span class="n">loader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+            <span class="n">loader</span><span class="o">.</span><span class="n">ReadImageInformation</span><span class="p">()</span>
+            
+            <span class="c1"># request information about the image</span>
+            <span class="n">pixel_type</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">GetPixelTypeAsString</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">GetPixelType</span><span class="p">())</span>
+            <span class="n">component_type</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">GetComponentTypeAsString</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">GetComponentType</span><span class="p">())</span>
+            <span class="n">dimensions</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">GetNumberOfDimensions</span><span class="p">()</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">GetNumberOfComponents</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;scalar&#39;</span> <span class="o">==</span> <span class="n">pixel_type</span> <span class="ow">and</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">components</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Can only open scalar image with one component. Found type {} with {} components.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pixel_type</span><span class="p">,</span> <span class="n">components</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;Can only open scalar image with one component. Found type {} with {} components.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pixel_type</span><span class="p">,</span> <span class="n">components</span><span class="p">))</span>
+            
+            <span class="c1"># return image type object</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Determined image type as {} with pixel type {} and {} dimensions.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">component_type</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="p">[</span><span class="n">string_to_component</span><span class="p">[</span><span class="n">component_type</span><span class="p">],</span> <span class="n">dimensions</span><span class="p">]</span>
+        
+    <span class="c1"># no suitable loader found</span>
+    <span class="k">return</span> <span class="bp">False</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

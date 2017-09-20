@@ -1,0 +1,6 @@
+medpy.filter.houghtransform.ght_alternative
+===========================================
+
+.. currentmodule:: medpy.filter.houghtransform
+
+.. autofunction:: ght_alternative

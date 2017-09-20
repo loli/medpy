@@ -1,0 +1,6 @@
+medpy.features.utilities.append
+===============================
+
+.. currentmodule:: medpy.features.utilities
+
+.. autofunction:: append

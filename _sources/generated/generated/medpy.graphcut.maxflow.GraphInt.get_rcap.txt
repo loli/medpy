@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphInt.get_rcap
+========================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphInt.get_rcap

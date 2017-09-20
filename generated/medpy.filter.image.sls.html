@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.filter.image.sls &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="up" title="Image filter and manipulation (medpy.filter)" href="../filter.html" >
+    <link rel="next" title="medpy.filter.image.ssd" href="medpy.filter.image.ssd.html" >
+    <link rel="prev" title="medpy.filter.binary.bounding_box" href="medpy.filter.binary.bounding_box.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../filter.html" accesskey="U">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="medpy.filter.image.ssd.html" title="medpy.filter.image.ssd"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="medpy.filter.binary.bounding_box.html" title="medpy.filter.binary.bounding_box"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="medpy.filter.binary.bounding_box.html"
+                        title="previous chapter">medpy.filter.binary.bounding_box</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="medpy.filter.image.ssd.html"
+                        title="next chapter">medpy.filter.image.ssd</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/generated/medpy.filter.image.sls.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="medpy-filter-image-sls">
+<h1>medpy.filter.image.sls<a class="headerlink" href="#medpy-filter-image-sls" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="medpy.filter.image.sls">
+<code class="descclassname">medpy.filter.image.</code><code class="descname">sls</code><span class="sig-paren">(</span><em>minuend</em>, <em>subtrahend</em>, <em>metric='ssd'</em>, <em>noise='global'</em>, <em>signed=True</em>, <em>sn_size=None</em>, <em>sn_footprint=None</em>, <em>sn_mode='reflect'</em>, <em>sn_cval=0.0</em>, <em>pn_size=None</em>, <em>pn_footprint=None</em>, <em>pn_mode='reflect'</em>, <em>pn_cval=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/filter/image.html#sls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.filter.image.sls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the signed local similarity between two images.</p>
+<p>Compares a patch around each voxel of the minuend array to a number of patches
+centered at the points of a search neighbourhood in the subtrahend. Thus, creates
+a multi-dimensional measure of patch similarity between the minuend and a
+corresponding search area in the subtrahend.</p>
+<p>This filter can also be used to compute local self-similarity, obtaining a
+descriptor similar to the one described in <a class="reference internal" href="#r6" id="id1">[R6]</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>minuend</strong> : array_like</p>
+<blockquote>
+<div><p>Input array from which to subtract the subtrahend.</p>
+</div></blockquote>
+<p><strong>subtrahend</strong> : array_like</p>
+<blockquote>
+<div><p>Input array to subtract from the minuend.</p>
+</div></blockquote>
+<p><strong>metric</strong> : {&#8216;ssd&#8217;, &#8216;mi&#8217;, &#8216;nmi&#8217;, &#8216;ncc&#8217;}, optional</p>
+<blockquote>
+<div><p>The <em class="xref py py-obj">metric</em> parameter determines the metric used to compute the
+filter output. Default is &#8216;ssd&#8217;.</p>
+</div></blockquote>
+<p><strong>noise</strong> : {&#8216;global&#8217;, &#8216;local&#8217;}, optional</p>
+<blockquote>
+<div><p>The <em class="xref py py-obj">noise</em> parameter determines how the noise is handled. If set
+to &#8216;global&#8217;, the variance determining the noise is a scalar, if
+set to &#8216;local&#8217;, it is a Gaussian smoothed field of estimated local
+noise. Default is &#8216;global&#8217;.</p>
+</div></blockquote>
+<p><strong>signed</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether the filter output should be signed or not. If set to &#8216;False&#8217;,
+only the absolute values will be returned. Default is &#8216;True&#8217;.</p>
+</div></blockquote>
+<p><strong>sn_size</strong> : scalar or tuple, optional</p>
+<blockquote>
+<div><p>See sn_footprint, below</p>
+</div></blockquote>
+<p><strong>sn_footprint</strong> : array, optional</p>
+<blockquote>
+<div><p>The search neighbourhood.
+Either <em class="xref py py-obj">sn_size</em> or <em class="xref py py-obj">sn_footprint</em> must be defined. <em class="xref py py-obj">sn_size</em> gives
+the shape that is taken from the input array, at every element
+position, to define the input to the filter function.
+<em class="xref py py-obj">sn_footprint</em> is a boolean array that specifies (implicitly) a
+shape, but also which of the elements within this shape will get
+passed to the filter function. Thus <code class="docutils literal"><span class="pre">sn_size=(n,m)</span></code> is equivalent
+to <code class="docutils literal"><span class="pre">sn_footprint=np.ones((n,m))</span></code>. We adjust <em class="xref py py-obj">sn_size</em> to the number
+of dimensions of the input array, so that, if the input array is
+shape (10,10,10), and <em class="xref py py-obj">sn_size</em> is 2, then the actual size used is
+(2,2,2).</p>
+</div></blockquote>
+<p><strong>sn_mode</strong> : {&#8216;reflect&#8217;, &#8216;constant&#8217;, &#8216;nearest&#8217;, &#8216;mirror&#8217;, &#8216;wrap&#8217;}, optional</p>
+<blockquote>
+<div><p>The <em class="xref py py-obj">sn_mode</em> parameter determines how the array borders are
+handled, where <em class="xref py py-obj">sn_cval</em> is the value when mode is equal to
+&#8216;constant&#8217;. Default is &#8216;reflect&#8217;</p>
+</div></blockquote>
+<p><strong>sn_cval</strong> : scalar, optional</p>
+<blockquote>
+<div><p>Value to fill past edges of input if <em class="xref py py-obj">sn_mode</em> is &#8216;constant&#8217;. Default
+is 0.0</p>
+</div></blockquote>
+<p><strong>pn_size</strong> : scalar or tuple, optional</p>
+<blockquote>
+<div><p>See pn_footprint, below</p>
+</div></blockquote>
+<p><strong>pn_footprint</strong> : array, optional</p>
+<blockquote>
+<div><p>The patch over which the distance measure is applied.
+Either <em class="xref py py-obj">pn_size</em> or <em class="xref py py-obj">pn_footprint</em> must be defined. <em class="xref py py-obj">pn_size</em> gives
+the shape that is taken from the input array, at every element
+position, to define the input to the filter function.
+<em class="xref py py-obj">pn_footprint</em> is a boolean array that specifies (implicitly) a
+shape, but also which of the elements within this shape will get
+passed to the filter function. Thus <code class="docutils literal"><span class="pre">pn_size=(n,m)</span></code> is equivalent
+of dimensions of the input array, so that, if the input array is
+shape (10,10,10), and <em class="xref py py-obj">pn_size</em> is 2, then the actual size used is
+(2,2,2).</p>
+</div></blockquote>
+<p><strong>pn_mode</strong> : {&#8216;reflect&#8217;, &#8216;constant&#8217;, &#8216;nearest&#8217;, &#8216;mirror&#8217;, &#8216;wrap&#8217;}, optional</p>
+<blockquote>
+<div><p>The <em class="xref py py-obj">pn_mode</em> parameter determines how the array borders are
+handled, where <em class="xref py py-obj">pn_cval</em> is the value when mode is equal to
+&#8216;constant&#8217;. Default is &#8216;reflect&#8217;</p>
+</div></blockquote>
+<p><strong>pn_cval</strong> : scalar, optional</p>
+<blockquote>
+<div><p>Value to fill past edges of input if <em class="xref py py-obj">pn_mode</em> is &#8216;constant&#8217;. Default
+is 0.0</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sls</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>The signed local similarity image between subtrahend and minuend.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R6]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Mattias P. Heinrich, Mark Jenkinson, Manav Bhushan, Tahreema Matin, Fergus V. Gleeson, Sir Michael Brady, Julia A. Schnabel
+MIND: Modality independent neighbourhood descriptor for multi-modal deformable registration
+Medical Image Analysis, Volume 16, Issue 7, October 2012, Pages 1423-1435, ISSN 1361-8415
+<a class="reference external" href="http://dx.doi.org/10.1016/j.media.2012.05.008">http://dx.doi.org/10.1016/j.media.2012.05.008</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

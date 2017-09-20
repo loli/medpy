@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.filter.IntensityRangeStandardization &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.filter.IntensityRangeStandardization</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.2</span>
+<span class="c1"># since 2013-09-04</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="c1"># path changes</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="IntensityRangeStandardization"><a class="viewcode-back" href="../../../generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization">[docs]</a><span class="k">class</span> <span class="nc">IntensityRangeStandardization</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Class to standardize intensity ranges between a number of images.</span>
+<span class="sd">    </span>
+<span class="sd">    **Short description:**</span>
+<span class="sd">    Often images containing similar objects or scenes have different intensity ranges</span>
+<span class="sd">    that make it difficult to compare them manually as well as to process them</span>
+<span class="sd">    further.</span>
+<span class="sd">    </span>
+<span class="sd">    IntensityRangeStandardization offers a way to transform a number of such images</span>
+<span class="sd">    intensity ranges to a common standard intensity space without any loss of</span>
+<span class="sd">    information using a multi-segment linear transformation model.</span>
+<span class="sd">    </span>
+<span class="sd">    Once learned, this model can be applied to other, formerly unseen images to map</span>
+<span class="sd">    them to the same standard intensity space.    </span>
+<span class="sd">            </span>
+<span class="sd">    **Concept of similar images:**</span>
+<span class="sd">    IntensityRangeStandardization is limited to similar images. Images containing</span>
+<span class="sd">    different object or different compositions of objects are not suitable to be</span>
+<span class="sd">    transformed to a common intensity space (and it would furthermore not make much</span>
+<span class="sd">    sense).</span>
+<span class="sd">    </span>
+<span class="sd">    A typical application of IntensityRangeStandardization are MRI images showing the</span>
+<span class="sd">    same body region. These often have different intensity ranges, even when acquired</span>
+<span class="sd">    from the same patient and using the same scanner. For further processing, e.g.</span>
+<span class="sd">    for training a classifier, they have to be mapped to a common intensity space.</span>
+<span class="sd">    </span>
+<span class="sd">    **Failure of the transformation:**</span>
+<span class="sd">    The method implemented in IntensityRangeStandardization ensures that no</span>
+<span class="sd">    information is lost i.e. a lossless transformation is performed. This can be</span>
+<span class="sd">    assured when there exists a one-to-one mapping between the images original</span>
+<span class="sd">    intensity values and their values mapped to the standard intensity space.</span>
+<span class="sd">    </span>
+<span class="sd">    But since the transformation model is trained on, and the standard intensity</span>
+<span class="sd">    space range selected over the training images, this can not be guaranteed for all</span>
+<span class="sd">    formerly unseen image. If they differ greatly from the training set images, a</span>
+<span class="sd">    lossless transformation can not be assured anymore. In this case the transform()</span>
+<span class="sd">    method will throw an InformationLossException.</span>
+<span class="sd">    </span>
+<span class="sd">    Should this happen, the model needs to be re-trained with the original training</span>
+<span class="sd">    images and additionally the images which caused the failure. Since this will lead</span>
+<span class="sd">    to a new intensity standard space, all already transformed images have to be</span>
+<span class="sd">    processed again.</span>
+<span class="sd">    </span>
+<span class="sd">    **Setting the training parameters:**</span>
+<span class="sd">    The method comes with a set of default parameters, that are suitable for most</span>
+<span class="sd">    cases. But for some special cases, it might be better to set them on your own. Ti</span>
+<span class="sd">    understand the working of the parameters, it is recommended to read the detailed</span>
+<span class="sd">    method description first.</span>
+<span class="sd">    </span>
+<span class="sd">    **The method depends on three parameters:**</span>
+<span class="sd">    </span>
+<span class="sd">    cutoffp, i.e. the cut-off percentiles</span>
+<span class="sd">        These are used to the define the intensity outliers, both during training and</span>
+<span class="sd">        image transformation. The default values are usualy a good choice.</span>
+<span class="sd">        (in [1]_ these are called the minimum and maximum percentile values pc1 and pc2 respectively)</span>
+<span class="sd">    landmarkp, i.e. the landmark percentiles</span>
+<span class="sd">        These percentiles define the landmark positions. The more supplied, the more</span>
+<span class="sd">        exact but less general becomes the model. It is common to supply equally</span>
+<span class="sd">        spaced percentiles between 0 and 100.</span>
+<span class="sd">        (in [1]_ these are called the landmark locations mu_1, .., mu_l)</span>
+<span class="sd">    strange, i.e. the standard intensity space range</span>
+<span class="sd">        These two intensity values define roughly the standard intensity space (or</span>
+<span class="sd">        common intensity space of the images; or even target intensity space) to</span>
+<span class="sd">        which each images intensities are mapped. This space can be supplied, but it</span>
+<span class="sd">        is usually recommended to let the method select it automatically during the</span>
+<span class="sd">        training process. It is additionally possible to supply only the lower or</span>
+<span class="sd">        upper range border and set the other to &#39;&#39;auto&#39;&#39;, in which case the method</span>
+<span class="sd">        chooses the range automatically, but not the position. </span>
+<span class="sd">        (in [1]_ these are called the minimum and maximum intensities on the standard scale of the IOI s1 resp. s2)</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    **Details of the method:**</span>
+<span class="sd">    In the following the method is described in some more detail. For even more</span>
+<span class="sd">    information see [1]_.</span>
+<span class="sd">         </span>
+<span class="sd">    Essentially the method is based on a multi-segment linear transformation model. A</span>
+<span class="sd">    standard intensity space (or common intensity space) is defined by an intensity</span>
+<span class="sd">    value range &#39;&#39;stdrange&#39;&#39;.</span>
+<span class="sd">    During the training phase, the intensity values at certain cut-off percentiles of</span>
+<span class="sd">    each image are computed and a single-segment linear mapping from them to the</span>
+<span class="sd">    standard intensity space range limits created. Then the images intensity values</span>
+<span class="sd">    at a number of landmark percentiles are extracted and passed to the linear</span>
+<span class="sd">    mapping to be transfered roughly to the standard intensity space. The mean of all</span>
+<span class="sd">    these mapped landmark intensities form the model learned.</span>
+<span class="sd">      </span>
+<span class="sd">    When presented with an image to transform, these images intensity values are</span>
+<span class="sd">    extracted at the cut-off percentile as well as at the landmark percentile</span>
+<span class="sd">    positions. This results in a number of segments. Using these and the</span>
+<span class="sd">    corresponding standard intensity space range values and learned mean landmark</span>
+<span class="sd">    values, a multi-segment linear transformation model is created for the image.</span>
+<span class="sd">    This is then applied to the images intensity values to map them to the standard</span>
+<span class="sd">    intensity space.</span>
+<span class="sd">    </span>
+<span class="sd">    Outliers, i.e. the images intensity values that lie outside of the cut-off</span>
+<span class="sd">    percentiles, are treated separately. They are transformed like the first resp.</span>
+<span class="sd">    last segmented of the transformation model. Not that this means the transformed</span>
+<span class="sd">    images intensity values do not always lie inside the standard intensity space</span>
+<span class="sd">    range, but are fitted as best as possible inside.</span>
+<span class="sd">         </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cutoffp : (float, float)</span>
+<span class="sd">        Lower and upper cut-off percentiles to exclude outliers.</span>
+<span class="sd">    landmarkp : sequence of floats</span>
+<span class="sd">        List of percentiles serving as model landmarks, must lie</span>
+<span class="sd">        between the cutoffp values.</span>
+<span class="sd">    stdrange : string or (float, float)</span>
+<span class="sd">        The range of the standard intensity space for which a</span>
+<span class="sd">        transformation is learned; when set to &#39;auto, automatically</span>
+<span class="sd">        determined from the training image upon training; it is also</span>
+<span class="sd">        possible to fix either the upper or the lower border value and</span>
+<span class="sd">        setting the other to &#39;auto&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    We have a number of similar images with varying intensity ranges. To make them</span>
+<span class="sd">    comparable, we would like to transform them to a common intensity space. Thus we</span>
+<span class="sd">    run:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; from medpy.filter import IntensityRangeStandardization</span>
+<span class="sd">        &gt;&gt;&gt; irs = IntensityRangeStandardization()</span>
+<span class="sd">        &gt;&gt;&gt; trained_model, transformed_images = irs.train_transform(images)</span>
+<span class="sd">        </span>
+<span class="sd">    Let us assume we now obtain another, new image, that we would like to make</span>
+<span class="sd">    comparable to the others. As long as it does not differ to much from these, we</span>
+<span class="sd">    can simply call:</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; transformed_image = irs.transform(new_image)</span>
+<span class="sd">        </span>
+<span class="sd">    For many application, not all images are already available at the time of</span>
+<span class="sd">    execution. It would therefore be good to be able to preserve a once trained</span>
+<span class="sd">    model. The solution is to just pickle the once trained model:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; import pickle</span>
+<span class="sd">        &gt;&gt;&gt; with open(&#39;my_trained_model.pkl&#39;, &#39;wb&#39;) as f:</span>
+<span class="sd">        &gt;&gt;&gt;     pickle.dump(irs, f)</span>
+<span class="sd">            </span>
+<span class="sd">    And load it again when required with:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; with open(&#39;my_trained_model.pkl&#39;, &#39;r&#39;) as f:</span>
+<span class="sd">        &gt;&gt;&gt;     irs = pickle.load(f)</span>
+<span class="sd">        </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Nyul, L.G.; Udupa, J.K.; Xuan Zhang, &quot;New variants of a method of MRI scale</span>
+<span class="sd">       standardization,&quot; Medical Imaging, IEEE Transactions on , vol.19, no.2, pp.143-150,</span>
+<span class="sd">       Feb. 2000</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    
+    <span class="c1"># static member variables</span>
+    <span class="n">L2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;1-value landmark points model.&quot;&quot;&quot;</span>
+    <span class="n">L3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;3-value landmark points model.&quot;&quot;&quot;</span>
+    <span class="n">L4</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;9-value landmark points model.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="IntensityRangeStandardization.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cutoffp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">),</span> <span class="n">landmarkp</span> <span class="o">=</span> <span class="n">L4</span><span class="p">,</span> <span class="n">stdrange</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">):</span></div>
+        <span class="c1"># check parameters</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_sequence</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp must be a sequence&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp must be of length 2, not {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_numbers</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp elements must be numbers&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_in_interval</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp elements must be in [0, 100]&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cutoffp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">cutoffp</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;the second element of cutoffp must be larger than the first&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_sequence</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp must be a sequence&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp must be of length &gt;= 1, not {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_numbers</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp elements must be numbers&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_in_interval</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp elements must be in [0, 100]&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_in_interval</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">,</span> <span class="n">cutoffp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cutoffp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;excluded&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp elements must be in between the elements of cutoffp&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp elements must be unique&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="n">stdrange</span><span class="p">:</span>
+            <span class="n">stdrange</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_sequence</span><span class="p">(</span><span class="n">stdrange</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange must be a sequence or </span><span class="se">\&#39;</span><span class="s1">auto</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">stdrange</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange must be of length 2, not {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stdrange</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;auto&#39;</span> <span class="ow">in</span> <span class="n">stdrange</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_numbers</span><span class="p">(</span><span class="n">stdrange</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange elements must be numbers or </span><span class="se">\&#39;</span><span class="s1">auto</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;the second element of stdrange must be larger than the first&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="n">stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_number</span><span class="p">(</span><span class="n">stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange elements must be numbers or </span><span class="se">\&#39;</span><span class="s1">auto</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="n">stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_number</span><span class="p">(</span><span class="n">stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange elements must be numbers or </span><span class="se">\&#39;</span><span class="s1">auto</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+        
+        <span class="c1"># process parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__cutoffp</span> <span class="o">=</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">to_float</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__landmarkp</span> <span class="o">=</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">to_float</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span> <span class="k">if</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="n">x</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">stdrange</span><span class="p">]</span>
+            
+        <span class="c1"># initialize remaining instance parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__model</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umins</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umaxs</span> <span class="o">=</span> <span class="bp">None</span>
+        
+<div class="viewcode-block" id="IntensityRangeStandardization.train"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Train a standard intensity space and an associated transformation model.</span>
+<span class="sd">        </span>
+<span class="sd">        Note that the passed images should be masked to contain only the foreground.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        images : sequence of array_likes</span>
+<span class="sd">            A number of images.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        IntensityRangeStandardization : IntensityRangeStandardization</span>
+<span class="sd">            This instance of IntensityRangeStandardization</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__compute_stdrange</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+        
+        <span class="n">lim</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cutoffp</span><span class="p">))</span>
+            <span class="n">li</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__landmarkp</span><span class="p">))</span>
+            <span class="n">ipf</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">ci</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">)</span>
+            <span class="n">lim</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ipf</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
+
+            <span class="c1"># treat single intensity accumulation error            </span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ci</span><span class="p">,</span> <span class="n">li</span><span class="p">))))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">__model</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umins</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umaxs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+<div class="viewcode-block" id="IntensityRangeStandardization.transform"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.transform.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">surpress_mapping_check</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Transform an images intensity values to the learned standard intensity space.</span>
+<span class="sd">        </span>
+<span class="sd">        Note that the passed image should be masked to contain only the foreground.</span>
+<span class="sd">        </span>
+<span class="sd">        The transformation is guaranteed to be lossless i.e. a one-to-one mapping between</span>
+<span class="sd">        old and new intensity values exists. In cases where this does not hold, an error</span>
+<span class="sd">        is thrown. This can be suppressed by setting ``surpress_mapping_check`` to &#39;True&#39;.</span>
+<span class="sd">        Do this only if you know what you are doing.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image : array_like</span>
+<span class="sd">            The image to transform.</span>
+<span class="sd">        surpress_mapping_check : bool</span>
+<span class="sd">            Whether to ensure a lossless transformation or not.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        image : ndarray</span>
+<span class="sd">            The transformed image</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        -------</span>
+<span class="sd">        InformationLossException </span>
+<span class="sd">            If a lossless transformation can not be ensured</span>
+<span class="sd">        Exception</span>
+<span class="sd">            If no model has been trained before</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UntrainedException</span><span class="p">(</span><span class="s1">&#39;Model not trained. Call train() first.&#39;</span><span class="p">)</span>
+        
+        <span class="n">image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        
+        <span class="c1"># determine image intensity values at cut-off percentiles &amp; landmark percentiles</span>
+        <span class="n">li</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__cutoffp</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__landmarkp</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__cutoffp</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        
+        <span class="c1"># treat single intensity accumulation error            </span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">li</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;The image shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. The only other possibility would be to re-train the model with a reduced number of landmark percentiles landmarkp or a changed distribution.&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># create linear mapping models for the percentile segments to the learned standard intensity space  </span>
+        <span class="n">ipf</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">li</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">,</span> <span class="n">bounds_error</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+        
+        <span class="c1"># transform the input image intensity values</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">ipf</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        
+        <span class="c1"># treat image intensity values outside of the cut-off percentiles range separately</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">linear_model</span><span class="p">(</span><span class="n">li</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">rlm</span> <span class="o">=</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">linear_model</span><span class="p">(</span><span class="n">li</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+        
+        <span class="n">output</span><span class="p">[</span><span class="n">image</span> <span class="o">&lt;</span> <span class="n">li</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">llm</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">image</span> <span class="o">&lt;</span> <span class="n">li</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">image</span> <span class="o">&gt;</span> <span class="n">li</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rlm</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">image</span> <span class="o">&gt;</span> <span class="n">li</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">surpress_mapping_check</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_mapping</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InformationLossException</span><span class="p">(</span><span class="s1">&#39;Image can not be transformed to the learned standard intensity space without loss of information. Please re-train.&#39;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">output</span></div>
+    
+<div class="viewcode-block" id="IntensityRangeStandardization.train_transform"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform">[docs]</a>    <span class="k">def</span> <span class="nf">train_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">surpress_mapping_check</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        train, transform</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">surpress_mapping_check</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">images</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="n">outputs</span></div>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">stdrange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the set resp. learned standard intensity range.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cutoffp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the cut-off percentiles.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cutoffp</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">landmarkp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the landmark percentiles.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__landmarkp</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the model (the learned percentile values).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span>
+    
+    <span class="k">def</span> <span class="nf">__compute_stdrange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Computes a common standard intensity range over a number of images.</span>
+<span class="sd">        </span>
+<span class="sd">        Depending on the settings of the internal self.__stdrange variable,</span>
+<span class="sd">        either (1) the already fixed values are returned, (2) a complete standard</span>
+<span class="sd">        intensity range is computed from the supplied images, (3) an intensity range</span>
+<span class="sd">        fixed at the lower end or (4) an intensity range fixed at the upper end is</span>
+<span class="sd">        returned.</span>
+<span class="sd">        </span>
+<span class="sd">        Takes into account the maximum length of each percentile segment over all</span>
+<span class="sd">        images, then adds a security margin defined by the highest variability among</span>
+<span class="sd">        all segments over all images.</span>
+<span class="sd">        </span>
+<span class="sd">        Be</span>
+<span class="sd">        </span>
+<span class="sd">        .. math::</span>
+<span class="sd">        </span>
+<span class="sd">            L = (cop_l, lp_1, lp_2, ..., lp_n, cop_u)</span>
+<span class="sd">        </span>
+<span class="sd">        the set formed by the two cut-off percentiles :math:`cop_l` and :math:`cop_u` and the</span>
+<span class="sd">        landmark percentiles :math:`lp_1, ..., lp_n`. The corresponding intensity values of</span>
+<span class="sd">        an image :math:`i\in I` are then</span>
+<span class="sd">        </span>
+<span class="sd">        .. math::</span>
+<span class="sd">            </span>
+<span class="sd">            V_i = (v_{i,1}, v_{i,2}, ..., v_{i,n+2})</span>
+<span class="sd">        </span>
+<span class="sd">        The distance between each of these intensity values forms a segment along the</span>
+<span class="sd">        images :math:`i` intensity range denoted as</span>
+<span class="sd">        </span>
+<span class="sd">        ..math ::</span>
+<span class="sd">            </span>
+<span class="sd">            S_i = (s_{i,1}, s_{i,2}, ..., s_{i, n+1})</span>
+<span class="sd">        </span>
+<span class="sd">        The common standard intensity range :math:`sir` over the set of images :math:`I` is</span>
+<span class="sd">        then defined as</span>
+<span class="sd">        </span>
+<span class="sd">        ..math ::</span>
+<span class="sd">            sir = \sum_{l=1}^{n+1}\max_{i=1}^I s_{i,l} * \max_{l=1}^{n+1} \left(\frac{\max_{i=1}^I s_{i,l}}{\min_{i=1}^I s_{i,l}}\right)</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        images : sequence of array_like</span>
+<span class="sd">            A number of images.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        stdrange : (float, float)</span>
+<span class="sd">            The borders of the computed standard intensity range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;auto&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span>
+        
+        <span class="n">copl</span><span class="p">,</span> <span class="n">copu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cutoffp</span>
+        
+        <span class="c1"># collect cutoff + landmark percentile segments and image mean intensity values </span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+            <span class="n">li</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">[</span><span class="n">copl</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__landmarkp</span> <span class="o">+</span> <span class="p">[</span><span class="n">copu</span><span class="p">])</span>
+            
+            <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">li</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">li</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+            
+            <span class="c1"># treat single intensity accumulation error</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            
+        <span class="c1"># select the maximum and minimum of each percentile segment over all images</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># divide them pairwise</span>
+        <span class="n">divs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">maxs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">),</span> <span class="n">mins</span><span class="p">)</span> 
+        
+        <span class="c1"># compute interval range according to generalized theorem 2 of [1]</span>
+        <span class="n">intv</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">maxs</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">divs</span><span class="p">)</span>
+        
+        <span class="c1"># compute mean intensity value over all images (assuming equal size)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        
+        <span class="c1"># return interval with borders according to settings</span>
+        <span class="k">if</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">im</span> <span class="o">-</span> <span class="n">intv</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">im</span> <span class="o">+</span> <span class="n">intv</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">intv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">intv</span>
+        
+    <span class="k">def</span> <span class="nf">__check_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">landmarks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the image, from which the supplied landmarks were extracted, can</span>
+<span class="sd">        be transformed to the learned standard intensity space without loss of</span>
+<span class="sd">        information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sc_udiff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sc_umaxs</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sc_umins</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">l_diff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sc_udiff</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">l_diff</span><span class="p">))</span>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.is_sequence"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">is_sequence</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks via its hidden attribute whether the passed argument is a sequence (but</span>
+<span class="sd">        excluding strings).</span>
+<span class="sd">        </span>
+<span class="sd">        Credits to Steve R. Hastings a.k.a steveha @ http://stackoverflow.com</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;strip&quot;</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;__getitem__&quot;</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">))</span></div>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.is_number"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_number.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_number">[docs]</a>    <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the passed argument is a valid number or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">numbers</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">)</span></div>
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.are_numbers"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers">[docs]</a>    <span class="k">def</span> <span class="nf">are_numbers</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether all elements in a sequence are valid numbers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_number</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">])</span></div>
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.is_in_interval"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_in_interval.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_in_interval">[docs]</a>    <span class="k">def</span> <span class="nf">is_in_interval</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether a number is inside the interval l, r.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;included&#39;</span> <span class="o">==</span> <span class="n">border</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="n">l</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;excluded&#39;</span> <span class="o">==</span> <span class="n">border</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="n">l</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;borders must be either </span><span class="se">\&#39;</span><span class="s1">included</span><span class="se">\&#39;</span><span class="s1"> or </span><span class="se">\&#39;</span><span class="s1">excluded</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.are_in_interval"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_in_interval.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_in_interval">[docs]</a>    <span class="k">def</span> <span class="nf">are_in_interval</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether all number in the sequence s lie inside the interval formed by</span>
+<span class="sd">        l and r.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_in_interval</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span></div>
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.to_float"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.to_float.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.to_float">[docs]</a>    <span class="k">def</span> <span class="nf">to_float</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cast a sequences elements to float numbers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span></div>
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.linear_model"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.linear_model.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.linear_model">[docs]</a>    <span class="k">def</span> <span class="nf">linear_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a linear model transformation function fitted on the two supplied points.</span>
+<span class="sd">        y = m*x + b</span>
+<span class="sd">        Note: Assumes that slope &gt; 0, otherwise division through zero might occur.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">x1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">m</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span></div></div>
+    
+<span class="k">class</span> <span class="nc">SingleIntensityAccumulationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thrown when an image shows an unusual single-intensity peaks which would obstruct</span>
+<span class="sd">    both, training and transformation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<span class="k">class</span> <span class="nc">InformationLossException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thrown when a transformation can not be guaranteed to be lossless.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+    
+<span class="k">class</span> <span class="nc">UntrainedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thrown when a transformation is attempted before training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+medpy.graphcut.graph.Graph.get_nodes
+====================================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. automethod:: Graph.get_nodes

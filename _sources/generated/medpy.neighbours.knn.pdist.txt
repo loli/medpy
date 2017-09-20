@@ -1,0 +1,6 @@
+medpy.neighbours.knn.pdist
+==========================
+
+.. currentmodule:: medpy.neighbours.knn
+
+.. autofunction:: pdist

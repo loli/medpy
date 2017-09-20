@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.metric.binary &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.metric.binary</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.1</span>
+<span class="c1"># since 2014-03-13</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">_ni_support</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.morphology</span> <span class="kn">import</span> <span class="n">distance_transform_edt</span><span class="p">,</span> <span class="n">binary_erosion</span><span class="p">,</span>\
+    <span class="n">generate_binary_structure</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.measurements</span> <span class="kn">import</span> <span class="n">label</span><span class="p">,</span> <span class="n">find_objects</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="dc"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.dc.html#medpy.metric.binary.dc">[docs]</a><span class="k">def</span> <span class="nf">dc</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Dice coefficient</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the Dice coefficient (also known as Sorensen index) between the binary</span>
+<span class="sd">    objects in two images.</span>
+<span class="sd">    </span>
+<span class="sd">    The metric is defined as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        </span>
+<span class="sd">        DC=\frac{2|A\cap B|}{|A|+|B|}</span>
+<span class="sd">        </span>
+<span class="sd">    , where :math:`A` is the first and :math:`B` the second set of samples (here: binary objects).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dc : float</span>
+<span class="sd">        The Dice coefficient between the object(s) in ```result``` and the</span>
+<span class="sd">        object(s) in ```reference```. It ranges from 0 (no overlap) to 1 (perfect overlap).</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a real metric. The binary images can therefore be supplied in any order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    
+    <span class="n">intersection</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">&amp;</span> <span class="n">reference</span><span class="p">)</span>
+    
+    <span class="n">size_i1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="n">size_i2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">intersection</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">size_i1</span> <span class="o">+</span> <span class="n">size_i2</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="mf">0.0</span>
+    
+    <span class="k">return</span> <span class="n">dc</span></div>
+
+<div class="viewcode-block" id="jc"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.jc.html#medpy.metric.binary.jc">[docs]</a><span class="k">def</span> <span class="nf">jc</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Jaccard coefficient</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the Jaccard coefficient between the binary objects in two images.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result: array_like</span>
+<span class="sd">            Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">            into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference: array_like</span>
+<span class="sd">            Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">            into binary: background where 0, object everywhere else.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    jc: float</span>
+<span class="sd">        The Jaccard coefficient between the object(s) in `result` and the</span>
+<span class="sd">        object(s) in `reference`. It ranges from 0 (no overlap) to 1 (perfect overlap).</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a real metric. The binary images can therefore be supplied in any order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    
+    <span class="n">intersection</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">&amp;</span> <span class="n">reference</span><span class="p">)</span>
+    <span class="n">union</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">|</span> <span class="n">reference</span><span class="p">)</span>
+    
+    <span class="n">jc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">union</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">jc</span></div>
+
+<div class="viewcode-block" id="precision"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.precision.html#medpy.metric.binary.precision">[docs]</a><span class="k">def</span> <span class="nf">precision</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Precison.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    precision : float</span>
+<span class="sd">        The precision between two binary datasets, here mostly binary objects in images,</span>
+<span class="sd">        which is defined as the fraction of retrieved instances that are relevant. The</span>
+<span class="sd">        precision is not symmetric.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`recall`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Not symmetric. The inverse of the precision is :func:`recall`.</span>
+<span class="sd">    High precision means that an algorithm returned substantially more relevant results than irrelevant.</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] http://en.wikipedia.org/wiki/Precision_and_recall</span>
+<span class="sd">    .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+        
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">&amp;</span> <span class="n">reference</span><span class="p">)</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">reference</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">precision</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="n">precision</span> <span class="o">=</span> <span class="mf">0.0</span>
+    
+    <span class="k">return</span> <span class="n">precision</span></div>
+
+<div class="viewcode-block" id="recall"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.recall.html#medpy.metric.binary.recall">[docs]</a><span class="k">def</span> <span class="nf">recall</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recall.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    recall : float</span>
+<span class="sd">        The recall between two binary datasets, here mostly binary objects in images,</span>
+<span class="sd">        which is defined as the fraction of relevant instances that are retrieved. The</span>
+<span class="sd">        recall is not symmetric.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`precision`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Not symmetric. The inverse of the recall is :func:`precision`.</span>
+<span class="sd">    High recall means that an algorithm returned most of the relevant results.</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] http://en.wikipedia.org/wiki/Precision_and_recall</span>
+<span class="sd">    .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+        
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">&amp;</span> <span class="n">reference</span><span class="p">)</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">result</span> <span class="o">&amp;</span> <span class="n">reference</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">recall</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="n">recall</span> <span class="o">=</span> <span class="mf">0.0</span>
+    
+    <span class="k">return</span> <span class="n">recall</span></div>
+
+<div class="viewcode-block" id="sensitivity"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.sensitivity.html#medpy.metric.binary.sensitivity">[docs]</a><span class="k">def</span> <span class="nf">sensitivity</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sensitivity.</span>
+<span class="sd">    Same as :func:`recall`, see there for a detailed description.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`specificity` </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">recall</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="specificity"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.specificity.html#medpy.metric.binary.specificity">[docs]</a><span class="k">def</span> <span class="nf">specificity</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Specificity.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    specificity : float</span>
+<span class="sd">        The specificity between two binary datasets, here mostly binary objects in images,</span>
+<span class="sd">        which denotes the fraction of correctly returned negatives. The</span>
+<span class="sd">        specificity is not symmetric.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`sensitivity`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Not symmetric. The completment of the specificity is :func:`sensitivity`.</span>
+<span class="sd">    High recall means that an algorithm returned most of the irrelevant results.</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] https://en.wikipedia.org/wiki/Sensitivity_and_specificity</span>
+<span class="sd">    .. [2] http://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+       
+    <span class="n">tn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">result</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">reference</span><span class="p">)</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">reference</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">specificity</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="n">specificity</span> <span class="o">=</span> <span class="mf">0.0</span>
+    
+    <span class="k">return</span> <span class="n">specificity</span></div>
+
+<div class="viewcode-block" id="true_negative_rate"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.true_negative_rate.html#medpy.metric.binary.true_negative_rate">[docs]</a><span class="k">def</span> <span class="nf">true_negative_rate</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    True negative rate.</span>
+<span class="sd">    Same as :func:`sensitivity`, see there for a detailed description.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`true_positive_rate` </span>
+<span class="sd">    :func:`positive_predictive_value`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sensitivity</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="true_positive_rate"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.true_positive_rate.html#medpy.metric.binary.true_positive_rate">[docs]</a><span class="k">def</span> <span class="nf">true_positive_rate</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    True positive rate.</span>
+<span class="sd">    Same as :func:`recall`, see there for a detailed description.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`positive_predictive_value` </span>
+<span class="sd">    :func:`true_negative_rate`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">recall</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="positive_predictive_value"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.positive_predictive_value.html#medpy.metric.binary.positive_predictive_value">[docs]</a><span class="k">def</span> <span class="nf">positive_predictive_value</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Positive predictive value.</span>
+<span class="sd">    Same as :func:`precision`, see there for a detailed description.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`true_positive_rate`</span>
+<span class="sd">    :func:`true_negative_rate`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">precision</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="hd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.hd.html#medpy.metric.binary.hd">[docs]</a><span class="k">def</span> <span class="nf">hd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hausdorff Distance.</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the (symmetric) Hausdorff Distance (HD) between the binary objects in two</span>
+<span class="sd">    images. It is defined as the maximum surface distance between the objects.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    voxelspacing : float or sequence of floats, optional</span>
+<span class="sd">        The voxelspacing in a distance unit i.e. spacing of elements</span>
+<span class="sd">        along each dimension. If a sequence, must be of length equal to</span>
+<span class="sd">        the input rank; if a single number, this is used for all axes. If</span>
+<span class="sd">        not specified, a grid spacing of unity is implied.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining the surface</span>
+<span class="sd">        of the binary objects. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        Note that the connectivity influences the result in the case of the Hausdorff distance.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hd : float</span>
+<span class="sd">        The symmetric Hausdorff Distance between the object(s) in ```result``` and the</span>
+<span class="sd">        object(s) in ```reference```. The distance unit is the same as for the spacing of </span>
+<span class="sd">        elements along each dimension, which is usually given in mm.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`assd`</span>
+<span class="sd">    :func:`asd`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a real metric. The binary images can therefore be supplied in any order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hd1</span> <span class="o">=</span> <span class="n">__surface_distances</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">hd2</span> <span class="o">=</span> <span class="n">__surface_distances</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">hd</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">hd1</span><span class="p">,</span> <span class="n">hd2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hd</span></div>
+
+<div class="viewcode-block" id="assd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.assd.html#medpy.metric.binary.assd">[docs]</a><span class="k">def</span> <span class="nf">assd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average symmetric surface distance.</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the average symmetric surface distance (ASD) between the binary objects in</span>
+<span class="sd">    two images.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    voxelspacing : float or sequence of floats, optional</span>
+<span class="sd">        The voxelspacing in a distance unit i.e. spacing of elements</span>
+<span class="sd">        along each dimension. If a sequence, must be of length equal to</span>
+<span class="sd">        the input rank; if a single number, this is used for all axes. If</span>
+<span class="sd">        not specified, a grid spacing of unity is implied.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining the surface</span>
+<span class="sd">        of the binary objects. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        The decision on the connectivity is important, as it can influence the results</span>
+<span class="sd">        strongly. If in doubt, leave it as it is.         </span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    assd : float</span>
+<span class="sd">        The average symmetric surface distance between the object(s) in ``result`` and the</span>
+<span class="sd">        object(s) in ``reference``. The distance unit is the same as for the spacing of </span>
+<span class="sd">        elements along each dimension, which is usually given in mm.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`asd`</span>
+<span class="sd">    :func:`hd`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a real metric, obtained by calling and averaging</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; asd(result, reference)</span>
+<span class="sd">    </span>
+<span class="sd">    and</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; asd(reference, result)</span>
+<span class="sd">    </span>
+<span class="sd">    The binary images can therefore be supplied in any order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">assd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span> <span class="p">(</span><span class="n">asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">),</span> <span class="n">asd</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">))</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">assd</span></div>
+
+<div class="viewcode-block" id="asd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.asd.html#medpy.metric.binary.asd">[docs]</a><span class="k">def</span> <span class="nf">asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average surface distance metric.</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the average surface distance (ASD) between the binary objects in two images.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    voxelspacing : float or sequence of floats, optional</span>
+<span class="sd">        The voxelspacing in a distance unit i.e. spacing of elements</span>
+<span class="sd">        along each dimension. If a sequence, must be of length equal to</span>
+<span class="sd">        the input rank; if a single number, this is used for all axes. If</span>
+<span class="sd">        not specified, a grid spacing of unity is implied.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining the surface</span>
+<span class="sd">        of the binary objects. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        The decision on the connectivity is important, as it can influence the results</span>
+<span class="sd">        strongly. If in doubt, leave it as it is.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    asd : float</span>
+<span class="sd">        The average surface distance between the object(s) in ``result`` and the</span>
+<span class="sd">        object(s) in ``reference``. The distance unit is the same as for the spacing</span>
+<span class="sd">        of elements along each dimension, which is usually given in mm.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`assd`</span>
+<span class="sd">    :func:`hd`</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is not a real metric, as it is directed. See `assd` for a real metric of this.</span>
+<span class="sd">    </span>
+<span class="sd">    The method is implemented making use of distance images and simple binary morphology</span>
+<span class="sd">    to achieve high computational speed.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The `connectivity` determines what pixels/voxels are considered the surface of a</span>
+<span class="sd">    binary object. Take the following binary image showing a cross</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; from scipy.ndimage.morphology import generate_binary_structure</span>
+<span class="sd">    &gt;&gt;&gt; cross = generate_binary_structure(2, 1)</span>
+<span class="sd">    array([[0, 1, 0],</span>
+<span class="sd">           [1, 1, 1],</span>
+<span class="sd">           [0, 1, 0]])</span>
+<span class="sd">           </span>
+<span class="sd">    With `connectivity` set to `1` a 4-neighbourhood is considered when determining the</span>
+<span class="sd">    object surface, resulting in the surface</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    </span>
+<span class="sd">        array([[0, 1, 0],</span>
+<span class="sd">               [1, 0, 1],</span>
+<span class="sd">               [0, 1, 0]])</span>
+<span class="sd">           </span>
+<span class="sd">    Changing `connectivity` to `2`, a 8-neighbourhood is considered and we get:</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    </span>
+<span class="sd">        array([[0, 1, 0],</span>
+<span class="sd">               [1, 1, 1],</span>
+<span class="sd">               [0, 1, 0]])</span>
+<span class="sd">           </span>
+<span class="sd">    , as a diagonal connection does no longer qualifies as valid object surface.</span>
+<span class="sd">    </span>
+<span class="sd">    This influences the  results `asd` returns. Imagine we want to compute the surface</span>
+<span class="sd">    distance of our cross to a cube-like object:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; cube = generate_binary_structure(2, 1)</span>
+<span class="sd">    array([[1, 1, 1],</span>
+<span class="sd">           [1, 1, 1],</span>
+<span class="sd">           [1, 1, 1]])</span>
+<span class="sd">           </span>
+<span class="sd">    , which surface is, independent of the `connectivity` value set, always</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    </span>
+<span class="sd">        array([[1, 1, 1],</span>
+<span class="sd">               [1, 0, 1],</span>
+<span class="sd">               [1, 1, 1]])</span>
+<span class="sd">           </span>
+<span class="sd">    Using a `connectivity` of `1` we get</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; asd(cross, cube, connectivity=1)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    </span>
+<span class="sd">    while a value of `2` returns us</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; asd(cross, cube, connectivity=2)</span>
+<span class="sd">    0.20000000000000001</span>
+<span class="sd">    </span>
+<span class="sd">    due to the center of the cross being considered surface as well.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sds</span> <span class="o">=</span> <span class="n">__surface_distances</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    <span class="n">asd</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">asd</span></div>
+
+<div class="viewcode-block" id="ravd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.ravd.html#medpy.metric.binary.ravd">[docs]</a><span class="k">def</span> <span class="nf">ravd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Relative absolute volume difference.</span>
+<span class="sd">    </span>
+<span class="sd">    Compute the relative absolute volume difference between the (joined) binary objects</span>
+<span class="sd">    in the two images.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ravd : float</span>
+<span class="sd">        The relative absolute volume difference between the object(s) in ``result``</span>
+<span class="sd">        and the object(s) in ``reference``. This is a percentage value in the range</span>
+<span class="sd">        :math:`[-1.0, +inf]` for which a :math:`0` denotes an ideal score.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If the reference object is empty.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`dc`</span>
+<span class="sd">    :func:`precision`</span>
+<span class="sd">    :func:`recall`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is not a real metric, as it is directed. Negative values denote a smaller</span>
+<span class="sd">    and positive values a larger volume than the reference.</span>
+<span class="sd">    This implementation does not check, whether the two supplied arrays are of the same</span>
+<span class="sd">    size.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Considering the following inputs</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import numpy</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[0,1,0],[1,1,1],[0,1,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[0, 1, 0],</span>
+<span class="sd">           [1, 1, 1],</span>
+<span class="sd">           [0, 1, 0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[0,1,0],[1,0,1],[0,1,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[0, 1, 0],</span>
+<span class="sd">           [1, 0, 1],</span>
+<span class="sd">           [0, 1, 0]])</span>
+<span class="sd">           </span>
+<span class="sd">    comparing `arr1` to `arr2` we get</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; ravd(arr1, arr2)</span>
+<span class="sd">    -0.2</span>
+<span class="sd">    </span>
+<span class="sd">    and reversing the inputs the directivness of the metric becomes evident</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; ravd(arr2, arr1)</span>
+<span class="sd">    0.25</span>
+<span class="sd">    </span>
+<span class="sd">    It is important to keep in mind that a perfect score of `0` does not mean that the</span>
+<span class="sd">    binary objects fit exactely, as only the volumes are compared:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,0,0])</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([0,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; ravd(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+        
+    <span class="n">vol1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="n">vol2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">vol2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The second supplied array does not contain any binary object.&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">vol1</span> <span class="o">-</span> <span class="n">vol2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">vol2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="volume_correlation"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.volume_correlation.html#medpy.metric.binary.volume_correlation">[docs]</a><span class="k">def</span> <span class="nf">volume_correlation</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Volume correlation.</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the linear correlation in binary object volume between the</span>
+<span class="sd">    contents of the successive binary images supplied. Measured through</span>
+<span class="sd">    the Pearson product-moment correlation coefficient. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    results : sequence of array_like</span>
+<span class="sd">        Ordered list of input data containing objects. Each array_like will be</span>
+<span class="sd">        converted into binary: background where 0, object everywhere else.</span>
+<span class="sd">    references : sequence of array_like</span>
+<span class="sd">        Ordered list of input data containing objects. Each array_like will be</span>
+<span class="sd">        converted into binary: background where 0, object everywhere else.</span>
+<span class="sd">        The order must be the same as for ``results``.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r : float</span>
+<span class="sd">        The correlation coefficient between -1 and 1.</span>
+<span class="sd">    p : float</span>
+<span class="sd">        The two-side p value.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">references</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">references</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    
+    <span class="n">results_volumes</span> <span class="o">=</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+    <span class="n">references_volumes</span> <span class="o">=</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">references</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">results_volumes</span><span class="p">,</span> <span class="n">references_volumes</span><span class="p">)</span> <span class="c1"># returns (Pearson&#39;</span></div>
+
+<div class="viewcode-block" id="volume_change_correlation"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.volume_change_correlation.html#medpy.metric.binary.volume_change_correlation">[docs]</a><span class="k">def</span> <span class="nf">volume_change_correlation</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Volume change correlation.</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the linear correlation of change in binary object volume between</span>
+<span class="sd">    the contents of the successive binary images supplied. Measured through</span>
+<span class="sd">    the Pearson product-moment correlation coefficient. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    results : sequence of array_like</span>
+<span class="sd">        Ordered list of input data containing objects. Each array_like will be</span>
+<span class="sd">        converted into binary: background where 0, object everywhere else.</span>
+<span class="sd">    references : sequence of array_like</span>
+<span class="sd">        Ordered list of input data containing objects. Each array_like will be</span>
+<span class="sd">        converted into binary: background where 0, object everywhere else.</span>
+<span class="sd">        The order must be the same as for ``results``.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r : float</span>
+<span class="sd">        The correlation coefficient between -1 and 1.</span>
+<span class="sd">    p : float</span>
+<span class="sd">        The two-side p value.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">references</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">references</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    
+    <span class="n">results_volumes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+    <span class="n">references_volumes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">references</span><span class="p">])</span>
+    
+    <span class="n">results_volumes_changes</span> <span class="o">=</span> <span class="n">results_volumes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">results_volumes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">references_volumes_changes</span> <span class="o">=</span> <span class="n">references_volumes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">references_volumes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+    
+    <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">results_volumes_changes</span><span class="p">,</span> <span class="n">references_volumes_changes</span><span class="p">)</span> <span class="c1"># returns (Pearson&#39;s correlation coefficient, 2-tailed p-value)</span></div>
+    
+<div class="viewcode-block" id="obj_assd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_assd.html#medpy.metric.binary.obj_assd">[docs]</a><span class="k">def</span> <span class="nf">obj_assd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average symmetric surface distance.</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the average symmetric surface distance (ASSD) between the binary objects in</span>
+<span class="sd">    two images.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    voxelspacing : float or sequence of floats, optional</span>
+<span class="sd">        The voxelspacing in a distance unit i.e. spacing of elements</span>
+<span class="sd">        along each dimension. If a sequence, must be of length equal to</span>
+<span class="sd">        the input rank; if a single number, this is used for all axes. If</span>
+<span class="sd">        not specified, a grid spacing of unity is implied.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining what accounts</span>
+<span class="sd">        for a distinct binary object as well as when determining the surface</span>
+<span class="sd">        of the binary objects. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        The decision on the connectivity is important, as it can influence the results</span>
+<span class="sd">        strongly. If in doubt, leave it as it is.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    assd : float</span>
+<span class="sd">        The average symmetric surface distance between all mutually existing distinct</span>
+<span class="sd">        binary object(s) in ``result`` and ``reference``. The distance unit is the same as for</span>
+<span class="sd">        the spacing of elements along each dimension, which is usually given in mm.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`obj_asd`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a real metric, obtained by calling and averaging</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(result, reference)</span>
+<span class="sd">    </span>
+<span class="sd">    and</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(reference, result)</span>
+<span class="sd">    </span>
+<span class="sd">    The binary images can therefore be supplied in any order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">assd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span> <span class="p">(</span><span class="n">obj_asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">),</span> <span class="n">obj_asd</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">))</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">assd</span></div>
+    
+    
+<div class="viewcode-block" id="obj_asd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_asd.html#medpy.metric.binary.obj_asd">[docs]</a><span class="k">def</span> <span class="nf">obj_asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average surface distance between objects.</span>
+<span class="sd">    </span>
+<span class="sd">    First correspondences between distinct binary objects in reference and result are</span>
+<span class="sd">    established. Then the average surface distance is only computed between corresponding</span>
+<span class="sd">    objects. Correspondence is defined as unique and at least one voxel overlap.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    voxelspacing : float or sequence of floats, optional</span>
+<span class="sd">        The voxelspacing in a distance unit i.e. spacing of elements</span>
+<span class="sd">        along each dimension. If a sequence, must be of length equal to</span>
+<span class="sd">        the input rank; if a single number, this is used for all axes. If</span>
+<span class="sd">        not specified, a grid spacing of unity is implied.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining what accounts</span>
+<span class="sd">        for a distinct binary object as well as when determining the surface</span>
+<span class="sd">        of the binary objects. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        The decision on the connectivity is important, as it can influence the results</span>
+<span class="sd">        strongly. If in doubt, leave it as it is.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    asd : float</span>
+<span class="sd">        The average surface distance between all mutually existing distinct binary</span>
+<span class="sd">        object(s) in ``result`` and ``reference``. The distance unit is the same as for the</span>
+<span class="sd">        spacing of elements along each dimension, which is usually given in mm.</span>
+<span class="sd">        </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`obj_assd`</span>
+<span class="sd">    :func:`obj_tpr`</span>
+<span class="sd">    :func:`obj_fpr`</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is not a real metric, as it is directed. See `obj_assd` for a real metric of this.</span>
+<span class="sd">    </span>
+<span class="sd">    For the understanding of this metric, both the notions of connectedness and surface</span>
+<span class="sd">    distance are essential. Please see :func:`obj_tpr` and :func:`obj_fpr` for more</span>
+<span class="sd">    information on the first and :func:`asd` on the second.</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[1,1,1],[1,1,1],[1,1,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[0,1,0],[0,1,0],[0,1,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[1, 1, 1],</span>
+<span class="sd">           [1, 1, 1],</span>
+<span class="sd">           [1, 1, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[0, 1, 0],</span>
+<span class="sd">           [0, 1, 0],</span>
+<span class="sd">           [0, 1, 0]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr1, arr2)</span>
+<span class="sd">    1.5</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr2, arr1)</span>
+<span class="sd">    0.333333333333</span>
+<span class="sd">    </span>
+<span class="sd">    With the `voxelspacing` parameter, the distances between the voxels can be set for</span>
+<span class="sd">    each dimension separately:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr1, arr2, voxelspacing=(1,2))</span>
+<span class="sd">    1.5</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr2, arr1, voxelspacing=(1,2))</span>
+<span class="sd">    0.333333333333    </span>
+<span class="sd">    </span>
+<span class="sd">    More examples depicting the notion of object connectedness:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[1,0,1],[1,0,0],[0,0,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,1],[1,0,0],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[1, 0, 1],</span>
+<span class="sd">           [1, 0, 0],</span>
+<span class="sd">           [0, 0, 0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[1, 0, 1],</span>
+<span class="sd">           [1, 0, 0],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr2, arr1)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[1,0,1],[1,0,1],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,1],[1,0,0],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[1, 0, 1],</span>
+<span class="sd">           [1, 0, 1],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[1, 0, 1],</span>
+<span class="sd">           [1, 0, 0],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr1, arr2)</span>
+<span class="sd">    0.6</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr2, arr1)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    </span>
+<span class="sd">    Influence of `connectivity` parameter can be seen in the following example, where</span>
+<span class="sd">    with the (default) connectivity of `1` the first array is considered to contain two</span>
+<span class="sd">    objects, while with an increase connectivity of `2`, just one large object is</span>
+<span class="sd">    detected.  </span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[1,0,0],[0,1,1],[0,1,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,0],[0,0,0],[0,0,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[1, 0, 0],</span>
+<span class="sd">           [0, 1, 1],</span>
+<span class="sd">           [0, 1, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[1, 0, 0],</span>
+<span class="sd">           [0, 0, 0],</span>
+<span class="sd">           [0, 0, 0]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_asd(arr1, arr2, connectivity=2)</span>
+<span class="sd">    1.742955328</span>
+<span class="sd">    </span>
+<span class="sd">    Note that the connectivity also influence the notion of what is considered an object</span>
+<span class="sd">    surface voxels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">labelmap1</span><span class="p">,</span> <span class="n">labelmap2</span><span class="p">,</span> <span class="n">_a</span><span class="p">,</span> <span class="n">_b</span><span class="p">,</span> <span class="n">mapping</span> <span class="o">=</span> <span class="n">__distinct_binary_object_correspondences</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    <span class="n">slicers1</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">labelmap1</span><span class="p">)</span>
+    <span class="n">slicers2</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">labelmap2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">lid2</span><span class="p">,</span> <span class="n">lid1</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">__combine_windows</span><span class="p">(</span><span class="n">slicers1</span><span class="p">[</span><span class="n">lid1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">slicers2</span><span class="p">[</span><span class="n">lid2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">object1</span> <span class="o">=</span> <span class="n">labelmap1</span><span class="p">[</span><span class="n">window</span><span class="p">]</span> <span class="o">==</span> <span class="n">lid1</span>
+        <span class="n">object2</span> <span class="o">=</span> <span class="n">labelmap2</span><span class="p">[</span><span class="n">window</span><span class="p">]</span> <span class="o">==</span> <span class="n">lid2</span>
+        <span class="n">sds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">__surface_distances</span><span class="p">(</span><span class="n">object1</span><span class="p">,</span> <span class="n">object2</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">))</span>
+    <span class="n">asd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sds</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">asd</span></div>
+    
+<div class="viewcode-block" id="obj_fpr"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_fpr.html#medpy.metric.binary.obj_fpr">[docs]</a><span class="k">def</span> <span class="nf">obj_fpr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The false positive rate of distinct binary object detection.</span>
+<span class="sd">    </span>
+<span class="sd">    The false positive rates gives a percentage measure of how many distinct binary</span>
+<span class="sd">    objects in the second array do not exists in the first array. A partial overlap</span>
+<span class="sd">    (of minimum one voxel) is here considered sufficient.</span>
+<span class="sd">    </span>
+<span class="sd">    In cases where two distinct binary object in the second array overlap with a single</span>
+<span class="sd">    distinct object in the first array, only one is considered to have been detected</span>
+<span class="sd">    successfully and the other is added to the count of false positives.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining what accounts</span>
+<span class="sd">        for a distinct binary object. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        The decision on the connectivity is important, as it can influence the results</span>
+<span class="sd">        strongly. If in doubt, leave it as it is.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tpr : float</span>
+<span class="sd">        A percentage measure of how many distinct binary objects in ``results`` have no</span>
+<span class="sd">        corresponding binary object in ``reference``. It has the range :math:`[0, 1]`, where a :math:`0`</span>
+<span class="sd">        denotes an ideal score.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If the second array is empty.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`obj_tpr`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is not a real metric, as it is directed. Whatever array is considered as</span>
+<span class="sd">    reference should be passed second. A perfect score of :math:`0` tells that there are no</span>
+<span class="sd">    distinct binary objects in the second array that do not exists also in the reference</span>
+<span class="sd">    array, but does not reveal anything about objects in the reference array also</span>
+<span class="sd">    existing in the second array (use :func:`obj_tpr` for this).</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,0],[1,0,1],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[0,0,1],[1,0,1],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[1, 0, 0],</span>
+<span class="sd">           [1, 0, 1],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[0, 0, 1],</span>
+<span class="sd">           [1, 0, 1],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr2, arr1)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    </span>
+<span class="sd">    Example of directedness:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([1,0,1,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,0,1,0,0])</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr2, arr1)</span>
+<span class="sd">    0.3333333333333333</span>
+<span class="sd">    </span>
+<span class="sd">    Examples of multiple overlap treatment:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([1,0,1,0,1,1,1])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,1,1,0,1,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr1, arr2)</span>
+<span class="sd">    0.3333333333333333</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr2, arr1)</span>
+<span class="sd">    0.3333333333333333</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([1,0,1,1,1,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,1,1,0,1,1,1])</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr2, arr1)</span>
+<span class="sd">    0.3333333333333333</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,1,0,0],</span>
+<span class="sd">                              [1,0,0,0,0],</span>
+<span class="sd">                              [1,0,1,1,1],</span>
+<span class="sd">                              [0,0,0,0,0],</span>
+<span class="sd">                              [1,0,1,0,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[1,1,1,0,0],</span>
+<span class="sd">                              [0,0,0,0,0],</span>
+<span class="sd">                              [1,1,1,0,1],</span>
+<span class="sd">                              [0,0,0,0,0],</span>
+<span class="sd">                              [1,1,1,0,0]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr1, arr2)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_fpr(arr2, arr1)</span>
+<span class="sd">    0.2    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">n_obj_reference</span><span class="p">,</span> <span class="n">mapping</span> <span class="o">=</span> <span class="n">__distinct_binary_object_correspondences</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">n_obj_reference</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_obj_reference</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="obj_tpr"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_tpr.html#medpy.metric.binary.obj_tpr">[docs]</a><span class="k">def</span> <span class="nf">obj_tpr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The true positive rate of distinct binary object detection.</span>
+<span class="sd">    </span>
+<span class="sd">    The true positive rates gives a percentage measure of how many distinct binary</span>
+<span class="sd">    objects in the first array also exists in the second array. A partial overlap</span>
+<span class="sd">    (of minimum one voxel) is here considered sufficient.</span>
+<span class="sd">    </span>
+<span class="sd">    In cases where two distinct binary object in the first array overlaps with a single</span>
+<span class="sd">    distinct object in the second array, only one is considered to have been detected</span>
+<span class="sd">    successfully.  </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining what accounts</span>
+<span class="sd">        for a distinct binary object. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        The decision on the connectivity is important, as it can influence the results</span>
+<span class="sd">        strongly. If in doubt, leave it as it is.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tpr : float</span>
+<span class="sd">        A percentage measure of how many distinct binary objects in ``result`` also exists</span>
+<span class="sd">        in ``reference``. It has the range :math:`[0, 1]`, where a :math:`1` denotes an ideal score.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If the reference object is empty.</span>
+<span class="sd">    </span>
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`obj_fpr`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is not a real metric, as it is directed. Whatever array is considered as</span>
+<span class="sd">    reference should be passed second. A perfect score of :math:`1` tells that all distinct</span>
+<span class="sd">    binary objects in the reference array also exist in the result array, but does not</span>
+<span class="sd">    reveal anything about additional binary objects in the result array</span>
+<span class="sd">    (use :func:`obj_fpr` for this).</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,0],[1,0,1],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[0,0,1],[1,0,1],[0,0,1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr2</span>
+<span class="sd">    array([[1, 0, 0],</span>
+<span class="sd">           [1, 0, 1],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1</span>
+<span class="sd">    array([[0, 0, 1],</span>
+<span class="sd">           [1, 0, 1],</span>
+<span class="sd">           [0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr1, arr2)</span>
+<span class="sd">    1.0</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr2, arr1)</span>
+<span class="sd">    1.0</span>
+<span class="sd">    </span>
+<span class="sd">    Example of directedness:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([1,0,1,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,0,1,0,0])</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr1, arr2)</span>
+<span class="sd">    0.6666666666666666</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr2, arr1)</span>
+<span class="sd">    1.0</span>
+<span class="sd">    </span>
+<span class="sd">    Examples of multiple overlap treatment:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([1,0,1,0,1,1,1])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,1,1,0,1,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr1, arr2)</span>
+<span class="sd">    0.6666666666666666</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr2, arr1)</span>
+<span class="sd">    0.6666666666666666</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([1,0,1,1,1,0,1])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([1,1,1,0,1,1,1])</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr1, arr2)</span>
+<span class="sd">    0.6666666666666666</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr2, arr1)</span>
+<span class="sd">    1.0</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; arr2 = numpy.asarray([[1,0,1,0,0],</span>
+<span class="sd">                              [1,0,0,0,0],</span>
+<span class="sd">                              [1,0,1,1,1],</span>
+<span class="sd">                              [0,0,0,0,0],</span>
+<span class="sd">                              [1,0,1,0,0]])</span>
+<span class="sd">    &gt;&gt;&gt; arr1 = numpy.asarray([[1,1,1,0,0],</span>
+<span class="sd">                              [0,0,0,0,0],</span>
+<span class="sd">                              [1,1,1,0,1],</span>
+<span class="sd">                              [0,0,0,0,0],</span>
+<span class="sd">                              [1,1,1,0,0]])</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr1, arr2)</span>
+<span class="sd">    0.8</span>
+<span class="sd">    &gt;&gt;&gt; obj_tpr(arr2, arr1)</span>
+<span class="sd">    1.0    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">n_obj_result</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">mapping</span> <span class="o">=</span> <span class="n">__distinct_binary_object_correspondences</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_obj_result</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">__distinct_binary_object_correspondences</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines all distinct (where connectivity is defined by the connectivity parameter</span>
+<span class="sd">    passed to scipy&#39;s `generate_binary_structure`) binary objects in both of the input</span>
+<span class="sd">    parameters and returns a 1to1 mapping from the labelled objects in reference to the</span>
+<span class="sd">    corresponding (whereas a one-voxel overlap suffices for correspondence) objects in</span>
+<span class="sd">    result.</span>
+<span class="sd">    </span>
+<span class="sd">    All stems from the problem, that the relationship is non-surjective many-to-many.</span>
+<span class="sd">    </span>
+<span class="sd">    @return (labelmap1, labelmap2, n_lables1, n_labels2, labelmapping2to1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    
+    <span class="c1"># binary structure</span>
+    <span class="n">footprint</span> <span class="o">=</span> <span class="n">generate_binary_structure</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    
+    <span class="c1"># label distinct binary objects</span>
+    <span class="n">labelmap1</span><span class="p">,</span> <span class="n">n_obj_result</span> <span class="o">=</span> <span class="n">label</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">footprint</span><span class="p">)</span>
+    <span class="n">labelmap2</span><span class="p">,</span> <span class="n">n_obj_reference</span> <span class="o">=</span> <span class="n">label</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">footprint</span><span class="p">)</span>
+    
+    <span class="c1"># find all overlaps from labelmap2 to labelmap1; collect one-to-one relationships and store all one-two-many for later processing</span>
+    <span class="n">slicers</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">labelmap2</span><span class="p">)</span> <span class="c1"># get windows of labelled objects</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="c1"># mappings from labels in labelmap2 to corresponding object labels in labelmap1</span>
+    <span class="n">used_labels</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># set to collect all already used labels from labelmap2</span>
+    <span class="n">one_to_many</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span> <span class="c1"># list to collect all one-to-many mappings</span>
+    <span class="k">for</span> <span class="n">l1id</span><span class="p">,</span> <span class="n">slicer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">slicers</span><span class="p">):</span> <span class="c1"># iterate over object in labelmap2 and their windows</span>
+        <span class="n">l1id</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># labelled objects have ids sarting from 1</span>
+        <span class="n">bobj</span> <span class="o">=</span> <span class="p">(</span><span class="n">l1id</span><span class="p">)</span> <span class="o">==</span> <span class="n">labelmap2</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span> <span class="c1"># find binary object corresponding to the label1 id in the segmentation</span>
+        <span class="n">l2ids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labelmap1</span><span class="p">[</span><span class="n">slicer</span><span class="p">][</span><span class="n">bobj</span><span class="p">])</span> <span class="c1"># extract all unique object identifiers at the corresponding positions in the reference (i.e. the mapping)</span>
+        <span class="n">l2ids</span> <span class="o">=</span> <span class="n">l2ids</span><span class="p">[</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">l2ids</span><span class="p">]</span> <span class="c1"># remove background identifiers (=0)</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">l2ids</span><span class="p">):</span> <span class="c1"># one-to-one mapping: if target label not already used, add to final list of object-to-object mappings and mark target label as used</span>
+            <span class="n">l2id</span> <span class="o">=</span> <span class="n">l2ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">l2id</span> <span class="ow">in</span> <span class="n">used_labels</span><span class="p">:</span>
+                <span class="n">mapping</span><span class="p">[</span><span class="n">l1id</span><span class="p">]</span> <span class="o">=</span> <span class="n">l2id</span>
+                <span class="n">used_labels</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l2id</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">l2ids</span><span class="p">):</span> <span class="c1"># one-to-many mapping: store relationship for later processing</span>
+            <span class="n">one_to_many</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l1id</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">l2ids</span><span class="p">)))</span>
+            
+    <span class="c1"># process one-to-many mappings, always choosing the one with the least labelmap2 correspondences first</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">one_to_many</span> <span class="o">=</span> <span class="p">[(</span><span class="n">l1id</span><span class="p">,</span> <span class="n">l2ids</span> <span class="o">-</span> <span class="n">used_labels</span><span class="p">)</span> <span class="k">for</span> <span class="n">l1id</span><span class="p">,</span> <span class="n">l2ids</span> <span class="ow">in</span> <span class="n">one_to_many</span><span class="p">]</span> <span class="c1"># remove already used ids from all sets</span>
+        <span class="n">one_to_many</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">one_to_many</span><span class="p">)</span> <span class="c1"># remove empty sets</span>
+        <span class="n">one_to_many</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">one_to_many</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="c1"># sort by set length</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">one_to_many</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="n">l2id</span> <span class="o">=</span> <span class="n">one_to_many</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="c1"># select an arbitrary target label id from the shortest set</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">one_to_many</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">l2id</span> <span class="c1"># add to one-to-one mappings </span>
+        <span class="n">used_labels</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l2id</span><span class="p">)</span> <span class="c1"># mark target label as used</span>
+        <span class="n">one_to_many</span> <span class="o">=</span> <span class="n">one_to_many</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1"># delete the processed set from all sets</span>
+    
+    <span class="k">return</span> <span class="n">labelmap1</span><span class="p">,</span> <span class="n">labelmap2</span><span class="p">,</span> <span class="n">n_obj_result</span><span class="p">,</span> <span class="n">n_obj_reference</span><span class="p">,</span> <span class="n">mapping</span>
+    
+<span class="k">def</span> <span class="nf">__surface_distances</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The distances between the surface voxel of binary objects in result and their</span>
+<span class="sd">    nearest partner surface voxel of a binary object in reference.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">voxelspacing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">voxelspacing</span> <span class="o">=</span> <span class="n">_ni_support</span><span class="o">.</span><span class="n">_normalize_sequence</span><span class="p">(</span><span class="n">voxelspacing</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+        <span class="n">voxelspacing</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">voxelspacing</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">voxelspacing</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">contiguous</span><span class="p">:</span>
+            <span class="n">voxelspacing</span> <span class="o">=</span> <span class="n">voxelspacing</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            
+    <span class="c1"># binary structure</span>
+    <span class="n">footprint</span> <span class="o">=</span> <span class="n">generate_binary_structure</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    
+    <span class="c1"># test for emptiness</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> 
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The first supplied array does not contain any binary object.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">reference</span><span class="p">):</span> 
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The second supplied array does not contain any binary object.&#39;</span><span class="p">)</span>    
+            
+    <span class="c1"># extract only 1-pixel border line of objects</span>
+    <span class="n">result_border</span> <span class="o">=</span> <span class="n">result</span> <span class="o">-</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">reference_border</span> <span class="o">=</span> <span class="n">reference</span> <span class="o">-</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># compute average surface distance        </span>
+    <span class="c1"># Note: scipys distance transform is calculated only inside the borders of the</span>
+    <span class="c1">#       foreground objects, therefore the input has to be reversed</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">distance_transform_edt</span><span class="p">(</span><span class="o">~</span><span class="n">reference_border</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="n">voxelspacing</span><span class="p">)</span>
+    <span class="n">sds</span> <span class="o">=</span> <span class="n">dt</span><span class="p">[</span><span class="n">result_border</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">sds</span>
+
+<span class="k">def</span> <span class="nf">__combine_windows</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Joins two windows (defined by tuple of slices) such that their maximum</span>
+<span class="sd">    combined extend is covered by the new returned window.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">s2</span><span class="o">.</span><span class="n">start</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">s2</span><span class="o">.</span><span class="n">stop</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

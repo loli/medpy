@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.warn
+=============================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.warn

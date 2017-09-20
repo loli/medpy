@@ -1,0 +1,6 @@
+medpy.features.intensity.centerdistance_xdminus1
+================================================
+
+.. currentmodule:: medpy.features.intensity
+
+.. autofunction:: centerdistance_xdminus1

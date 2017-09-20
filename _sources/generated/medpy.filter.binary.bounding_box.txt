@@ -1,0 +1,6 @@
+medpy.filter.binary.bounding_box
+================================
+
+.. currentmodule:: medpy.filter.binary
+
+.. autofunction:: bounding_box

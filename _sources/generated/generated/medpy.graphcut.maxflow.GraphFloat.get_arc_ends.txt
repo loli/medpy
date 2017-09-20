@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphFloat.get_arc_ends
+==============================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphFloat.get_arc_ends

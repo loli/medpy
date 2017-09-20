@@ -1,0 +1,6 @@
+medpy.iterators.patchwise.CentredPatchIterator.assembleimage
+============================================================
+
+.. currentmodule:: medpy.iterators.patchwise
+
+.. automethod:: CentredPatchIterator.assembleimage

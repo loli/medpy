@@ -1,0 +1,6 @@
+medpy.io.header.get_offset
+==========================
+
+.. currentmodule:: medpy.io.header
+
+.. autofunction:: get_offset

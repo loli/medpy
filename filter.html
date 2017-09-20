@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Image filter and manipulation (medpy.filter) &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
+    <link rel="stylesheet" href="_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="index.html" >
+    <link rel="next" title="medpy.filter.smoothing.anisotropic_diffusion" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html" >
+    <link rel="prev" title="medpy.metric.histogram.relative_deviation" href="generated/medpy.metric.histogram.relative_deviation.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="index.html">MedPy 0.3.0 documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="generated/medpy.filter.smoothing.anisotropic_diffusion.html" title="medpy.filter.smoothing.anisotropic_diffusion"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="generated/medpy.metric.histogram.relative_deviation.html" title="medpy.metric.histogram.relative_deviation"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a><ul>
+<li><a class="reference internal" href="#smoothing-medpy-filter-smoothing">Smoothing <code class="docutils literal"><span class="pre">medpy.filter.smoothing</span></code></a></li>
+<li><a class="reference internal" href="#binary-medpy-filter-binary">Binary <code class="docutils literal"><span class="pre">medpy.filter.binary</span></code></a></li>
+<li><a class="reference internal" href="#image-medpy-filter-image">Image <code class="docutils literal"><span class="pre">medpy.filter.image</span></code></a></li>
+<li><a class="reference internal" href="#label-medpy-filter-label">Label <code class="docutils literal"><span class="pre">medpy.filter.label</span></code></a></li>
+<li><a class="reference internal" href="#noise-medpy-filter-noise">Noise <code class="docutils literal"><span class="pre">medpy.filter.noise</span></code></a></li>
+<li><a class="reference internal" href="#utilities-medpy-filter-utilities">Utilities <code class="docutils literal"><span class="pre">medpy.filter.utilities</span></code></a></li>
+<li><a class="reference internal" href="#hough-transform-medpy-filter-houghtransform">Hough transform <code class="docutils literal"><span class="pre">medpy.filter.houghtransform</span></code></a></li>
+<li><a class="reference internal" href="#intensity-range-standardization-medpy-filter-intensityrangestandardization">Intensity range standardization <code class="docutils literal"><span class="pre">medpy.filter.IntensityRangeStandardization</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/medpy.metric.histogram.relative_deviation.html"
+                        title="previous chapter">medpy.metric.histogram.relative_deviation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/medpy.filter.smoothing.anisotropic_diffusion.html"
+                        title="next chapter">medpy.filter.smoothing.anisotropic_diffusion</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="_sources/filter.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <span class="target" id="module-medpy.filter"></span><div class="section" id="image-filter-and-manipulation-medpy-filter">
+<h1>Image filter and manipulation (<a class="reference internal" href="#module-medpy.filter" title="medpy.filter"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter</span></code></a>)<a class="headerlink" href="#image-filter-and-manipulation-medpy-filter" title="Permalink to this headline">¶</a></h1>
+<p>This package contains various image filters and image
+manipulation functions.</p>
+<div class="section" id="smoothing-medpy-filter-smoothing">
+<h2>Smoothing <a class="reference internal" href="#module-medpy.filter.smoothing" title="medpy.filter.smoothing"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.smoothing</span></code></a><a class="headerlink" href="#smoothing-medpy-filter-smoothing" title="Permalink to this headline">¶</a></h2>
+<p>Image smoothing / noise reduction in grayscale images.</p>
+<span class="target" id="module-medpy.filter.smoothing"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html#medpy.filter.smoothing.anisotropic_diffusion" title="medpy.filter.smoothing.anisotropic_diffusion"><code class="xref py py-obj docutils literal"><span class="pre">anisotropic_diffusion</span></code></a>(img[,&nbsp;niter,&nbsp;kappa,&nbsp;...])</td>
+<td>Edge-preserving, XD Anisotropic diffusion.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.smoothing.gauss_xminus1d.html#medpy.filter.smoothing.gauss_xminus1d" title="medpy.filter.smoothing.gauss_xminus1d"><code class="xref py py-obj docutils literal"><span class="pre">gauss_xminus1d</span></code></a>(img,&nbsp;sigma[,&nbsp;dim])</td>
+<td>Applies a X-1D gauss to a copy of a XD image, slicing it along dim.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="binary-medpy-filter-binary">
+<h2>Binary <a class="reference internal" href="#module-medpy.filter.binary" title="medpy.filter.binary"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.binary</span></code></a><a class="headerlink" href="#binary-medpy-filter-binary" title="Permalink to this headline">¶</a></h2>
+<p>Binary image manipulation.</p>
+<span class="target" id="module-medpy.filter.binary"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.binary.size_threshold.html#medpy.filter.binary.size_threshold" title="medpy.filter.binary.size_threshold"><code class="xref py py-obj docutils literal"><span class="pre">size_threshold</span></code></a>(img,&nbsp;thr[,&nbsp;comp,&nbsp;structure])</td>
+<td>Removes binary objects from an image identified by a size threshold.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.binary.largest_connected_component.html#medpy.filter.binary.largest_connected_component" title="medpy.filter.binary.largest_connected_component"><code class="xref py py-obj docutils literal"><span class="pre">largest_connected_component</span></code></a>(img[,&nbsp;structure])</td>
+<td>Select the largest connected binary component in an image.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.binary.bounding_box.html#medpy.filter.binary.bounding_box" title="medpy.filter.binary.bounding_box"><code class="xref py py-obj docutils literal"><span class="pre">bounding_box</span></code></a>(img)</td>
+<td>Return the bounding box incorporating all non-zero values in the image.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="image-medpy-filter-image">
+<h2>Image <a class="reference internal" href="#module-medpy.filter.image" title="medpy.filter.image"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.image</span></code></a><a class="headerlink" href="#image-medpy-filter-image" title="Permalink to this headline">¶</a></h2>
+<p>Grayscale image manipulation.</p>
+<span class="target" id="module-medpy.filter.image"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.sls.html#medpy.filter.image.sls" title="medpy.filter.image.sls"><code class="xref py py-obj docutils literal"><span class="pre">sls</span></code></a>(minuend,&nbsp;subtrahend[,&nbsp;metric,&nbsp;noise,&nbsp;...])</td>
+<td>Computes the signed local similarity between two images.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.image.ssd.html#medpy.filter.image.ssd" title="medpy.filter.image.ssd"><code class="xref py py-obj docutils literal"><span class="pre">ssd</span></code></a>(minuend,&nbsp;subtrahend[,&nbsp;normalized,&nbsp;...])</td>
+<td>Computes the sum of squared difference (SSD) between patches of minuend and subtrahend.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.average_filter.html#medpy.filter.image.average_filter" title="medpy.filter.image.average_filter"><code class="xref py py-obj docutils literal"><span class="pre">average_filter</span></code></a>(input[,&nbsp;size,&nbsp;footprint,&nbsp;...])</td>
+<td>Calculates a multi-dimensional average filter.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.image.sum_filter.html#medpy.filter.image.sum_filter" title="medpy.filter.image.sum_filter"><code class="xref py py-obj docutils literal"><span class="pre">sum_filter</span></code></a>(input[,&nbsp;size,&nbsp;footprint,&nbsp;output,&nbsp;...])</td>
+<td>Calculates a multi-dimensional sum filter.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.local_minima.html#medpy.filter.image.local_minima" title="medpy.filter.image.local_minima"><code class="xref py py-obj docutils literal"><span class="pre">local_minima</span></code></a>(img[,&nbsp;min_distance])</td>
+<td>Returns all local minima from an image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.image.otsu.html#medpy.filter.image.otsu" title="medpy.filter.image.otsu"><code class="xref py py-obj docutils literal"><span class="pre">otsu</span></code></a>(img[,&nbsp;bins])</td>
+<td>Otsu&#8217;s method to find the optimal threshold separating an image into fore- and background.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.resample.html#medpy.filter.image.resample" title="medpy.filter.image.resample"><code class="xref py py-obj docutils literal"><span class="pre">resample</span></code></a>(img,&nbsp;hdr,&nbsp;target_spacing[,&nbsp;...])</td>
+<td>Re-sample an image to a new voxel-spacing.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="label-medpy-filter-label">
+<h2>Label <a class="reference internal" href="#module-medpy.filter.label" title="medpy.filter.label"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.label</span></code></a><a class="headerlink" href="#label-medpy-filter-label" title="Permalink to this headline">¶</a></h2>
+<p>Label map manipulation.</p>
+<span class="target" id="module-medpy.filter.label"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.label.relabel_map.html#medpy.filter.label.relabel_map" title="medpy.filter.label.relabel_map"><code class="xref py py-obj docutils literal"><span class="pre">relabel_map</span></code></a>(label_image,&nbsp;mapping[,&nbsp;key])</td>
+<td>Relabel an image using the supplied mapping.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.label.relabel.html#medpy.filter.label.relabel" title="medpy.filter.label.relabel"><code class="xref py py-obj docutils literal"><span class="pre">relabel</span></code></a>(label_image[,&nbsp;start])</td>
+<td>Relabel the regions of a label image.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.label.relabel_non_zero.html#medpy.filter.label.relabel_non_zero" title="medpy.filter.label.relabel_non_zero"><code class="xref py py-obj docutils literal"><span class="pre">relabel_non_zero</span></code></a>(label_image[,&nbsp;start])</td>
+<td>Relabel the regions of a label image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.label.fit_labels_to_mask.html#medpy.filter.label.fit_labels_to_mask" title="medpy.filter.label.fit_labels_to_mask"><code class="xref py py-obj docutils literal"><span class="pre">fit_labels_to_mask</span></code></a>(label_image,&nbsp;mask)</td>
+<td>Reduces a label images by overlaying it with a binary mask and assign the labels either to the mask or to the background.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="noise-medpy-filter-noise">
+<h2>Noise <a class="reference internal" href="#module-medpy.filter.noise" title="medpy.filter.noise"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.noise</span></code></a><a class="headerlink" href="#noise-medpy-filter-noise" title="Permalink to this headline">¶</a></h2>
+<p>Global and local noise estimation in grayscale images.</p>
+<span class="target" id="module-medpy.filter.noise"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.noise.immerkaer.html#medpy.filter.noise.immerkaer" title="medpy.filter.noise.immerkaer"><code class="xref py py-obj docutils literal"><span class="pre">immerkaer</span></code></a>(input[,&nbsp;mode,&nbsp;cval])</td>
+<td>Estimate the global noise.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.noise.immerkaer_local.html#medpy.filter.noise.immerkaer_local" title="medpy.filter.noise.immerkaer_local"><code class="xref py py-obj docutils literal"><span class="pre">immerkaer_local</span></code></a>(input,&nbsp;size[,&nbsp;output,&nbsp;mode,&nbsp;...])</td>
+<td>Estimate the local noise.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.noise.separable_convolution.html#medpy.filter.noise.separable_convolution" title="medpy.filter.noise.separable_convolution"><code class="xref py py-obj docutils literal"><span class="pre">separable_convolution</span></code></a>(input,&nbsp;weights[,&nbsp;...])</td>
+<td>Calculate a n-dimensional convolution of a separable kernel to a n-dimensional input.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="utilities-medpy-filter-utilities">
+<h2>Utilities <a class="reference internal" href="#module-medpy.filter.utilities" title="medpy.filter.utilities"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.utilities</span></code></a><a class="headerlink" href="#utilities-medpy-filter-utilities" title="Permalink to this headline">¶</a></h2>
+<p>Utilities to apply filters selectively and create your own ones.</p>
+<span class="target" id="module-medpy.filter.utilities"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.utilities.xminus1d.html#medpy.filter.utilities.xminus1d" title="medpy.filter.utilities.xminus1d"><code class="xref py py-obj docutils literal"><span class="pre">xminus1d</span></code></a>(img,&nbsp;fun,&nbsp;dim,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Applies the function fun along all X-1D dimensional volumes of the images img dimension dim.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.utilities.intersection.html#medpy.filter.utilities.intersection" title="medpy.filter.utilities.intersection"><code class="xref py py-obj docutils literal"><span class="pre">intersection</span></code></a>(i1,&nbsp;h1,&nbsp;i2,&nbsp;h2)</td>
+<td>Returns the intersecting parts of two images in real world coordinates.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.utilities.pad.html#medpy.filter.utilities.pad" title="medpy.filter.utilities.pad"><code class="xref py py-obj docutils literal"><span class="pre">pad</span></code></a>(input[,&nbsp;size,&nbsp;footprint,&nbsp;output,&nbsp;mode,&nbsp;cval])</td>
+<td>Returns a copy of the input, padded by the supplied structuring element.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="hough-transform-medpy-filter-houghtransform">
+<h2>Hough transform <a class="reference internal" href="#module-medpy.filter.houghtransform" title="medpy.filter.houghtransform"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.houghtransform</span></code></a><a class="headerlink" href="#hough-transform-medpy-filter-houghtransform" title="Permalink to this headline">¶</a></h2>
+<p>The hough transform shape detection algorithm.</p>
+<span class="target" id="module-medpy.filter.houghtransform"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html#medpy.filter.houghtransform.ght" title="medpy.filter.houghtransform.ght"><code class="xref py py-obj docutils literal"><span class="pre">ght</span></code></a>(img,&nbsp;template)</td>
+<td>Implementation of the general hough transform for all dimensions.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.ght_alternative.html#medpy.filter.houghtransform.ght_alternative" title="medpy.filter.houghtransform.ght_alternative"><code class="xref py py-obj docutils literal"><span class="pre">ght_alternative</span></code></a>(img,&nbsp;template,&nbsp;indices)</td>
+<td>Alternative implementation of the general hough transform, which uses iteration over indices rather than broadcasting rules like <a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html#medpy.filter.houghtransform.ght" title="medpy.filter.houghtransform.ght"><code class="xref py py-obj docutils literal"><span class="pre">ght</span></code></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.template_ellipsoid.html#medpy.filter.houghtransform.template_ellipsoid" title="medpy.filter.houghtransform.template_ellipsoid"><code class="xref py py-obj docutils literal"><span class="pre">template_ellipsoid</span></code></a>(shape)</td>
+<td>Returns an ellipsoid binary structure of a of the supplied radius that can be used as template input to the generalized hough transform.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.template_sphere.html#medpy.filter.houghtransform.template_sphere" title="medpy.filter.houghtransform.template_sphere"><code class="xref py py-obj docutils literal"><span class="pre">template_sphere</span></code></a>(radius,&nbsp;dimensions)</td>
+<td>Returns a spherical binary structure of a of the supplied radius that can be used as template input to the generalized hough transform.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="intensity-range-standardization-medpy-filter-intensityrangestandardization">
+<h2>Intensity range standardization <a class="reference internal" href="#module-medpy.filter.IntensityRangeStandardization" title="medpy.filter.IntensityRangeStandardization"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.IntensityRangeStandardization</span></code></a><a class="headerlink" href="#intensity-range-standardization-medpy-filter-intensityrangestandardization" title="Permalink to this headline">¶</a></h2>
+<p>A learning method to align the intensity ranges of images.</p>
+<span class="target" id="module-medpy.filter.IntensityRangeStandardization"></span><table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization"><code class="xref py py-obj docutils literal"><span class="pre">IntensityRangeStandardization</span></code></a>([cutoffp,&nbsp;...])</td>
+<td>Class to standardize intensity ranges between a number of images.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

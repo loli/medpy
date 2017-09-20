@@ -1,0 +1,6 @@
+medpy.neighbours.knn.mkneighbors_graph
+======================================
+
+.. currentmodule:: medpy.neighbours.knn
+
+.. autofunction:: mkneighbors_graph

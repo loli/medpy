@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.neighbours.knn &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.neighbours.knn</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.0</span>
+<span class="c1"># since 2014-10-15</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.csr</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># constants</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="mkneighbors_graph"><a class="viewcode-back" href="../../../generated/medpy.neighbours.knn.mkneighbors_graph.html#medpy.neighbours.knn.mkneighbors_graph">[docs]</a><span class="k">def</span> <span class="nf">mkneighbors_graph</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;connectivity&#39;</span><span class="p">,</span> <span class="n">metric_params</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the (weighted) graph of mutual k-Neighbors for observations.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The distance between an observation and itself is never computed and instead set to</span>
+<span class="sd">    ``numpy.inf``. I.e. only in the case of k&gt;=n_observations or when the ``metric``</span>
+<span class="sd">    returns ``numpy.inf``, the returned graph can contain loops.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    observations : sequence</span>
+<span class="sd">        Sequence of observations.</span>
+<span class="sd">    n_neighbours : int</span>
+<span class="sd">        Maximum number of neighbours for each sample.</span>
+<span class="sd">    metric : function</span>
+<span class="sd">        The distance metric taking two observations and returning a numeric value &gt; 0.</span>
+<span class="sd">    mode : {&#39;connectivity&#39;, &#39;distance&#39;, &#39;both&#39;}, optional</span>
+<span class="sd">        Type of returned matrix: &#39;connectivity&#39; will return the connectivity matrix with</span>
+<span class="sd">        ones and zeros, in &#39;distance&#39; the edges are distances between points, while</span>
+<span class="sd">        &#39;both&#39; returns a (connectivity, distance) tuple.</span>
+<span class="sd">    metric_params : dict, optional  (default = None)</span>
+<span class="sd">            Additional keyword arguments for the metric function.</span>
+<span class="sd">            </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mkneighbors_graph : ndarray</span>
+<span class="sd">        Sparse matrix in CSR format, shape = [n_observations, n_observations].</span>
+<span class="sd">        mkneighbors_graph[i, j] is assigned the weight of edge that connects i to j.</span>
+<span class="sd">        Might contain ``numpy.inf`` values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># compute their pairwise-distances</span>
+    <span class="n">pdists</span> <span class="o">=</span> <span class="n">pdist</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
+
+    <span class="c1"># get the k nearest neighbours for each patch </span>
+    <span class="n">k_nearest_nbhs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pdists</span><span class="p">)[:,:</span><span class="n">n_neighbours</span><span class="p">]</span>
+    
+    <span class="c1"># create a mask denoting the k nearest neighbours in image_pdist</span>
+    <span class="n">k_nearest_mutual_nbhs_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">pdists</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_mask_row</span><span class="p">,</span> <span class="n">_nbhs_row</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">k_nearest_mutual_nbhs_mask</span><span class="p">,</span> <span class="n">k_nearest_nbhs</span><span class="p">):</span>
+        <span class="n">_mask_row</span><span class="p">[</span><span class="n">_nbhs_row</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        
+    <span class="c1"># and with transposed to remove non-mutual nearest neighbours</span>
+    <span class="n">k_nearest_mutual_nbhs_mask</span> <span class="o">&amp;=</span> <span class="n">k_nearest_mutual_nbhs_mask</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="c1"># set distance not in the mutual k nearest neighbour set to zero</span>
+    <span class="n">pdists</span><span class="p">[</span><span class="o">~</span><span class="n">k_nearest_mutual_nbhs_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># check for edges with zero-weight</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pdists</span><span class="p">[</span><span class="n">k_nearest_mutual_nbhs_mask</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The graph contains at least one edge with a weight of &quot;0&quot;.&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="s1">&#39;connectivity&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">k_nearest_mutual_nbhs_mask</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;distance&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">pdists</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">k_nearest_mutual_nbhs_mask</span><span class="p">),</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">pdists</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="pdist"><a class="viewcode-back" href="../../../generated/medpy.neighbours.knn.pdist.html#medpy.neighbours.knn.pdist">[docs]</a><span class="k">def</span> <span class="nf">pdist</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">dmeasure</span><span class="p">,</span> <span class="n">diagval</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the pair-wise distances between arbitrary objects.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    ``dmeasure`` is assumed to be *symmetry* i.e. between object *a* and object *b* the</span>
+<span class="sd">    function will be called only ones.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    objects : sequence</span>
+<span class="sd">        A sequence of objects of length *n*.</span>
+<span class="sd">    dmeasure : function</span>
+<span class="sd">        A callable function that takes two objects as input at returns a number.</span>
+<span class="sd">    diagval : number</span>
+<span class="sd">        The diagonal values of the resulting array.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pdists : ndarray</span>
+<span class="sd">        An *nxn* symmetric float array containing the pair-wise distances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">diagval</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">)),</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">]</span> <span class="o">=</span> <span class="n">dmeasure</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">idx1</span><span class="p">],</span> <span class="n">objects</span><span class="p">[</span><span class="n">idx2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">out</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">T</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

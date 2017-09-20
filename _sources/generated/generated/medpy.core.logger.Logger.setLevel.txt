@@ -1,0 +1,6 @@
+medpy.core.logger.Logger.setLevel
+=================================
+
+.. currentmodule:: medpy.core.logger
+
+.. automethod:: Logger.setLevel

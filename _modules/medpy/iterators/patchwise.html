@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.iterators.patchwise &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.iterators.patchwise</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.0</span>
+<span class="c1"># since 2014-10-13</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">find_objects</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># constants</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="SlidingWindowIterator"><a class="viewcode-back" href="../../../generated/medpy.iterators.patchwise.SlidingWindowIterator.html#medpy.iterators.patchwise.SlidingWindowIterator">[docs]</a><span class="k">class</span> <span class="nc">SlidingWindowIterator</span><span class="p">():</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Moves a sliding window over the array, where the first patch is places centered on</span>
+<span class="sd">    the top-left voxel and outside-of-image values filled with `cval`. The returned</span>
+<span class="sd">    patches are views if the array.</span>
+<span class="sd">    </span>
+<span class="sd">    All yielded patches will be of size ``psize``. Areas outside of the array are</span>
+<span class="sd">    filled with ``cval``. Besides the patch, a patch mask is returned, that denoted</span>
+<span class="sd">    the outside values.</span>
+<span class="sd">    </span>
+<span class="sd">    Central element for even patches:</span>
+<span class="sd">    </span>
+<span class="sd">        [[0, 0],</span>
+<span class="sd">         [0, X]]</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array : array_like</span>
+<span class="sd">        A n-dimensional array.</span>
+<span class="sd">    psize : int or sequence of ints</span>
+<span class="sd">        The patch size. If a single integer interpreted as hyper-cube.</span>
+<span class="sd">    cval : number</span>
+<span class="sd">        Value to fill undefined positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="SlidingWindowIterator.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.SlidingWindowIterator.__init__.html#medpy.iterators.patchwise.SlidingWindowIterator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">cval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span></div>
+        <span class="c1"># process arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_integer</span><span class="p">(</span><span class="n">psize</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">=</span> <span class="p">[</span><span class="n">psize</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">psize</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cval</span> <span class="o">=</span> <span class="n">cval</span>
+        
+        <span class="c1"># validate</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch size must be at least 1 in any dimension.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch dimensionality must equal the array dimensionality.&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># compute required padding as pairs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="p">[(</span><span class="n">p</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">p</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">]</span>
+        
+        <span class="c1"># pad array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cval</span><span class="p">)</span>
+        
+        <span class="c1"># initialize slicers</span>
+        <span class="n">slicepoints</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">s</span> <span class="o">-</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__slicepointiter</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">slicepoints</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+<div class="viewcode-block" id="SlidingWindowIterator.next"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.SlidingWindowIterator.next.html#medpy.iterators.patchwise.SlidingWindowIterator.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Yields the next patch.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        patch : ndarray</span>
+<span class="sd">            The extracted patch as a view.</span>
+<span class="sd">        pmask : ndarray</span>
+<span class="sd">            Boolean array denoting the defined part of the patch.</span>
+<span class="sd">        slicer : list</span>
+<span class="sd">            List of slicers to apply the same operation to another array (using applyslicer()).</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="c1"># trigger internal iterators</span>
+        <span class="n">spointset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__slicepointiter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="c1"># will raise StopIteration when empty</span>
+        <span class="c1"># compute slicer object</span>
+        <span class="n">slicer</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">padder</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spointset</span><span class="p">):</span>
+            <span class="n">slicer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">slice</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">sp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span> <span class="p">)</span>
+            <span class="n">padder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">sp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">[</span><span class="n">dim</span><span class="p">][</span><span class="mi">0</span><span class="p">])),</span>
+                            <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">sp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">))</span> <span class="p">)</span>
+            
+        <span class="c1"># create patch and patch mask</span>
+        <span class="n">def_slicer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">None</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">y</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">padder</span><span class="p">]</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">patch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)</span>
+        <span class="n">pmask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+        <span class="n">pmask</span><span class="p">[</span><span class="n">def_slicer</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        
+        <span class="k">return</span> <span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">slicer</span></div>
+        
+<div class="viewcode-block" id="SlidingWindowIterator.applyslicer"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.SlidingWindowIterator.applyslicer.html#medpy.iterators.patchwise.SlidingWindowIterator.applyslicer">[docs]</a>    <span class="k">def</span> <span class="nf">applyslicer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">slicer</span><span class="p">,</span> <span class="n">cval</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Apply a slicer returned by the iterator to a new array of the same</span>
+<span class="sd">        dimensionality as the one used to initialize the iterator.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If ``array`` has more dimensions than ``slicer`` and ``pmask``, the first ones</span>
+<span class="sd">        are sliced.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        array : array_like</span>
+<span class="sd">            A n-dimensional array.</span>
+<span class="sd">        slicer : list</span>
+<span class="sd">            List if `slice()` instances as returned by `next()`.</span>
+<span class="sd">        cval : number</span>
+<span class="sd">            Value to fill undefined positions. If None, the ``cval`` of the object is used.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        patch: ndarray</span>
+<span class="sd">            A patch from the input ``array``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cval</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cval</span>
+        <span class="n">_padding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">+</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">))</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">_padding</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="n">cval</span><span class="p">)</span>
+        <span class="n">_psize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">):])</span>
+        <span class="k">return</span> <span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">_psize</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CentredPatchIterator"><a class="viewcode-back" href="../../../generated/medpy.iterators.patchwise.CentredPatchIterator.html#medpy.iterators.patchwise.CentredPatchIterator">[docs]</a><span class="k">class</span> <span class="nc">CentredPatchIterator</span><span class="p">():</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Iterated patch-wise over the array, where the central patch is centred on the</span>
+<span class="sd">    image centre.</span>
+<span class="sd">    </span>
+<span class="sd">    All yielded patches will be of size ``psize``. Areas outside of the array are</span>
+<span class="sd">    filled with ``cval``. Besides the patch, a patch mask is returned, that denoted</span>
+<span class="sd">    the outside values. Additionally, the n-dimensional grid id and a slicer object</span>
+<span class="sd">    are returned.</span>
+<span class="sd">    </span>
+<span class="sd">    To extract the same patch from another array of the same size as ``array``, use</span>
+<span class="sd">    the `applyslicer` method.</span>
+<span class="sd">    </span>
+<span class="sd">    The following schematic overview explains the behaviour to expect for even and odd</span>
+<span class="sd">    images respectively patches. All ``O`` denote image voxels, ``|`` the patch</span>
+<span class="sd">    borders and ``#`` padded voxels.</span>
+<span class="sd">    </span>
+<span class="sd">    One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5::</span>
+<span class="sd">    </span>
+<span class="sd">        |O|O|O|O|O|</span>
+<span class="sd">        </span>
+<span class="sd">        |#O|OO|OO|</span>
+<span class="sd">        </span>
+<span class="sd">        |##O|OOO|O##|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOOO|O###|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOOOO|</span>
+<span class="sd">    </span>
+<span class="sd">    One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4::</span>
+<span class="sd">    </span>
+<span class="sd">        |O|O|O|O|</span>
+<span class="sd">        </span>
+<span class="sd">        |#O|OO|O#|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOO|O##|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOOO|</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array : array_like</span>
+<span class="sd">        A n-dimensional array.</span>
+<span class="sd">    psize : int or sequence</span>
+<span class="sd">        The patch size. If a single integer interpreted as hyper-cube.</span>
+<span class="sd">    cval : number</span>
+<span class="sd">        Value to fill undefined positions.</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy</span>
+<span class="sd">    &gt;&gt;&gt; from medpy.iterators import CentredPatchIterator</span>
+<span class="sd">    &gt;&gt;&gt; arr = numpy.arange(0, 25).reshape((5,5))</span>
+<span class="sd">    &gt;&gt;&gt; arr</span>
+<span class="sd">    array([[ 0,  1,  2,  3,  4],</span>
+<span class="sd">           [ 5,  6,  7,  8,  9],</span>
+<span class="sd">           [10, 11, 12, 13, 14],</span>
+<span class="sd">           [15, 16, 17, 18, 19],</span>
+<span class="sd">           [20, 21, 22, 23, 24]])</span>
+<span class="sd">    &gt;&gt;&gt; patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))</span>
+<span class="sd">    Total number of patches:</span>
+<span class="sd">    &gt;&gt;&gt; len(patches)</span>
+<span class="sd">    9</span>
+<span class="sd">    Central patch:</span>
+<span class="sd">    &gt;&gt;&gt; patches[4]</span>
+<span class="sd">    array([[ 6,  7,  8],</span>
+<span class="sd">           [11, 12, 13],</span>
+<span class="sd">           [16, 17, 18]])</span>
+<span class="sd">    Bottom-right corner patch:</span>
+<span class="sd">    &gt;&gt;&gt; patches[-1]</span>
+<span class="sd">    array([[24,  0,  0],</span>
+<span class="sd">           [ 0,  0,  0],</span>
+<span class="sd">           [ 0,  0,  0]])</span>
+<span class="sd">    And its definition mask:</span>
+<span class="sd">    &gt;&gt;&gt; pmasks[-1]</span>
+<span class="sd">    array([[ True, False, False],</span>
+<span class="sd">           [False, False, False],</span>
+<span class="sd">           [False, False, False]], dtype=bool)</span>
+<span class="sd">    One dimensional behaviour examples:</span>
+<span class="sd">    &gt;&gt;&gt; arr = range(1, 5)</span>
+<span class="sd">    &gt;&gt;&gt; len(arr)</span>
+<span class="sd">    4</span>
+<span class="sd">    &gt;&gt;&gt; patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))</span>
+<span class="sd">    &gt;&gt;&gt; patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))</span>
+<span class="sd">    &gt;&gt;&gt; patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))</span>
+<span class="sd">    &gt;&gt;&gt; patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([1, 2, 3, 4]),))</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="CentredPatchIterator.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIterator.__init__.html#medpy.iterators.patchwise.CentredPatchIterator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">cval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span></div>
+        <span class="c1"># process arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_integer</span><span class="p">(</span><span class="n">psize</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">=</span> <span class="p">[</span><span class="n">psize</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">psize</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cval</span> <span class="o">=</span> <span class="n">cval</span>
+        
+        <span class="c1"># validate</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch size must be at least 1 in any dimension.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch dimensionality must equal the array dimensionality.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch is not allowed to be larger than the array in any dimension.&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># compute required padding</span>
+        <span class="n">even_even_correction</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ps</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)]</span>
+        <span class="n">array_centre</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">]</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span> <span class="o">-</span> <span class="n">ps</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ee</span><span class="p">,</span>
+                      <span class="n">s</span> <span class="o">-</span> <span class="n">c</span> <span class="o">-</span> <span class="p">(</span><span class="n">ps</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">ee</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">ee</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">array_centre</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">,</span> <span class="n">even_even_correction</span><span class="p">)]</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="p">[((</span><span class="n">ps</span> <span class="o">-</span> <span class="n">l</span> <span class="o">%</span> <span class="n">ps</span><span class="p">)</span> <span class="o">%</span> <span class="n">ps</span><span class="p">,</span>
+                   <span class="p">(</span><span class="n">ps</span> <span class="o">-</span> <span class="n">r</span> <span class="o">%</span> <span class="n">ps</span><span class="p">)</span> <span class="o">%</span> <span class="n">ps</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">remainder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)]</span>
+            
+        <span class="c1"># determine slice-points for each dimension and initialize internal slice-point iterator</span>
+        <span class="n">slicepoints</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">l</span><span class="p">,</span> <span class="n">s</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ps</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">,</span> <span class="n">padding</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__slicepointiter</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">slicepoints</span><span class="p">)</span>
+        
+        <span class="c1"># initialize internal grid-id iterator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grididiter</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sps</span><span class="p">))</span> <span class="k">for</span> <span class="n">sps</span> <span class="ow">in</span> <span class="n">slicepoints</span><span class="p">])</span>
+        
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+<div class="viewcode-block" id="CentredPatchIterator.next"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIterator.next.html#medpy.iterators.patchwise.CentredPatchIterator.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Yields the next patch.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        patch : ndarray</span>
+<span class="sd">            The extracted patch as a view.</span>
+<span class="sd">        pmask : ndarray</span>
+<span class="sd">            Boolean array denoting the defined part of the patch.</span>
+<span class="sd">        gridid : sequence</span>
+<span class="sd">            N-dimensional grid id.</span>
+<span class="sd">        slicer : list</span>
+<span class="sd">            A list of `slice()` instances definind the patch.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="c1"># trigger internal iterators</span>
+        <span class="n">spointset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__slicepointiter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="c1"># will raise StopIteration when empty</span>
+        <span class="n">gridid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grididiter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="c1"># compute slicer object and padder tuples</span>
+        <span class="n">slicer</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">padder</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spointset</span><span class="p">):</span>
+            <span class="n">slicer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">slice</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sp</span><span class="p">),</span>
+                                 <span class="nb">min</span><span class="p">(</span><span class="n">sp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">[</span><span class="n">dim</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]))</span> <span class="p">)</span>
+            <span class="n">padder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">sp</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]))</span> <span class="p">)</span>
+        <span class="c1"># create patch and patch mask</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">],</span> <span class="n">padder</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cval</span><span class="p">)</span>
+        <span class="n">pmask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span> <span class="n">padder</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">gridid</span><span class="p">,</span> <span class="n">slicer</span></div>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CentredPatchIterator.applyslicer"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIterator.applyslicer.html#medpy.iterators.patchwise.CentredPatchIterator.applyslicer">[docs]</a>    <span class="k">def</span> <span class="nf">applyslicer</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">slicer</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">cval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Apply a slicer returned by the iterator to a new array of the same</span>
+<span class="sd">        dimensionality as the one used to initialize the iterator.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If ``array`` has more dimensions than ``slicer`` and ``pmask``, the first ones</span>
+<span class="sd">        are sliced.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        array : array_like</span>
+<span class="sd">            A n-dimensional array.</span>
+<span class="sd">        slicer : list</span>
+<span class="sd">            List if `slice()` instances as returned by `next()`.</span>
+<span class="sd">        pmask : narray</span>
+<span class="sd">            The array mask as returned by `next()`.</span>
+<span class="sd">        cval : number</span>
+<span class="sd">            Value to fill undefined positions.            </span>
+<span class="sd">            </span>
+<span class="sd">        Experiments</span>
+<span class="sd">        -----------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy</span>
+<span class="sd">        &gt;&gt;&gt; from medpy.iterators import CentredPatchIterator</span>
+<span class="sd">        &gt;&gt;&gt; arr = numpy.arange(0, 25).reshape((5,5))</span>
+<span class="sd">        &gt;&gt;&gt; for patch, pmask, _, slicer in CentredPatchIterator(arr, 3):</span>
+<span class="sd">        &gt;&gt;&gt;     new_patch = CentredPatchIterator.applyslicer(arr, slicer, pmask)</span>
+<span class="sd">        &gt;&gt;&gt;     print numpy.all(new_patch == patch)</span>
+<span class="sd">        True</span>
+<span class="sd">        ...</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">slicer</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pmask</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">l</span><span class="p">])</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">l</span><span class="p">:]),</span> <span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">cval</span><span class="p">:</span> <span class="n">patch</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">cval</span><span class="p">)</span>
+        <span class="n">sliced</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span>
+        <span class="n">patch</span><span class="p">[</span><span class="n">pmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">sliced</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">sliced</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">l</span><span class="p">])]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">sliced</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">l</span><span class="p">:]))</span>
+        <span class="k">return</span> <span class="n">patch</span></div>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CentredPatchIterator.assembleimage"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIterator.assembleimage.html#medpy.iterators.patchwise.CentredPatchIterator.assembleimage">[docs]</a>    <span class="k">def</span> <span class="nf">assembleimage</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">pmasks</span><span class="p">,</span> <span class="n">gridids</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Assemble an image from a number of patches, patch masks and their grid ids.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        patches : sequence</span>
+<span class="sd">            Sequence of patches.</span>
+<span class="sd">        pmasks : sequence</span>
+<span class="sd">            Sequence of associated patch masks.</span>
+<span class="sd">        gridids</span>
+<span class="sd">            Sequence of associated grid ids.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        image : ndarray</span>
+<span class="sd">            The patches assembled back into an image of the original proportions.</span>
+<span class="sd">            </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Two-dimensional example:</span>
+<span class="sd">        &gt;&gt;&gt; import numpy</span>
+<span class="sd">        &gt;&gt;&gt; from medpy.iterators import CentredPatchIterator</span>
+<span class="sd">        &gt;&gt;&gt; arr = numpy.arange(0, 25).reshape((5,5))</span>
+<span class="sd">        &gt;&gt;&gt; arr</span>
+<span class="sd">        array([[ 0,  1,  2,  3,  4],</span>
+<span class="sd">               [ 5,  6,  7,  8,  9],</span>
+<span class="sd">               [10, 11, 12, 13, 14],</span>
+<span class="sd">               [15, 16, 17, 18, 19],</span>
+<span class="sd">               [20, 21, 22, 23, 24]])</span>
+<span class="sd">        &gt;&gt;&gt; patches, pmasks, gridids, _ = zip(*CentredPatchIterator(arr, 2))</span>
+<span class="sd">        &gt;&gt;&gt; result = CentredPatchIterator.assembleimage(patches, pmasks, gridids)</span>
+<span class="sd">        &gt;&gt;&gt; numpy.all(arr == result)</span>
+<span class="sd">        True</span>
+<span class="sd">        </span>
+<span class="sd">        Five-dimensional example:</span>
+<span class="sd">        &gt;&gt;&gt; arr = numpy.random.randint(0, 10, range(5, 10))</span>
+<span class="sd">        &gt;&gt;&gt; patches, pmasks, gridids, _ = zip(*CentredPatchIterator(arr, range(2, 7)))</span>
+<span class="sd">        &gt;&gt;&gt; result = CentredPatchIterator.assembleimage(patches, pmasks, gridids)</span>
+<span class="sd">        &gt;&gt;&gt; numpy.all(arr == result)</span>
+<span class="sd">        True            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">patches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">gridid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">pmasks</span><span class="p">,</span> <span class="n">gridids</span><span class="p">):</span>
+                <span class="n">groupid</span> <span class="o">=</span> <span class="n">gridid</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">groupid</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">groupid</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">groups</span><span class="p">[</span><span class="n">groupid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">gridid</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">gridids</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">pmasks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">groupid</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">2</span><span class="p">))],</span> <span class="n">d</span><span class="p">))</span>
+                <span class="n">pmasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">m</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">2</span><span class="p">))],</span> <span class="n">d</span><span class="p">))</span>
+                <span class="n">gridids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">groupid</span><span class="p">)</span>
+        <span class="n">objs</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">pmasks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">objs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The assembled patch masks contain more than one binary object.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">patches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span></div></div>
+        
+<div class="viewcode-block" id="CentredPatchIteratorOverlapping"><a class="viewcode-back" href="../../../generated/medpy.iterators.patchwise.CentredPatchIteratorOverlapping.html#medpy.iterators.patchwise.CentredPatchIteratorOverlapping">[docs]</a><span class="k">class</span> <span class="nc">CentredPatchIteratorOverlapping</span><span class="p">():</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Iterated patch-wise over the array, where the central patch is centred on the</span>
+<span class="sd">    image centre.</span>
+<span class="sd">    </span>
+<span class="sd">    All yielded patches will be of size ``psize``. Areas outside of the array are</span>
+<span class="sd">    filled with ``cval``. Besides the patch, a patch mask is returned, that denoted</span>
+<span class="sd">    the outside values. Additionally, the n-dimensional grid id and a slicer object</span>
+<span class="sd">    are returned.</span>
+<span class="sd">    </span>
+<span class="sd">    To extract the same patch from another array of the same size as ``array``, use</span>
+<span class="sd">    the `applyslicer` method.</span>
+<span class="sd">    </span>
+<span class="sd">    The following schematic overview explains the behaviour to expect for even and odd</span>
+<span class="sd">    images respectively patches. All ``O`` denote image voxels, ``|`` the patch</span>
+<span class="sd">    borders and ``#`` padded voxels.</span>
+<span class="sd">    </span>
+<span class="sd">    One-dimensional image of size 5 with patch sizes 1, 2, 3, 4 and 5::</span>
+<span class="sd">    </span>
+<span class="sd">        |O|O|O|O|O|</span>
+<span class="sd">        </span>
+<span class="sd">        |#O|OO|OO|</span>
+<span class="sd">        </span>
+<span class="sd">        |##O|OOO|O##|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOOO|O###|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOOOO|</span>
+<span class="sd">    </span>
+<span class="sd">    One-dimensional image of size 4 with patch sizes 1, 2, 3 and 4::</span>
+<span class="sd">    </span>
+<span class="sd">        |O|O|O|O|</span>
+<span class="sd">        </span>
+<span class="sd">        |#O|OO|O#|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOO|O##|</span>
+<span class="sd">        </span>
+<span class="sd">        |OOOO|</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array : array_like</span>
+<span class="sd">        A n-dimensional array.</span>
+<span class="sd">    psize : int or sequence of ints</span>
+<span class="sd">        The patch size. If a single integer interpreted as hyper-cube.</span>
+<span class="sd">    offset : None, int or sequence of ints</span>
+<span class="sd">        The patch offset. If None interpreted as non-overlapping patches. If a single integer interpreted as hyper-cube.</span>
+<span class="sd">    cval : number</span>
+<span class="sd">        Value to fill undefined positions.</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy</span>
+<span class="sd">    &gt;&gt;&gt; from medpy.iterators import CentredPatchIterator</span>
+<span class="sd">    &gt;&gt;&gt; arr = numpy.arange(0, 25).reshape((5,5))</span>
+<span class="sd">    &gt;&gt;&gt; arr</span>
+<span class="sd">    array([[ 0,  1,  2,  3,  4],</span>
+<span class="sd">           [ 5,  6,  7,  8,  9],</span>
+<span class="sd">           [10, 11, 12, 13, 14],</span>
+<span class="sd">           [15, 16, 17, 18, 19],</span>
+<span class="sd">           [20, 21, 22, 23, 24]])</span>
+<span class="sd">    &gt;&gt;&gt; patches, pmasks, gridids, slicers = zip(*CentredPatchIterator(arr, 3))</span>
+<span class="sd">    Total number of patches:</span>
+<span class="sd">    &gt;&gt;&gt; len(patches)</span>
+<span class="sd">    9</span>
+<span class="sd">    Central patch:</span>
+<span class="sd">    &gt;&gt;&gt; patches[4]</span>
+<span class="sd">    array([[ 6,  7,  8],</span>
+<span class="sd">           [11, 12, 13],</span>
+<span class="sd">           [16, 17, 18]])</span>
+<span class="sd">    Bottom-right corner patch:</span>
+<span class="sd">    &gt;&gt;&gt; patches[-1]</span>
+<span class="sd">    array([[24,  0,  0],</span>
+<span class="sd">           [ 0,  0,  0],</span>
+<span class="sd">           [ 0,  0,  0]])</span>
+<span class="sd">    And its definition mask:</span>
+<span class="sd">    &gt;&gt;&gt; pmasks[-1]</span>
+<span class="sd">    array([[ True, False, False],</span>
+<span class="sd">           [False, False, False],</span>
+<span class="sd">           [False, False, False]], dtype=bool)</span>
+<span class="sd">    One dimensional behaviour examples:</span>
+<span class="sd">    &gt;&gt;&gt; arr = range(1, 5)</span>
+<span class="sd">    &gt;&gt;&gt; len(arr)</span>
+<span class="sd">    4</span>
+<span class="sd">    &gt;&gt;&gt; patches, pmasks, _, _ = zip(*CentredPatchIterator(arr, 1))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([1]), array([2]), array([3]), array([4])))</span>
+<span class="sd">    &gt;&gt;&gt; patches, _, _, _ = zip(*CentredPatchIterator(arr, 2))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([0, 1]), array([2, 3]), array([4, 0])))</span>
+<span class="sd">    &gt;&gt;&gt; patches, _, _, _ = zip(*CentredPatchIterator(arr, 3))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([1, 2, 3]), array([4, 0, 0])))</span>
+<span class="sd">    &gt;&gt;&gt; patches, _, _, _ = zip(*CentredPatchIterator(arr, 4))</span>
+<span class="sd">    &gt;&gt;&gt; arr, patches</span>
+<span class="sd">    ([1, 2, 3, 4], (array([1, 2, 3, 4]),))</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="CentredPatchIteratorOverlapping.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIteratorOverlapping.__init__.html#medpy.iterators.patchwise.CentredPatchIteratorOverlapping.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span></div>
+        <span class="c1"># process arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_integer</span><span class="p">(</span><span class="n">psize</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">=</span> <span class="p">[</span><span class="n">psize</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psize</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">psize</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">offset</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">psize</span>
+        <span class="k">elif</span> <span class="n">is_integer</span><span class="p">(</span><span class="n">psize</span><span class="p">):</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="n">offset</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cval</span> <span class="o">=</span> <span class="n">cval</span>
+        
+        <span class="c1"># validate</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch size must be at least 1 in any dimension.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch dimensionality must equal the array dimensionality.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The patch is not allowed to be larger than the array in any dimension.&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># compute required padding</span>
+        <span class="n">even_even_correction</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ps</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)]</span>
+        <span class="n">array_centre</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">]</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span> <span class="o">-</span> <span class="n">ps</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ee</span><span class="p">,</span>
+                      <span class="n">s</span> <span class="o">-</span> <span class="n">c</span> <span class="o">-</span> <span class="p">(</span><span class="n">ps</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">ee</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">ee</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">array_centre</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">,</span> <span class="n">even_even_correction</span><span class="p">)]</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="p">[((</span><span class="n">ps</span> <span class="o">-</span> <span class="n">l</span> <span class="o">%</span> <span class="n">ps</span><span class="p">)</span> <span class="o">%</span> <span class="n">ps</span><span class="p">,</span>
+                   <span class="p">(</span><span class="n">ps</span> <span class="o">-</span> <span class="n">r</span> <span class="o">%</span> <span class="n">ps</span><span class="p">)</span> <span class="o">%</span> <span class="n">ps</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">remainder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">)]</span>
+            
+        <span class="c1"># determine slice-points for each dimension and initialize internal slice-point iterator</span>
+        <span class="n">slicepoints</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">l</span><span class="p">,</span> <span class="n">s</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">os</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">os</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">padding</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__slicepointiter</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">slicepoints</span><span class="p">)</span>
+        
+        <span class="c1"># initialize internal grid-id iterator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grididiter</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sps</span><span class="p">))</span> <span class="k">for</span> <span class="n">sps</span> <span class="ow">in</span> <span class="n">slicepoints</span><span class="p">])</span>
+        
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+<div class="viewcode-block" id="CentredPatchIteratorOverlapping.next"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIteratorOverlapping.next.html#medpy.iterators.patchwise.CentredPatchIteratorOverlapping.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Yields the next patch.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        patch : ndarray</span>
+<span class="sd">            The extracted patch as a view.</span>
+<span class="sd">        pmask : ndarray</span>
+<span class="sd">            Boolean array denoting the defined part of the patch.</span>
+<span class="sd">        gridid : sequence</span>
+<span class="sd">            N-dimensional grid id.</span>
+<span class="sd">        slicer : list</span>
+<span class="sd">            A list of `slice()` instances definind the patch.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="c1"># trigger internal iterators</span>
+        <span class="n">spointset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__slicepointiter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> <span class="c1"># will raise StopIteration when empty</span>
+        <span class="n">gridid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grididiter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="c1"># compute slicer object and padder tuples</span>
+        <span class="n">slicer</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">padder</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spointset</span><span class="p">):</span>
+            <span class="n">slicer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="nb">slice</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sp</span><span class="p">),</span>
+                                 <span class="nb">min</span><span class="p">(</span><span class="n">sp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">[</span><span class="n">dim</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]))</span> <span class="p">)</span>
+            <span class="n">padder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">sp</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psize</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]))</span> <span class="p">)</span>
+        <span class="c1"># create patch and patch mask</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">],</span> <span class="n">padder</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cval</span><span class="p">)</span>
+        <span class="n">pmask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span> <span class="n">padder</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">gridid</span><span class="p">,</span> <span class="n">slicer</span></div>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CentredPatchIteratorOverlapping.applyslicer"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIteratorOverlapping.applyslicer.html#medpy.iterators.patchwise.CentredPatchIteratorOverlapping.applyslicer">[docs]</a>    <span class="k">def</span> <span class="nf">applyslicer</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">slicer</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">cval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Apply a slicer returned by the iterator to a new array of the same</span>
+<span class="sd">        dimensionality as the one used to initialize the iterator.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If ``array`` has more dimensions than ``slicer`` and ``pmask``, the first ones</span>
+<span class="sd">        are sliced.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        array : array_like</span>
+<span class="sd">            A n-dimensional array.</span>
+<span class="sd">        slicer : list</span>
+<span class="sd">            List if `slice()` instances as returned by `next()`.</span>
+<span class="sd">        pmask : narray</span>
+<span class="sd">            The array mask as returned by `next()`.</span>
+<span class="sd">        cval : number</span>
+<span class="sd">            Value to fill undefined positions.            </span>
+<span class="sd">            </span>
+<span class="sd">        Experiments</span>
+<span class="sd">        -----------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy</span>
+<span class="sd">        &gt;&gt;&gt; from medpy.iterators import CentredPatchIterator</span>
+<span class="sd">        &gt;&gt;&gt; arr = numpy.arange(0, 25).reshape((5,5))</span>
+<span class="sd">        &gt;&gt;&gt; for patch, pmask, _, slicer in CentredPatchIterator(arr, 3):</span>
+<span class="sd">        &gt;&gt;&gt;     new_patch = CentredPatchIterator.applyslicer(arr, slicer, pmask)</span>
+<span class="sd">        &gt;&gt;&gt;     print numpy.all(new_patch == patch)</span>
+<span class="sd">        True</span>
+<span class="sd">        ...</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">slicer</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pmask</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">l</span><span class="p">])</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">l</span><span class="p">:]),</span> <span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">cval</span><span class="p">:</span> <span class="n">patch</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">cval</span><span class="p">)</span>
+        <span class="n">sliced</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span>
+        <span class="n">patch</span><span class="p">[</span><span class="n">pmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">sliced</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">sliced</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">l</span><span class="p">])]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">sliced</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">l</span><span class="p">:]))</span>
+        <span class="k">return</span> <span class="n">patch</span></div>
+        
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CentredPatchIteratorOverlapping.assembleimage"><a class="viewcode-back" href="../../../generated/generated/medpy.iterators.patchwise.CentredPatchIteratorOverlapping.assembleimage.html#medpy.iterators.patchwise.CentredPatchIteratorOverlapping.assembleimage">[docs]</a>    <span class="k">def</span> <span class="nf">assembleimage</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">pmasks</span><span class="p">,</span> <span class="n">gridids</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">        Assemble an image from a number of patches, patch masks and their grid ids.</span>
+<span class="sd">        </span>
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        Currently only applicable for non-overlapping patches.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        patches : sequence</span>
+<span class="sd">            Sequence of patches.</span>
+<span class="sd">        pmasks : sequence</span>
+<span class="sd">            Sequence of associated patch masks.</span>
+<span class="sd">        gridids</span>
+<span class="sd">            Sequence of associated grid ids.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        image : ndarray</span>
+<span class="sd">            The patches assembled back into an image of the original proportions.</span>
+<span class="sd">            </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Two-dimensional example:</span>
+<span class="sd">        &gt;&gt;&gt; import numpy</span>
+<span class="sd">        &gt;&gt;&gt; from medpy.iterators import CentredPatchIterator</span>
+<span class="sd">        &gt;&gt;&gt; arr = numpy.arange(0, 25).reshape((5,5))</span>
+<span class="sd">        &gt;&gt;&gt; arr</span>
+<span class="sd">        array([[ 0,  1,  2,  3,  4],</span>
+<span class="sd">               [ 5,  6,  7,  8,  9],</span>
+<span class="sd">               [10, 11, 12, 13, 14],</span>
+<span class="sd">               [15, 16, 17, 18, 19],</span>
+<span class="sd">               [20, 21, 22, 23, 24]])</span>
+<span class="sd">        &gt;&gt;&gt; patches, pmasks, gridids, _ = zip(*CentredPatchIterator(arr, 2))</span>
+<span class="sd">        &gt;&gt;&gt; result = CentredPatchIterator.assembleimage(patches, pmasks, gridids)</span>
+<span class="sd">        &gt;&gt;&gt; numpy.all(arr == result)</span>
+<span class="sd">        True</span>
+<span class="sd">        </span>
+<span class="sd">        Five-dimensional example:</span>
+<span class="sd">        &gt;&gt;&gt; arr = numpy.random.randint(0, 10, range(5, 10))</span>
+<span class="sd">        &gt;&gt;&gt; patches, pmasks, gridids, _ = zip(*CentredPatchIterator(arr, range(2, 7)))</span>
+<span class="sd">        &gt;&gt;&gt; result = CentredPatchIterator.assembleimage(patches, pmasks, gridids)</span>
+<span class="sd">        &gt;&gt;&gt; numpy.all(arr == result)</span>
+<span class="sd">        True            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">patches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">gridid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">pmasks</span><span class="p">,</span> <span class="n">gridids</span><span class="p">):</span>
+                <span class="n">groupid</span> <span class="o">=</span> <span class="n">gridid</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">groupid</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                    <span class="n">groups</span><span class="p">[</span><span class="n">groupid</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">groups</span><span class="p">[</span><span class="n">groupid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">patch</span><span class="p">,</span> <span class="n">pmask</span><span class="p">,</span> <span class="n">gridid</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">gridids</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">pmasks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">groupid</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">2</span><span class="p">))],</span> <span class="n">d</span><span class="p">))</span>
+                <span class="n">pmasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">m</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">2</span><span class="p">))],</span> <span class="n">d</span><span class="p">))</span>
+                <span class="n">gridids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">groupid</span><span class="p">)</span>
+        <span class="n">objs</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">pmasks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">objs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The assembled patch masks contain more than one binary object.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">patches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span></div></div>
+                
+        
+<span class="k">def</span> <span class="nf">is_integer</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

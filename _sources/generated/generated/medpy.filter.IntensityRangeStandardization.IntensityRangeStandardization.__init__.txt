@@ -1,0 +1,6 @@
+medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__
+=================================================================================
+
+.. currentmodule:: medpy.filter.IntensityRangeStandardization
+
+.. automethod:: IntensityRangeStandardization.__init__

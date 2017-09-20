@@ -1,0 +1,6 @@
+medpy.metric.binary.positive_predictive_value
+=============================================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: positive_predictive_value

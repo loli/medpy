@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphInt.reset
+=====================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphInt.reset

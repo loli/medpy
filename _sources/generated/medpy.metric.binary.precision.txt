@@ -1,0 +1,6 @@
+medpy.metric.binary.precision
+=============================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: precision

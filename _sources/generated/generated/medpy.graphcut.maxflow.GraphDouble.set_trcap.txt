@@ -1,0 +1,6 @@
+medpy.graphcut.maxflow.GraphDouble.set_trcap
+============================================
+
+.. currentmodule:: medpy.graphcut.maxflow
+
+.. automethod:: GraphDouble.set_trcap

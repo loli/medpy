@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.features.histogram &mdash; MedPy 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
+	
+        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for medpy.features.histogram</h1><div class="highlight"><pre>
+<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span class="c1"># </span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1"># </span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># </span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># author Oskar Maier</span>
+<span class="c1"># version r0.1.3</span>
+<span class="c1"># since 2012-03-01</span>
+<span class="c1"># status Release</span>
+
+<span class="c1"># build-in modules</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># third-party modules</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span>
+
+<span class="c1"># own modules</span>
+
+<span class="c1"># constants</span>
+<span class="c1"># the available membership functions for fuzzy histogram calculation</span>
+<span class="n">__MBS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;triangular&#39;</span><span class="p">,</span> <span class="s1">&#39;trapezoid&#39;</span><span class="p">,</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;sigmoid&#39;</span><span class="p">]</span>
+
+<span class="c1"># code</span>
+<div class="viewcode-block" id="fuzzy_histogram"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.fuzzy_histogram.html#medpy.features.histogram.fuzzy_histogram">[docs]</a><span class="k">def</span> <span class="nf">fuzzy_histogram</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">membership</span><span class="o">=</span><span class="s1">&#39;triangular&#39;</span><span class="p">,</span> <span class="n">smoothness</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">guarantee</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Compute a fuzzy histogram.</span>
+<span class="sd">    The percentage of a value&#39;s membership in a bin is computed using the selected</span>
+<span class="sd">    membership function. This functions stays as near as possible to the `numpy.histogram`</span>
+<span class="sd">    behaviour.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : array_like</span>
+<span class="sd">        Input data; The histogram is computed over the flattened array (with ravel()).</span>
+<span class="sd">    bins : int</span>
+<span class="sd">        The number of equal-width bins in the given range (10, by default).</span>
+<span class="sd">    range : (float, float)</span>
+<span class="sd">        The lower and upper range of the bins; If not provided, range is simply</span>
+<span class="sd">        (a.min(), a.max()); Values outside the range are ignored.</span>
+<span class="sd">    normed : bool</span>
+<span class="sd">        If False, the result will contain the number of samples in each bin; If</span>
+<span class="sd">        True, the result is the value of the probability density function at</span>
+<span class="sd">        the bin, normalized such that the integral over the range is 1.</span>
+<span class="sd">    membership : string</span>
+<span class="sd">        Select the type of the fuzzy membership function; See package</span>
+<span class="sd">        description for available options.</span>
+<span class="sd">    smoothness : float</span>
+<span class="sd">        The smoothness of the fuzzy function; See package</span>
+<span class="sd">        description and the membership functions for more details.</span>
+<span class="sd">    guarantee : bool</span>
+<span class="sd">        Guarantee that all values contribute equally to the histogram; when this value is</span>
+<span class="sd">        set, the range term is ignored; see package descriptions for details.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hist : array</span>
+<span class="sd">        The values of the histogram. See normed and weights for a description of the possible semantics.</span>
+<span class="sd">    bin_edges : array of dtype float</span>
+<span class="sd">        Return the bin edges (length(hist)+1).</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    See package description for more details on the usage.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from medpy.features import fuzzy_histogram</span>
+<span class="sd">    &gt;&gt;&gt; a = np.asarray([1,2,3,3.2,3.4,3.5,7.5,7.6,7.8,8,9,10])</span>
+<span class="sd">    &gt;&gt;&gt; np.histogram(a, bins=4)</span>
+<span class="sd">    (array([4, 2, 2, 4]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))</span>
+<span class="sd">    &gt;&gt;&gt; fuzzy_histogram(a, bins=4)</span>
+<span class="sd">    (array([ 3.4       ,  2.04444444,  2.04444444,  3.4       ]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))</span>
+<span class="sd">    &gt;&gt;&gt; fuzzy_histogram(a, bins=4, membership=&#39;sigmoid&#39;)</span>
+<span class="sd">    (array([ 3.34304743,  2.15613626,  2.15613626,  3.34304743]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check and prepare parameters</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="nb">range</span><span class="p">:</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;max must be larger than min in range parameter.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">bins</span><span class="p">):</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;bins must an integer.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bins</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;bins must greater than zero.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">membership</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">__MBS</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Unknown type: {}. Must be one of {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">membership</span><span class="p">,</span> <span class="n">__MBS</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">smoothness</span> <span class="ow">and</span> <span class="n">smoothness</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;smoothness must be greater than zero.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># set default smoothness values</span>
+    <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">smoothness</span><span class="p">:</span>
+        <span class="n">smoothness</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="k">if</span> <span class="s1">&#39;trapezoid&#39;</span> <span class="o">==</span> <span class="n">membership</span> <span class="k">else</span> <span class="mf">0.5</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">guarantee</span><span class="p">:</span> <span class="c1"># compute bin distribution in no guarantee case</span>
+        <span class="n">binw</span> <span class="o">=</span> <span class="p">(</span><span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">i</span> <span class="o">*</span> <span class="n">binw</span> <span class="o">+</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scipy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># compute bin distribution for guarantee case</span>
+        <span class="n">bins_core</span> <span class="o">=</span> <span class="n">bins</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">smoothness</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">bins_core</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;bins to few to guarantee removing boundary effect.&#39;</span><span class="p">)</span>
+        <span class="n">binw</span> <span class="o">=</span> <span class="p">(</span><span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">bins_core</span><span class="p">)</span>
+        <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">smoothness</span><span class="p">))</span> <span class="o">*</span> <span class="n">binw</span><span class="p">,</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">smoothness</span><span class="p">))</span> <span class="o">*</span> <span class="n">binw</span><span class="p">)</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">i</span> <span class="o">*</span> <span class="n">binw</span> <span class="o">+</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scipy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
+    
+    <span class="c1"># create membership function (centered at 0)</span>
+    <span class="k">if</span> <span class="s1">&#39;triangular&#39;</span> <span class="o">==</span> <span class="n">membership</span><span class="p">:</span>
+        <span class="n">membership</span> <span class="o">=</span> <span class="n">triangular_membership</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">binw</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;trapezoid&#39;</span> <span class="o">==</span> <span class="n">membership</span><span class="p">:</span>
+        <span class="n">membership</span> <span class="o">=</span> <span class="n">trapezoid_membership</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">binw</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;gaussian&#39;</span> <span class="o">==</span> <span class="n">membership</span><span class="p">:</span>
+        <span class="n">membership</span> <span class="o">=</span> <span class="n">gaussian_membership</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">binw</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;sigmoid&#39;</span> <span class="o">==</span> <span class="n">membership</span><span class="p">:</span>
+        <span class="n">membership</span> <span class="o">=</span> <span class="n">sigmoidal_difference_membership</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">binw</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">)</span>
+
+    <span class="c1"># compute histogram i.e. memberships of values across neighbourhood (determined by smoothness)</span>
+    <span class="n">neighbourhood</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">smoothness</span><span class="p">))</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
+    <span class="n">histogram</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span> <span class="c1"># for each value</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">v</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="n">binw</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scipy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span> <span class="o">-</span> <span class="n">neighbourhood</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">idx</span> <span class="o">+</span> <span class="n">neighbourhood</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span> <span class="c1"># for crips bin neighbourhood</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">histogram</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">membership</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">start</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">binw</span><span class="p">)</span> <span class="c1"># adjust v for evaluation on zero-centered membership function</span>
+
+    <span class="c1"># normalize</span>
+    <span class="k">if</span> <span class="n">normed</span><span class="p">:</span> <span class="n">histogram</span> <span class="o">/=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">histogram</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">histogram</span><span class="p">,</span> <span class="n">bins</span></div>
+    
+<span class="c1"># //////////////////// #</span>
+<span class="c1"># Membership functions #</span>
+<span class="c1"># //////////////////// #</span>
+<span class="c1"># see http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html for graphs    </span>
+
+<div class="viewcode-block" id="triangular_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.triangular_membership.html#medpy.features.histogram.triangular_membership">[docs]</a><span class="k">def</span> <span class="nf">triangular_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Create a triangular membership function for a fuzzy histogram bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bin_center : number</span>
+<span class="sd">        The center of the bin of which to compute the membership function.</span>
+<span class="sd">    bin_width : number</span>
+<span class="sd">        The width of a single bin (all expected to be of equal width).</span>
+<span class="sd">    smoothness : number, optional</span>
+<span class="sd">        The smoothness of the function; determines the neighbourhood affected.</span>
+<span class="sd">        See below and `fuzzy_histogram` for a more detailed explanation</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    triangular_membership : function</span>
+<span class="sd">        A triangular membership function centered on the bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For the triangular function the smoothness factor has to be 0.5. Lower values</span>
+<span class="sd">    are accepted, but then the function assumes the shape of the trapezium membership</span>
+<span class="sd">    function. Higher values lead to an exception.</span>
+<span class="sd">    </span>
+<span class="sd">    The triangular membership function is defined as</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        </span>
+<span class="sd">        \mu_{\triangle}(x) =</span>
+<span class="sd">          \left\{</span>
+<span class="sd">            \begin{array}{ll}</span>
+<span class="sd">              0, &amp; x&lt;a, x&gt;c\\</span>
+<span class="sd">              \frac{x-a}{b-a}, &amp; a\leq x\leq b \\</span>
+<span class="sd">              \frac{c-x}{c-b}, &amp; b&lt;x\leq c\\</span>
+<span class="sd">            \end{array}</span>
+<span class="sd">          \right.</span>
+
+<span class="sd">    where :math:`a` is the left border, :math:`c` the right border and :math:`b` the center of the triangular</span>
+<span class="sd">    function. The height of the triangle is chosen such, that all values contribute with</span>
+<span class="sd">    exactly one.</span>
+<span class="sd">    </span>
+<span class="sd">    The standard triangular function (:math:`smoothness = 0.5`) is displayed in the following</span>
+<span class="sd">    figure</span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/triangular_01.png</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Triangular functions (1)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    where the bin width is :math:`2` with centers at :math:`-2`, :math:`0` and :math:`2`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">smoothness</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;the triangular/trapezium membership functions supports only smoothnesses between 1/10 and 1/2.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">smoothness</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="k">return</span> <span class="n">trapezoid_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">)</span>
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">-</span> <span class="n">bin_width</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bin_center</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">+</span> <span class="n">bin_width</span>
+    
+    <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">c</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fun</span></div>
+    
+<div class="viewcode-block" id="trapezoid_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.trapezoid_membership.html#medpy.features.histogram.trapezoid_membership">[docs]</a><span class="k">def</span> <span class="nf">trapezoid_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Create a trapezium membership function for a fuzzy histogram bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bin_center : number</span>
+<span class="sd">        The center of the bin of which to compute the membership function.</span>
+<span class="sd">    bin_width : number</span>
+<span class="sd">        The width of a single bin (all expected to be of equal width).</span>
+<span class="sd">    smoothness : number, optional</span>
+<span class="sd">        The smoothness of the function; determines the neighbourhood affected.</span>
+<span class="sd">        See below and `fuzzy_histogram` for a more detailed explanation</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    trapezoid_membership : function</span>
+<span class="sd">        A trapezoidal membership function centered on the bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For the trapezium function the smoothness factor can be between &gt;0.0 and &lt;0.5.</span>
+<span class="sd">    Higher values are excepted, but then the function assumes the shape of the triangular</span>
+<span class="sd">    membership function. A value of 0.0 would make the histogram behave like a crisp one.</span>
+<span class="sd">    </span>
+<span class="sd">    The trapezium membership function is defined as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        \mu_{trapez}(x) =</span>
+<span class="sd">          \left\{</span>
+<span class="sd">            \begin{array}{ll}</span>
+<span class="sd">              0, &amp; x&lt;a, x&gt;d\\</span>
+<span class="sd">              \frac{x-a}{b-a}, &amp; a\leq x\leq b \\</span>
+<span class="sd">              1, &amp; b&lt;x&lt;c\\</span>
+<span class="sd">              \frac{d-x}{d-c}, &amp; c\leq x\leq d\\</span>
+<span class="sd">            \end{array}</span>
+<span class="sd">          \right.</span>
+<span class="sd">    </span>
+<span class="sd">    where :math:`a` is the left lower border, :math:`b` the left upper border, :math:`c` the right upper border</span>
+<span class="sd">    and :math:`d` the right lower border of the trapezium.</span>
+<span class="sd">    </span>
+<span class="sd">    A smoothness term of 0.1 makes the trapezium function reach by :math:`0.1 * bin\_width` into</span>
+<span class="sd">    the areas of the adjunct bins, as can be observed in the following figure</span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/trapezium_02.png</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Trapezium functions (1)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    where the bin width is 2 with centers at -2, 0 and 2.</span>
+<span class="sd">    </span>
+<span class="sd">    Increasing the smoothness term toward 0.5, the function starts to resemble the</span>
+<span class="sd">    triangular membership function, which in fact it becomes for any :math:`smoothness &gt;= 0.5`.</span>
+<span class="sd">    The behavior can be observed in the following graph with :math:`smoothness=0.4` </span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/trapezium_01.png</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Trapezium functions (2)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Lowering the smoothness toward 0.0, on the other hand, leads the trapezium function</span>
+<span class="sd">    to behave more and more like a crisp histogram membership, which in fact it becomes</span>
+<span class="sd">    at a smoothness of 0.0. The following figure, where the smoothness term is near zero,</span>
+<span class="sd">    illustrates this behaviour</span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/trapezium_03.png</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Trapezium functions (3)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># special case of high smoothness</span>
+    <span class="k">if</span> <span class="n">smoothness</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;the triangular/trapezium membership functions supports only smoothnesses between 1/10 and 1/2.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">smoothness</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">:</span> <span class="k">return</span> <span class="n">triangular_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">)</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">-</span> <span class="p">(</span><span class="n">smoothness</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">bin_width</span> 
+    <span class="n">b</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">-</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">smoothness</span><span class="p">)</span> <span class="o">*</span> <span class="n">bin_width</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">smoothness</span><span class="p">)</span> <span class="o">*</span> <span class="n">bin_width</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">+</span> <span class="p">(</span><span class="n">smoothness</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">bin_width</span>
+     
+    <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">c</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fun</span></div>
+
+<div class="viewcode-block" id="gaussian_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.gaussian_membership.html#medpy.features.histogram.gaussian_membership">[docs]</a><span class="k">def</span> <span class="nf">gaussian_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Create a gaussian membership function for a fuzzy histogram bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bin_center : number</span>
+<span class="sd">        The center of the bin of which to compute the membership function.</span>
+<span class="sd">    bin_width : number</span>
+<span class="sd">        The width of a single bin (all expected to be of equal width).</span>
+<span class="sd">    smoothness : number, optional</span>
+<span class="sd">        The smoothness of the function; determines the neighbourhood affected.</span>
+<span class="sd">        See below and `fuzzy_histogram` for a more detailed explanation</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gaussian_membership : function</span>
+<span class="sd">        The cumulative density function of the desired gaussian.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Since the gaussian membership function is infinite, it is</span>
+<span class="sd">    not actually true that it does not contribute to bins outside of the neighbourhood</span>
+<span class="sd">    range. But the contribution is so marginal (:math:`eps &lt;= 0.001` per value) that it can be</span>
+<span class="sd">    safely ignored.</span>
+<span class="sd">    </span>
+<span class="sd">    The gaussian membership function is defined as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">    </span>
+<span class="sd">        \mu_{gauss}(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\zeta)^2}{2\sigma^2}}</span>
+
+<span class="sd">    Since the gaussian distributions can not be formed to sum up to one at each point of</span>
+<span class="sd">    the x-axis, their cumulative density functions (CDF) are used instead. For more</span>
+<span class="sd">    details on CDF see http://en.wikipedia.org/wiki/Normal_distribution .</span>
+<span class="sd">    </span>
+<span class="sd">    The gaussian and therefore the CDF are centered above the requested value instead of</span>
+<span class="sd">    the bin center. Then the CDF value for the left side of the bin is subtracted from</span>
+<span class="sd">    the CDF value returned for the right side. The result is the integral under the</span>
+<span class="sd">    gaussian with :math:`\mu/\zeta = value` with the bin-sides as the integral borders.</span>
+<span class="sd">    </span>
+<span class="sd">    This approach might seem a little bit unintuitive, but is the best possible for</span>
+<span class="sd">    gaussian membership functions. The following graph gives a graphical example of the</span>
+<span class="sd">    computation of each values bin membership</span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/gaussian_01.png </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Trapezium functions (1)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    where the bin_width is 1, one bin between each of the x tics (e.g. [-1, 0], [0, 1],</span>
+<span class="sd">    etc.). The value which membership should be computed is marked by a yellow bar at</span>
+<span class="sd">    :math:`x = 0.3`. Its membership in each bin is defined by the integral under the gaussian</span>
+<span class="sd">    centered at the value (i.e. 0.3). The purple area therefore defines its membership in</span>
+<span class="sd">    the [-2,-1] bin, the red area its membership in the [-1,0] bin, etc.</span>
+<span class="sd">    Since the gaussian is guaranteed to have an infinite integral of 1, the some of the</span>
+<span class="sd">    contributions of a value to all bins is one.</span>
+
+<span class="sd">    For computation the function normalizes all values to a bin_width of 1, which can</span>
+<span class="sd">    introduce marginal rounding errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">smoothness</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">smoothness</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;the gaussian membership function supports only smoothnesses between 1/10 and 5.&#39;</span><span class="p">)</span>
+    
+    <span class="n">bin_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bin_width</span><span class="p">)</span>
+    <span class="n">bin_center</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">/</span> <span class="n">bin_width</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">-</span> <span class="mf">0.5</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">bin_center</span> <span class="o">+</span> <span class="mf">0.5</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">_gaussian_membership_sigma</span><span class="p">(</span><span class="n">smoothness</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">x</span> <span class="o">/</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">-</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">x</span> <span class="o">/</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="c1"># x, mu, sigma</span>
+    
+    <span class="k">return</span> <span class="n">fun</span></div>
+
+<span class="k">def</span> <span class="nf">_gaussian_membership_sigma</span><span class="p">(</span><span class="n">smoothness</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">):</span> <span class="c1"># 275us @ smothness=10</span>
+    <span class="sd">r&quot;&quot;&quot;Compute the sigma required for a gaussian, such that in a neighbourhood of</span>
+<span class="sd">    smoothness the maximum error is &#39;eps&#39;.</span>
+<span class="sd">    The error is here the difference between the clipped integral and one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">deltas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">]</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">smoothness</span> <span class="o">*</span> <span class="mf">0.3</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="p">(</span><span class="n">smoothness</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="n">deltas</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">error</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
+            <span class="n">sigma</span> <span class="o">+=</span> <span class="n">delta</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">-</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="c1"># x, mu, sigma</span>
+        <span class="n">sigma</span> <span class="o">-=</span> <span class="n">delta</span>
+    <span class="k">return</span> <span class="n">sigma</span>
+
+<div class="viewcode-block" id="sigmoidal_difference_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.sigmoidal_difference_membership.html#medpy.features.histogram.sigmoidal_difference_membership">[docs]</a><span class="k">def</span> <span class="nf">sigmoidal_difference_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;Create the difference of two sigmoids as membership function for a fuzzy histogram bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bin_center : number</span>
+<span class="sd">        The center of the bin of which to compute the membership function.</span>
+<span class="sd">    bin_width : number</span>
+<span class="sd">        The width of a single bin (all expected to be of equal width).</span>
+<span class="sd">    smoothness : number, optional</span>
+<span class="sd">        The smoothness of the function; determines the neighbourhood affected.</span>
+<span class="sd">        See below and `fuzzy_histogram` for a more detailed explanation</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sigmoidal_difference_membership : function</span>
+<span class="sd">        A sigmoidal difference membership function centered on the bin.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Since the sigmoidal membership function is infinite, it is</span>
+<span class="sd">    not actually true that it does not contribute to bins outside of the neighbourhood</span>
+<span class="sd">    range. But the contribution is so marginal (eps &lt;= 0.001 per value) that it can be</span>
+<span class="sd">    safely ignored.</span>
+<span class="sd">    </span>
+<span class="sd">    The sigmoidal membership function is defined as</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        </span>
+<span class="sd">        \mu_{sigmoid}(x) = \left[1+e^{-\alpha_1 (x-\zeta_1)}\right]^{-1} - \left[1+e^{-\alpha_2 (x-\zeta_2)}\right]^{-1}</span>
+
+<span class="sd">    where :math:`\alpha_1 = \alpha_2 = \alpha` is computed throught the smoothness term</span>
+<span class="sd">    and :math:`\zeta_1` and :math:`\zeta_2` constitute the left resp. right borders of the bin.</span>
+<span class="sd">    </span>
+<span class="sd">    The following figure shows three sigmoidal membership functions for bins at the</span>
+<span class="sd">    centers -2, -0 and 2 with a bin width of 2 and a smoothness of 2:</span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/sigmoid_01.png</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Sigmoidal functions (1)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    The central (green) membership functions extends to its up till the second bin</span>
+<span class="sd">    (centered around -4) and the same to the right (until the bin centered around +4).</span>
+<span class="sd">    Therefore all values from -5 to +5 are considered for membership in this bin. Values</span>
+<span class="sd">    out of this range would only contribute marginally to this bin.</span>
+<span class="sd">    Furthermore it is inteligable that the sum of all membership functions at each point</span>
+<span class="sd">    is equal to 1, therefore all values are equally represented (i.e. contribute with 1</span>
+<span class="sd">    to the overall histogram).</span>
+<span class="sd">    </span>
+<span class="sd">    The influence of the smoothness term can be observed in the following figure:</span>
+<span class="sd">    </span>
+<span class="sd">    .. .. image:: images/sigmoid_02.png</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;Sigmoidal functions (2)&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Here smoothness has been chosen to be 1. The green function therefore extends just</span>
+<span class="sd">    into the directly adjunct bins to its left and right.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">smoothness</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">smoothness</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">10</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;the sigmoidal membership function supports only smoothnesses between 1/10 and 10.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># compute the alpha that will give a contribution to the next bins right and left</span>
+    <span class="n">alpha_nbh1</span> <span class="o">=</span> <span class="mf">8.</span> <span class="o">/</span> <span class="n">bin_width</span> <span class="c1"># experimental value</span>
+    <span class="c1"># compute the alpha that results in the desired smoothness level </span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_nbh1</span> <span class="o">/</span> <span class="n">smoothness</span>
+    
+    <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">sigmoid1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">bin_center</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">bin_width</span><span class="p">)))</span>
+        <span class="n">sigmoid2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">bin_center</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">bin_width</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">sigmoid1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">sigmoid2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fun</span></div>
+    
+<span class="c1">#def generalized_bell_membership(alpha, beta, zeta):</span>
+<span class="c1">#    &quot;&quot;&quot;</span>
+<span class="c1">#    Create a generalized bell function as membership function for a fuzzy histogram bin.</span>
+<span class="c1">#    </span>
+<span class="c1">#    @param alpha controls the width of the plateau</span>
+<span class="c1">#    @param beta controls the width of the base</span>
+<span class="c1">#    @param zeta the center of the function</span>
+<span class="c1">#    </span>
+<span class="c1">#    Recommended values are:</span>
+<span class="c1">#        - alpha: bin-width/2</span>
+<span class="c1">#        - beta: bin-width/2</span>
+<span class="c1">#        - zeta: bin center</span>
+<span class="c1">#    </span>
+<span class="c1">#    The bell membership function is defined as    </span>
+<span class="c1">#    \f[</span>
+<span class="c1">#     \mu_{bell}(x) = \left[1+\left|\frac{x-\zeta}{\alpha}\right|^{2\beta}\right]^{-1}</span>
+<span class="c1">#    \f]</span>
+<span class="c1">#    &quot;&quot;&quot;</span>
+<span class="c1">#    def fun(x):</span>
+<span class="c1">#        try:</span>
+<span class="c1">#            return math.pow(1 + math.pow(abs((x - zeta)/float(alpha)), 2. * beta), -1)</span>
+<span class="c1">#        except Exception as e:</span>
+<span class="c1">#            print x, zeta, alpha, beta</span>
+<span class="c1">#            raise e</span>
+<span class="c1">#    return fun</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2016, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Sep 20, 2017.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

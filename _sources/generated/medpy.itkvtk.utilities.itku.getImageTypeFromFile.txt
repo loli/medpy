@@ -1,0 +1,6 @@
+medpy.itkvtk.utilities.itku.getImageTypeFromFile
+================================================
+
+.. currentmodule:: medpy.itkvtk.utilities.itku
+
+.. autofunction:: getImageTypeFromFile
