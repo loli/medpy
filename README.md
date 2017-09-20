@@ -11,18 +11,18 @@ Stable releases
 ===============
 
 - Download (stable release): https://pypi.python.org/pypi/medpy
-- HTML documentation and installation instruction (stable release): http://pythonhosted.org/MedPy/
+- HTML documentation and installation instruction (stable release): http://loli.github.io/medpy/
 
 Development version
 ===================
 
 - Download (development version): https://github.com/loli/medpy
-- HTML documentation and installation instruction (development version): link-to-github-pages-doc
+- HTML documentation and installation instruction (development version): create this from doc/ folder following instructions in contained README file
 
 Python 3 version
 =================
 
-- Experimental Python 3 version: https://github.com/loli/medpy/tree/Python3Adaptation
+- Experimental Python 3 version: https://github.com/loli/medpy/tree/Release_0.3.0p3
 
 Other links
 ===========
