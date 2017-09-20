@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Compares the pixel values of two images and gives a measure of the difference.

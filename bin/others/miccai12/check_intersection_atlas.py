@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Checks whether and how much an atlas for a given threshold and a massive 4D contour volume intersect."""
 

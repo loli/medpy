@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Resizes a marker-file along the slice direction (z)."""
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Zoom into an image by adding new slices in the z-direction and filling them with interpolated data.

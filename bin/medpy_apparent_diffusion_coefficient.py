@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Computes the apparent diffusion coefficient from two diffusion weighted MRI images.

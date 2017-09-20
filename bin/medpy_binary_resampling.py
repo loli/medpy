@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Re-samples a binary image according to a supplied voxel spacing.

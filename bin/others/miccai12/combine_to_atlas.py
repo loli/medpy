@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Combines a number of binary images to an atlas with values between 0 and 1."""
 

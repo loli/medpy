@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Creates an empty volume with the same attributes as the passes example image.

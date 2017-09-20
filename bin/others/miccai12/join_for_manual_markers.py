@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Joins a number of 3D manual markers into a 4D marker volume."""
 

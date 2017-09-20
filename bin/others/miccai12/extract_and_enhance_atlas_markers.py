@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Extracts FG and BG markers from an atlas image and enhances them."""
 

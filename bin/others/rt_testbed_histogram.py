@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Uses a testbed to test some histogram regional terms."""
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Takes a volume and a contour file and returns the cropped volume free of irrelevant slices."""
 

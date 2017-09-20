@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 "Register two binary 3D RV volumes via there base-points."
 

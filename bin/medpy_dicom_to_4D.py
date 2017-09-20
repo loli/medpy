@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Takes a dicom folder, loads the contained slices and saves them as a proper 4D volume.

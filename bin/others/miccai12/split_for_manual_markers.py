@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Prepares manual-marker ready volumes from a 4D volume."""
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Allow to plot a slice of an image with a masked area coloured."""
 

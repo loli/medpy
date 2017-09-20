@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Splits a (MICCAI'12) results file to evaluate the results also according to basal, mid and apical slices."""
 

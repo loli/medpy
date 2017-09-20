@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Join the trees of a number of forest into a common ensemble classifier.

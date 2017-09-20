@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Cuts all regions ties along one dimension on a region image."""
 

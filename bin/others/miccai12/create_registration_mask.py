@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Creates registration masks from ground-truth or manual markers."""
 

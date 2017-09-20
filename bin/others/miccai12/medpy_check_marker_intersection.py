@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Checks whether the markers of a given marker volume and the original contours intersect.

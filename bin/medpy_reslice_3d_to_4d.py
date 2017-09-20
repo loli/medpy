@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Reslices 4D information stacked into a 3D volume into a real 4D image.

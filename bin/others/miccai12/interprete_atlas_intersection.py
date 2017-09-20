@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Interpretes the results obtained by the check_intersection_atlas script."""
 

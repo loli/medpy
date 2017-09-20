@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Joins a number of XD volumes into a (X+1)D volume.

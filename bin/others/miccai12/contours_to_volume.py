@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Takes a number of contour text files and converts them into an image volume with markers."""
 

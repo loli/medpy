@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """Executes the watershed algorithm over images using a image-size based function to determine the best parameters."""
 
