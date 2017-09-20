@@ -22,7 +22,7 @@ Then::
 
     sudo pip install nibabel pydicom medpy
  
-Done. More installation instructions can be found in the `documentation <http://pythonhosted.org/MedPy/>`_.
+Done. More installation instructions can be found in the `documentation <http://loli.github.io/medpy/>`_.
 
 Using Python 3?
 ---------------
@@ -34,7 +34,7 @@ Try::
 
 Getting started with the library
 ================================
-If you already have one, whose format is support (see in the `documentation <http://pythonhosted.org/MedPy/>`_.), then good.
+If you already have one, whose format is support (see in the `documentation <http://loli.github.io/medpy/>`_.), then good.
 Otherwise navigate to http://www.nitrc.org/projects/inia19, click on the *Download Now* button, unpack and look for the *inia19-t1.nii* file.
 Open it in your favorite medical image viewer (I personally fancy `itksnap <http://www.itksnap.org>`_) and beware a the INIA19 primate brain atlas.
 
@@ -70,7 +70,7 @@ And save the binary image, marking the foreground
 >>> from medpy.io import save
 >>> save(output_data, '/path/to/otsu.xxx', image_header)
 
-After taking a look at it, you might want to dive deeper with the `documentation <http://pythonhosted.org/MedPy/>`_.
+After taking a look at it, you might want to dive deeper with the `documentation <http://loli.github.io/medpy/>`_.
 
 
 Getting started with the scripts
@@ -87,7 +87,7 @@ you can compare two image. And::
 
 	medpy_anisotropic_diffusion.py /path/to/image.xxx /path/to/output.xxx
 	
-lets you apply an edge preserving anisotropic diffusion filter. For a list of all scripts, see the `documentation <http://pythonhosted.org/MedPy/>`_.
+lets you apply an edge preserving anisotropic diffusion filter. For a list of all scripts, see the `documentation <http://loli.github.io/medpy/>`_.
 
 
 Read/write support for medical image formats
@@ -134,7 +134,7 @@ You can find our sources and single-click downloads:
 
 Tutorials and API Documentation
 ===============================
-http://pythonhosted.org/MedPy 
+http://loli.github.io/medpy/
 
 Requirements
 ============
