@@ -134,8 +134,8 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
         kappa_s = kappa * (2**0.5)
 
         def condgradient(delta, spacing):
-            top = 0.5/((1.-(delta/kappa_s)**2.)**2.)/float(spacing)
-            return numpy.where(delta <= kappa_s, top, 0)
+            top = 0.5*((1.-(delta/kappa_s)**2.)**2.)/float(spacing)
+            return numpy.where(numpy.abs(delta) <= kappa_s, top, 0)
 
     # initialize output array
     out = numpy.array(img, dtype=numpy.float32, copy=True)
