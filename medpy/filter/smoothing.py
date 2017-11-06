@@ -74,7 +74,7 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
         on conduction.
     gamma : float
         Controls the speed of diffusion. Pick a value :math:`<= .25` for stability.
-    voxelspacing : tuple of floats
+    voxelspacing : tuple of floats or array_like
         The distance between adjacent pixels in all img.ndim directions
     option : {1, 2}
         Whether to use the Perona Malik diffusion equation No. 1 or No. 2.
@@ -127,8 +127,8 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
     # initialize output array
     out = numpy.array(img, dtype=numpy.float32, copy=True)
 
-    # set default voxel spacong if not suppliec
-    if None == voxelspacing:
+    # set default voxel spacing if not supplied
+    if voxelspacing is None:
         voxelspacing = tuple([1.] * img.ndim)
 
     # initialize some internal variables
