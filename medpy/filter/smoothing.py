@@ -76,10 +76,13 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
         Controls the speed of diffusion. Pick a value :math:`<= .25` for stability.
     voxelspacing : tuple of floats or array_like
         The distance between adjacent pixels in all img.ndim directions
-    option : {1, 2}
-        Whether to use the Perona Malik diffusion equation No. 1 or No. 2.
+    option : {1, 2, 3}
+        Whether to use the Perona Malik diffusion equation No. 1 or No. 2,
+        or Tukey's biweight function.
         Equation 1 favours high contrast edges over low contrast ones, while
         equation 2 favours wide regions over smaller ones. See [1]_ for details.
+        Equation 3 preserves sharper boundaries than previous formulations and
+        improves the automatic stopping of the diffusion. See [2]_ for details.
 
     Returns
     -------
@@ -115,6 +118,10 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
        Scale-space and edge detection using ansotropic diffusion.
        IEEE Transactions on Pattern Analysis and Machine Intelligence,
        12(7):629-639, July 1990.
+    .. [2] M.J. Black, G. Sapiro, D. Marimont, D. Heeger
+       Robust anisotropic diffusion.
+       IEEE Transactions on Image Processing,
+       7(3):421-432, March 1998.
     """
     # define conduction gradients functions
     if option == 1:
@@ -123,6 +130,12 @@ def anisotropic_diffusion(img, niter=1, kappa=50, gamma=0.1, voxelspacing=None, 
     elif option == 2:
         def condgradient(delta, spacing):
             return 1./(1.+(delta/kappa)**2.)/float(spacing)
+    elif option == 3:
+        kappa_s = kappa * (2**0.5)
+
+        def condgradient(delta, spacing):
+            top = 0.5*((1.-(delta/kappa_s)**2.)**2.)/float(spacing)
+            return numpy.where(numpy.abs(delta) <= kappa_s, top, 0)
 
     # initialize output array
     out = numpy.array(img, dtype=numpy.float32, copy=True)
