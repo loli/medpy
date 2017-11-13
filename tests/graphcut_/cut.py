@@ -150,7 +150,7 @@ class TestCut(unittest.TestCase):
         self.assertSequenceEqual(label_image.tolist(), self.__result, 'The resulting cut is wrong. Expected\n {}\n got\n{}'.format(scipy.asarray(self.__result, dtype=scipy.bool_), label_image))
         
     @staticmethod
-    def __boundary_term(graph, label_image, (boundary_term_args)):
+    def __boundary_term(graph, label_image, boundary_term_args):
         "The boundary term function used for this tests."
         dic = TestCut.__get_mapping()
         for key, value in dic.iteritems():
