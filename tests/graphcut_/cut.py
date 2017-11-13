@@ -187,4 +187,4 @@ class TestCut(unittest.TestCase):
         return ((3, 6), (7, 10))
     
 if __name__ == '__main__':
-    unittest.main()     
+    unittest.main()
