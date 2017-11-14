@@ -1,2 +1,2 @@
-from houghtransform import TestHoughTransform
-from IntensityRangeStandardization import TestIntensityRangeStandardization
+from .houghtransform import TestHoughTransform
+from .IntensityRangeStandardization import TestIntensityRangeStandardization

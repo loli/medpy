@@ -129,9 +129,9 @@ class TestCut(unittest.TestCase):
         # build graph cut graph from graph
         gcgraph = GraphDouble(len(graph_new.get_nodes()), len(graph_new.get_nweights()))
         gcgraph.add_node(len(graph_new.get_nodes()))
-        for node, weight in graph_new.get_tweights().iteritems():
+        for node, weight in graph_new.get_tweights().items():
             gcgraph.add_tweights(int(node - 1), weight[0], weight[1])
-        for edge, weight in graph_new.get_nweights().iteritems():
+        for edge, weight in graph_new.get_nweights().items():
             gcgraph.add_edge(int(edge[0] - 1), int(edge[1] - 1), weight[0], weight[1])    
         
         # execute min-cut / executing BK_MFMC
@@ -153,7 +153,7 @@ class TestCut(unittest.TestCase):
     def __boundary_term(graph, label_image, boundary_term_args):
         "The boundary term function used for this tests."
         dic = TestCut.__get_mapping()
-        for key, value in dic.iteritems():
+        for key, value in dic.items():
             dic[key] = (value, value)
         return dic
         
