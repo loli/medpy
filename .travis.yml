@@ -10,6 +10,7 @@ python:
 install:
   # gcut version
   - "ls /usr/lib/x86_64-linux-gnu/libboost_*"
+  - "pip install -r requirements-dev.txt"
   - "pip install -v -e ."
 script: true
 addons:
@@ -21,3 +22,7 @@ cache:
 - apt
 - directories:
   - "$HOME/.cache/pip"
+script:
+  - nosetests tests/filter_/
+  - nosetests tests/io_/
+  - nosetests tests/features_/
