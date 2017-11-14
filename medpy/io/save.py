@@ -176,7 +176,7 @@ def save(arr, filename, hdr = False, force = True):
         # determine two suffixes (the second one of the compound of the two last elements)
         suffix = filename.split('.')[-1].lower()
         if not suffix in suffix_to_type:
-            suffix = '.'.join(map(lambda x: x.lower(), filename.split('.')[-2:]))
+            suffix = '.'.join([x.lower() for x in filename.split('.')[-2:]])
             if not suffix in suffix_to_type: # otherwise throw an Exception that will be caught later on
                 raise KeyError()
         # determine image type by ending
@@ -191,7 +191,7 @@ def save(arr, filename, hdr = False, force = True):
         except Exception as e:
             raise ImageSavingError('Failed to save image {} as type {}. Reason signaled by third-party module: {}'.format(filename, type_to_string[image_type], e))
     except KeyError:
-        raise ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(filename.split('.')[-1], filename, type_to_string.values()))
+        raise ImageTypeError('The ending {} of {} could not be associated with any known image type. Supported types are: {}'.format(filename.split('.')[-1], filename, list(type_to_string.values())))
         
     # Try brute force
     logger.debug('Normal saving failed. Entering brute force mode.')

@@ -222,7 +222,7 @@ def getImageType(image): # tested
         return itk.Image[itk.template(image)[1][0],
                          itk.template(image)[1][1]]
     except IndexError as _:
-        raise NotImplementedError, 'The python wrappers of ITK define no template class for this data type.'
+        raise NotImplementedError('The python wrappers of ITK define no template class for this data type.')
     
 def getImageTypeFromArray(arr): # tested
     """

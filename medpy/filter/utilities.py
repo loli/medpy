@@ -146,8 +146,8 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
         return return_value
     elif 'nearest' == mode:
         output[input_slicer] = input
-        dim_mult_slices = [(d, l, slice(None, l), slice(l, l + 1)) for d, (l, _) in zip(range(output.ndim), padding_offset) if not 0 == l]
-        dim_mult_slices.extend([(d, r, slice(-1 * r, None), slice(-2 * r, -2 * r + 1)) for d, (_, r) in zip(range(output.ndim), padding_offset) if not 0 == r])
+        dim_mult_slices = [(d, l, slice(None, l), slice(l, l + 1)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
+        dim_mult_slices.extend([(d, r, slice(-1 * r, None), slice(-2 * r, -2 * r + 1)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
         for dim, mult, to_slice, from_slice in dim_mult_slices:
             slicer_to = [to_slice if d == dim else slice(None) for d in range(output.ndim)]
             slicer_from = [from_slice if d == dim else slice(None) for d in range(output.ndim)]
@@ -155,16 +155,16 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
                 output[slicer_to] = numpy.concatenate([output[slicer_from]] * mult, dim)
         return return_value
     elif 'mirror' == mode:
-        dim_slices = [(d, slice(None, l), slice(l + 1, 2 * l + 1)) for d, (l, _) in zip(range(output.ndim), padding_offset) if not 0 == l]
-        dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r - 1, -1 * r - 1)) for d, (_, r) in zip(range(output.ndim), padding_offset) if not 0 == r])
+        dim_slices = [(d, slice(None, l), slice(l + 1, 2 * l + 1)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
+        dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r - 1, -1 * r - 1)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
         reverse_slice = slice(None, None, -1)
     elif 'reflect' == mode:
-        dim_slices = [(d, slice(None, l), slice(l, 2 * l)) for d, (l, _) in zip(range(output.ndim), padding_offset) if not 0 == l]
-        dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r, -1 * r)) for d, (_, r) in zip(range(output.ndim), padding_offset) if not 0 == r])
+        dim_slices = [(d, slice(None, l), slice(l, 2 * l)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
+        dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r, -1 * r)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
         reverse_slice = slice(None, None, -1)
     elif 'wrap' == mode:
-        dim_slices = [(d, slice(None, l), slice(-1 * (l + r), -1 * r if not 0 == r else None)) for d, (l, r) in zip(range(output.ndim), padding_offset) if not 0 == l]
-        dim_slices.extend([(d, slice(-1 * r, None), slice(l, r + l)) for d, (l, r) in zip(range(output.ndim), padding_offset) if not 0 == r])
+        dim_slices = [(d, slice(None, l), slice(-1 * (l + r), -1 * r if not 0 == r else None)) for d, (l, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
+        dim_slices.extend([(d, slice(-1 * r, None), slice(l, r + l)) for d, (l, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
         reverse_slice = slice(None)
     else:
         raise RuntimeError('boundary mode not supported')
