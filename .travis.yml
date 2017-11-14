@@ -11,3 +11,6 @@ install:
   # gcut version
   - "pip install -v ."
 script: true
+cache:
+- directories:
+  - "$HOME/.cache/pip"
