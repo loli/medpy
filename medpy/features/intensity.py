@@ -205,7 +205,7 @@ def indices(image, voxelspacing = None, mask = slice(None)):
     if voxelspacing is None:
         voxelspacing = [1.] * image.ndim
 
-    return join(*[a_vs[0][mask].ravel() * a_vs[1] for a_vs in zip(numpy.indices(image.shape), voxelspacing)])
+    return join(*[a[mask].ravel() * vs for a, vs in zip(numpy.indices(image.shape), voxelspacing)])
     
 def shifted_mean_gauss(image, offset = None, sigma = 5, voxelspacing = None, mask = slice(None)):
     r"""
