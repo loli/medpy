@@ -126,7 +126,7 @@ def relabel_non_zero(label_image, start = 1):
     if 0 in l: l.remove(0)
     mapping = dict()
     mapping[0] = 0
-    for key, item in zip(l, list(range(start, len(l) + start))):
+    for key, item in zip(l, range(start, len(l) + start)):
         mapping[key] = item
     
     return relabel_map(label_image, mapping)
