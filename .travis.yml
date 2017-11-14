@@ -13,5 +13,5 @@ before_install:
   - "sudo apt-get install libboost-python-dev"
 install:
   # gcut version
-  - "sudo pip install ."
+  - "sudo pip install -v ."
 script: true
