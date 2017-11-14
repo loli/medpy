@@ -68,8 +68,8 @@ VTK utilities :mod:`medpy.itkvtk.utilities.vtku`
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-import filter
-import utilities
+from . import filter
+from . import utilities
                         
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]

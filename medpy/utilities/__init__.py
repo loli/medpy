@@ -29,5 +29,5 @@ Custom types for the `argparse <https://docs.python.org/3/library/argparse.html>
     sequenceOfFloatsLe
 
 """
-import nibabelu
-import argparseu
+from . import nibabelu
+from . import argparseu
