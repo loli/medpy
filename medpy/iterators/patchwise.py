@@ -115,7 +115,9 @@ class SlidingWindowIterator():
         pmask[def_slicer] = True
         
         return patch, pmask, slicer
-        
+
+    next = __next__
+
     def applyslicer(self, array, slicer, cval = None):
         r"""
         Apply a slicer returned by the iterator to a new array of the same
@@ -311,6 +313,8 @@ class CentredPatchIterator():
         pmask = numpy.pad(numpy.ones(self.array[slicer].shape, dtype=numpy.bool), padder, mode='constant', constant_values=0)
         
         return patch, pmask, gridid, slicer
+
+    next = __next__
         
     @staticmethod
     def applyslicer(array, slicer, pmask, cval = 0):
@@ -586,6 +590,8 @@ class CentredPatchIteratorOverlapping():
         pmask = numpy.pad(numpy.ones(self.array[slicer].shape, dtype=numpy.bool), padder, mode='constant', constant_values=0)
         
         return patch, pmask, gridid, slicer
+
+    next = __next__
         
     @staticmethod
     def applyslicer(array, slicer, pmask, cval = 0):
