@@ -10,6 +10,12 @@ install:
   # gcut version
   - "pip install -v -e ."
 script: true
+addons:
+  apt:
+    packages:
+    - build-essential    
+    - libboost-python-dev
 cache:
+- apt
 - directories:
   - "$HOME/.cache/pip"
