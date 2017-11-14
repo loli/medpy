@@ -33,7 +33,10 @@ from .generate import graph_from_labels
 from ..core.exceptions import ArgumentError
 from ..core.logger import Logger
 from ..filter import relabel, relabel_map
-from functools import reduce
+try:
+    from functools import reduce
+except ImportError:
+    pass
 
 # code
 def split_marker(marker, fg_id = 1, bg_id = 2):
