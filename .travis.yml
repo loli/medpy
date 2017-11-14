@@ -25,4 +25,4 @@ cache:
 script:
   - nosetests tests/filter_/
   - nosetests tests/io_/
-  - nosetests tests/features_/
+#  - nosetests tests/features_/
