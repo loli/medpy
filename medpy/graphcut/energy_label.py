@@ -29,7 +29,7 @@ import numpy
 # own modules
 
 # code
-def boundary_difference_of_means(graph, label_image, (original_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_difference_of_means(graph, label_image, original_image): # label image is not required to hold continuous ids or to start from 1
     r"""
     Boundary term based on the difference of means between adjacent image regions.
     
@@ -108,7 +108,7 @@ def boundary_difference_of_means(graph, label_image, (original_image)): # label 
             graph.set_nweight(edge[0] - 1, edge[1] - 1, value, value)
 
 
-def boundary_stawiaski(graph, label_image, (gradient_image)): # label image is not required to hold continuous ids or to start from 1
+def boundary_stawiaski(graph, label_image, gradient_image): # label image is not required to hold continuous ids or to start from 1
     r"""
     Boundary term based on the sum of border voxel pairs differences.
      

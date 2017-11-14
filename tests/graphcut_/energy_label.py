@@ -74,14 +74,14 @@ class TestEnergyLabel(unittest.TestCase):
         label = numpy.asarray(label)
         gradient = numpy.asarray(gradient)
         graph = GCGraphTest(numpy.unique(label).size, math.pow(numpy.unique(label).size, 2))
-        boundary_stawiaski(graph, label, (gradient))
+        boundary_stawiaski(graph, label, gradient)
         graph.validate_nweights(self, expected_result, msg)
         
     def __run_boundary_difference_of_means_test(self, label, gradient, expected_result, msg = ''):
         label = numpy.asarray(label)
         gradient = numpy.asarray(gradient)
         graph = GCGraphTest(numpy.unique(label).size, math.pow(numpy.unique(label).size, 2))
-        boundary_difference_of_means(graph, label, (gradient))
+        boundary_difference_of_means(graph, label, gradient)
         graph.validate_nweights(self, expected_result, msg)
     
     
@@ -190,4 +190,3 @@ class GCGraphTest(GCGraph):
         
 if __name__ == '__main__':
     unittest.main()    
-        

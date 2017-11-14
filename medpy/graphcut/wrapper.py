@@ -17,6 +17,7 @@
 # version r0.1.0
 # since 2012-06-25
 # status Release
+from __future__ import division
 
 # build-in modules
 import multiprocessing
@@ -119,9 +120,9 @@ def graphcut_split(graphcut_function, regions, gradient, foreground, background,
     
     # compute how to split the volumes into sub-volumes i.e. determine step-size for each image dimension
     shape = list(img_region.shape)
-    steps = map(lambda x: x / int(minimal_edge_length), shape) # we want integer division
+    steps = map(lambda x: x // minimal_edge_length, shape)
     steps = [1 if 0 == x else x for x in steps] # replace zeros by ones
-    stepsizes = [math.ceil(x / float(y)) for x, y in zip(shape, steps)]
+    stepsizes = [math.ceil(x / y) for x, y in zip(shape, steps)]
     logger.debug('Using a minimal edge length of {}, a sub-volume size of {} was determined from the shape {}, which means {} sub-volumes.'.format(minimal_edge_length, stepsizes, shape, reduce(lambda x, y: x*y, steps)))
     
     # control step-sizes to definitely cover the whole image
