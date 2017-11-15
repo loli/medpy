@@ -9,6 +9,7 @@ python:
   - "3.6"  
 install:
   # gcut version
+  - "ls /usr/lib/x86_64-linux-gnu/libboost_*"
   - "pip install -v -e ."
 script: true
 addons:
