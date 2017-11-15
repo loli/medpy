@@ -1,6 +1,7 @@
 # config for travis-ci
 language: python
 sudo: false
+dist: trusty
 python:
   - "2.7"
   - "3.4"
