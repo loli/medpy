@@ -1,17 +1,23 @@
 # config for travis-ci
 language: python
+sudo: false
+dist: trusty
 python:
-  - "2.6"
   - "2.7"
-  - "3.2"
-  - "3.3"
   - "3.4"
-before_install:
-  - "sudo apt-get install build-essential"
-  - "sudo apt-get update"
-  - "sudo apt-get install python-scipy"
-  - "sudo apt-get install libboost-python-dev"
+  - "3.5"
+  - "3.6"  
 install:
   # gcut version
-  - "sudo pip install -v ."
+  - "ls /usr/lib/x86_64-linux-gnu/libboost_*"
+  - "pip install -v -e ."
 script: true
+addons:
+  apt:
+    packages:
+    - build-essential    
+    - libboost-python-dev
+cache:
+- apt
+- directories:
+  - "$HOME/.cache/pip"
