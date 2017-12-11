@@ -36,11 +36,21 @@ def read(fname):
 
 ### PREDEFINED MODULES
 # The maxflow graphcut wrapper using boost.python
+
+# Special handling for homebrew Boost Python library
+if sys.platform == "darwin":
+    if sys.version_info.major > 2:
+        boost_python_library = 'boost_python' + str(sys.version_info.major)
+    else:
+        boost_python_library = 'boost_python'
+else:
+    boost_python_library = 'boost_python-py' + str(sys.version_info.major) + str(sys.version_info.minor)
+
 maxflow = Extension('medpy.graphcut.maxflow',
                     define_macros = [('MAJOR_VERSION', '0'),
                                      ('MINOR_VERSION', '1')],
                     sources = ['lib/maxflow/src/maxflow.cpp', 'lib/maxflow/src/wrapper.cpp', 'lib/maxflow/src/graph.cpp'],
-                    libraries = ['boost_python-py' + str(sys.version_info.major) + str(sys.version_info.minor)],
+                    libraries = [boost_python_library],
                     extra_compile_args = ['-O0'])
 
 ### FUNCTIONALITY FOR CONDITIONAL C++ BUILD
@@ -51,19 +61,19 @@ if sys.platform == 'win32' and sys.version_info > (2, 6):
     ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError, IOError, ValueError)
 else:
     ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError)
-    
+
 class BuildFailed(Exception):
     pass
 
 class TestCommand(Command):
     user_options = []
-    
+
     def initialize_options(self):
         pass
-    
+
     def finalize_options(self):
         pass
-    
+
     def run(self):
         raise SystemExit(1)
 
@@ -74,7 +84,7 @@ class ve_build_ext(build_ext):
             build_ext.run(self)
         except DistutilsPlatformError:
             raise BuildFailed()
-        
+
     def build_extension(self, ext):
         try:
             build_ext.build_extension(self, ext)
@@ -102,7 +112,7 @@ def run_setup(with_compilation):
           license='LICENSE.txt',
           keywords='medical image processing dicom itk insight tool kit MRI CT US graph cut max-flow min-cut',
           long_description=read('README.txt'),
-        
+
           classifiers=[
               'Development Status :: 4 - Beta',
               'Environment :: Console',
@@ -123,45 +133,45 @@ def run_setup(with_compilation):
               'Topic :: Scientific/Engineering :: Medical Science Apps.',
               'Topic :: Scientific/Engineering :: Image Recognition'
           ],
-        
+
           install_requires=[
             "scipy >= 0.9.0",
             "numpy >= 1.6.1",
             "nibabel >= 1.3.0",
             "pydicom >= 0.9.7"
           ],
-        
+
           extras_require = {
             'extra_formats' : ["itk >= 3.16.0"]
           },
-        
+
           packages = PACKAGES + ap,
-          
+
           scripts=[
             'bin/medpy_anisotropic_diffusion.py',
             'bin/medpy_apparent_diffusion_coefficient.py',
             'bin/medpy_binary_resampling.py',
-            'bin/medpy_convert.py',       
+            'bin/medpy_convert.py',
             'bin/medpy_create_empty_volume_by_example.py',
-            'bin/medpy_dicom_slices_to_volume.py',    
-            'bin/medpy_dicom_to_4D.py',             
+            'bin/medpy_dicom_slices_to_volume.py',
+            'bin/medpy_dicom_to_4D.py',
             'bin/medpy_diff.py',
             'bin/medpy_extract_contour.py',
-            'bin/medpy_extract_min_max.py',     
-            'bin/medpy_extract_sub_volume_auto.py',     
-            'bin/medpy_extract_sub_volume_by_example.py',        
+            'bin/medpy_extract_min_max.py',
+            'bin/medpy_extract_sub_volume_auto.py',
+            'bin/medpy_extract_sub_volume_by_example.py',
             'bin/medpy_extract_sub_volume.py',
             'bin/medpy_fit_into_shape.py',
             'bin/medpy_gradient.py',
-            'bin/medpy_graphcut_label_bgreduced.py',   
-            'bin/medpy_graphcut_label_w_regional.py', 
+            'bin/medpy_graphcut_label_bgreduced.py',
+            'bin/medpy_graphcut_label_w_regional.py',
             'bin/medpy_graphcut_label_wsplit.py',
             'bin/medpy_graphcut_label.py',
-            'bin/medpy_graphcut_voxel.py',   
-            'bin/medpy_grid.py',   
-            'bin/medpy_info.py',  
-            'bin/medpy_intensity_range_standardization.py', 
-            'bin/medpy_intersection.py', 
+            'bin/medpy_graphcut_voxel.py',
+            'bin/medpy_grid.py',
+            'bin/medpy_info.py',
+            'bin/medpy_intensity_range_standardization.py',
+            'bin/medpy_intersection.py',
             'bin/medpy_itk_gradient.py',
             'bin/medpy_itk_smoothing.py',
             'bin/medpy_itk_watershed.py',
@@ -170,19 +180,19 @@ def run_setup(with_compilation):
             'bin/medpy_label_count.py',
             'bin/medpy_label_fit_to_mask.py',
             'bin/medpy_label_superimposition.py',
-            'bin/medpy_merge.py',    
-            'bin/medpy_morphology.py',  
+            'bin/medpy_merge.py',
+            'bin/medpy_morphology.py',
             'bin/medpy_resample.py',
-            'bin/medpy_reslice_3d_to_4d.py',     
-            'bin/medpy_set_pixel_spacing.py',     
-            'bin/medpy_shrink_image.py',  
-            'bin/medpy_split_xd_to_xminus1d.py', 
+            'bin/medpy_reslice_3d_to_4d.py',
+            'bin/medpy_set_pixel_spacing.py',
+            'bin/medpy_shrink_image.py',
+            'bin/medpy_split_xd_to_xminus1d.py',
             'bin/medpy_stack_sub_volumes.py',
             'bin/medpy_swap_dimensions.py',
             'bin/medpy_watershed.py',
             'bin/medpy_zoom_image.py'
           ],
-          
+
           **kw
      )
 
