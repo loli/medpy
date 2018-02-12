@@ -20,13 +20,14 @@ __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = "IntensityRangeStandardization class unittest."
 
+BASE_IMAGE = numpy.asarray([[1,2,3],[3,5,4],[7,8,9],[2,4,8]])
+
 # code
 class TestIntensityRangeStandardization(unittest.TestCase):
         
-    base_image = numpy.asarray([[1,2,3],[3,5,4],[7,8,9],[2,4,8]])
-    good_trainingset = [base_image + x for x in range(10)]
-    good_image = base_image + 11
-    bad_image = base_image + numpy.arange(1, 24, 2).reshape((4,3))
+    good_trainingset = [BASE_IMAGE + x for x in range(10)]
+    good_image = BASE_IMAGE + 11
+    bad_image = BASE_IMAGE + numpy.arange(1, 24, 2).reshape((4,3))
     uniform_image = numpy.zeros((4, 3))
     single_intensity_image = numpy.asarray([[0, 0, 0], [0, 0, 0], [0, 0, 1000000], [0, 0, 0]])
         
