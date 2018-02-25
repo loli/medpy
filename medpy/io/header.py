@@ -390,9 +390,9 @@ def __is_header_itk(hdr):
     except Exception:
         pass
     # see if itk header type (ITK v3.X)
-    for cl in itk.Image.__template__.values():
+    for cl in list(itk.Image.__template__.values()):
         if cl in type(hdr).__bases__: return True
     # see if itk header type (ITK v4.X)
-    for cl in itk.Image.__template__.values():
+    for cl in list(itk.Image.__template__.values()):
         if cl == type(hdr): return True
     return False

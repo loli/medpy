@@ -62,7 +62,7 @@ def main():
     data_input = series.get_pixel_array()
     
     if args.spacing:
-        print '{} {}'.format(*series.info.PixelSpacing)
+        print('{} {}'.format(*series.info.PixelSpacing))
         return 0
     
     logger.debug('Resulting shape is {}.'.format(data_input.shape))

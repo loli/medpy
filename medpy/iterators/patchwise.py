@@ -410,7 +410,7 @@ class CentredPatchIterator():
             patches = []
             gridids = []
             pmasks = []
-            for groupid, group in groups.items():
+            for groupid, group in list(groups.items()):
                 patches.append(numpy.concatenate([p for p, _, _ in sorted(group, key=itemgetter(2))], d))
                 pmasks.append(numpy.concatenate([m for _, m, _ in sorted(group, key=itemgetter(2))], d))
                 gridids.append(groupid)
@@ -691,7 +691,7 @@ class CentredPatchIteratorOverlapping():
             patches = []
             gridids = []
             pmasks = []
-            for groupid, group in groups.items():
+            for groupid, group in list(groups.items()):
                 patches.append(numpy.concatenate([p for p, _, _ in sorted(group, key=itemgetter(2))], d))
                 pmasks.append(numpy.concatenate([m for _, m, _ in sorted(group, key=itemgetter(2))], d))
                 gridids.append(groupid)
