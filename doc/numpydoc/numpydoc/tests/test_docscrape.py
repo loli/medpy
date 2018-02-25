@@ -1,5 +1,5 @@
 # -*- encoding:utf-8 -*-
-from __future__ import division, absolute_import, print_function
+
 
 import sys, textwrap
 
@@ -10,7 +10,7 @@ from nose.tools import *
 if sys.version_info[0] >= 3:
     sixu = lambda s: s
 else:
-    sixu = lambda s: unicode(s, 'unicode_escape')
+    sixu = lambda s: str(s, 'unicode_escape')
 
 
 doc_txt = '''\

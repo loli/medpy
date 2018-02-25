@@ -1,7 +1,7 @@
 """Extract reference documentation from the NumPy source tree.
 
 """
-from __future__ import division, absolute_import, print_function
+
 
 import inspect
 import textwrap
@@ -380,7 +380,7 @@ class NumpyDocString(object):
         idx = self['index']
         out = []
         out += ['.. index:: %s' % idx.get('default','')]
-        for section, references in idx.items():
+        for section, references in list(idx.items()):
             if section == 'default':
                 continue
             out += ['   :%s: %s' % (section, ', '.join(references))]

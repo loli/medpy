@@ -238,16 +238,16 @@ class Graph(object):
         graphs, except for debugging purposes.
         """
         messages = []
-        for node in self.__tweights.keys():
+        for node in list(self.__tweights.keys()):
             if not node <= self.__nodes: messages.append("Node {} in t-weights but not in nodes.".format(node))
         for node in self.__snodes:
             if not node <= self.__nodes: messages.append("Node {} in s-nodes but not in nodes.".format(node))
         for node in self.__tnodes:
             if not node <= self.__nodes: messages.append("Node {} in t-nodes but not in nodes.".format(node))
-        for e in self.__nweights.keys():
+        for e in list(self.__nweights.keys()):
             if not e[0] <= self.__nodes: messages.append("Node {} in edge {} but not in nodes.".format(e[0], e))
             if not e[1] <= self.__nodes: messages.append("Node {} in edge {} but not in nodes.".format(e[1], e))
-            if (e[1], e[0]) in iter(self.__nweights.keys()): messages.append("The reversed edges of {} is also in the n-weights.".format(e))
+            if (e[1], e[0]) in iter(list(self.__nweights.keys())): messages.append("The reversed edges of {} is also in the n-weights.".format(e))
                 
             
         if 0 == len(messages): return False
@@ -419,7 +419,7 @@ class GCGraph:
               
         See `set_nweight` for raised errors.
         """
-        for edge, weight in nweights.items():
+        for edge, weight in list(nweights.items()):
             self.set_nweight(edge[0], edge[1], weight[0], weight[1])
             
     def set_tweight(self, node, weight_source, weight_sink):
@@ -481,7 +481,7 @@ class GCGraph:
         are best set using `set_source_nodes` or `set_sink_nodes` to ensure
         consistency of their maximum values.
         """        
-        for node, weight in tweights.items():
+        for node, weight in list(tweights.items()):
             self.set_tweight(node, weight[0], weight[1]) # (weight-to-source, weight-to-sink)
             
     def set_tweights_all(self, tweights):
