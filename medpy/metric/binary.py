@@ -356,7 +356,7 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     95th percentile of the Hausdorff Distance.
 
     Computes the 95th percentile of the (symmetric) Hausdorff Distance (HD) between the binary objects in two
-    images. Compared to the Hausdorff Distance, this metric is slightly more stable to small outliers and is 
+    images. Compared to the Hausdorff Distance, this metric is slightly more stable to small outliers and is
     commonly used in Biomedical Segmentation challenges.
 
     Parameters
@@ -393,10 +393,9 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     -----
     This is a real metric. The binary images can therefore be supplied in any order.
     """
-    import numpy as np
     hd1 = __surface_distances(result, reference, voxelspacing, connectivity)
     hd2 = __surface_distances(reference, result, voxelspacing, connectivity)
-    hd95 = np.percentile(np.hstack((hd1, hd2)), 95)
+    hd95 = numpy.percentile(np.hstack((hd1, hd2)), 95)
     return hd95
 
 
