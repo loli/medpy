@@ -116,7 +116,7 @@ Histogram metrics (:mod:`medpy.metric.histogram`)
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # import all functions/methods/classes into the module
-from .binary import asd, assd, dc, hd, jc, positive_predictive_value, precision, ravd, recall, sensitivity, specificity, true_negative_rate, true_positive_rate
+from .binary import asd, assd, dc, hd, jc, positive_predictive_value, precision, ravd, recall, sensitivity, specificity, true_negative_rate, true_positive_rate, hd95
 from .binary import obj_asd, obj_assd, obj_fpr, obj_tpr
 from .binary import volume_change_correlation, volume_correlation
 from .histogram import chebyshev, chebyshev_neg, chi_square, correlate, correlate_1, cosine,\
