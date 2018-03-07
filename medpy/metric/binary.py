@@ -395,7 +395,7 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     """
     hd1 = __surface_distances(result, reference, voxelspacing, connectivity)
     hd2 = __surface_distances(reference, result, voxelspacing, connectivity)
-    hd95 = numpy.percentile(np.hstack((hd1, hd2)), 95)
+    hd95 = numpy.percentile(numpy.hstack((hd1, hd2)), 95)
     return hd95
 
 
