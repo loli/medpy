@@ -350,6 +350,56 @@ def hd(result, reference, voxelspacing=None, connectivity=1):
     hd = max(hd1, hd2)
     return hd
 
+
+def hd95(result, reference, voxelspacing=None, connectivity=1):
+    """
+    95th percentile of the Hausdorff Distance.
+
+    Computes the 95th percentile of the (symmetric) Hausdorff Distance (HD) between the binary objects in two
+    images. Compared to the Hausdorff Distance, this metric is slightly more stable to small outliers and is 
+    commonly used in Biomedical Segmentation challenges.
+
+    Parameters
+    ----------
+    result : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    reference : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    voxelspacing : float or sequence of floats, optional
+        The voxelspacing in a distance unit i.e. spacing of elements
+        along each dimension. If a sequence, must be of length equal to
+        the input rank; if a single number, this is used for all axes. If
+        not specified, a grid spacing of unity is implied.
+    connectivity : int
+        The neighbourhood/connectivity considered when determining the surface
+        of the binary objects. This value is passed to
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        Note that the connectivity influences the result in the case of the Hausdorff distance.
+
+    Returns
+    -------
+    hd : float
+        The symmetric Hausdorff Distance between the object(s) in ```result``` and the
+        object(s) in ```reference```. The distance unit is the same as for the spacing of 
+        elements along each dimension, which is usually given in mm.
+
+    See also
+    --------
+    :func:`hd`
+
+    Notes
+    -----
+    This is a real metric. The binary images can therefore be supplied in any order.
+    """
+    import numpy as np
+    hd1 = __surface_distances(result, reference, voxelspacing, connectivity)
+    hd2 = __surface_distances(reference, result, voxelspacing, connectivity)
+    hd95 = np.percentile(np.hstack((hd1, hd2)), 95)
+    return hd95
+
+
 def assd(result, reference, voxelspacing=None, connectivity=1):
     """
     Average symmetric surface distance.
