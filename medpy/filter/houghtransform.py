@@ -126,7 +126,7 @@ def ght(img, template):
         raise AttributeError('The supplied template is bigger than the image. This setting makes no sense for a hough transform.')    
     
     # compute center of template array
-    center = (numpy.asarray(template.shape) - 1) / 2 # integer division intended
+    center = (numpy.asarray(template.shape) - 1) // 2
     
     # prepare the hough image
     if numpy.bool == img.dtype:
