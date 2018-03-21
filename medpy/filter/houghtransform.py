@@ -176,7 +176,8 @@ def template_sphere (radius, dimensions):
     
     return template_ellipsoid(dimensions * [radius * 2])
 
-def template_ellipsoid (shape):
+
+def template_ellipsoid(shape):
     r"""
     Returns an ellipsoid binary structure of a of the supplied radius that can be used as
     template input to the generalized hough transform.
@@ -192,7 +193,8 @@ def template_ellipsoid (shape):
         A boolean array containing an ellipsoid.
     """
     # prepare template array
-    template = numpy.zeros([int(round(x / 2.)) for x in shape], dtype=numpy.bool) # in odd shape cases, this will include the ellipses middle line, otherwise not
+    # we add eps to keep old rounding up behavior
+    template = numpy.zeros([int(round(x / 2. + 1e-9)) for x in shape], dtype=numpy.bool) # in odd shape cases, this will include the ellipses middle line, otherwise not
 
     # get real world offset to compute the ellipsoid membership
     rw_offset = []
