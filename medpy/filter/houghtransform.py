@@ -193,8 +193,7 @@ def template_ellipsoid(shape):
         A boolean array containing an ellipsoid.
     """
     # prepare template array
-    # we add eps to keep old rounding up behavior
-    template = numpy.zeros([int(round(x / 2. + 1e-9)) for x in shape], dtype=numpy.bool) # in odd shape cases, this will include the ellipses middle line, otherwise not
+    template = numpy.zeros([(x // 2 + (x % 2)) for x in shape], dtype=numpy.bool) # in odd shape cases, this will include the ellipses middle line, otherwise not
 
     # get real world offset to compute the ellipsoid membership
     rw_offset = []
