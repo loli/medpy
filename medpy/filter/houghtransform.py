@@ -146,7 +146,7 @@ def ght(img, template):
             elif pos > 0: # right shifted hough
                 slicers_hough.append(slice(pos, None))
                 slicers_orig.append(slice(None, -1 * pos))
-interpreted as            else: # left shifted hough
+            else: # left shifted hough
                 slicers_hough.append(slice(None, pos))
                 slicers_orig.append(slice(-1 * pos, None))
         img_hough[slicers_hough] += img[slicers_orig]
