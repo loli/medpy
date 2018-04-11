@@ -146,7 +146,7 @@ def ght(img, template):
             elif pos > 0: # right shifted hough
                 slicers_hough.append(slice(pos, None))
                 slicers_orig.append(slice(None, -1 * pos))
-            else: # left shifted hough
+interpreted as            else: # left shifted hough
                 slicers_hough.append(slice(None, pos))
                 slicers_orig.append(slice(-1 * pos, None))
         img_hough[slicers_hough] += img[slicers_orig]
@@ -193,7 +193,7 @@ def template_ellipsoid(shape):
         A boolean array containing an ellipsoid.
     """
     # prepare template array
-    template = numpy.zeros([(x // 2 + (x % 2)) for x in shape], dtype=numpy.bool) # in odd shape cases, this will include the ellipses middle line, otherwise not
+    template = numpy.zeros([int(x // 2 + (x % 2)) for x in shape], dtype=numpy.bool) # in odd shape cases, this will include the ellipses middle line, otherwise not
 
     # get real world offset to compute the ellipsoid membership
     rw_offset = []
