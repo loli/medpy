@@ -44,7 +44,7 @@ Load the image
 >>> image_data, image_header = load('/path/to/image.xxx')
 
 The data is stored in a numpy ndarray, the header is an object containing additional metadata, such as the voxel-spacing.
-No lets take a look at some of the image metadata
+Now lets take a look at some of the image metadata
 
 >>> image_data.shape
 (168, 206, 128)
