@@ -270,19 +270,19 @@ def specificity(result, reference):
 def true_negative_rate(result, reference):
     """
     True negative rate.
-    Same as :func:`sensitivity`, see there for a detailed description.
+    Same as :func:`specificity`, see there for a detailed description.
     
     See also
     --------
     :func:`true_positive_rate` 
     :func:`positive_predictive_value`
     """
-    return sensitivity(result, reference)
+    return specificity(result, reference)
 
 def true_positive_rate(result, reference):
     """
     True positive rate.
-    Same as :func:`recall`, see there for a detailed description.
+    Same as :func:`recall` and :func:`sensitivity`, see there for a detailed description.
     
     See also
     --------
