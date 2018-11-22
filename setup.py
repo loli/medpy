@@ -135,7 +135,7 @@ def run_setup(with_compilation):
           ],
 
           install_requires=[
-            "scipy >= 0.9.0",
+            "scipy >= 0.9.0, < 1.1.0", # see https://github.com/loli/medpy/issues/78 for reason of second. Remove when fixed.
             "numpy >= 1.6.1",
             "nibabel >= 1.3.0",
             "pydicom >= 0.9.7"
