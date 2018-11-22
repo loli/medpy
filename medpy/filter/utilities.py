@@ -138,12 +138,12 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     padding_offset = [((s - 1) / 2, s / 2) for s in fshape]
     input_slicer = [slice(l, None if 0 == r else -1 * r) for l, r in padding_offset]
     output_shape = [s + sum(os) for s, os in zip(input.shape, padding_offset)]
-    output, return_value = _ni_support._get_output(output, input, output_shape)
+    output = _ni_support._get_output(output, input, output_shape)
 
     if 'constant' == mode:
         output += cval
         output[input_slicer] = input
-        return return_value
+        return output
     elif 'nearest' == mode:
         output[input_slicer] = input
         dim_mult_slices = [(d, l, slice(None, l), slice(l, l + 1)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
@@ -153,7 +153,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
             slicer_from = [from_slice if d == dim else slice(None) for d in range(output.ndim)]
             if not 0 == mult:
                 output[slicer_to] = numpy.concatenate([output[slicer_from]] * mult, dim)
-        return return_value
+        return output
     elif 'mirror' == mode:
         dim_slices = [(d, slice(None, l), slice(l + 1, 2 * l + 1)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
         dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r - 1, -1 * r - 1)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
@@ -176,7 +176,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
         slicer_from = [from_slice if d == dim else slice(None) for d in range(output.ndim)]
         output[slicer_to] = output[slicer_from][slicer_reverse]
 
-    return return_value
+    return output
 
 def intersection(i1, h1, i2, h2):
         r"""

@@ -68,7 +68,7 @@ def immerkaer_local(input, size, output=None, mode="reflect", cval=0.0):
     --------
     immerkaer
     """
-    output, return_value = _ni_support._get_output(output, input)
+    output = _ni_support._get_output(output, input)
     footprint = numpy.asarray([1] * size)
     
     # build nd-kernel to acquire square root of sum of squared elements
@@ -88,7 +88,7 @@ def immerkaer_local(input, size, output=None, mode="reflect", cval=0.0):
     
     output *= factor
     
-    return return_value    
+    return output
 
 def immerkaer(input, mode="reflect", cval=0.0):
     r"""
@@ -198,7 +198,7 @@ def separable_convolution(input, weights, output=None, mode="reflect", cval=0.0,
         Input image convolved with the supplied kernel.
     """
     input = numpy.asarray(input)
-    output, return_value = _ni_support._get_output(output, input)
+    output = _ni_support._get_output(output, input)
     axes = list(range(input.ndim))
     if len(axes) > 0:
         convolve1d(input, weights, axes[0], output, mode, cval, origin)
@@ -206,6 +206,6 @@ def separable_convolution(input, weights, output=None, mode="reflect", cval=0.0,
             convolve1d(output, weights, axes[ii], output, mode, cval, origin)
     else:
         output[...] = input[...]
-    return return_value
+    return output
     
     

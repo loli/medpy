@@ -602,7 +602,7 @@ def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cut
         raise RuntimeError('the rang must contain exactly two elements or the string "image"')
         
     _, bin_edges = numpy.histogram([], bins=bins, range=rang)
-    output, _ = _get_output(numpy.float if None == output else output, image, shape = [bins] + list(image.shape))
+    output = _get_output(numpy.float if None == output else output, image, shape = [bins] + list(image.shape))
 
     # threshold the image into the histogram bins represented by the output images first dimension, treat last bin separately, since upper border is inclusive
     for i in range(bins - 1):

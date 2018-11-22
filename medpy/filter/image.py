@@ -278,10 +278,10 @@ def average_filter(input, size=None, footprint=None, output=None, mode="reflect"
     footprint = __make_footprint(input, size, footprint)
     filter_size = footprint.sum()
     
-    output, return_value = _get_output(output, input)
+    output = _get_output(output, input)
     sum_filter(input, footprint=footprint, output=output, mode=mode, cval=cval, origin=origin)
     output /= filter_size
-    return return_value
+    return output
 
 
 def sum_filter(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0):
