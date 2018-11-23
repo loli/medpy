@@ -1,6 +1,0 @@
-medpy.features.utilities.normalize_with_model
-=============================================
-
-.. currentmodule:: medpy.features.utilities
-
-.. autofunction:: normalize_with_model

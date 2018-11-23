@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.filter.IntensityRangeStandardization &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.filter.IntensityRangeStandardization &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.filter.IntensityRangeStandardization</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -118,7 +116,7 @@
 
 <span class="c1"># third-party modules</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
 
 <span class="c1"># path changes</span>
 
@@ -126,7 +124,7 @@
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="IntensityRangeStandardization"><a class="viewcode-back" href="../../../generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization">[docs]</a><span class="k">class</span> <span class="nc">IntensityRangeStandardization</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to standardize intensity ranges between a number of images.</span>
 <span class="sd">    </span>
 <span class="sd">    **Short description:**</span>
@@ -283,12 +281,12 @@
     <span class="n">L4</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">]</span>
     <span class="sd">&quot;&quot;&quot;9-value landmark points model.&quot;&quot;&quot;</span>
     
-<div class="viewcode-block" id="IntensityRangeStandardization.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cutoffp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">),</span> <span class="n">landmarkp</span> <span class="o">=</span> <span class="n">L4</span><span class="p">,</span> <span class="n">stdrange</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">):</span></div>
+<div class="viewcode-block" id="IntensityRangeStandardization.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cutoffp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">),</span> <span class="n">landmarkp</span> <span class="o">=</span> <span class="n">L4</span><span class="p">,</span> <span class="n">stdrange</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">):</span>
         <span class="c1"># check parameters</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_sequence</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp must be a sequence&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp must be of length 2, not {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp must be of length 2, not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">)))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_numbers</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cutoffp elements must be numbers&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_in_interval</span><span class="p">(</span><span class="n">cutoffp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
@@ -299,7 +297,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_sequence</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp must be a sequence&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp must be of length &gt;= 1, not {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp must be of length &gt;= 1, not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">)))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_numbers</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;landmarkp elements must be numbers&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_in_interval</span><span class="p">(</span><span class="n">landmarkp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
@@ -315,7 +313,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_sequence</span><span class="p">(</span><span class="n">stdrange</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange must be a sequence or </span><span class="se">\&#39;</span><span class="s1">auto</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">stdrange</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange must be of length 2, not {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stdrange</span><span class="p">)))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange must be of length 2, not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stdrange</span><span class="p">)))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;auto&#39;</span> <span class="ow">in</span> <span class="n">stdrange</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">are_numbers</span><span class="p">(</span><span class="n">stdrange</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;stdrange elements must be numbers or </span><span class="se">\&#39;</span><span class="s1">auto</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -333,12 +331,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span> <span class="k">if</span> <span class="s1">&#39;auto&#39;</span> <span class="o">==</span> <span class="n">x</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">stdrange</span><span class="p">]</span>
             
         <span class="c1"># initialize remaining instance parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__model</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umins</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umaxs</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umins</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umaxs</span> <span class="o">=</span> <span class="kc">None</span></div>
         
 <div class="viewcode-block" id="IntensityRangeStandardization.train"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train a standard intensity space and an associated transformation model.</span>
 <span class="sd">        </span>
 <span class="sd">        Note that the passed images should be masked to contain only the foreground.</span>
@@ -364,7 +362,7 @@
 
             <span class="c1"># treat single intensity accumulation error            </span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ci</span><span class="p">,</span> <span class="n">li</span><span class="p">))))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">li</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;Image no.</span><span class="si">{}</span><span class="s1"> shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
             
         <span class="bp">self</span><span class="o">.</span><span class="n">__model</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__sc_umins</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__stdrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
@@ -372,8 +370,8 @@
             
         <span class="k">return</span> <span class="bp">self</span></div>
         
-<div class="viewcode-block" id="IntensityRangeStandardization.transform"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.transform.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">surpress_mapping_check</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.transform"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.transform.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">surpress_mapping_check</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transform an images intensity values to the learned standard intensity space.</span>
 <span class="sd">        </span>
 <span class="sd">        Note that the passed image should be masked to contain only the foreground.</span>
@@ -402,7 +400,7 @@
 <span class="sd">        Exception</span>
 <span class="sd">            If no model has been trained before</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">:</span>
+        <span class="k">if</span> <span class="kc">None</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">UntrainedException</span><span class="p">(</span><span class="s1">&#39;Model not trained. Call train() first.&#39;</span><span class="p">)</span>
         
         <span class="n">image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -415,7 +413,7 @@
             <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;The image shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. The only other possibility would be to re-train the model with a reduced number of landmark percentiles landmarkp or a changed distribution.&#39;</span><span class="p">)</span>
         
         <span class="c1"># create linear mapping models for the percentile segments to the learned standard intensity space  </span>
-        <span class="n">ipf</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">li</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">,</span> <span class="n">bounds_error</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">ipf</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">li</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span><span class="p">,</span> <span class="n">bounds_error</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
         
         <span class="c1"># transform the input image intensity values</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">ipf</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -432,8 +430,8 @@
         
         <span class="k">return</span> <span class="n">output</span></div>
     
-<div class="viewcode-block" id="IntensityRangeStandardization.train_transform"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform">[docs]</a>    <span class="k">def</span> <span class="nf">train_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">surpress_mapping_check</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.train_transform"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.train_transform">[docs]</a>    <span class="k">def</span> <span class="nf">train_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">surpress_mapping_check</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
 <span class="sd">        train, transform</span>
@@ -463,7 +461,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__model</span>
     
     <span class="k">def</span> <span class="nf">__compute_stdrange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
-        <span class="sd">r&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes a common standard intensity range over a number of images.</span>
 <span class="sd">        </span>
 <span class="sd">        Depending on the settings of the internal self.__stdrange variable,</span>
@@ -529,7 +527,7 @@
             
             <span class="c1"># treat single intensity accumulation error</span>
             <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">SingleIntensityAccumulationError</span><span class="p">(</span><span class="s1">&#39;Image no.</span><span class="si">{}</span><span class="s1"> shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
             
         <span class="c1"># select the maximum and minimum of each percentile segment over all images</span>
         <span class="n">maxs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -562,8 +560,8 @@
         <span class="n">l_diff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sc_udiff</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">l_diff</span><span class="p">))</span>
         
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.is_sequence"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">is_sequence</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.is_sequence"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_sequence">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_sequence</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks via its hidden attribute whether the passed argument is a sequence (but</span>
 <span class="sd">        excluding strings).</span>
@@ -574,23 +572,23 @@
             <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;__getitem__&quot;</span><span class="p">)</span> <span class="ow">or</span>
             <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">))</span></div>
         
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.is_number"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_number.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_number">[docs]</a>    <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.is_number"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_number.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_number">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether the passed argument is a valid number or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">numbers</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">)</span></div>
     
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.are_numbers"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers">[docs]</a>    <span class="k">def</span> <span class="nf">are_numbers</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.are_numbers"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">are_numbers</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether all elements in a sequence are valid numbers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_number</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">])</span></div>
     
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.is_in_interval"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_in_interval.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_in_interval">[docs]</a>    <span class="k">def</span> <span class="nf">is_in_interval</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.is_in_interval"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_in_interval.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.is_in_interval">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_in_interval</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether a number is inside the interval l, r.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -601,23 +599,23 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;borders must be either </span><span class="se">\&#39;</span><span class="s1">included</span><span class="se">\&#39;</span><span class="s1"> or </span><span class="se">\&#39;</span><span class="s1">excluded</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span></div>
         
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.are_in_interval"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_in_interval.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_in_interval">[docs]</a>    <span class="k">def</span> <span class="nf">are_in_interval</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.are_in_interval"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_in_interval.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_in_interval">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">are_in_interval</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;included&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether all number in the sequence s lie inside the interval formed by</span>
 <span class="sd">        l and r.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">IntensityRangeStandardization</span><span class="o">.</span><span class="n">is_in_interval</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">border</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span></div>
     
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.to_float"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.to_float.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.to_float">[docs]</a>    <span class="k">def</span> <span class="nf">to_float</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.to_float"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.to_float.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.to_float">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">to_float</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cast a sequences elements to float numbers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span></div>
     
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="IntensityRangeStandardization.linear_model"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.linear_model.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.linear_model">[docs]</a>    <span class="k">def</span> <span class="nf">linear_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="IntensityRangeStandardization.linear_model"><a class="viewcode-back" href="../../../generated/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.linear_model.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.linear_model">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">linear_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a linear model transformation function fitted on the two supplied points.</span>
 <span class="sd">        y = m*x + b</span>
@@ -665,13 +663,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

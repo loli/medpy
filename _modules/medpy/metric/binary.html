@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.metric.binary &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.metric.binary &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.metric.binary</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -118,17 +116,17 @@
 
 <span class="c1"># third-party modules</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">_ni_support</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage.morphology</span> <span class="kn">import</span> <span class="n">distance_transform_edt</span><span class="p">,</span> <span class="n">binary_erosion</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="k">import</span> <span class="n">_ni_support</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.morphology</span> <span class="k">import</span> <span class="n">distance_transform_edt</span><span class="p">,</span> <span class="n">binary_erosion</span><span class="p">,</span>\
     <span class="n">generate_binary_structure</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage.measurements</span> <span class="kn">import</span> <span class="n">label</span><span class="p">,</span> <span class="n">find_objects</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.measurements</span> <span class="k">import</span> <span class="n">label</span><span class="p">,</span> <span class="n">find_objects</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">pearsonr</span>
 
 <span class="c1"># own modules</span>
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="dc"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.dc.html#medpy.metric.binary.dc">[docs]</a><span class="k">def</span> <span class="nf">dc</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dice coefficient</span>
 <span class="sd">    </span>
 <span class="sd">    Computes the Dice coefficient (also known as Sorensen index) between the binary</span>
@@ -366,19 +364,19 @@
 <div class="viewcode-block" id="true_negative_rate"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.true_negative_rate.html#medpy.metric.binary.true_negative_rate">[docs]</a><span class="k">def</span> <span class="nf">true_negative_rate</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    True negative rate.</span>
-<span class="sd">    Same as :func:`sensitivity`, see there for a detailed description.</span>
+<span class="sd">    Same as :func:`specificity`, see there for a detailed description.</span>
 <span class="sd">    </span>
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
 <span class="sd">    :func:`true_positive_rate` </span>
 <span class="sd">    :func:`positive_predictive_value`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">sensitivity</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">specificity</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="true_positive_rate"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.true_positive_rate.html#medpy.metric.binary.true_positive_rate">[docs]</a><span class="k">def</span> <span class="nf">true_positive_rate</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    True positive rate.</span>
-<span class="sd">    Same as :func:`recall`, see there for a detailed description.</span>
+<span class="sd">    Same as :func:`recall` and :func:`sensitivity`, see there for a detailed description.</span>
 <span class="sd">    </span>
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
@@ -399,7 +397,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">precision</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="hd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.hd.html#medpy.metric.binary.hd">[docs]</a><span class="k">def</span> <span class="nf">hd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="hd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.hd.html#medpy.metric.binary.hd">[docs]</a><span class="k">def</span> <span class="nf">hd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Hausdorff Distance.</span>
 <span class="sd">    </span>
@@ -446,7 +444,56 @@
     <span class="n">hd</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">hd1</span><span class="p">,</span> <span class="n">hd2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">hd</span></div>
 
-<div class="viewcode-block" id="assd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.assd.html#medpy.metric.binary.assd">[docs]</a><span class="k">def</span> <span class="nf">assd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">hd95</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    95th percentile of the Hausdorff Distance.</span>
+
+<span class="sd">    Computes the 95th percentile of the (symmetric) Hausdorff Distance (HD) between the binary objects in two</span>
+<span class="sd">    images. Compared to the Hausdorff Distance, this metric is slightly more stable to small outliers and is</span>
+<span class="sd">    commonly used in Biomedical Segmentation challenges.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    reference : array_like</span>
+<span class="sd">        Input data containing objects. Can be any type but will be converted</span>
+<span class="sd">        into binary: background where 0, object everywhere else.</span>
+<span class="sd">    voxelspacing : float or sequence of floats, optional</span>
+<span class="sd">        The voxelspacing in a distance unit i.e. spacing of elements</span>
+<span class="sd">        along each dimension. If a sequence, must be of length equal to</span>
+<span class="sd">        the input rank; if a single number, this is used for all axes. If</span>
+<span class="sd">        not specified, a grid spacing of unity is implied.</span>
+<span class="sd">    connectivity : int</span>
+<span class="sd">        The neighbourhood/connectivity considered when determining the surface</span>
+<span class="sd">        of the binary objects. This value is passed to</span>
+<span class="sd">        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`&gt; 1`.</span>
+<span class="sd">        Note that the connectivity influences the result in the case of the Hausdorff distance.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hd : float</span>
+<span class="sd">        The symmetric Hausdorff Distance between the object(s) in ```result``` and the</span>
+<span class="sd">        object(s) in ```reference```. The distance unit is the same as for the spacing of </span>
+<span class="sd">        elements along each dimension, which is usually given in mm.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`hd`</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a real metric. The binary images can therefore be supplied in any order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hd1</span> <span class="o">=</span> <span class="n">__surface_distances</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    <span class="n">hd2</span> <span class="o">=</span> <span class="n">__surface_distances</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
+    <span class="n">hd95</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">hd1</span><span class="p">,</span> <span class="n">hd2</span><span class="p">)),</span> <span class="mi">95</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hd95</span>
+
+
+<div class="viewcode-block" id="assd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.assd.html#medpy.metric.binary.assd">[docs]</a><span class="k">def</span> <span class="nf">assd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Average symmetric surface distance.</span>
 <span class="sd">    </span>
@@ -500,7 +547,7 @@
     <span class="n">assd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span> <span class="p">(</span><span class="n">asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">),</span> <span class="n">asd</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">))</span> <span class="p">)</span>
     <span class="k">return</span> <span class="n">assd</span></div>
 
-<div class="viewcode-block" id="asd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.asd.html#medpy.metric.binary.asd">[docs]</a><span class="k">def</span> <span class="nf">asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="asd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.asd.html#medpy.metric.binary.asd">[docs]</a><span class="k">def</span> <span class="nf">asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Average surface distance metric.</span>
 <span class="sd">    </span>
@@ -697,7 +744,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">vol1</span> <span class="o">-</span> <span class="n">vol2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">vol2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="volume_correlation"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.volume_correlation.html#medpy.metric.binary.volume_correlation">[docs]</a><span class="k">def</span> <span class="nf">volume_correlation</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Volume correlation.</span>
 <span class="sd">    </span>
 <span class="sd">    Computes the linear correlation in binary object volume between the</span>
@@ -731,7 +778,7 @@
     <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">results_volumes</span><span class="p">,</span> <span class="n">references_volumes</span><span class="p">)</span> <span class="c1"># returns (Pearson&#39;</span></div>
 
 <div class="viewcode-block" id="volume_change_correlation"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.volume_change_correlation.html#medpy.metric.binary.volume_change_correlation">[docs]</a><span class="k">def</span> <span class="nf">volume_change_correlation</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Volume change correlation.</span>
 <span class="sd">    </span>
 <span class="sd">    Computes the linear correlation of change in binary object volume between</span>
@@ -767,7 +814,7 @@
     
     <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">results_volumes_changes</span><span class="p">,</span> <span class="n">references_volumes_changes</span><span class="p">)</span> <span class="c1"># returns (Pearson&#39;s correlation coefficient, 2-tailed p-value)</span></div>
     
-<div class="viewcode-block" id="obj_assd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_assd.html#medpy.metric.binary.obj_assd">[docs]</a><span class="k">def</span> <span class="nf">obj_assd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="obj_assd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_assd.html#medpy.metric.binary.obj_assd">[docs]</a><span class="k">def</span> <span class="nf">obj_assd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Average symmetric surface distance.</span>
 <span class="sd">    </span>
@@ -822,7 +869,7 @@
     <span class="k">return</span> <span class="n">assd</span></div>
     
     
-<div class="viewcode-block" id="obj_asd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_asd.html#medpy.metric.binary.obj_asd">[docs]</a><span class="k">def</span> <span class="nf">obj_asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="obj_asd"><a class="viewcode-back" href="../../../generated/medpy.metric.binary.obj_asd.html#medpy.metric.binary.obj_asd">[docs]</a><span class="k">def</span> <span class="nf">obj_asd</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Average surface distance between objects.</span>
 <span class="sd">    </span>
@@ -956,7 +1003,7 @@
     <span class="n">labelmap1</span><span class="p">,</span> <span class="n">labelmap2</span><span class="p">,</span> <span class="n">_a</span><span class="p">,</span> <span class="n">_b</span><span class="p">,</span> <span class="n">mapping</span> <span class="o">=</span> <span class="n">__distinct_binary_object_correspondences</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">)</span>
     <span class="n">slicers1</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">labelmap1</span><span class="p">)</span>
     <span class="n">slicers2</span> <span class="o">=</span> <span class="n">find_objects</span><span class="p">(</span><span class="n">labelmap2</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">lid2</span><span class="p">,</span> <span class="n">lid1</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">lid2</span><span class="p">,</span> <span class="n">lid1</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">__combine_windows</span><span class="p">(</span><span class="n">slicers1</span><span class="p">[</span><span class="n">lid1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">slicers2</span><span class="p">[</span><span class="n">lid2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">object1</span> <span class="o">=</span> <span class="n">labelmap1</span><span class="p">[</span><span class="n">window</span><span class="p">]</span> <span class="o">==</span> <span class="n">lid1</span>
         <span class="n">object2</span> <span class="o">=</span> <span class="n">labelmap2</span><span class="p">[</span><span class="n">window</span><span class="p">]</span> <span class="o">==</span> <span class="n">lid2</span>
@@ -1226,9 +1273,9 @@
             <span class="n">one_to_many</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l1id</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">l2ids</span><span class="p">)))</span>
             
     <span class="c1"># process one-to-many mappings, always choosing the one with the least labelmap2 correspondences first</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">one_to_many</span> <span class="o">=</span> <span class="p">[(</span><span class="n">l1id</span><span class="p">,</span> <span class="n">l2ids</span> <span class="o">-</span> <span class="n">used_labels</span><span class="p">)</span> <span class="k">for</span> <span class="n">l1id</span><span class="p">,</span> <span class="n">l2ids</span> <span class="ow">in</span> <span class="n">one_to_many</span><span class="p">]</span> <span class="c1"># remove already used ids from all sets</span>
-        <span class="n">one_to_many</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">one_to_many</span><span class="p">)</span> <span class="c1"># remove empty sets</span>
+        <span class="n">one_to_many</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">one_to_many</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="c1"># remove empty sets</span>
         <span class="n">one_to_many</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">one_to_many</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="c1"># sort by set length</span>
         <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">one_to_many</span><span class="p">):</span>
             <span class="k">break</span>
@@ -1239,14 +1286,14 @@
     
     <span class="k">return</span> <span class="n">labelmap1</span><span class="p">,</span> <span class="n">labelmap2</span><span class="p">,</span> <span class="n">n_obj_result</span><span class="p">,</span> <span class="n">n_obj_reference</span><span class="p">,</span> <span class="n">mapping</span>
     
-<span class="k">def</span> <span class="nf">__surface_distances</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">__surface_distances</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The distances between the surface voxel of binary objects in result and their</span>
 <span class="sd">    nearest partner surface voxel of a binary object in reference.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
     <span class="n">reference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">voxelspacing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">voxelspacing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">voxelspacing</span> <span class="o">=</span> <span class="n">_ni_support</span><span class="o">.</span><span class="n">_normalize_sequence</span><span class="p">(</span><span class="n">voxelspacing</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
         <span class="n">voxelspacing</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">voxelspacing</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">voxelspacing</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">contiguous</span><span class="p">:</span>
@@ -1262,8 +1309,8 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The second supplied array does not contain any binary object.&#39;</span><span class="p">)</span>    
             
     <span class="c1"># extract only 1-pixel border line of objects</span>
-    <span class="n">result_border</span> <span class="o">=</span> <span class="n">result</span> <span class="o">-</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">reference_border</span> <span class="o">=</span> <span class="n">reference</span> <span class="o">-</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result_border</span> <span class="o">=</span> <span class="n">result</span> <span class="o">^</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">reference_border</span> <span class="o">=</span> <span class="n">reference</span> <span class="o">^</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     
     <span class="c1"># compute average surface distance        </span>
     <span class="c1"># Note: scipys distance transform is calculated only inside the borders of the</span>
@@ -1301,13 +1348,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

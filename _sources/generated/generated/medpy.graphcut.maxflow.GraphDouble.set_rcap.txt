@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphDouble.set_rcap
-===========================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphDouble.set_rcap

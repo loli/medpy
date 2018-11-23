@@ -1,6 +1,0 @@
-medpy.utilities.argparseu.sequenceOfFloatsLt
-============================================
-
-.. currentmodule:: medpy.utilities.argparseu
-
-.. autofunction:: sequenceOfFloatsLt

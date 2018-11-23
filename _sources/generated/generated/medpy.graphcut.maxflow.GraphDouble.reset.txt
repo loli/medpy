@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphDouble.reset
-========================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphDouble.reset

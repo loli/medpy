@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphInt.add_node
-========================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphInt.add_node

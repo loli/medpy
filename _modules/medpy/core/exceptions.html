@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.core.exceptions &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.core.exceptions &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.core.exceptions</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -124,42 +122,42 @@
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="ArgumentError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.ArgumentError.html#medpy.core.exceptions.ArgumentError">[docs]</a><span class="k">class</span> <span class="nc">ArgumentError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown by an application when an invalid command line argument has been supplied.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown by an application when an invalid command line argument has been supplied.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
     
 <div class="viewcode-block" id="FunctionError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.FunctionError.html#medpy.core.exceptions.FunctionError">[docs]</a><span class="k">class</span> <span class="nc">FunctionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown when a supplied function returns unexpected results.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown when a supplied function returns unexpected results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
     
 <div class="viewcode-block" id="SubprocessError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.SubprocessError.html#medpy.core.exceptions.SubprocessError">[docs]</a><span class="k">class</span> <span class="nc">SubprocessError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown by an application when a subprocess execution failed.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown by an application when a subprocess execution failed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="ImageTypeError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.ImageTypeError.html#medpy.core.exceptions.ImageTypeError">[docs]</a><span class="k">class</span> <span class="nc">ImageTypeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown when trying to load or save an image of unknown type.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown when trying to load or save an image of unknown type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="DependencyError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.DependencyError.html#medpy.core.exceptions.DependencyError">[docs]</a><span class="k">class</span> <span class="nc">DependencyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown when a required module could not be loaded.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown when a required module could not be loaded.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="ImageLoadingError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.ImageLoadingError.html#medpy.core.exceptions.ImageLoadingError">[docs]</a><span class="k">class</span> <span class="nc">ImageLoadingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown when a image could not be loaded.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown when a image could not be loaded.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="ImageSavingError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.ImageSavingError.html#medpy.core.exceptions.ImageSavingError">[docs]</a><span class="k">class</span> <span class="nc">ImageSavingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown when a image could not be saved.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown when a image could not be saved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="MetaDataError"><a class="viewcode-back" href="../../../generated/medpy.core.exceptions.MetaDataError.html#medpy.core.exceptions.MetaDataError">[docs]</a><span class="k">class</span> <span class="nc">MetaDataError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Thrown when an image meta data failure occurred.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thrown when an image meta data failure occurred.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 </pre></div>
@@ -181,13 +179,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

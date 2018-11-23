@@ -1,6 +1,0 @@
-medpy.metric.binary.jc
-======================
-
-.. currentmodule:: medpy.metric.binary
-
-.. autofunction:: jc

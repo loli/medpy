@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.filter.smoothing &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.filter.smoothing &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.filter.smoothing</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1">#</span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -118,17 +116,17 @@
 
 <span class="c1"># third-party modules</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="k">import</span> <span class="n">gaussian_filter</span>
 
 <span class="c1"># path changes</span>
 
 <span class="c1"># own modules</span>
-<span class="kn">from</span> <span class="nn">.utilities</span> <span class="kn">import</span> <span class="n">xminus1d</span>
+<span class="kn">from</span> <span class="nn">.utilities</span> <span class="k">import</span> <span class="n">xminus1d</span>
 
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="gauss_xminus1d"><a class="viewcode-back" href="../../../generated/medpy.filter.smoothing.gauss_xminus1d.html#medpy.filter.smoothing.gauss_xminus1d">[docs]</a><span class="k">def</span> <span class="nf">gauss_xminus1d</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies a X-1D gauss to a copy of a XD image, slicing it along dim.</span>
 
 <span class="sd">    Essentially uses `scipy.ndimage.filters.gaussian_filter`, but</span>
@@ -148,11 +146,11 @@
 <span class="sd">    gauss_xminus1d : ndarray</span>
 <span class="sd">        The input image ``img`` smoothed by a gaussian kernel along dimension ``dim``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">xminus1d</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">gaussian_filter</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="anisotropic_diffusion"><a class="viewcode-back" href="../../../generated/medpy.filter.smoothing.anisotropic_diffusion.html#medpy.filter.smoothing.anisotropic_diffusion">[docs]</a><span class="k">def</span> <span class="nf">anisotropic_diffusion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="anisotropic_diffusion"><a class="viewcode-back" href="../../../generated/medpy.filter.smoothing.anisotropic_diffusion.html#medpy.filter.smoothing.anisotropic_diffusion">[docs]</a><span class="k">def</span> <span class="nf">anisotropic_diffusion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">voxelspacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Edge-preserving, XD Anisotropic diffusion.</span>
 
 
@@ -170,12 +168,15 @@
 <span class="sd">        on conduction.</span>
 <span class="sd">    gamma : float</span>
 <span class="sd">        Controls the speed of diffusion. Pick a value :math:`&lt;= .25` for stability.</span>
-<span class="sd">    voxelspacing : tuple of floats</span>
+<span class="sd">    voxelspacing : tuple of floats or array_like</span>
 <span class="sd">        The distance between adjacent pixels in all img.ndim directions</span>
-<span class="sd">    option : {1, 2}</span>
-<span class="sd">        Whether to use the Perona Malik diffusion equation No. 1 or No. 2.</span>
+<span class="sd">    option : {1, 2, 3}</span>
+<span class="sd">        Whether to use the Perona Malik diffusion equation No. 1 or No. 2,</span>
+<span class="sd">        or Tukey&#39;s biweight function.</span>
 <span class="sd">        Equation 1 favours high contrast edges over low contrast ones, while</span>
 <span class="sd">        equation 2 favours wide regions over smaller ones. See [1]_ for details.</span>
+<span class="sd">        Equation 3 preserves sharper boundaries than previous formulations and</span>
+<span class="sd">        improves the automatic stopping of the diffusion. See [2]_ for details.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -211,6 +212,10 @@
 <span class="sd">       Scale-space and edge detection using ansotropic diffusion.</span>
 <span class="sd">       IEEE Transactions on Pattern Analysis and Machine Intelligence,</span>
 <span class="sd">       12(7):629-639, July 1990.</span>
+<span class="sd">    .. [2] M.J. Black, G. Sapiro, D. Marimont, D. Heeger</span>
+<span class="sd">       Robust anisotropic diffusion.</span>
+<span class="sd">       IEEE Transactions on Image Processing,</span>
+<span class="sd">       7(3):421-432, March 1998.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># define conduction gradients functions</span>
     <span class="k">if</span> <span class="n">option</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -219,12 +224,18 @@
     <span class="k">elif</span> <span class="n">option</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">condgradient</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="p">(</span><span class="n">delta</span><span class="o">/</span><span class="n">kappa</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">option</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">kappa_s</span> <span class="o">=</span> <span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">condgradient</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="mf">1.</span><span class="o">-</span><span class="p">(</span><span class="n">delta</span><span class="o">/</span><span class="n">kappa_s</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">kappa_s</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># initialize output array</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># set default voxel spacong if not suppliec</span>
-    <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">voxelspacing</span><span class="p">:</span>
+    <span class="c1"># set default voxel spacing if not supplied</span>
+    <span class="k">if</span> <span class="n">voxelspacing</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">voxelspacing</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
 
     <span class="c1"># initialize some internal variables</span>
@@ -234,7 +245,7 @@
 
         <span class="c1"># calculate the diffs</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
-            <span class="n">slicer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">ndim</span><span class="p">)]</span>
+            <span class="n">slicer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">ndim</span><span class="p">)]</span>
             <span class="n">deltas</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">slicer</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
 
         <span class="c1"># update matrices</span>
@@ -243,7 +254,7 @@
         <span class="c1"># subtract a copy that has been shifted (&#39;Up/North/West&#39; in 3D case) by one</span>
         <span class="c1"># pixel. Don&#39;t as questions. just do it. trust me.</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
-            <span class="n">slicer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">ndim</span><span class="p">)]</span>
+            <span class="n">slicer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">ndim</span><span class="p">)]</span>
             <span class="n">matrices</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">slicer</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">matrices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
 
         <span class="c1"># update the image</span>
@@ -269,13 +280,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

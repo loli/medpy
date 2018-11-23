@@ -1,6 +1,0 @@
-medpy.graphcut.energy_label.boundary_stawiaski_directed
-=======================================================
-
-.. currentmodule:: medpy.graphcut.energy_label
-
-.. autofunction:: boundary_stawiaski_directed

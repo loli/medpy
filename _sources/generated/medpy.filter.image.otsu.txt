@@ -1,6 +1,0 @@
-medpy.filter.image.otsu
-=======================
-
-.. currentmodule:: medpy.filter.image
-
-.. autofunction:: otsu

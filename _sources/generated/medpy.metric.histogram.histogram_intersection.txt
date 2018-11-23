@@ -1,6 +1,0 @@
-medpy.metric.histogram.histogram_intersection
-=============================================
-
-.. currentmodule:: medpy.metric.histogram
-
-.. autofunction:: histogram_intersection

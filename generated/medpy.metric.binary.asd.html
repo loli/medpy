@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.metric.binary.asd &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.metric.binary.asd &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Metric measures (medpy.metric)" href="../metric.html" >
     <link rel="next" title="medpy.metric.binary.assd" href="medpy.metric.binary.assd.html" >
     <link rel="prev" title="medpy.metric.binary.hd" href="medpy.metric.binary.hd.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../metric.html" accesskey="U">Metric measures (<code class="docutils literal"><span class="pre">medpy.metric</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.metric.binary.assd</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.metric.binary.asd.txt"
+    <a href="../_sources/generated/medpy.metric.binary.asd.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -173,7 +171,7 @@ to achieve high computational speed.</p>
 <p class="rubric">Examples</p>
 <p>The <em class="xref py py-obj">connectivity</em> determines what pixels/voxels are considered the surface of a
 binary object. Take the following binary image showing a cross</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.ndimage.morphology</span> <span class="kn">import</span> <span class="n">generate_binary_structure</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.ndimage.morphology</span> <span class="k">import</span> <span class="n">generate_binary_structure</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cross</span> <span class="o">=</span> <span class="n">generate_binary_structure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="go">array([[0, 1, 0],</span>
 <span class="go">       [1, 1, 1],</span>
@@ -182,13 +180,13 @@ binary object. Take the following binary image showing a cross</p>
 </div>
 <p>With <em class="xref py py-obj">connectivity</em> set to <em class="xref py py-obj">1</em> a 4-neighbourhood is considered when determining the
 object surface, resulting in the surface</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
 </pre></div>
 </div>
 <p>Changing <em class="xref py py-obj">connectivity</em> to <em class="xref py py-obj">2</em>, a 8-neighbourhood is considered and we get:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
 </pre></div>
@@ -196,25 +194,25 @@ object surface, resulting in the surface</p>
 <p>, as a diagonal connection does no longer qualifies as valid object surface.</p>
 <p>This influences the  results <a class="reference internal" href="#medpy.metric.binary.asd" title="medpy.metric.binary.asd"><code class="xref py py-obj docutils literal"><span class="pre">asd</span></code></a> returns. Imagine we want to compute the surface
 distance of our cross to a cube-like object:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cube</span> <span class="o">=</span> <span class="n">generate_binary_structure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cube</span> <span class="o">=</span> <span class="n">generate_binary_structure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="go">array([[1, 1, 1],</span>
 <span class="go">       [1, 1, 1],</span>
 <span class="go">       [1, 1, 1]])</span>
 </pre></div>
 </div>
 <p>, which surface is, independent of the <em class="xref py py-obj">connectivity</em> value set, always</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
 </pre></div>
 </div>
 <p>Using a <em class="xref py py-obj">connectivity</em> of <em class="xref py py-obj">1</em> we get</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">asd</span><span class="p">(</span><span class="n">cross</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">asd</span><span class="p">(</span><span class="n">cross</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">0.0</span>
 </pre></div>
 </div>
 <p>while a value of <em class="xref py py-obj">2</em> returns us</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">asd</span><span class="p">(</span><span class="n">cross</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">asd</span><span class="p">(</span><span class="n">cross</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">0.20000000000000001</span>
 </pre></div>
 </div>
@@ -241,13 +239,13 @@ distance of our cross to a cube-like object:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

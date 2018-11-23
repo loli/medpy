@@ -1,6 +1,0 @@
-medpy.filter.smoothing.anisotropic_diffusion
-============================================
-
-.. currentmodule:: medpy.filter.smoothing
-
-.. autofunction:: anisotropic_diffusion

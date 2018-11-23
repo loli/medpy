@@ -1,6 +1,0 @@
-medpy.metric.histogram.relative_deviation
-=========================================
-
-.. currentmodule:: medpy.metric.histogram
-
-.. autofunction:: relative_deviation

@@ -1,6 +1,0 @@
-medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.cutoffp
-================================================================================
-
-.. currentmodule:: medpy.filter.IntensityRangeStandardization
-
-.. autoattribute:: IntensityRangeStandardization.cutoffp

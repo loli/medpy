@@ -1,6 +1,0 @@
-medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.are_numbers
-====================================================================================
-
-.. currentmodule:: medpy.filter.IntensityRangeStandardization
-
-.. automethod:: IntensityRangeStandardization.are_numbers

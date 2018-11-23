@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.core.logger.Logger.makeRecord &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.core.logger.Logger.makeRecord &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../index.html" >
+    <link rel="index" title="Index" href="../../genindex.html" >
+    <link rel="search" title="Search" href="../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../index.html" >
     <link rel="up" title="medpy.core.logger.Logger" href="../medpy.core.logger.Logger.html" >
     <link rel="next" title="medpy.core.logger.Logger.removeFilter" href="medpy.core.logger.Logger.removeFilter.html" >
     <link rel="prev" title="medpy.core.logger.Logger.log" href="medpy.core.logger.Logger.log.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../core.html" >Core functionalities and shared exception objects (<code class="docutils literal"><span class="pre">medpy.core</span></code>)</a></li>
           <li class="active"><a href="../medpy.core.logger.Logger.html" accesskey="U">medpy.core.logger.Logger</a></li> 
@@ -92,20 +93,17 @@
                         title="next chapter">medpy.core.logger.Logger.removeFilter</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../../_sources/generated/generated/medpy.core.logger.Logger.makeRecord.txt"
+    <a href="../../_sources/generated/generated/medpy.core.logger.Logger.makeRecord.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -119,7 +117,7 @@
 <h1>medpy.core.logger.Logger.makeRecord<a class="headerlink" href="#medpy-core-logger-logger-makerecord" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="medpy.core.logger.Logger.makeRecord">
-<code class="descclassname">Logger.</code><code class="descname">makeRecord</code><span class="sig-paren">(</span><em>name</em>, <em>level</em>, <em>fn</em>, <em>lno</em>, <em>msg</em>, <em>args</em>, <em>exc_info</em>, <em>func=None</em>, <em>extra=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/logging.html#Logger.makeRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.core.logger.Logger.makeRecord" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Logger.</code><code class="descname">makeRecord</code><span class="sig-paren">(</span><em>name</em>, <em>level</em>, <em>fn</em>, <em>lno</em>, <em>msg</em>, <em>args</em>, <em>exc_info</em>, <em>func=None</em>, <em>extra=None</em>, <em>sinfo=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/logging.html#Logger.makeRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.core.logger.Logger.makeRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>A factory method which can be overridden in subclasses to create
 specialized LogRecords.</p>
 </dd></dl>
@@ -144,13 +142,13 @@ specialized LogRecords.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

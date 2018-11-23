@@ -1,6 +1,0 @@
-medpy.features.intensity.intensities
-====================================
-
-.. currentmodule:: medpy.features.intensity
-
-.. autofunction:: intensities

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.filter.noise.immerkaer &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.filter.noise.immerkaer &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Image filter and manipulation (medpy.filter)" href="../filter.html" >
     <link rel="next" title="medpy.filter.noise.immerkaer_local" href="medpy.filter.noise.immerkaer_local.html" >
     <link rel="prev" title="medpy.filter.label.fit_labels_to_mask" href="medpy.filter.label.fit_labels_to_mask.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../filter.html" accesskey="U">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.filter.noise.immerkaer_local</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.filter.noise.immerkaer.txt"
+    <a href="../_sources/generated/medpy.filter.noise.immerkaer.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -124,9 +122,9 @@
 convolution with a Laplacian operator and a subsequent averaging the standard
 deviation sigma of this noise is estimated. This estimation is global i.e. the
 noise is assumed to be globally homogeneous over the image.</p>
-<p>Implementation based on <a class="reference internal" href="#r7" id="id1">[R7]</a>.</p>
+<p>Implementation based on <a class="reference internal" href="#r8" id="id1">[R8]</a>.</p>
 <p>Immerkaer suggested a Laplacian-based 2D kernel:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">[[</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
  <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
  <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
 </pre></div>
@@ -136,7 +134,7 @@ the one dimensional kernel [1, -2, 1].</p>
 <p>We generalize from this 1D-kernel to an ND-kernel by applying N consecutive
 convolutions with the 1D-kernel along all N dimensions.</p>
 <p>This is equivalent with convolving the image with an ND-kernel constructed by calling</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kernel1d</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kernel1d</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel1d</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">kernel</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">kernel1d</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -150,15 +148,15 @@ convolutions with the 1D-kernel along all N dimensions.</p>
 <blockquote>
 <div><p>Array of which to estimate the noise.</p>
 </div></blockquote>
-<p><strong>mode</strong> : {&#8216;reflect&#8217;, &#8216;constant&#8217;, &#8216;nearest&#8217;, &#8216;mirror&#8217;, &#8216;wrap&#8217;}, optional</p>
+<p><strong>mode</strong> : {‘reflect’, ‘constant’, ‘nearest’, ‘mirror’, ‘wrap’}, optional</p>
 <blockquote>
 <div><p>The <em class="xref py py-obj">mode</em> parameter determines how the array borders are
 handled, where <em class="xref py py-obj">cval</em> is the value when mode is equal to
-&#8216;constant&#8217;. Default is &#8216;reflect&#8217;</p>
+‘constant’. Default is ‘reflect’</p>
 </div></blockquote>
 <p><strong>cval</strong> : scalar, optional</p>
 <blockquote>
-<div><p>Value to fill past edges of input if <em class="xref py py-obj">mode</em> is &#8216;constant&#8217;. Default
+<div><p>Value to fill past edges of input if <em class="xref py py-obj">mode</em> is ‘constant’. Default
 is 0.0</p>
 </div></blockquote>
 </td>
@@ -179,10 +177,10 @@ is 0.0</p>
 <p>Does not take the voxel spacing into account.
 Works good with medium to strong noise. Tends to underestimate for low noise levels.</p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r7" rules="none">
+<table class="docutils citation" frame="void" id="r8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R7]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> John Immerkaer, &#8220;Fast Noise Variance Estimation&#8221;, Computer Vision and Image
+<tr><td class="label">[R8]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> John Immerkaer, “Fast Noise Variance Estimation”, Computer Vision and Image
 Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142</td></tr>
 </tbody>
 </table>
@@ -208,13 +206,13 @@ Understanding, Volume 64, Issue 2, September 1996, Pages 300-302, ISSN 1077-3142
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

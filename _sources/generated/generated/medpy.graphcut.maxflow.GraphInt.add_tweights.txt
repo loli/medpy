@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphInt.add_tweights
-============================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphInt.add_tweights

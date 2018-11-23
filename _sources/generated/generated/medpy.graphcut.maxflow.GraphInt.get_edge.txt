@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphInt.get_edge
-========================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphInt.get_edge

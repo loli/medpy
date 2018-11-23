@@ -1,6 +1,0 @@
-medpy.graphcut.generate.graph_from_voxels
-=========================================
-
-.. currentmodule:: medpy.graphcut.generate
-
-.. autofunction:: graph_from_voxels

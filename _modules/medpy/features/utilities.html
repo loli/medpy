@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.features.utilities &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.features.utilities &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.features.utilities</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -124,8 +122,8 @@
 <span class="c1"># code</span>
 
 
-<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../../generated/medpy.features.utilities.normalize.html#medpy.features.utilities.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">cutoffp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">model</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../../generated/medpy.features.utilities.normalize.html#medpy.features.utilities.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">cutoffp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">model</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a feature-wise normalized version of the supplied vector. Normalization is</span>
 <span class="sd">    achieved to [0,1] over the complete vector using shifting and scaling.</span>
 <span class="sd">    </span>
@@ -177,13 +175,13 @@
     
     <span class="c1"># add a singleton dimension if required</span>
     <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">vector</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-        <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[:,</span> <span class="bp">None</span><span class="p">]</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
     
     <span class="c1"># compute lower and upper range border of each row using the supplied percentiles</span>
     <span class="n">minp</span><span class="p">,</span> <span class="n">maxp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">cutoffp</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     
     <span class="c1"># shift outliers to fit range</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
         <span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">][</span><span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">minp</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">minp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">][</span><span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxp</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">maxp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     
@@ -199,7 +197,7 @@
         <span class="k">return</span> <span class="n">vector</span><span class="p">,</span> <span class="p">(</span><span class="n">minp</span><span class="p">,</span> <span class="n">maxp</span><span class="p">,</span> <span class="n">minv</span><span class="p">,</span> <span class="n">maxv</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="normalize_with_model"><a class="viewcode-back" href="../../../generated/medpy.features.utilities.normalize_with_model.html#medpy.features.utilities.normalize_with_model">[docs]</a><span class="k">def</span> <span class="nf">normalize_with_model</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Normalize as with `normalize`, but not based on the data of the passed feature</span>
 <span class="sd">    vector, but rather on a learned model created with `normalize`. Thus formerly</span>
 <span class="sd">    unseen query data can be normalized according to the training data.</span>
@@ -223,10 +221,10 @@
     
     <span class="c1"># add a singleton dimension if required</span>
     <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">vector</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-        <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[:,</span> <span class="bp">None</span><span class="p">]</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
     
     <span class="c1"># shift outliers to fit range</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
         <span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">][</span><span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">minp</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">minp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">][</span><span class="n">vector</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxp</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">maxp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         
@@ -237,7 +235,7 @@
     <span class="k">return</span> <span class="n">vector</span>        </div>
 
 <div class="viewcode-block" id="append"><a class="viewcode-back" href="../../../generated/medpy.features.utilities.append.html#medpy.features.utilities.append">[docs]</a><span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes an arbitrary number of vectors containing features and append them</span>
 <span class="sd">    (horizontally).</span>
 <span class="sd">    </span>
@@ -267,7 +265,7 @@
     
     <span class="c1"># process supplied arguments</span>
     <span class="n">vectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)):</span>
         <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
@@ -275,7 +273,7 @@
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
     
 <div class="viewcode-block" id="join"><a class="viewcode-back" href="../../../generated/medpy.features.utilities.join.html#medpy.features.utilities.join">[docs]</a><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes an arbitrary number of aligned vectors of the same length and combines</span>
 <span class="sd">    them into a single vector (vertically).</span>
 <span class="sd">    </span>
@@ -306,9 +304,9 @@
     <span class="c1"># process supplied arguments</span>
     <span class="n">vectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)):</span>
-        <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
     
     <span class="c1"># treat single-value cases special (no squeezing)</span>
     <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -334,13 +332,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

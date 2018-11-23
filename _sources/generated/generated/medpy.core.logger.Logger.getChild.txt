@@ -1,6 +1,0 @@
-medpy.core.logger.Logger.getChild
-=================================
-
-.. currentmodule:: medpy.core.logger
-
-.. automethod:: Logger.getChild

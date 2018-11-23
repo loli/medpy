@@ -1,6 +1,0 @@
-medpy.iterators.patchwise.CentredPatchIterator.applyslicer
-==========================================================
-
-.. currentmodule:: medpy.iterators.patchwise
-
-.. automethod:: CentredPatchIterator.applyslicer

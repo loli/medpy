@@ -1,6 +1,0 @@
-medpy.features.intensity.centerdistance
-=======================================
-
-.. currentmodule:: medpy.features.intensity
-
-.. autofunction:: centerdistance

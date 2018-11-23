@@ -1,1 +1,0 @@
-.. automodule:: medpy.core

@@ -1,6 +1,0 @@
-medpy.itkvtk.filter.image.watershed
-===================================
-
-.. currentmodule:: medpy.itkvtk.filter.image
-
-.. autofunction:: watershed

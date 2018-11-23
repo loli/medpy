@@ -1,6 +1,0 @@
-medpy.utilities.argparseu.sequenceOfIntegersGt
-==============================================
-
-.. currentmodule:: medpy.utilities.argparseu
-
-.. autofunction:: sequenceOfIntegersGt

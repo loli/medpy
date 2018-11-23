@@ -1,6 +1,0 @@
-medpy.filter.smoothing.gauss_xminus1d
-=====================================
-
-.. currentmodule:: medpy.filter.smoothing
-
-.. autofunction:: gauss_xminus1d

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.metric.histogram.noelle_1 &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.metric.histogram.noelle_1 &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Metric measures (medpy.metric)" href="../metric.html" >
     <link rel="next" title="medpy.metric.histogram.noelle_2" href="medpy.metric.histogram.noelle_2.html" >
     <link rel="prev" title="medpy.metric.histogram.minowski" href="medpy.metric.histogram.minowski.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../metric.html" accesskey="U">Metric measures (<code class="docutils literal"><span class="pre">medpy.metric</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.metric.histogram.noelle_2</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.metric.histogram.noelle_1.txt"
+    <a href="../_sources/generated/medpy.metric.histogram.noelle_1.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -119,7 +117,7 @@
 <dl class="function">
 <dt id="medpy.metric.histogram.noelle_1">
 <code class="descclassname">medpy.metric.histogram.</code><code class="descname">noelle_1</code><span class="sig-paren">(</span><em>h1</em>, <em>h2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/metric/histogram.html#noelle_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.metric.histogram.noelle_1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extension of <a class="reference internal" href="medpy.metric.histogram.fidelity_based.html#medpy.metric.histogram.fidelity_based" title="medpy.metric.histogram.fidelity_based"><code class="xref py py-obj docutils literal"><span class="pre">fidelity_based</span></code></a> proposed by <a class="reference internal" href="#r18" id="id1">[R18]</a>.</p>
+<dd><p>Extension of <a class="reference internal" href="medpy.metric.histogram.fidelity_based.html#medpy.metric.histogram.fidelity_based" title="medpy.metric.histogram.fidelity_based"><code class="xref py py-obj docutils literal"><span class="pre">fidelity_based</span></code></a> proposed by <a class="reference internal" href="#r19" id="id1">[R19]</a>.</p>
 <div class="math">
 \[d_{\bar{F}}(H, H') = 1 - d_{F}(H, H')\]</div>
 <p>See <a class="reference internal" href="medpy.metric.histogram.fidelity_based.html#medpy.metric.histogram.fidelity_based" title="medpy.metric.histogram.fidelity_based"><code class="xref py py-obj docutils literal"><span class="pre">fidelity_based</span></code></a> for the definition of <span class="math">\(d_{F}(H, H')\)</span>.</p>
@@ -164,11 +162,11 @@
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r18" rules="none">
+<table class="docutils citation" frame="void" id="r19" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R18]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> <ol class="last upperalpha simple" start="13">
-<li>Noelle &#8220;Distribution Distance Measures Applied to 3-D Object Recognition&#8221;, 2003</li>
+<tr><td class="label">[R19]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> <ol class="last upperalpha simple" start="13">
+<li>Noelle “Distribution Distance Measures Applied to 3-D Object Recognition”, 2003</li>
 </ol>
 </td></tr>
 </tbody>
@@ -195,13 +193,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

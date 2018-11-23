@@ -1,6 +1,0 @@
-medpy.graphcut.graph.GCGraph.MAX
-================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. autoattribute:: GCGraph.MAX

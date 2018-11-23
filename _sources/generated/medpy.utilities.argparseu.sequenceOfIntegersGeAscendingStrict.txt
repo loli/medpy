@@ -1,6 +1,0 @@
-medpy.utilities.argparseu.sequenceOfIntegersGeAscendingStrict
-=============================================================
-
-.. currentmodule:: medpy.utilities.argparseu
-
-.. autofunction:: sequenceOfIntegersGeAscendingStrict

@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphDouble.sum_edge
-===========================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphDouble.sum_edge

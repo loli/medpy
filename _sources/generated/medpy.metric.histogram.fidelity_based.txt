@@ -1,6 +1,0 @@
-medpy.metric.histogram.fidelity_based
-=====================================
-
-.. currentmodule:: medpy.metric.histogram
-
-.. autofunction:: fidelity_based

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.io.load &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.io.load &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.io.load</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -121,16 +119,16 @@
 <span class="kn">import</span> <span class="nn">scipy</span>
 
 <span class="c1"># own modules</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">header</span>
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ImageTypeError</span><span class="p">,</span> <span class="n">DependencyError</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">header</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">ImageTypeError</span><span class="p">,</span> <span class="n">DependencyError</span><span class="p">,</span>\
     <span class="n">ImageLoadingError</span>
 
 <span class="c1"># !TODO: Change to not work with the Exceptions anymore, as these hides bugs!</span>
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../generated/medpy.io.load.load.html#medpy.io.load.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads the ``image`` and returns a ndarray with the image&#39;s pixel content as well as</span>
 <span class="sd">    an image format specific header object.</span>
 <span class="sd">    </span>
@@ -257,18 +255,18 @@
     <span class="c1"># code #</span>
     <span class="c1">########</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading image {}...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
     
     <span class="c1"># Check image file existence</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;The supplied image {} does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;The supplied image </span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
     
     <span class="c1"># Try normal loading</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># determine two suffixes (the second one of the compound of the two last elements)</span>
         <span class="n">suffix</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffix_to_type</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]))</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffix_to_type</span><span class="p">:</span> <span class="c1"># otherwise throw an Exception that will be caught later on</span>
                 <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">()</span>
         <span class="c1"># determine image type by ending</span>
@@ -279,11 +277,11 @@
             <span class="c1"># load the image</span>
             <span class="k">return</span> <span class="n">loader</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;Loading images of type {} requires a third-party module that could not be encountered. Reason: {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;Loading images of type </span><span class="si">{}</span><span class="s1"> requires a third-party module that could not be encountered. Reason: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;Failes to load image {} as {}. Reason signaled by third-party module: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;Failes to load image </span><span class="si">{}</span><span class="s1"> as </span><span class="si">{}</span><span class="s1">. Reason signaled by third-party module: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="n">err</span> <span class="o">=</span> <span class="n">ImageTypeError</span><span class="p">(</span><span class="s1">&#39;The ending {} of {} could not be associated with any known image type. Supported types are: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">image</span><span class="p">,</span> <span class="n">type_to_string</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">ImageTypeError</span><span class="p">(</span><span class="s1">&#39;The ending </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1"> could not be associated with any known image type. Supported types are: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">image</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">type_to_string</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
 
     <span class="c1"># Try brute force</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Normal loading failed. Entering brute force mode.&#39;</span><span class="p">)</span>
@@ -292,7 +290,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">loader</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module {} signaled error: {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module </span><span class="si">{}</span><span class="s1"> signaled error: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
     
     <span class="k">raise</span> <span class="n">err</span></div>
     
@@ -305,7 +303,7 @@
     <span class="kn">import</span> <span class="nn">nibabel</span>
     
     <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image {} with NiBabel...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1"> with NiBabel...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
     
     <span class="n">img</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">arr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">get_data</span><span class="p">())</span>
@@ -321,13 +319,13 @@
     <span class="kn">import</span> <span class="nn">dicom</span>
     
     <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image {} with PyDicom...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1"> with PyDicom...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
     
     <span class="k">try</span><span class="p">:</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">dicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">dicom</span><span class="o">.</span><span class="n">filereader</span><span class="o">.</span><span class="n">InvalidDicomError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module pydicom signaled error: {}. Attempting to force loading nevertheless&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">dicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module pydicom signaled error: </span><span class="si">{}</span><span class="s1">. Attempting to force loading nevertheless&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">dicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">arr</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">pixel_array</span>
     
     <span class="c1"># Dicom images are difficult and require special treatment:</span>
@@ -355,10 +353,10 @@
 <span class="sd">    @return A tuple of 1. a scipy array with the image data, 2. a ImageHeader object with additional information</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">itk</span>
-    <span class="kn">from</span> <span class="nn">..itkvtk.utilities</span> <span class="kn">import</span> <span class="n">itku</span>
+    <span class="kn">from</span> <span class="nn">..itkvtk.utilities</span> <span class="k">import</span> <span class="n">itku</span>
     
     <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image {} with ITK...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1"> with ITK...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
     
     <span class="c1"># determine the image type</span>
     <span class="n">image_type</span> <span class="o">=</span> <span class="n">itku</span><span class="o">.</span><span class="n">getImageTypeFromFile</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -406,13 +404,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

@@ -1,6 +1,0 @@
-medpy.metric.binary.hd
-======================
-
-.. currentmodule:: medpy.metric.binary
-
-.. autofunction:: hd

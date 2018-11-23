@@ -1,6 +1,0 @@
-medpy.itkvtk.utilities.itku.getImageType
-========================================
-
-.. currentmodule:: medpy.itkvtk.utilities.itku
-
-.. autofunction:: getImageType

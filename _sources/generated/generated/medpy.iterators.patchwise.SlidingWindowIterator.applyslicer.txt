@@ -1,6 +1,0 @@
-medpy.iterators.patchwise.SlidingWindowIterator.applyslicer
-===========================================================
-
-.. currentmodule:: medpy.iterators.patchwise
-
-.. automethod:: SlidingWindowIterator.applyslicer

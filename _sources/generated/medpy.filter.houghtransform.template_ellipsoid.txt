@@ -1,6 +1,0 @@
-medpy.filter.houghtransform.template_ellipsoid
-==============================================
-
-.. currentmodule:: medpy.filter.houghtransform
-
-.. autofunction:: template_ellipsoid

@@ -1,6 +1,0 @@
-medpy.filter.label.fit_labels_to_mask
-=====================================
-
-.. currentmodule:: medpy.filter.label
-
-.. autofunction:: fit_labels_to_mask

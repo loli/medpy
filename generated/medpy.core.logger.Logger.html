@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.core.logger.Logger &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.core.logger.Logger &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Core functionalities and shared exception objects (medpy.core)" href="../core.html" >
     <link rel="next" title="medpy.core.logger.Logger.__init__" href="generated/medpy.core.logger.Logger.__init__.html" >
     <link rel="prev" title="Core functionalities and shared exception objects (medpy.core)" href="../core.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../core.html" accesskey="U">Core functionalities and shared exception objects (<code class="docutils literal"><span class="pre">medpy.core</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.core.logger.Logger.__init__</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.core.logger.Logger.txt"
+    <a href="../_sources/generated/medpy.core.logger.Logger.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -124,28 +122,28 @@
 <p>Singleton class i.e. setting the log level changes the output globally.</p>
 <p class="rubric">Examples</p>
 <p>Initializing the logger</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.core</span> <span class="kn">import</span> <span class="n">Logger</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.core</span> <span class="k">import</span> <span class="n">Logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Error messages are passed to stdout</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;error message&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;error message&#39;</span><span class="p">)</span>
 <span class="go">15.09.2014 12:40:25 [ERROR   ] error message</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;critical message&#39;</span><span class="p">)</span>
 <span class="go">15.09.2014 12:40:42 [CRITICAL] critical message</span>
 </pre></div>
 </div>
 <p>But debug and info messages are suppressed</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;info message&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;info message&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;debug message&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Unless the log level is set accordingly</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;info message&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;info message&#39;</span><span class="p">)</span>
 <span class="go">15.09.2014 12:43:06 [INFO    ] info message (in &lt;ipython-input-14-a08cad56519d&gt;.&lt;module&gt;:1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;debug message&#39;</span><span class="p">)</span>
 <span class="go">15.09.2014 12:42:50 [DEBUG   ] debug message (in &lt;ipython-input-13-3bb0c512b560&gt;.&lt;module&gt;:1)</span>
@@ -171,24 +169,24 @@
 <td>Pass a record to all relevant handlers.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.critical.html#medpy.core.logger.Logger.critical" title="medpy.core.logger.Logger.critical"><code class="xref py py-obj docutils literal"><span class="pre">critical</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;CRITICAL&#8217;.</td>
+<td>Log ‘msg % args’ with severity ‘CRITICAL’.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.debug.html#medpy.core.logger.Logger.debug" title="medpy.core.logger.Logger.debug"><code class="xref py py-obj docutils literal"><span class="pre">debug</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;DEBUG&#8217;.</td>
+<td>Log ‘msg % args’ with severity ‘DEBUG’.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.error.html#medpy.core.logger.Logger.error" title="medpy.core.logger.Logger.error"><code class="xref py py-obj docutils literal"><span class="pre">error</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;ERROR&#8217;.</td>
+<td>Log ‘msg % args’ with severity ‘ERROR’.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.exception.html#medpy.core.logger.Logger.exception" title="medpy.core.logger.Logger.exception"><code class="xref py py-obj docutils literal"><span class="pre">exception</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.exception.html#medpy.core.logger.Logger.exception" title="medpy.core.logger.Logger.exception"><code class="xref py py-obj docutils literal"><span class="pre">exception</span></code></a>(msg,&nbsp;*args[,&nbsp;exc_info])</td>
 <td>Convenience method for logging an ERROR with exception information.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.fatal.html#medpy.core.logger.Logger.fatal" title="medpy.core.logger.Logger.fatal"><code class="xref py py-obj docutils literal"><span class="pre">fatal</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;CRITICAL&#8217;.</td>
+<td>Log ‘msg % args’ with severity ‘CRITICAL’.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.filter.html#medpy.core.logger.Logger.filter" title="medpy.core.logger.Logger.filter"><code class="xref py py-obj docutils literal"><span class="pre">filter</span></code></a>(record)</td>
 <td>Determine if a record is loggable by consulting all the filters.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.findCaller.html#medpy.core.logger.Logger.findCaller" title="medpy.core.logger.Logger.findCaller"><code class="xref py py-obj docutils literal"><span class="pre">findCaller</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.findCaller.html#medpy.core.logger.Logger.findCaller" title="medpy.core.logger.Logger.findCaller"><code class="xref py py-obj docutils literal"><span class="pre">findCaller</span></code></a>([stack_info])</td>
 <td>Find the stack frame of the caller so that we can note the source file name, line number and function name.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.getChild.html#medpy.core.logger.Logger.getChild" title="medpy.core.logger.Logger.getChild"><code class="xref py py-obj docutils literal"><span class="pre">getChild</span></code></a>(suffix)</td>
@@ -200,53 +198,38 @@
 <tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.handle.html#medpy.core.logger.Logger.handle" title="medpy.core.logger.Logger.handle"><code class="xref py py-obj docutils literal"><span class="pre">handle</span></code></a>(record)</td>
 <td>Call the handlers for the specified record.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.info.html#medpy.core.logger.Logger.info" title="medpy.core.logger.Logger.info"><code class="xref py py-obj docutils literal"><span class="pre">info</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;INFO&#8217;.</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.hasHandlers.html#medpy.core.logger.Logger.hasHandlers" title="medpy.core.logger.Logger.hasHandlers"><code class="xref py py-obj docutils literal"><span class="pre">hasHandlers</span></code></a>()</td>
+<td>See if this logger has any handlers configured.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.isEnabledFor.html#medpy.core.logger.Logger.isEnabledFor" title="medpy.core.logger.Logger.isEnabledFor"><code class="xref py py-obj docutils literal"><span class="pre">isEnabledFor</span></code></a>(level)</td>
-<td>Is this logger enabled for level &#8216;level&#8217;?</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.info.html#medpy.core.logger.Logger.info" title="medpy.core.logger.Logger.info"><code class="xref py py-obj docutils literal"><span class="pre">info</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Log ‘msg % args’ with severity ‘INFO’.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.log.html#medpy.core.logger.Logger.log" title="medpy.core.logger.Logger.log"><code class="xref py py-obj docutils literal"><span class="pre">log</span></code></a>(level,&nbsp;msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with the integer severity &#8216;level&#8217;.</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.isEnabledFor.html#medpy.core.logger.Logger.isEnabledFor" title="medpy.core.logger.Logger.isEnabledFor"><code class="xref py py-obj docutils literal"><span class="pre">isEnabledFor</span></code></a>(level)</td>
+<td>Is this logger enabled for level ‘level’?</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.makeRecord.html#medpy.core.logger.Logger.makeRecord" title="medpy.core.logger.Logger.makeRecord"><code class="xref py py-obj docutils literal"><span class="pre">makeRecord</span></code></a>(name,&nbsp;level,&nbsp;fn,&nbsp;lno,&nbsp;msg,&nbsp;args,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.log.html#medpy.core.logger.Logger.log" title="medpy.core.logger.Logger.log"><code class="xref py py-obj docutils literal"><span class="pre">log</span></code></a>(level,&nbsp;msg,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Log ‘msg % args’ with the integer severity ‘level’.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.makeRecord.html#medpy.core.logger.Logger.makeRecord" title="medpy.core.logger.Logger.makeRecord"><code class="xref py py-obj docutils literal"><span class="pre">makeRecord</span></code></a>(name,&nbsp;level,&nbsp;fn,&nbsp;lno,&nbsp;msg,&nbsp;args,&nbsp;…)</td>
 <td>A factory method which can be overridden in subclasses to create specialized LogRecords.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.removeFilter.html#medpy.core.logger.Logger.removeFilter" title="medpy.core.logger.Logger.removeFilter"><code class="xref py py-obj docutils literal"><span class="pre">removeFilter</span></code></a>(filter)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.removeFilter.html#medpy.core.logger.Logger.removeFilter" title="medpy.core.logger.Logger.removeFilter"><code class="xref py py-obj docutils literal"><span class="pre">removeFilter</span></code></a>(filter)</td>
 <td>Remove the specified filter from this handler.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.removeHandler.html#medpy.core.logger.Logger.removeHandler" title="medpy.core.logger.Logger.removeHandler"><code class="xref py py-obj docutils literal"><span class="pre">removeHandler</span></code></a>(hdlr)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.removeHandler.html#medpy.core.logger.Logger.removeHandler" title="medpy.core.logger.Logger.removeHandler"><code class="xref py py-obj docutils literal"><span class="pre">removeHandler</span></code></a>(hdlr)</td>
 <td>Remove the specified handler from this logger.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.setHandler.html#medpy.core.logger.Logger.setHandler" title="medpy.core.logger.Logger.setHandler"><code class="xref py py-obj docutils literal"><span class="pre">setHandler</span></code></a>(hdlr)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.setHandler.html#medpy.core.logger.Logger.setHandler" title="medpy.core.logger.Logger.setHandler"><code class="xref py py-obj docutils literal"><span class="pre">setHandler</span></code></a>(hdlr)</td>
 <td>Replace the current handler with a new one.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.setLevel.html#medpy.core.logger.Logger.setLevel" title="medpy.core.logger.Logger.setLevel"><code class="xref py py-obj docutils literal"><span class="pre">setLevel</span></code></a>(level)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.setLevel.html#medpy.core.logger.Logger.setLevel" title="medpy.core.logger.Logger.setLevel"><code class="xref py py-obj docutils literal"><span class="pre">setLevel</span></code></a>(level)</td>
 <td>Overrides the parent method to adapt the formatting string to the level.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.warn.html#medpy.core.logger.Logger.warn" title="medpy.core.logger.Logger.warn"><code class="xref py py-obj docutils literal"><span class="pre">warn</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;WARNING&#8217;.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.warning.html#medpy.core.logger.Logger.warning" title="medpy.core.logger.Logger.warning"><code class="xref py py-obj docutils literal"><span class="pre">warning</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Log &#8216;msg % args&#8217; with severity &#8216;WARNING&#8217;.</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">getInstance</span></code></td>
-<td>The member variable holding the actual instance of the class.</td>
-</tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">manager</span></code></td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.warn.html#medpy.core.logger.Logger.warn" title="medpy.core.logger.Logger.warn"><code class="xref py py-obj docutils literal"><span class="pre">warn</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">root</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.core.logger.Logger.warning.html#medpy.core.logger.Logger.warning" title="medpy.core.logger.Logger.warning"><code class="xref py py-obj docutils literal"><span class="pre">warning</span></code></a>(msg,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Log ‘msg % args’ with severity ‘WARNING’.</td>
 </tr>
 </tbody>
 </table>
@@ -272,13 +255,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

@@ -1,6 +1,0 @@
-medpy.itkvtk.utilities.itku.saveImage
-=====================================
-
-.. currentmodule:: medpy.itkvtk.utilities.itku
-
-.. autofunction:: saveImage

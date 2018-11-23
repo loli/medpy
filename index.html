@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>MedPy &mdash; MedPy 0.3.0 documentation</title>
+    <title>MedPy &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="#" >
+    <link rel="index" title="Index" href="genindex.html" >
+    <link rel="search" title="Search" href="search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="#" >
     <link rel="next" title="Installing MedPy the fast way" href="installation/fastpath.html" > 
   </head>
   <body>
@@ -46,7 +48,6 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	 
     </ul>
               
@@ -92,20 +93,17 @@
                         title="next chapter">Installing MedPy the fast way</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="_sources/index.txt"
+    <a href="_sources/index.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -121,13 +119,13 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.3.0</td>
+<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.4.0</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">September 20, 2017</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">Nov 23, 2018</td>
 </tr>
 </tbody>
 </table>
-<p>MedPy is a medical image processing library written in Python.</p>
+<p>MedPy is a medical image processing library written in Python. MedPy requires <em>Python 3</em>.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -137,8 +135,9 @@
 <li class="toctree-l1"><a class="reference internal" href="installation/asuser.html">Installing MedPy as user</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/developmentmode.html">Installing MedPy in development mode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/uninstall.html">Uninstall MedPy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/python3.html">Installing MedPy with Python 3 support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation/python2.html">Installing MedPy with Python 2 support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/graphcutsupport.html">Installing with GraphCut support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation/simpleitk.html">Installing ITK wrappers for Python (any version)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/itkwrapper4.12.2.html">Installing ITK wrappers for Python (ITKv4.12.2)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/itkwrapper4.7.html">Installing ITK wrappers for Python (ITKv4.7)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation/itkwrapper3.2.html">Installing ITK wrappers for Python (ITKv3)</a></li>
@@ -174,8 +173,8 @@
 <div class="section" id="notebooks">
 <h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
-<dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Accessing%20the%20image's%20meta-data.ipynb">Accessing the image&#8217;s meta-data</a>.</dt>
-<dd>In this tutorial we will learn how to access and manipulate the image&#8217;s meta-data form the header.</dd>
+<dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Accessing%20the%20image's%20meta-data.ipynb">Accessing the image’s meta-data</a>.</dt>
+<dd>In this tutorial we will learn how to access and manipulate the image’s meta-data form the header.</dd>
 <dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Load%2C%20threshold%20and%20save%20an%20image.ipynb">Load, threshold and save an image</a>.</dt>
 <dd>In this tutorial you will learn how to load a medical image with MedPy, how to perform a simple thresholding operation and how to save the resulting binary image.</dd>
 <dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Simple%20binary%20image%20processing.ipynb">Simple binary image processing</a>.</dt>
@@ -191,9 +190,9 @@
 <li class="toctree-l1"><a class="reference internal" href="filter.html">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="features.html">Image feature extraction and manipulation (<code class="docutils literal"><span class="pre">medpy.features</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="iterators.html">Image iterators (<code class="docutils literal"><span class="pre">medpy.iterators</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="itkvtk.html">Functionalities and filters connected with ITK/VTK (<code class="docutils literal"><span class="pre">medpy.itkvtk</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neighbours.html">Neighbours (<code class="docutils literal"><span class="pre">medpy.neighbours</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="graphcut.html">Graph-cut (max-flow/min-cut) (<code class="docutils literal"><span class="pre">medpy.graphcut</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="itkvtk.html">Functionalities and filters connected with ITK/VTK (<code class="docutils literal"><span class="pre">medpy.itkvtk</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="core.html">Core functionalities and shared exception objects (<code class="docutils literal"><span class="pre">medpy.core</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities without a direct connection to medical image processing (<code class="docutils literal"><span class="pre">medpy.utilities</span></code>)</a></li>
 </ul>
@@ -219,13 +218,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

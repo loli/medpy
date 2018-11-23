@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Image filter and manipulation (medpy.filter)" href="../filter.html" >
     <link rel="next" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__.html" >
     <link rel="prev" title="medpy.filter.houghtransform.template_sphere" href="medpy.filter.houghtransform.template_sphere.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../filter.html" accesskey="U">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.__init__</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.txt"
+    <a href="../_sources/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -162,28 +160,28 @@ method description first.</p>
 <dt>cutoffp, i.e. the cut-off percentiles</dt>
 <dd>These are used to the define the intensity outliers, both during training and
 image transformation. The default values are usualy a good choice.
-(in <a class="reference internal" href="#r5" id="id1">[R5]</a> these are called the minimum and maximum percentile values pc1 and pc2 respectively)</dd>
+(in <a class="reference internal" href="#r6" id="id1">[R6]</a> these are called the minimum and maximum percentile values pc1 and pc2 respectively)</dd>
 <dt>landmarkp, i.e. the landmark percentiles</dt>
 <dd>These percentiles define the landmark positions. The more supplied, the more
 exact but less general becomes the model. It is common to supply equally
 spaced percentiles between 0 and 100.
-(in <a class="reference internal" href="#r5" id="id2">[R5]</a> these are called the landmark locations mu_1, .., mu_l)</dd>
+(in <a class="reference internal" href="#r6" id="id2">[R6]</a> these are called the landmark locations mu_1, .., mu_l)</dd>
 <dt>strange, i.e. the standard intensity space range</dt>
 <dd>These two intensity values define roughly the standard intensity space (or
 common intensity space of the images; or even target intensity space) to
 which each images intensities are mapped. This space can be supplied, but it
 is usually recommended to let the method select it automatically during the
 training process. It is additionally possible to supply only the lower or
-upper range border and set the other to &#8216;&#8217;auto&#8217;&#8216;, in which case the method
+upper range border and set the other to ‘’auto’‘, in which case the method
 chooses the range automatically, but not the position. 
-(in <a class="reference internal" href="#r5" id="id3">[R5]</a> these are called the minimum and maximum intensities on the standard scale of the IOI s1 resp. s2)</dd>
+(in <a class="reference internal" href="#r6" id="id3">[R6]</a> these are called the minimum and maximum intensities on the standard scale of the IOI s1 resp. s2)</dd>
 </dl>
 <p><strong>Details of the method:</strong>
 In the following the method is described in some more detail. For even more
-information see <a class="reference internal" href="#r5" id="id4">[R5]</a>.</p>
+information see <a class="reference internal" href="#r6" id="id4">[R6]</a>.</p>
 <p>Essentially the method is based on a multi-segment linear transformation model. A
 standard intensity space (or common intensity space) is defined by an intensity
-value range &#8216;&#8217;stdrange&#8217;&#8216;.
+value range ‘’stdrange’‘.
 During the training phase, the intensity values at certain cut-off percentiles of
 each image are computed and a single-segment linear mapping from them to the
 standard intensity space range limits created. Then the images intensity values
@@ -218,21 +216,21 @@ between the cutoffp values.</p>
 <p><strong>stdrange</strong> : string or (float, float)</p>
 <blockquote class="last">
 <div><p>The range of the standard intensity space for which a
-transformation is learned; when set to &#8216;auto, automatically
+transformation is learned; when set to ‘auto, automatically
 determined from the training image upon training; it is also
 possible to fix either the upper or the lower border value and
-setting the other to &#8216;auto&#8217;.</p>
+setting the other to ‘auto’.</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r5" rules="none">
+<table class="docutils citation" frame="void" id="r6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R5]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>, <a class="fn-backref" href="#id3">3</a>, <a class="fn-backref" href="#id4">4</a>, <a class="fn-backref" href="#id5">5</a>)</em> Nyul, L.G.; Udupa, J.K.; Xuan Zhang, &#8220;New variants of a method of MRI scale
-standardization,&#8221; Medical Imaging, IEEE Transactions on , vol.19, no.2, pp.143-150,
+<tr><td class="label">[R6]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>, <a class="fn-backref" href="#id3">3</a>, <a class="fn-backref" href="#id4">4</a>, <a class="fn-backref" href="#id5">5</a>)</em> Nyul, L.G.; Udupa, J.K.; Xuan Zhang, “New variants of a method of MRI scale
+standardization,” Medical Imaging, IEEE Transactions on , vol.19, no.2, pp.143-150,
 Feb. 2000</td></tr>
 </tbody>
 </table>
@@ -240,7 +238,7 @@ Feb. 2000</td></tr>
 <p>We have a number of similar images with varying intensity ranges. To make them
 comparable, we would like to transform them to a common intensity space. Thus we
 run:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.filter</span> <span class="kn">import</span> <span class="n">IntensityRangeStandardization</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.filter</span> <span class="k">import</span> <span class="n">IntensityRangeStandardization</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">irs</span> <span class="o">=</span> <span class="n">IntensityRangeStandardization</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trained_model</span><span class="p">,</span> <span class="n">transformed_images</span> <span class="o">=</span> <span class="n">irs</span><span class="o">.</span><span class="n">train_transform</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
 </pre></div>
@@ -248,19 +246,19 @@ run:</p>
 <p>Let us assume we now obtain another, new image, that we would like to make
 comparable to the others. As long as it does not differ to much from these, we
 can simply call:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">transformed_image</span> <span class="o">=</span> <span class="n">irs</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">new_image</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transformed_image</span> <span class="o">=</span> <span class="n">irs</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">new_image</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For many application, not all images are already available at the time of
 execution. It would therefore be good to be able to preserve a once trained
 model. The solution is to just pickle the once trained model:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pickle</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pickle</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;my_trained_model.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">irs</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And load it again when required with:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;my_trained_model.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;my_trained_model.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">irs</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -306,36 +304,6 @@ model. The solution is to just pickle the once trained model:</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Attributes</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L2.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L2" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L2"><code class="xref py py-obj docutils literal"><span class="pre">L2</span></code></a></td>
-<td>1-value landmark points model.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L3.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L3" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L3"><code class="xref py py-obj docutils literal"><span class="pre">L3</span></code></a></td>
-<td>3-value landmark points model.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L4.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L4" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L4"><code class="xref py py-obj docutils literal"><span class="pre">L4</span></code></a></td>
-<td>9-value landmark points model.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.cutoffp.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.cutoffp" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.cutoffp"><code class="xref py py-obj docutils literal"><span class="pre">cutoffp</span></code></a></td>
-<td>Get the cut-off percentiles.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.landmarkp.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.landmarkp" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.landmarkp"><code class="xref py py-obj docutils literal"><span class="pre">landmarkp</span></code></a></td>
-<td>Get the landmark percentiles.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.model.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.model" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.model"><code class="xref py py-obj docutils literal"><span class="pre">model</span></code></a></td>
-<td>Get the model (the learned percentile values).</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.stdrange"><code class="xref py py-obj docutils literal"><span class="pre">stdrange</span></code></a></td>
-<td>Get the set resp.</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>
@@ -358,13 +326,13 @@ model. The solution is to just pickle the once trained model:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

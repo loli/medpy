@@ -1,6 +1,0 @@
-medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.L2
-===========================================================================
-
-.. currentmodule:: medpy.filter.IntensityRangeStandardization
-
-.. autoattribute:: IntensityRangeStandardization.L2

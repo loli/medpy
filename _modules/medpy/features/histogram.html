@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.features.histogram &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.features.histogram &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.features.histogram</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -127,8 +125,8 @@
 <span class="n">__MBS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;triangular&#39;</span><span class="p">,</span> <span class="s1">&#39;trapezoid&#39;</span><span class="p">,</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;sigmoid&#39;</span><span class="p">]</span>
 
 <span class="c1"># code</span>
-<div class="viewcode-block" id="fuzzy_histogram"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.fuzzy_histogram.html#medpy.features.histogram.fuzzy_histogram">[docs]</a><span class="k">def</span> <span class="nf">fuzzy_histogram</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">membership</span><span class="o">=</span><span class="s1">&#39;triangular&#39;</span><span class="p">,</span> <span class="n">smoothness</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">guarantee</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Compute a fuzzy histogram.</span>
+<div class="viewcode-block" id="fuzzy_histogram"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.fuzzy_histogram.html#medpy.features.histogram.fuzzy_histogram">[docs]</a><span class="k">def</span> <span class="nf">fuzzy_histogram</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">membership</span><span class="o">=</span><span class="s1">&#39;triangular&#39;</span><span class="p">,</span> <span class="n">smoothness</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">guarantee</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute a fuzzy histogram.</span>
 <span class="sd">    The percentage of a value&#39;s membership in a bin is computed using the selected</span>
 <span class="sd">    membership function. This functions stays as near as possible to the `numpy.histogram`</span>
 <span class="sd">    behaviour.</span>
@@ -182,15 +180,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># check and prepare parameters</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-    <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="nb">range</span><span class="p">:</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="k">if</span> <span class="kc">None</span> <span class="o">==</span> <span class="nb">range</span><span class="p">:</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
     <span class="k">if</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;max must be larger than min in range parameter.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">bins</span><span class="p">):</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;bins must an integer.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">bins</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;bins must greater than zero.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">membership</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">__MBS</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Unknown type: {}. Must be one of {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">membership</span><span class="p">,</span> <span class="n">__MBS</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">smoothness</span> <span class="ow">and</span> <span class="n">smoothness</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;smoothness must be greater than zero.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">membership</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">__MBS</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Unknown type: </span><span class="si">{}</span><span class="s1">. Must be one of </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">membership</span><span class="p">,</span> <span class="n">__MBS</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="kc">None</span> <span class="o">==</span> <span class="n">smoothness</span> <span class="ow">and</span> <span class="n">smoothness</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;smoothness must be greater than zero.&#39;</span><span class="p">)</span>
     
     <span class="c1"># set default smoothness values</span>
-    <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">smoothness</span><span class="p">:</span>
+    <span class="k">if</span> <span class="kc">None</span> <span class="o">==</span> <span class="n">smoothness</span><span class="p">:</span>
         <span class="n">smoothness</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="k">if</span> <span class="s1">&#39;trapezoid&#39;</span> <span class="o">==</span> <span class="n">membership</span> <span class="k">else</span> <span class="mf">0.5</span>
     
     <span class="k">if</span> <span class="ow">not</span> <span class="n">guarantee</span><span class="p">:</span> <span class="c1"># compute bin distribution in no guarantee case</span>
@@ -235,7 +233,7 @@
 <span class="c1"># see http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html for graphs    </span>
 
 <div class="viewcode-block" id="triangular_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.triangular_membership.html#medpy.features.histogram.triangular_membership">[docs]</a><span class="k">def</span> <span class="nf">triangular_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a triangular membership function for a fuzzy histogram bin.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -299,7 +297,7 @@
     <span class="k">return</span> <span class="n">fun</span></div>
     
 <div class="viewcode-block" id="trapezoid_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.trapezoid_membership.html#medpy.features.histogram.trapezoid_membership">[docs]</a><span class="k">def</span> <span class="nf">trapezoid_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Create a trapezium membership function for a fuzzy histogram bin.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create a trapezium membership function for a fuzzy histogram bin.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -383,7 +381,7 @@
     <span class="k">return</span> <span class="n">fun</span></div>
 
 <div class="viewcode-block" id="gaussian_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.gaussian_membership.html#medpy.features.histogram.gaussian_membership">[docs]</a><span class="k">def</span> <span class="nf">gaussian_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Create a gaussian membership function for a fuzzy histogram bin.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create a gaussian membership function for a fuzzy histogram bin.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -455,7 +453,7 @@
     <span class="k">return</span> <span class="n">fun</span></div>
 
 <span class="k">def</span> <span class="nf">_gaussian_membership_sigma</span><span class="p">(</span><span class="n">smoothness</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">):</span> <span class="c1"># 275us @ smothness=10</span>
-    <span class="sd">r&quot;&quot;&quot;Compute the sigma required for a gaussian, such that in a neighbourhood of</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the sigma required for a gaussian, such that in a neighbourhood of</span>
 <span class="sd">    smoothness the maximum error is &#39;eps&#39;.</span>
 <span class="sd">    The error is here the difference between the clipped integral and one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -471,7 +469,7 @@
     <span class="k">return</span> <span class="n">sigma</span>
 
 <div class="viewcode-block" id="sigmoidal_difference_membership"><a class="viewcode-back" href="../../../generated/medpy.features.histogram.sigmoidal_difference_membership.html#medpy.features.histogram.sigmoidal_difference_membership">[docs]</a><span class="k">def</span> <span class="nf">sigmoidal_difference_membership</span><span class="p">(</span><span class="n">bin_center</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">,</span> <span class="n">smoothness</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;Create the difference of two sigmoids as membership function for a fuzzy histogram bin.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create the difference of two sigmoids as membership function for a fuzzy histogram bin.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -586,13 +584,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

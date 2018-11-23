@@ -1,6 +1,0 @@
-medpy.itkvtk.utilities.itku.getArrayFromImage
-=============================================
-
-.. currentmodule:: medpy.itkvtk.utilities.itku
-
-.. autofunction:: getArrayFromImage

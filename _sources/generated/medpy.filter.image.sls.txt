@@ -1,6 +1,0 @@
-medpy.filter.image.sls
-======================
-
-.. currentmodule:: medpy.filter.image
-
-.. autofunction:: sls

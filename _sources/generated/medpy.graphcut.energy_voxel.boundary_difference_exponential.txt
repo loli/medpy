@@ -1,6 +1,0 @@
-medpy.graphcut.energy_voxel.boundary_difference_exponential
-===========================================================
-
-.. currentmodule:: medpy.graphcut.energy_voxel
-
-.. autofunction:: boundary_difference_exponential

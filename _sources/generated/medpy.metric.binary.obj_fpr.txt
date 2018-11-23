@@ -1,6 +1,0 @@
-medpy.metric.binary.obj_fpr
-===========================
-
-.. currentmodule:: medpy.metric.binary
-
-.. autofunction:: obj_fpr

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>List of commandline tools &mdash; MedPy 0.3.0 documentation</title>
+    <title>List of commandline tools &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="Supported medical image formats" href="imageformats.html" >
     <link rel="prev" title="MedPy docker containers" href="../docker/dockercontainers.html" > 
   </head>
@@ -47,9 +49,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	 
     </ul>
               
@@ -106,20 +107,17 @@
                         title="next chapter">Supported medical image formats</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/information/commandline_tools_listing.txt"
+    <a href="../_sources/information/commandline_tools_listing.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -136,19 +134,19 @@ All are prefixed with <strong>medpy_</strong>.</p>
 <div class="section" id="categories">
 <h2>Categories<a class="headerlink" href="#categories" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="#basic"><span>Basic image manipulation</span></a></li>
-<li><a class="reference internal" href="#volume"><span>Image volume manipulation</span></a></li>
-<li><a class="reference internal" href="#binary"><span>Binary image manipulation</span></a></li>
-<li><a class="reference internal" href="#filter"><span>Image filters</span></a></li>
-<li><a class="reference internal" href="#mr"><span>Magnetic resonance (MR) related</span></a></li>
-<li><a class="reference internal" href="#gc"><span>Graph-cut</span></a></li>
-<li><a class="reference internal" href="#itk"><span>Scripts requiring ITK</span></a></li>
-<li><a class="reference internal" href="#others"><span>Others</span></a></li>
+<li><a class="reference internal" href="#basic"><span class="std std-ref">Basic image manipulation</span></a></li>
+<li><a class="reference internal" href="#volume"><span class="std std-ref">Image volume manipulation</span></a></li>
+<li><a class="reference internal" href="#binary"><span class="std std-ref">Binary image manipulation</span></a></li>
+<li><a class="reference internal" href="#filter"><span class="std std-ref">Image filters</span></a></li>
+<li><a class="reference internal" href="#mr"><span class="std std-ref">Magnetic resonance (MR) related</span></a></li>
+<li><a class="reference internal" href="#gc"><span class="std std-ref">Graph-cut</span></a></li>
+<li><a class="reference internal" href="#itk"><span class="std std-ref">Scripts requiring ITK</span></a></li>
+<li><a class="reference internal" href="#others"><span class="std std-ref">Others</span></a></li>
 </ul>
 </div>
 <div class="section" id="basic-image-manipulation">
 <span id="basic"></span><h2>Basic image manipulation<a class="headerlink" href="#basic-image-manipulation" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <div class="topic">
 <p class="topic-title first">medpy_info.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_info.py.ipynb">notebook</a>)</p>
 <p>Prints basic information about an image to the stdout.</p>
@@ -188,7 +186,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="image-volume-manipulation">
 <span id="volume"></span><h2>Image volume manipulation<a class="headerlink" href="#image-volume-manipulation" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <div class="topic">
 <p class="topic-title first">medpy_extract_sub_volume.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume.py.ipynb">notebook</a>)</p>
 <p>Extracts a sub volume from an image.</p>
@@ -244,7 +242,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="binary-image-manipulation">
 <span id="binary"></span><h2>Binary image manipulation<a class="headerlink" href="#binary-image-manipulation" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <div class="topic">
 <p class="topic-title first">medpy_binary_resampling.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_binary_resampling.py.ipynb">notebook</a>)</p>
 <p>Re-samples a binary image according to a supplied voxel spacing using shape based interpolation where necessary.</p>
@@ -264,7 +262,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="image-filters">
 <span id="filter"></span><h2>Image filters<a class="headerlink" href="#image-filters" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <div class="topic">
 <p class="topic-title first">medpy_gradient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_gradient.py.ipynb">notebook</a>)</p>
 <p>Gradient magnitude image filter. Output is float.</p>
@@ -284,7 +282,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="magnetic-resonance-mr-related">
 <span id="mr"></span><h2>Magnetic resonance (MR) related<a class="headerlink" href="#magnetic-resonance-mr-related" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <div class="topic">
 <p class="topic-title first">medpy_apparent_diffusion_coefficient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_apparent_diffusion_coefficient.py.ipynb">notebook</a>)</p>
 <p>Computes the apparent diffusion coefficient (ADC) map from two diffusion weight (DW) volumes acquired with different b-values.</p>
@@ -296,7 +294,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="graph-cut">
 <span id="gc"></span><h2>Graph-cut<a class="headerlink" href="#graph-cut" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <p>GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algorithm, version 3.01 <a class="footnote-reference" href="#id45" id="id32">[1]</a>.</p>
 <div class="topic">
 <p class="topic-title first">medpy_graphcut_voxel.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_voxel.py.ipynb">notebook</a>)</p>
@@ -333,7 +331,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="scripts-requiring-itk">
 <span id="itk"></span><h2>Scripts requiring ITK<a class="headerlink" href="#scripts-requiring-itk" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 <p>All of the scripts in this section require the ITK Python bindings to be installed.</p>
 <div class="topic">
 <p class="topic-title first">medpy_itk_smoothing.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_smoothing.py.ipynb">notebook</a>)</p>
@@ -350,7 +348,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 </div>
 <div class="section" id="others">
 <span id="id44"></span><h2>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span>↑top</span></a></p>
+<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
@@ -381,13 +379,13 @@ All are prefixed with <strong>medpy_</strong>.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

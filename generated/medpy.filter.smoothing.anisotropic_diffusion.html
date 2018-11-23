@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.filter.smoothing.anisotropic_diffusion &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.filter.smoothing.anisotropic_diffusion &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Image filter and manipulation (medpy.filter)" href="../filter.html" >
     <link rel="next" title="medpy.filter.smoothing.gauss_xminus1d" href="medpy.filter.smoothing.gauss_xminus1d.html" >
     <link rel="prev" title="Image filter and manipulation (medpy.filter)" href="../filter.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../filter.html" accesskey="U">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.filter.smoothing.gauss_xminus1d</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.filter.smoothing.anisotropic_diffusion.txt"
+    <a href="../_sources/generated/medpy.filter.smoothing.anisotropic_diffusion.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -144,15 +142,18 @@ on conduction.</p>
 <blockquote>
 <div><p>Controls the speed of diffusion. Pick a value <span class="math">\(&lt;= .25\)</span> for stability.</p>
 </div></blockquote>
-<p><strong>voxelspacing</strong> : tuple of floats</p>
+<p><strong>voxelspacing</strong> : tuple of floats or array_like</p>
 <blockquote>
 <div><p>The distance between adjacent pixels in all img.ndim directions</p>
 </div></blockquote>
-<p><strong>option</strong> : {1, 2}</p>
+<p><strong>option</strong> : {1, 2, 3}</p>
 <blockquote>
-<div><p>Whether to use the Perona Malik diffusion equation No. 1 or No. 2.
+<div><p>Whether to use the Perona Malik diffusion equation No. 1 or No. 2,
+or Tukey’s biweight function.
 Equation 1 favours high contrast edges over low contrast ones, while
-equation 2 favours wide regions over smaller ones. See <a class="reference internal" href="#r8" id="id1">[R8]</a> for details.</p>
+equation 2 favours wide regions over smaller ones. See <a class="reference internal" href="#r9" id="id1">[R9]</a> for details.
+Equation 3 preserves sharper boundaries than previous formulations and
+improves the automatic stopping of the diffusion. See <a class="reference internal" href="#r10" id="id2">[R10]</a> for details.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -183,13 +184,22 @@ March 2002 corrected diffusion eqn No 2. -
 July 2012 translated to Python -
 August 2013 incorporated into MedPy, arbitrary dimensionality -</p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r8" rules="none">
+<table class="docutils citation" frame="void" id="r9" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R8]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> P. Perona and J. Malik.
+<tr><td class="label">[R9]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> P. Perona and J. Malik.
 Scale-space and edge detection using ansotropic diffusion.
 IEEE Transactions on Pattern Analysis and Machine Intelligence,
 12(7):629-639, July 1990.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R10]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> M.J. Black, G. Sapiro, D. Marimont, D. Heeger
+Robust anisotropic diffusion.
+IEEE Transactions on Image Processing,
+7(3):421-432, March 1998.</td></tr>
 </tbody>
 </table>
 </dd></dl>
@@ -214,13 +224,13 @@ IEEE Transactions on Pattern Analysis and Machine Intelligence,
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

@@ -1,6 +1,0 @@
-medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.landmarkp
-==================================================================================
-
-.. currentmodule:: medpy.filter.IntensityRangeStandardization
-
-.. autoattribute:: IntensityRangeStandardization.landmarkp

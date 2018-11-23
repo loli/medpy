@@ -1,6 +1,0 @@
-medpy.utilities.argparseu.sequenceOfIntegersLe
-==============================================
-
-.. currentmodule:: medpy.utilities.argparseu
-
-.. autofunction:: sequenceOfIntegersLe

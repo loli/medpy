@@ -1,6 +1,0 @@
-medpy.core.logger.Logger.__init__
-=================================
-
-.. currentmodule:: medpy.core.logger
-
-.. automethod:: Logger.__init__

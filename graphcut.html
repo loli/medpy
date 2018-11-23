@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Graph-cut (max-flow/min-cut) (medpy.graphcut) &mdash; MedPy 0.3.0 documentation</title>
+    <title>Graph-cut (max-flow/min-cut) (medpy.graphcut) &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="index.html" >
+    <link rel="index" title="Index" href="genindex.html" >
+    <link rel="search" title="Search" href="search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="index.html" >
     <link rel="next" title="medpy.graphcut.generate.graph_from_voxels" href="generated/medpy.graphcut.generate.graph_from_voxels.html" >
     <link rel="prev" title="medpy.neighbours.knn.pdist" href="generated/medpy.neighbours.knn.pdist.html" > 
   </head>
@@ -47,9 +49,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="index.html">MedPy 0.4.0 documentation</a></li>
 	 
     </ul>
               
@@ -115,20 +116,17 @@
                         title="next chapter">medpy.graphcut.generate.graph_from_voxels</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="_sources/graphcut.txt"
+    <a href="_sources/graphcut.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -142,10 +140,10 @@
 <h1>Graph-cut (max-flow/min-cut) (<a class="reference internal" href="#module-medpy.graphcut" title="medpy.graphcut"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut</span></code></a>)<a class="headerlink" href="#graph-cut-max-flow-min-cut-medpy-graphcut" title="Permalink to this headline">¶</a></h1>
 <p>Provides functionalities to efficiently construct nD graphs from various sources using
 arbitrary energy functions (boundary and regional terms). The graph can then be saved in
-the Dimacs graph standard <a class="reference internal" href="#r27" id="id1">[R27]</a> and/or processed (i.e. cut) using 3rd party graph-cut <a class="reference internal" href="#r23" id="id2">[R23]</a>
+the Dimacs graph standard <a class="reference internal" href="#r28" id="id1">[R28]</a> and/or processed (i.e. cut) using 3rd party graph-cut <a class="reference internal" href="#r24" id="id2">[R24]</a>
 algorithms.</p>
-<p>This module makes use of a custom <em>Boost.Python</em> <a class="reference internal" href="#r24" id="id3">[R24]</a> wrapper written for a modified
-version of Boykov and Kolmogorovs max-flow/min-cut algorithm (v3.01) <a class="reference internal" href="#r26" id="id4">[R26]</a> that can be found at <a class="reference internal" href="#r25" id="id5">[R25]</a>.</p>
+<p>This module makes use of a custom <em>Boost.Python</em> <a class="reference internal" href="#r25" id="id3">[R25]</a> wrapper written for a modified
+version of Boykov and Kolmogorovs max-flow/min-cut algorithm (v3.01) <a class="reference internal" href="#r27" id="id4">[R27]</a> that can be found at <a class="reference internal" href="#r26" id="id5">[R26]</a>.</p>
 <p>Supports voxel- as well as label/region-based graph-cuts.</p>
 <p>See below for examples.</p>
 <div class="section" id="directly-generate-graphs-from-image-medpy-graphcut-generate">
@@ -158,10 +156,10 @@ Use together with an energy term from <a class="reference internal" href="#modul
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_voxels.html#medpy.graphcut.generate.graph_from_voxels" title="medpy.graphcut.generate.graph_from_voxels"><code class="xref py py-obj docutils literal"><span class="pre">graph_from_voxels</span></code></a>(fg_markers,&nbsp;bg_markers[,&nbsp;...])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_voxels.html#medpy.graphcut.generate.graph_from_voxels" title="medpy.graphcut.generate.graph_from_voxels"><code class="xref py py-obj docutils literal"><span class="pre">graph_from_voxels</span></code></a>(fg_markers,&nbsp;bg_markers[,&nbsp;…])</td>
 <td>Create a graph-cut ready graph to segment a nD image using the voxel neighbourhood.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_labels.html#medpy.graphcut.generate.graph_from_labels" title="medpy.graphcut.generate.graph_from_labels"><code class="xref py py-obj docutils literal"><span class="pre">graph_from_labels</span></code></a>(label_image,&nbsp;fg_markers,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_labels.html#medpy.graphcut.generate.graph_from_labels" title="medpy.graphcut.generate.graph_from_labels"><code class="xref py py-obj docutils literal"><span class="pre">graph_from_labels</span></code></a>(label_image,&nbsp;fg_markers,&nbsp;…)</td>
 <td>Create a graph-cut ready graph to segment a nD image using the region neighbourhood.</td>
 </tr>
 </tbody>
@@ -169,7 +167,7 @@ Use together with an energy term from <a class="reference internal" href="#modul
 </div>
 <div class="section" id="energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel">
 <h2>Energy terms for voxel-based graph-cuts <a class="reference internal" href="#module-medpy.graphcut.energy_voxel" title="medpy.graphcut.energy_voxel"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.energy_voxel</span></code></a><a class="headerlink" href="#energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel" title="Permalink to this headline">¶</a></h2>
-<p>Run-time optimized energy functions for the graph generation. Voxel based <a class="reference internal" href="#r29" id="id6">[R29]</a>.</p>
+<p>Run-time optimized energy functions for the graph generation. Voxel based <a class="reference internal" href="#r30" id="id6">[R30]</a>.</p>
 <span class="target" id="module-medpy.graphcut.energy_voxel"></span><div class="section" id="boundary-energy-terms">
 <h3>Boundary energy terms<a class="headerlink" href="#boundary-energy-terms" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
@@ -178,28 +176,28 @@ Use together with an energy term from <a class="reference internal" href="#modul
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_linear.html#medpy.graphcut.energy_voxel.boundary_maximum_linear" title="medpy.graphcut.energy_voxel.boundary_maximum_linear"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_linear</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_linear.html#medpy.graphcut.energy_voxel.boundary_maximum_linear" title="medpy.graphcut.energy_voxel.boundary_maximum_linear"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_linear</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels maximum value using a linear relationship.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_linear.html#medpy.graphcut.energy_voxel.boundary_difference_linear" title="medpy.graphcut.energy_voxel.boundary_difference_linear"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_linear</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_linear.html#medpy.graphcut.energy_voxel.boundary_difference_linear" title="medpy.graphcut.energy_voxel.boundary_difference_linear"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_linear</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels difference value using a linear relationship.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_exponential.html#medpy.graphcut.energy_voxel.boundary_maximum_exponential" title="medpy.graphcut.energy_voxel.boundary_maximum_exponential"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_exponential</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_exponential.html#medpy.graphcut.energy_voxel.boundary_maximum_exponential" title="medpy.graphcut.energy_voxel.boundary_maximum_exponential"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_exponential</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels maximum value using an exponential relationship.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_exponential.html#medpy.graphcut.energy_voxel.boundary_difference_exponential" title="medpy.graphcut.energy_voxel.boundary_difference_exponential"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_exponential</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_exponential.html#medpy.graphcut.energy_voxel.boundary_difference_exponential" title="medpy.graphcut.energy_voxel.boundary_difference_exponential"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_exponential</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels difference value using an exponential relationship.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_division.html#medpy.graphcut.energy_voxel.boundary_maximum_division" title="medpy.graphcut.energy_voxel.boundary_maximum_division"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_division</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_division.html#medpy.graphcut.energy_voxel.boundary_maximum_division" title="medpy.graphcut.energy_voxel.boundary_maximum_division"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_division</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels maximum value using a division relationship.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_division.html#medpy.graphcut.energy_voxel.boundary_difference_division" title="medpy.graphcut.energy_voxel.boundary_difference_division"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_division</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_division.html#medpy.graphcut.energy_voxel.boundary_difference_division" title="medpy.graphcut.energy_voxel.boundary_difference_division"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_division</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels difference value using a division relationship.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_power.html#medpy.graphcut.energy_voxel.boundary_maximum_power" title="medpy.graphcut.energy_voxel.boundary_maximum_power"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_power</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_power.html#medpy.graphcut.energy_voxel.boundary_maximum_power" title="medpy.graphcut.energy_voxel.boundary_maximum_power"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_power</span></code></a>(graph,&nbsp;xxx_todo_changeme7)</td>
 <td>Boundary term processing adjacent voxels maximum value using a power relationship.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_power.html#medpy.graphcut.energy_voxel.boundary_difference_power" title="medpy.graphcut.energy_voxel.boundary_difference_power"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_power</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_power.html#medpy.graphcut.energy_voxel.boundary_difference_power" title="medpy.graphcut.energy_voxel.boundary_difference_power"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_power</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term processing adjacent voxels difference value using a power relationship.</td>
 </tr>
 </tbody>
@@ -213,7 +211,7 @@ Use together with an energy term from <a class="reference internal" href="#modul
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.regional_probability_map.html#medpy.graphcut.energy_voxel.regional_probability_map" title="medpy.graphcut.energy_voxel.regional_probability_map"><code class="xref py py-obj docutils literal"><span class="pre">regional_probability_map</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.regional_probability_map.html#medpy.graphcut.energy_voxel.regional_probability_map" title="medpy.graphcut.energy_voxel.regional_probability_map"><code class="xref py py-obj docutils literal"><span class="pre">regional_probability_map</span></code></a>(graph,&nbsp;…)</td>
 <td>Regional term based on a probability atlas.</td>
 </tr>
 </tbody>
@@ -222,7 +220,7 @@ Use together with an energy term from <a class="reference internal" href="#modul
 </div>
 <div class="section" id="energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label">
 <h2>Energy terms for label-based graph-cuts <a class="reference internal" href="#module-medpy.graphcut.energy_label" title="medpy.graphcut.energy_label"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.energy_label</span></code></a><a class="headerlink" href="#energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label" title="Permalink to this headline">¶</a></h2>
-<p>Run-time optimized energy functions for the graph generation. Label/Superpixel based <a class="reference internal" href="#r28" id="id7">[R28]</a>.</p>
+<p>Run-time optimized energy functions for the graph generation. Label/Superpixel based <a class="reference internal" href="#r29" id="id7">[R29]</a>.</p>
 <span class="target" id="module-medpy.graphcut.energy_label"></span><div class="section" id="id8">
 <h3>Boundary energy terms<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
@@ -231,13 +229,13 @@ Use together with an energy term from <a class="reference internal" href="#modul
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_difference_of_means.html#medpy.graphcut.energy_label.boundary_difference_of_means" title="medpy.graphcut.energy_label.boundary_difference_of_means"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_of_means</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_difference_of_means.html#medpy.graphcut.energy_label.boundary_difference_of_means" title="medpy.graphcut.energy_label.boundary_difference_of_means"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_of_means</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term based on the difference of means between adjacent image regions.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski.html#medpy.graphcut.energy_label.boundary_stawiaski" title="medpy.graphcut.energy_label.boundary_stawiaski"><code class="xref py py-obj docutils literal"><span class="pre">boundary_stawiaski</span></code></a>(graph,&nbsp;label_image,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski.html#medpy.graphcut.energy_label.boundary_stawiaski" title="medpy.graphcut.energy_label.boundary_stawiaski"><code class="xref py py-obj docutils literal"><span class="pre">boundary_stawiaski</span></code></a>(graph,&nbsp;label_image,&nbsp;…)</td>
 <td>Boundary term based on the sum of border voxel pairs differences.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski_directed.html#medpy.graphcut.energy_label.boundary_stawiaski_directed" title="medpy.graphcut.energy_label.boundary_stawiaski_directed"><code class="xref py py-obj docutils literal"><span class="pre">boundary_stawiaski_directed</span></code></a>(graph,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski_directed.html#medpy.graphcut.energy_label.boundary_stawiaski_directed" title="medpy.graphcut.energy_label.boundary_stawiaski_directed"><code class="xref py py-obj docutils literal"><span class="pre">boundary_stawiaski_directed</span></code></a>(graph,&nbsp;…)</td>
 <td>Boundary term based on the sum of border voxel pairs differences, directed version.</td>
 </tr>
 </tbody>
@@ -251,7 +249,7 @@ Use together with an energy term from <a class="reference internal" href="#modul
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.regional_atlas.html#medpy.graphcut.energy_label.regional_atlas" title="medpy.graphcut.energy_label.regional_atlas"><code class="xref py py-obj docutils literal"><span class="pre">regional_atlas</span></code></a>(graph,&nbsp;label_image,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.regional_atlas.html#medpy.graphcut.energy_label.regional_atlas" title="medpy.graphcut.energy_label.regional_atlas"><code class="xref py py-obj docutils literal"><span class="pre">regional_atlas</span></code></a>(graph,&nbsp;label_image,&nbsp;…)</td>
 <td>Regional term based on a probability atlas.</td>
 </tr>
 </tbody>
@@ -260,7 +258,7 @@ Use together with an energy term from <a class="reference internal" href="#modul
 </div>
 <div class="section" id="persist-a-graph-medpy-graphcut-write">
 <h2>Persist a graph <a class="reference internal" href="#module-medpy.graphcut.write" title="medpy.graphcut.write"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.write</span></code></a><a class="headerlink" href="#persist-a-graph-medpy-graphcut-write" title="Permalink to this headline">¶</a></h2>
-<p>Functions to persist a graph in file formats like Dimacs <a class="reference internal" href="#r27" id="id10">[R27]</a>, which can be read by external graph-cut algorithms.</p>
+<p>Functions to persist a graph in file formats like Dimacs <a class="reference internal" href="#r28" id="id10">[R28]</a>, which can be read by external graph-cut algorithms.</p>
 <span class="target" id="module-medpy.graphcut.write"></span><table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -293,7 +291,7 @@ Use together with an energy term from <a class="reference internal" href="#modul
 </div>
 <div class="section" id="maxflow-medpy-graphcut-maxflow">
 <h2>Maxflow <a class="reference internal" href="#module-medpy.graphcut.maxflow" title="medpy.graphcut.maxflow"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.maxflow</span></code></a><a class="headerlink" href="#maxflow-medpy-graphcut-maxflow" title="Permalink to this headline">¶</a></h2>
-<p>C++ wrapper around the max-flow/min-cut implementation of <a class="reference internal" href="#r26" id="id11">[R26]</a> using Boost.Python.
+<p>C++ wrapper around the max-flow/min-cut implementation of <a class="reference internal" href="#r27" id="id11">[R27]</a> using Boost.Python.
 Do not use these directly, but rather the graph objects supplied by <a class="reference internal" href="#module-medpy.graphcut.graph" title="medpy.graphcut.graph"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.graph</span></code></a>.</p>
 <span class="target" id="module-medpy.graphcut.maxflow"></span><table border="1" class="longtable docutils">
 <colgroup>
@@ -325,13 +323,13 @@ Do not use these directly, but rather the graph objects supplied by <a class="re
 <tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.split_marker.html#medpy.graphcut.wrapper.split_marker" title="medpy.graphcut.wrapper.split_marker"><code class="xref py py-obj docutils literal"><span class="pre">split_marker</span></code></a>(marker[,&nbsp;fg_id,&nbsp;bg_id])</td>
 <td>Splits an integer marker image into two binary image containing the foreground and background markers respectively.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_split.html#medpy.graphcut.wrapper.graphcut_split" title="medpy.graphcut.wrapper.graphcut_split"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_split</span></code></a>(graphcut_function,&nbsp;regions,&nbsp;...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_split.html#medpy.graphcut.wrapper.graphcut_split" title="medpy.graphcut.wrapper.graphcut_split"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_split</span></code></a>(graphcut_function,&nbsp;regions,&nbsp;…)</td>
 <td>Executes a graph cut by splitting the original volume into a number of sub-volumes of a minimal edge length.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_subprocesses.html#medpy.graphcut.wrapper.graphcut_subprocesses" title="medpy.graphcut.wrapper.graphcut_subprocesses"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_subprocesses</span></code></a>(graphcut_function,&nbsp;...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_subprocesses.html#medpy.graphcut.wrapper.graphcut_subprocesses" title="medpy.graphcut.wrapper.graphcut_subprocesses"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_subprocesses</span></code></a>(graphcut_function,&nbsp;…)</td>
 <td>Executes multiple graph cuts in parallel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_stawiaski.html#medpy.graphcut.wrapper.graphcut_stawiaski" title="medpy.graphcut.wrapper.graphcut_stawiaski"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_stawiaski</span></code></a>(regions[,&nbsp;gradient,&nbsp;...])</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_stawiaski.html#medpy.graphcut.wrapper.graphcut_stawiaski" title="medpy.graphcut.wrapper.graphcut_stawiaski"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_stawiaski</span></code></a>(regions[,&nbsp;gradient,&nbsp;…])</td>
 <td>Executes a Stawiaski label graph cut.</td>
 </tr>
 </tbody>
@@ -339,17 +337,17 @@ Do not use these directly, but rather the graph objects supplied by <a class="re
 <div class="section" id="example-of-voxel-based-graph-cut">
 <h3>Example of voxel based graph cut<a class="headerlink" href="#example-of-voxel-based-graph-cut" title="Permalink to this headline">¶</a></h3>
 <p>Import the necessary methods</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.io</span> <span class="kn">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">header</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.graphcut</span> <span class="kn">import</span> <span class="n">graphcut_from_voxels</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mdepy.graphcut.energy_voxel</span> <span class="kn">import</span> <span class="n">boundary_difference_exponential</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.io</span> <span class="k">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">header</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.graphcut</span> <span class="k">import</span> <span class="n">graphcut_from_voxels</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mdepy.graphcut.energy_voxel</span> <span class="k">import</span> <span class="n">boundary_difference_exponential</span>
 </pre></div>
 </div>
 <p>Loading the images and setting the parameters. Assuming that <em>image.nii</em> contains
 the image on which to execute the graph-cut, <em>fgmarkers_image.nii</em> a binary image
 of the same size with True values for the foreground markers and <em>bgmarkers_image.nii</em>
 respectively for the background markers.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">image_data</span><span class="p">,</span> <span class="n">image_header</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;image.nii&quot;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image_data</span><span class="p">,</span> <span class="n">image_header</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;image.nii&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fgmarkers_image_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;fgmarkers_image.nii&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bgmarkers_image_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;bgmarkers_image.nii&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sigma</span> <span class="o">=</span> <span class="mf">15.</span>
@@ -357,19 +355,19 @@ respectively for the background markers.</p>
 </pre></div>
 </div>
 <p>Building the graph.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gcgraph</span> <span class="o">=</span> <span class="n">graph_from_voxels</span><span class="p">(</span><span class="n">fgmarkers_image_data</span><span class="p">,</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gcgraph</span> <span class="o">=</span> <span class="n">graph_from_voxels</span><span class="p">(</span><span class="n">fgmarkers_image_data</span><span class="p">,</span>
 <span class="go">                                bgmarkers_image_data,</span>
 <span class="go">                                boundary_term = boundary_difference_exponential,</span>
 <span class="go">                                boundary_term_args = (image_data, sigma, spacing))</span>
 </pre></div>
 </div>
 <p>Executing the graph-cut (depending on the image size, this might take a while).</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">maxflow</span> <span class="o">=</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">maxflow</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">maxflow</span> <span class="o">=</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">maxflow</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Building the resulting segmentation image, with True values for foreground and False
 values for background voxels.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">result_image_data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result_image_data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result_image_data</span><span class="p">)):</span>
 <span class="go">        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1    </span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result_image_data</span> <span class="o">=</span> <span class="n">result_image_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -378,50 +376,50 @@ values for background voxels.</p>
 </div>
 <div class="section" id="references">
 <h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
-<table class="docutils citation" frame="void" id="r23" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[R23]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision">http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision</a></td></tr>
-</tbody>
-</table>
 <table class="docutils citation" frame="void" id="r24" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[R24]</a></td><td><a class="reference external" href="http://www.boost.org/doc/libs/1_55_0/libs/python/doc/">http://www.boost.org/doc/libs/1_55_0/libs/python/doc/</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[R24]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision">http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision</a></td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="r25" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[R25]</a></td><td><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id3">[R25]</a></td><td><a class="reference external" href="http://www.boost.org/doc/libs/1_55_0/libs/python/doc/">http://www.boost.org/doc/libs/1_55_0/libs/python/doc/</a></td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="r26" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R26]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> Boykov Y., Kolmogorov V. &#8220;An Experimental Comparison of Min-Cut/Max-Flow
-Algorithms for Energy Minimization in Vision&#8221; In IEEE Transactions on PAMI, Vol. 26,
-No. 9, pp. 1124-1137, Sept. 2004</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[R26]</a></td><td><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="r27" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R27]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id10">2</a>)</em> <a class="reference external" href="http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm">http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm</a></td></tr>
+<tr><td class="label">[R27]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> Boykov Y., Kolmogorov V. “An Experimental Comparison of Min-Cut/Max-Flow
+Algorithms for Energy Minimization in Vision” In IEEE Transactions on PAMI, Vol. 26,
+No. 9, pp. 1124-1137, Sept. 2004</td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="r28" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id7">[R28]</a></td><td>Stawiaski J., Decenciere E., Bidlaut F. &#8220;Interactive Liver Tumor Segmentation
-Using Graph-cuts and watershed&#8221; MICCAI 2008 participation</td></tr>
+<tr><td class="label">[R28]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id10">2</a>)</em> <a class="reference external" href="http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm">http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm</a></td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="r29" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[R29]</a></td><td>Kolmogorov, Vladimir, and Ramin Zabin. &#8220;What energy functions can be minimized
-via graph cuts?.&#8221; Pattern Analysis and Machine Intelligence, IEEE Transactions
+<tr><td class="label"><a class="fn-backref" href="#id7">[R29]</a></td><td>Stawiaski J., Decenciere E., Bidlaut F. “Interactive Liver Tumor Segmentation
+Using Graph-cuts and watershed” MICCAI 2008 participation</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[R30]</a></td><td>Kolmogorov, Vladimir, and Ramin Zabin. “What energy functions can be minimized
+via graph cuts?.” Pattern Analysis and Machine Intelligence, IEEE Transactions
 on 26.2 (2004): 147-159.</td></tr>
 </tbody>
 </table>
@@ -447,13 +445,13 @@ on 26.2 (2004): 147-159.</td></tr>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

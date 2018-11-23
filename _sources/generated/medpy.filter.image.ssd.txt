@@ -1,6 +1,0 @@
-medpy.filter.image.ssd
-======================
-
-.. currentmodule:: medpy.filter.image
-
-.. autofunction:: ssd

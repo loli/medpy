@@ -1,6 +1,0 @@
-medpy.metric.histogram.chi_square
-=================================
-
-.. currentmodule:: medpy.metric.histogram
-
-.. autofunction:: chi_square

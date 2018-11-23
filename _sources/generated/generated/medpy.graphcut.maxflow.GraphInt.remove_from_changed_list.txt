@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphInt.remove_from_changed_list
-========================================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphInt.remove_from_changed_list

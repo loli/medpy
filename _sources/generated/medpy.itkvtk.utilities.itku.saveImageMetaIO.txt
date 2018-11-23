@@ -1,6 +1,0 @@
-medpy.itkvtk.utilities.itku.saveImageMetaIO
-===========================================
-
-.. currentmodule:: medpy.itkvtk.utilities.itku
-
-.. autofunction:: saveImageMetaIO

@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphInt.get_trcap
-=========================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphInt.get_trcap

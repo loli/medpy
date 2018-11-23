@@ -1,6 +1,0 @@
-medpy.graphcut.graph.GCGraph.get_graph
-======================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. automethod:: GCGraph.get_graph

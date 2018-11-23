@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.neighbours.knn &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.neighbours.knn &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.neighbours.knn</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -115,19 +113,19 @@
 <span class="c1"># status Release</span>
 
 <span class="c1"># build-in modules</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">combinations</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="c1"># third-party modules</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse.csr</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.csr</span> <span class="k">import</span> <span class="n">csr_matrix</span>
 
 <span class="c1"># own modules</span>
 
 <span class="c1"># constants</span>
 
 <span class="c1"># code</span>
-<div class="viewcode-block" id="mkneighbors_graph"><a class="viewcode-back" href="../../../generated/medpy.neighbours.knn.mkneighbors_graph.html#medpy.neighbours.knn.mkneighbors_graph">[docs]</a><span class="k">def</span> <span class="nf">mkneighbors_graph</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;connectivity&#39;</span><span class="p">,</span> <span class="n">metric_params</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="mkneighbors_graph"><a class="viewcode-back" href="../../../generated/medpy.neighbours.knn.mkneighbors_graph.html#medpy.neighbours.knn.mkneighbors_graph">[docs]</a><span class="k">def</span> <span class="nf">mkneighbors_graph</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">n_neighbours</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;connectivity&#39;</span><span class="p">,</span> <span class="n">metric_params</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the (weighted) graph of mutual k-Neighbors for observations.</span>
 <span class="sd">    </span>
@@ -169,7 +167,7 @@
     <span class="c1"># create a mask denoting the k nearest neighbours in image_pdist</span>
     <span class="n">k_nearest_mutual_nbhs_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">pdists</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">_mask_row</span><span class="p">,</span> <span class="n">_nbhs_row</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">k_nearest_mutual_nbhs_mask</span><span class="p">,</span> <span class="n">k_nearest_nbhs</span><span class="p">):</span>
-        <span class="n">_mask_row</span><span class="p">[</span><span class="n">_nbhs_row</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">_mask_row</span><span class="p">[</span><span class="n">_nbhs_row</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         
     <span class="c1"># and with transposed to remove non-mutual nearest neighbours</span>
     <span class="n">k_nearest_mutual_nbhs_mask</span> <span class="o">&amp;=</span> <span class="n">k_nearest_mutual_nbhs_mask</span><span class="o">.</span><span class="n">T</span>
@@ -213,7 +211,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">diagval</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">)),</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">))),</span> <span class="mi">2</span><span class="p">):</span>
         <span class="n">out</span><span class="p">[</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">]</span> <span class="o">=</span> <span class="n">dmeasure</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">idx1</span><span class="p">],</span> <span class="n">objects</span><span class="p">[</span><span class="n">idx2</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">out</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">T</span></div>
 </pre></div>
@@ -235,13 +233,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

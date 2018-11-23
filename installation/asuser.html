@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Installing MedPy as user &mdash; MedPy 0.3.0 documentation</title>
+    <title>Installing MedPy as user &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="Installing MedPy in development mode" href="developmentmode.html" >
     <link rel="prev" title="Installing MedPy as root" href="asroot.html" > 
   </head>
@@ -47,9 +49,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	 
     </ul>
               
@@ -100,20 +101,17 @@
                         title="next chapter">Installing MedPy in development mode</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/installation/asuser.txt"
+    <a href="../_sources/installation/asuser.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -130,29 +128,29 @@
 <p class="last">All installation instructions are for Ubuntu, but they will work similar for other distributions.</p>
 </div>
 <p>The local install will place <strong>MedPy</strong> in your user site-packages directory and does not require root privileges. You can find our the location of your personal site-packages directory by calling:</p>
-<div class="highlight-bash"><div class="highlight"><pre>python -c <span class="s1">&#39;import site;print site.USER_SITE&#39;</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import site;print site.USER_SITE&#39;</span>
 </pre></div>
 </div>
 <p>In some cases, the Python configuration does not find packages in the users site-packages directory, in which case you will have to add it to your PYTHONPATH variable.
 To make this permanent, add the extension to your <em class="xref py py-obj">bashrc</em>, e.g. using:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nb">echo</span> <span class="s2">&quot;export PYTHONPATH=</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:</span><span class="k">$(</span> python -c <span class="s1">&#39;import site;print site.USER_SITE&#39;</span> <span class="k">)</span><span class="s2">&quot;</span> &gt;&gt; ~/.bashrc
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;export PYTHONPATH=</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:</span><span class="k">$(</span> python -c <span class="s1">&#39;import site;print site.USER_SITE&#39;</span> <span class="k">)</span><span class="s2">&quot;</span> &gt;&gt; ~/.bashrc
 </pre></div>
 </div>
-<p>More importantly, the script shipped with <strong>MedPy</strong> won&#8217;t be in your PATH and hence can not be used directly. If your user site-packages directory is
+<p>More importantly, the script shipped with <strong>MedPy</strong> won’t be in your PATH and hence can not be used directly. If your user site-packages directory is
 e.g. <em class="xref py py-obj">/home/&lt;user&gt;/.local/lib/python2.7/site-packages/</em>, the scripts are most likely to be found under <em class="xref py py-obj">/home/&lt;user&gt;/.local/bin/</em>. Add this directory to your PATH using:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nb">echo</span> <span class="s2">&quot;export PATH=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">:/home/&lt;user&gt;/.local/bin/&quot;</span> &gt;&gt; ~/.bashrc
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;export PATH=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">:/home/&lt;user&gt;/.local/bin/&quot;</span> &gt;&gt; ~/.bashrc
 </pre></div>
 </div>
-<p>(Don&#8217;t forget to replace &lt;user&gt; with your own user name.)</p>
+<p>(Don’t forget to replace &lt;user&gt; with your own user name.)</p>
 <div class="section" id="installing-using-pip">
 <h2>Installing using <a class="reference external" href="https://pypi.python.org/pypi/pip">PIP</a><a class="headerlink" href="#installing-using-pip" title="Permalink to this headline">¶</a></h2>
 <p>Requires <a class="reference external" href="https://pypi.python.org/pypi/pip">PIP</a> to be installed on your machine.</p>
 <p>First install the Python requirements locally</p>
-<div class="highlight-bash"><div class="highlight"><pre>pip install --user numpy scipy nibabel pydicom
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install --user numpy scipy nibabel pydicom
 </pre></div>
 </div>
 <p>and then <strong>MedPy</strong></p>
-<div class="highlight-bash"><div class="highlight"><pre>pip install --user medpy
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install --user medpy
 </pre></div>
 </div>
 </div>
@@ -160,11 +158,11 @@ e.g. <em class="xref py py-obj">/home/&lt;user&gt;/.local/lib/python2.7/site-pac
 <h2>Installing using <a class="reference external" href="https://pypi.python.org/pypi/setuptools">easy_install</a><a class="headerlink" href="#installing-using-easy-install" title="Permalink to this headline">¶</a></h2>
 <p>Requires <a class="reference external" href="https://pypi.python.org/pypi/setuptools">easy_install</a> to be installed on your machine.</p>
 <p>First install the Python requirements locally</p>
-<div class="highlight-bash"><div class="highlight"><pre>easy_install --user numpy scipy nibabel pydicom
+<div class="highlight-bash"><div class="highlight"><pre><span></span>easy_install --user numpy scipy nibabel pydicom
 </pre></div>
 </div>
 <p>and then <strong>MedPy</strong></p>
-<div class="highlight-bash"><div class="highlight"><pre>easy_install --user medpy
+<div class="highlight-bash"><div class="highlight"><pre><span></span>easy_install --user medpy
 </pre></div>
 </div>
 </div>
@@ -175,7 +173,7 @@ First, install <a class="reference external" href="http://www.numpy.org/">numpy<
 <a class="reference external" href="http://nipy.org/nibabel/">nibabel</a> and <a class="reference external" href="https://code.google.com/p/pydicom/">pydicom</a>
 from source (see there respective webpages for details) as user.</p>
 <p>The download the sources from <a class="reference external" href="https://pypi.python.org/pypi/MedPy/">https://pypi.python.org/pypi/MedPy/</a>, unpack them, enter the directory and run</p>
-<div class="highlight-bash"><div class="highlight"><pre>python setup.py install --user
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python setup.py install --user
 </pre></div>
 </div>
 </div>
@@ -184,7 +182,7 @@ from source (see there respective webpages for details) as user.</p>
 <p>The graph-cut package shipped with <strong>MedPy</strong> requires Boost.Python and some standard C++ building tools.
 If these are not available during the installation, the package will not be compiled.
 You will have to ask your administrator to install the requirements for you (before installing <strong>MedPy</strong>):</p>
-<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get install libboost-python-dev build-essential
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install libboost-python-dev build-essential
 </pre></div>
 </div>
 </div>
@@ -208,13 +206,13 @@ You will have to ask your administrator to install the requirements for you (bef
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

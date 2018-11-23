@@ -1,6 +1,0 @@
-medpy.graphcut.energy_voxel.boundary_maximum_exponential
-========================================================
-
-.. currentmodule:: medpy.graphcut.energy_voxel
-
-.. autofunction:: boundary_maximum_exponential

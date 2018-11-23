@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Installing ITK wrappers for Python (ITKv4.7) &mdash; MedPy 0.3.0 documentation</title>
+    <title>Installing ITK wrappers for Python (ITKv4.7) &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="Installing ITK wrappers for Python (ITKv3)" href="itkwrapper3.2.html" >
     <link rel="prev" title="Installing ITK wrappers for Python (ITKv4.12.2)" href="itkwrapper4.12.2.html" > 
   </head>
@@ -47,9 +49,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	 
     </ul>
               
@@ -101,20 +102,17 @@
                         title="next chapter">Installing ITK wrappers for Python (ITKv3)</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/installation/itkwrapper4.7.txt"
+    <a href="../_sources/installation/itkwrapper4.7.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -135,7 +133,7 @@ This is quite some work and absolutely not fail-save. Only try it, if you must (
 <div class="section" id="getting-pybuffer">
 <h2>Getting PyBuffer<a class="headerlink" href="#getting-pybuffer" title="Permalink to this headline">¶</a></h2>
 <p>To be able to convert between ITK images and Numpy arrays, we require PyBuffer. As a novelty compared to ITKv3, this external tool can now be installed as ITK module and the known bug has finally been fixed. Simply run:</p>
-<div class="highlight-bash"><div class="highlight"><pre>git clone https://github.com/tobiasmaier/itkPyBuffer.git IKT4.7.0/src/Modules/External/PyBuffer
+<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/tobiasmaier/itkPyBuffer.git IKT4.7.0/src/Modules/External/PyBuffer
 </pre></div>
 </div>
 <div class="admonition note">
@@ -146,39 +144,39 @@ This is quite some work and absolutely not fail-save. Only try it, if you must (
 <div class="section" id="configuring-itk">
 <h2>Configuring ITK<a class="headerlink" href="#configuring-itk" title="Permalink to this headline">¶</a></h2>
 <p>Compiling ITK requires <em>cmake</em> and, for convenience, <strong>ccmake</strong> which can be found for almost all platforms. Create a new directory <em>IKT4.7.0/build</em> and enter it. Then run:</p>
-<div class="highlight-bash"><div class="highlight"><pre>ccmake ../src
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ccmake ../src
 </pre></div>
 </div>
 <p>and subsequently hit the <em>c</em> key to configure the build. When finished, hit the <em>t</em> key to toggle the advanced mode and activate the following options:</p>
-<div class="highlight-python"><div class="highlight"><pre>BUILD_SHARED_LIBS       ON
-ITK_WRAP_PYTHON         ON
-ITK_LEGACY_SILENT       ON
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">BUILD_SHARED_LIBS</span>       <span class="n">ON</span>
+<span class="n">ITK_WRAP_PYTHON</span>         <span class="n">ON</span>
+<span class="n">ITK_LEGACY_SILENT</span>       <span class="n">ON</span>
 </pre></div>
 </div>
 <p>, then <em>c</em> configure again. Ignore the warning by pressing <em>e</em>. Now set the following options:</p>
-<div class="highlight-python"><div class="highlight"><pre>ITK_WRAP_DIMS           2;3;4
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ITK_WRAP_DIMS</span>           <span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">4</span>
 
-ITK_WRAP_float          ON
-ITK_WRAP_double         ON
-ITK_WRAP_signed_char    ON
-ITK_WRAP_signed_long    ON
-ITK_WRAP_signed_short   ON
-ITK_WRAP_unsigned_char  ON
-ITK_WRAP_unsigned_long  ON
-ITK_WRAP_unsigned_short ON
-    WRAP_&lt;data-type&gt;                Select yourself which more to activate.
+<span class="n">ITK_WRAP_float</span>          <span class="n">ON</span>
+<span class="n">ITK_WRAP_double</span>         <span class="n">ON</span>
+<span class="n">ITK_WRAP_signed_char</span>    <span class="n">ON</span>
+<span class="n">ITK_WRAP_signed_long</span>    <span class="n">ON</span>
+<span class="n">ITK_WRAP_signed_short</span>   <span class="n">ON</span>
+<span class="n">ITK_WRAP_unsigned_char</span>  <span class="n">ON</span>
+<span class="n">ITK_WRAP_unsigned_long</span>  <span class="n">ON</span>
+<span class="n">ITK_WRAP_unsigned_short</span> <span class="n">ON</span>
+    <span class="n">WRAP_</span><span class="o">&lt;</span><span class="n">data</span><span class="o">-</span><span class="nb">type</span><span class="o">&gt;</span>                <span class="n">Select</span> <span class="n">yourself</span> <span class="n">which</span> <span class="n">more</span> <span class="n">to</span> <span class="n">activate</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>, and <em>c</em> configure another time. Finally press <em>g</em> to generate the make-file.</p>
 <p>If <em>cmake</em> signals any errors during the configuration process, try to resolve the dependencies from which they originate. Especially PyBuffer sometimes signals <em class="xref py py-obj">Numpy not found.  Please set PYTHON_NUMARRAY_INCLUDE_DIR</em>, in which case you will have to set:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">PYTHON_NUMARRAY_INCLUDE_DIR</span>     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">numpy</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PYTHON_NUMARRAY_INCLUDE_DIR</span>     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">numpy</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="compiling-itk">
 <h2>Compiling ITK<a class="headerlink" href="#compiling-itk" title="Permalink to this headline">¶</a></h2>
 <p>Now that the configuration is done, we can compile ITK. Run:</p>
-<div class="highlight-bash"><div class="highlight"><pre>make -j&lt;number-of-your-porcessors&gt;
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make -j&lt;number-of-your-porcessors&gt;
 </pre></div>
 </div>
 <p>and wait. This will take some time, depending on your computer up to 2 days are not unlikely. This is because the Python Wrappers require ITK to instantiate all possible data type combinations for their templates, which increases exponentially which each activated data-type.</p>
@@ -187,7 +185,7 @@ ITK_WRAP_unsigned_short ON
 <div class="section" id="installing-itk">
 <h2>Installing ITK<a class="headerlink" href="#installing-itk" title="Permalink to this headline">¶</a></h2>
 <p>Install ITK and its Python bindings simply by running:</p>
-<div class="highlight-bash"><div class="highlight"><pre>make install <span class="o">(</span>as root<span class="o">)</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make install <span class="o">(</span>as root<span class="o">)</span>
 </pre></div>
 </div>
 <p>Congratulations, you are done compiling and installing ITK with Python wrappers.</p>
@@ -212,13 +210,13 @@ ITK_WRAP_unsigned_short ON
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

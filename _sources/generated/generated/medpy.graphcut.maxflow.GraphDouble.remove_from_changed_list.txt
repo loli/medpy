@@ -1,6 +1,0 @@
-medpy.graphcut.maxflow.GraphDouble.remove_from_changed_list
-===========================================================
-
-.. currentmodule:: medpy.graphcut.maxflow
-
-.. automethod:: GraphDouble.remove_from_changed_list

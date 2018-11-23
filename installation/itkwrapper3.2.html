@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Installing ITK wrappers for Python (ITKv3) &mdash; MedPy 0.3.0 documentation</title>
+    <title>Installing ITK wrappers for Python (ITKv3) &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="MedPy docker containers" href="../docker/dockercontainers.html" >
     <link rel="prev" title="Installing ITK wrappers for Python (ITKv4.7)" href="itkwrapper4.7.html" > 
   </head>
@@ -47,9 +49,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	 
     </ul>
               
@@ -106,20 +107,17 @@
                         title="next chapter">MedPy docker containers</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/installation/itkwrapper3.2.txt"
+    <a href="../_sources/installation/itkwrapper3.2.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -135,7 +133,7 @@
 <div class="section" id="installing-itk-with-python-binding-on-ubuntu-10-04">
 <h2>1. Installing ITK with Python binding on Ubuntu (&gt;= 10.04)<a class="headerlink" href="#installing-itk-with-python-binding-on-ubuntu-10-04" title="Permalink to this headline">¶</a></h2>
 <p>The Ubuntu repositories provide a package which can simply be installed using:</p>
-<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get install python-insighttoolkit3
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install python-insighttoolkit3
 </pre></div>
 </div>
 <p>But this package wraps only a subset of ITKs functionality and therefore does not unleash <strong>MedPy</strong> s complete power. The recommendation is to follow the second or third approach.</p>
@@ -154,31 +152,31 @@
 <div class="section" id="configuring-itk">
 <h3>Configuring ITK<a class="headerlink" href="#configuring-itk" title="Permalink to this headline">¶</a></h3>
 <p>Compiling ITK requires <em>cmake</em> which can be found for almost all platforms. Create a new directory <em>IKT3.20.1/build</em> and enter it. Then run:</p>
-<div class="highlight-bash"><div class="highlight"><pre>ccmake ../src
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ccmake ../src
 </pre></div>
 </div>
 <p>and subsequently hit the <em>c</em> key to configure the build. When finished, hit the <em>t</em> key to toggle the advanced mode and activate the following options:</p>
-<div class="highlight-python"><div class="highlight"><pre>BUILD_SHARED_LIBS ON
-ITK_USE_REVIEW    ON
-USE_WRAP_ITK      ON
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">BUILD_SHARED_LIBS</span> <span class="n">ON</span>
+<span class="n">ITK_USE_REVIEW</span>    <span class="n">ON</span>
+<span class="n">USE_WRAP_ITK</span>      <span class="n">ON</span>
 </pre></div>
 </div>
 <p>, then <em>c</em> onfigure again. Ignore the warning by pressing <em>e</em>. Now set the following options:</p>
-<div class="highlight-python"><div class="highlight"><pre>WRAP_FFT            OFF
-WRAP_ITK_DIMS       2;3;4 (or more, if you require)
-WRAP_ITK_JAVA       OFF
-WRAP_ITK_PYTHON     ON
-WRAP_ITK_TCL        OFF
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">WRAP_FFT</span>            <span class="n">OFF</span>
+<span class="n">WRAP_ITK_DIMS</span>       <span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">4</span> <span class="p">(</span><span class="ow">or</span> <span class="n">more</span><span class="p">,</span> <span class="k">if</span> <span class="n">you</span> <span class="n">require</span><span class="p">)</span>
+<span class="n">WRAP_ITK_JAVA</span>       <span class="n">OFF</span>
+<span class="n">WRAP_ITK_PYTHON</span>     <span class="n">ON</span>
+<span class="n">WRAP_ITK_TCL</span>        <span class="n">OFF</span>
 
-WRAP_double         ON
-WRAP_float          ON
-WRAP_signed_char    ON
-WRAP_signed_long    ON
-WRAP_signed_short   ON
-WRAP_unsigned_char  ON
-WRAP_unsigned_long  ON
-WRAP_unsigned_short ON
-WRAP_&lt;datatype&gt;   Select yourself which more to activate.
+<span class="n">WRAP_double</span>         <span class="n">ON</span>
+<span class="n">WRAP_float</span>          <span class="n">ON</span>
+<span class="n">WRAP_signed_char</span>    <span class="n">ON</span>
+<span class="n">WRAP_signed_long</span>    <span class="n">ON</span>
+<span class="n">WRAP_signed_short</span>   <span class="n">ON</span>
+<span class="n">WRAP_unsigned_char</span>  <span class="n">ON</span>
+<span class="n">WRAP_unsigned_long</span>  <span class="n">ON</span>
+<span class="n">WRAP_unsigned_short</span> <span class="n">ON</span>
+<span class="n">WRAP_</span><span class="o">&lt;</span><span class="n">datatype</span><span class="o">&gt;</span>   <span class="n">Select</span> <span class="n">yourself</span> <span class="n">which</span> <span class="n">more</span> <span class="n">to</span> <span class="n">activate</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>, and <em>c</em> onfigure another time. Finally press <em>g</em> to generate the make-file.</p>
@@ -187,7 +185,7 @@ WRAP_&lt;datatype&gt;   Select yourself which more to activate.
 <div class="section" id="compiling-itk">
 <h3>Compiling ITK<a class="headerlink" href="#compiling-itk" title="Permalink to this headline">¶</a></h3>
 <p>Now that the configuration is done, we can compile ITK. Run:</p>
-<div class="highlight-bash"><div class="highlight"><pre>make -j&lt;number-of-your-porcessors&gt;
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make -j&lt;number-of-your-porcessors&gt;
 </pre></div>
 </div>
 <p>and wait. This will take some time, depending on your computer up to 2 days are not unlikely.</p>
@@ -196,34 +194,34 @@ WRAP_&lt;datatype&gt;   Select yourself which more to activate.
 <div class="section" id="installing-itk">
 <h3>Installing ITK<a class="headerlink" href="#installing-itk" title="Permalink to this headline">¶</a></h3>
 <p>Install ITK and its Python bindings simply by running:</p>
-<div class="highlight-bash"><div class="highlight"><pre>make install <span class="o">(</span>as root<span class="o">)</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make install <span class="o">(</span>as root<span class="o">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="addditional-step">
 <h3>Addditional step<a class="headerlink" href="#addditional-step" title="Permalink to this headline">¶</a></h3>
 <p>The ITK Python bindings require a third-party module called PyBuffer which is shipped with ITK but not automatically compiled. Furthermore it holds a small bug. After finishing the previous steps, create a folder called <em>PyBuffer/src</em> somewhere and copy all files and folders from <em>ITK/src/Wrapping/WrapITK/ExternalProjects/PyBuffer/</em> into it. Now open <em>itkPyBuffer.txx</em> with an text editor and change the line:</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">dimensions</span><span class="p">[</span> <span class="n">ImageDimension</span> <span class="p">];</span>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">dimensions</span><span class="p">[</span> <span class="n">ImageDimension</span> <span class="p">];</span>
 </pre></div>
 </div>
 <p>to:</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span class="n">npy_intp</span> <span class="n">dimensions</span><span class="p">[</span> <span class="n">ImageDimension</span> <span class="p">];</span>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="n">npy_intp</span> <span class="n">dimensions</span><span class="p">[</span> <span class="n">ImageDimension</span> <span class="p">];</span>
 </pre></div>
 </div>
 <p>(see <a class="reference external" href="http://code.google.com/p/wrapitk/issues/detail?id=39">http://code.google.com/p/wrapitk/issues/detail?id=39</a> for patch details). Then create a folder <em>PyBuffer/build</em>, enter it and run:</p>
-<div class="highlight-bash"><div class="highlight"><pre>ccmake ../src
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ccmake ../src
 </pre></div>
 </div>
 <p>After <em>c</em> onfiguring you will see some warnings. Set:</p>
-<div class="highlight-python"><div class="highlight"><pre>WrapITK_DIR     ITK/bin/Wrapping/WrapITK/
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">WrapITK_DIR</span>     <span class="n">ITK</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">Wrapping</span><span class="o">/</span><span class="n">WrapITK</span><span class="o">/</span>
 </pre></div>
 </div>
 <p>In some cases you will also have to set:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">PYTHON_NUMARRAY_INCLUDE_DIR</span>     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">numpy</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PYTHON_NUMARRAY_INCLUDE_DIR</span>     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">numpy</span>
 </pre></div>
 </div>
 <p>Now <em>c</em> onfigure again and <em>g</em> enerate. To finalize run:</p>
-<div class="highlight-python"><div class="highlight"><pre>.. code-block:: bash
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">bash</span>
 </pre></div>
 </div>
 <blockquote>
@@ -252,13 +250,13 @@ make install (as root)</div></blockquote>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

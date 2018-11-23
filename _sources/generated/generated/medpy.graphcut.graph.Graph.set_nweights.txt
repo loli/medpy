@@ -1,6 +1,0 @@
-medpy.graphcut.graph.Graph.set_nweights
-=======================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. automethod:: Graph.set_nweights

@@ -1,6 +1,0 @@
-medpy.core.logger.Logger.error
-==============================
-
-.. currentmodule:: medpy.core.logger
-
-.. automethod:: Logger.error

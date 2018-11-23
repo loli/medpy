@@ -1,6 +1,0 @@
-medpy.iterators.patchwise.CentredPatchIteratorOverlapping.__init__
-==================================================================
-
-.. currentmodule:: medpy.iterators.patchwise
-
-.. automethod:: CentredPatchIteratorOverlapping.__init__

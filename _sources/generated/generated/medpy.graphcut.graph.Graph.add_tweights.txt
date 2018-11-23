@@ -1,6 +1,0 @@
-medpy.graphcut.graph.Graph.add_tweights
-=======================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. automethod:: Graph.add_tweights

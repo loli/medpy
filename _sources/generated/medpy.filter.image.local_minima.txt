@@ -1,6 +1,0 @@
-medpy.filter.image.local_minima
-===============================
-
-.. currentmodule:: medpy.filter.image
-
-.. autofunction:: local_minima

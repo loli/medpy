@@ -1,6 +1,0 @@
-medpy.io.header.get_pixel_spacing
-=================================
-
-.. currentmodule:: medpy.io.header
-
-.. autofunction:: get_pixel_spacing

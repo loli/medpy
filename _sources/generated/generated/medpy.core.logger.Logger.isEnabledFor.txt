@@ -1,6 +1,0 @@
-medpy.core.logger.Logger.isEnabledFor
-=====================================
-
-.. currentmodule:: medpy.core.logger
-
-.. automethod:: Logger.isEnabledFor

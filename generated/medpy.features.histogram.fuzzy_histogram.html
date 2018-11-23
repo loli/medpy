@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.features.histogram.fuzzy_histogram &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.features.histogram.fuzzy_histogram &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Image feature extraction and manipulation (medpy.features)" href="../features.html" >
     <link rel="next" title="medpy.features.histogram.triangular_membership" href="medpy.features.histogram.triangular_membership.html" >
     <link rel="prev" title="medpy.features.utilities.join" href="medpy.features.utilities.join.html" > 
@@ -48,9 +50,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../features.html" accesskey="U">Image feature extraction and manipulation (<code class="docutils literal"><span class="pre">medpy.features</span></code>)</a></li> 
     </ul>
@@ -91,20 +92,17 @@
                         title="next chapter">medpy.features.histogram.triangular_membership</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/generated/medpy.features.histogram.fuzzy_histogram.txt"
+    <a href="../_sources/generated/medpy.features.histogram.fuzzy_histogram.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -120,7 +118,7 @@
 <dt id="medpy.features.histogram.fuzzy_histogram">
 <code class="descclassname">medpy.features.histogram.</code><code class="descname">fuzzy_histogram</code><span class="sig-paren">(</span><em>a</em>, <em>bins=10</em>, <em>range=None</em>, <em>normed=False</em>, <em>membership='triangular'</em>, <em>smoothness=None</em>, <em>guarantee=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/features/histogram.html#fuzzy_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.features.histogram.fuzzy_histogram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a fuzzy histogram.
-The percentage of a value&#8217;s membership in a bin is computed using the selected
+The percentage of a value’s membership in a bin is computed using the selected
 membership function. This functions stays as near as possible to the <code class="xref py py-obj docutils literal"><span class="pre">numpy.histogram</span></code>
 behaviour.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -178,8 +176,8 @@ set, the range term is ignored; see package descriptions for details.</p>
 <p class="rubric">Notes</p>
 <p>See package description for more details on the usage.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.features</span> <span class="kn">import</span> <span class="n">fuzzy_histogram</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.features</span> <span class="k">import</span> <span class="n">fuzzy_histogram</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mf">3.2</span><span class="p">,</span><span class="mf">3.4</span><span class="p">,</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">7.5</span><span class="p">,</span><span class="mf">7.6</span><span class="p">,</span><span class="mf">7.8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="go">(array([4, 2, 2, 4]), array([  1.  ,   3.25,   5.5 ,   7.75,  10.  ]))</span>
@@ -211,13 +209,13 @@ set, the range term is ignored; see package descriptions for details.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

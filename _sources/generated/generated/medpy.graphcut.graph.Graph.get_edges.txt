@@ -1,6 +1,0 @@
-medpy.graphcut.graph.Graph.get_edges
-====================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. automethod:: Graph.get_edges

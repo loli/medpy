@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.io.header &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.io.header &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.io.header</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -120,13 +118,13 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="c1"># own modules</span>
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">Logger</span>
 
 <span class="c1"># !TODO: Turn into an own class, with sub-classes for each 3rd party type (see _header.py).</span>
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="get_pixel_spacing"><a class="viewcode-back" href="../../../generated/medpy.io.header.get_pixel_spacing.html#medpy.io.header.get_pixel_spacing">[docs]</a><span class="k">def</span> <span class="nf">get_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the pixels spacing from an image header.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -154,10 +152,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header {} is of unknown type or does not support queries for pixel spacing.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span></div>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support queries for pixel spacing.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="get_offset"><a class="viewcode-back" href="../../../generated/medpy.io.header.get_offset.html#medpy.io.header.get_offset">[docs]</a><span class="k">def</span> <span class="nf">get_offset</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the image offset from an image header.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -194,10 +192,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header {} is of unknown type or does not support queries for offsets.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span>        </div>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support queries for offsets.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span>        </div>
 
 <div class="viewcode-block" id="set_pixel_spacing"><a class="viewcode-back" href="../../../generated/medpy.io.header.set_pixel_spacing.html#medpy.io.header.set_pixel_spacing">[docs]</a><span class="k">def</span> <span class="nf">set_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the pixels spacing in an image header.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -224,10 +222,10 @@
     <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">e</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header {} is of unknown type or does not support setting of pixel spacing.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span></div>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support setting of pixel spacing.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="set_offset"><a class="viewcode-back" href="../../../generated/medpy.io.header.set_offset.html#medpy.io.header.set_offset">[docs]</a><span class="k">def</span> <span class="nf">set_offset</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the offset in the image header.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -259,10 +257,10 @@
     <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">e</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header {} is of unknown type or does not support setting of offsets.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span>    </div>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support setting of offsets.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span>    </div>
 
 <div class="viewcode-block" id="copy_meta_data"><a class="viewcode-back" href="../../../generated/medpy.io.header.copy_meta_data.html#medpy.io.header.copy_meta_data">[docs]</a><span class="k">def</span> <span class="nf">copy_meta_data</span><span class="p">(</span><span class="n">hdr_to</span><span class="p">,</span> <span class="n">hdr_from</span><span class="p">):</span>
-    <span class="sd">r&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Copy image meta data (voxel spacing and offset) from one header to another.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -281,11 +279,11 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">set_pixel_spacing</span><span class="p">(</span><span class="n">hdr_to</span><span class="p">,</span> <span class="n">get_pixel_spacing</span><span class="p">(</span><span class="n">hdr_from</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The voxel spacing could not be set correctly. Signaled error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The voxel spacing could not be set correctly. Signaled error: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">set_offset</span><span class="p">(</span><span class="n">hdr_to</span><span class="p">,</span> <span class="n">get_offset</span><span class="p">(</span><span class="n">hdr_from</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The image offset could not be set correctly. Signaled error: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The image offset could not be set correctly. Signaled error: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 
 <span class="k">def</span> <span class="nf">__get_pixel_spacing_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
@@ -381,10 +379,10 @@
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Pair</span><span class="p">:</span> <span class="c1"># The nifti image format supports offsets</span>
         <span class="c1"># check if the offset is of the expected length</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header ({}) and supplied offset sequence ({}) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied offset sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
         <span class="c1"># check if the offset is too long</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Nifti supports a maximum offset of 4 elements (x, y, z and t), got {}. Note that Nifit naturally does not support images of more than 4 dimensions, although it can handle them.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Nifti supports a maximum offset of 4 elements (x, y, z and t), got </span><span class="si">{}</span><span class="s1">. Note that Nifit naturally does not support images of more than 4 dimensions, although it can handle them.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
         <span class="c1"># set offset in header</span>
         <span class="n">mapping</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;qoffset_x&#39;</span><span class="p">,</span> <span class="s1">&#39;qoffset_y&#39;</span><span class="p">,</span> <span class="s1">&#39;qoffset_z&#39;</span><span class="p">,</span> <span class="s1">&#39;toffset&#39;</span><span class="p">]</span>
         <span class="n">hdr_real</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span>
@@ -395,13 +393,13 @@
     
 <span class="k">def</span> <span class="nf">__set_offset_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header ({}) and supplied offset sequence ({}) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
-    <span class="n">hdr</span><span class="o">.</span><span class="n">ImagePositionPatient</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied offset sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
+    <span class="n">hdr</span><span class="o">.</span><span class="n">ImagePositionPatient</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
     
 <span class="k">def</span> <span class="nf">__set_offset_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
     <span class="n">origin</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">origin</span><span class="o">.</span><span class="n">Size</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header ({}) and supplied offset sequence ({}) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">Size</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied offset sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">Size</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
         <span class="n">origin</span><span class="o">.</span><span class="n">SetElement</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
     
@@ -413,7 +411,7 @@
 <span class="sd">    @param spacing a sequence of numbers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header ({}) and supplied spacing sequence ({}) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied spacing sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">()):</span>
         <span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">SetElement</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
                             
@@ -425,7 +423,7 @@
 <span class="sd">    @param spacing a sequence of numbers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header ({}) and supplied spacing sequence ({}) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()),</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied spacing sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()),</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
     <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">set_zooms</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">spacing</span><span class="p">])</span>
     
 <span class="k">def</span> <span class="nf">__set_pixel_spacing_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
@@ -443,7 +441,7 @@
 <span class="sd">    @param spacing a sequence of numbers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;PyDicom supports a maximum dimensionality of 3, the supplied spacing sequence contains {} elements.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;PyDicom supports a maximum dimensionality of 3, the supplied spacing sequence contains </span><span class="si">{}</span><span class="s1"> elements.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
     
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">hdr</span><span class="o">.</span><span class="n">PixelSpacing</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">spacing</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]]</span>
@@ -471,9 +469,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
 <span class="k">def</span> <span class="nf">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -486,12 +484,12 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">pass</span>
     <span class="c1"># see if itk header type (ITK v3.X)</span>
-    <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__template__</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span><span class="o">.</span><span class="n">__bases__</span><span class="p">:</span> <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__template__</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
     <span class="c1"># see if itk header type (ITK v4.X)</span>
-    <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__template__</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">cl</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span> <span class="k">return</span> <span class="bp">True</span>
-    <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__template__</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">cl</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span> <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span>
 </pre></div>
 
           </div>
@@ -511,13 +509,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

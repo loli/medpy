@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>medpy.graphcut.wrapper &mdash; MedPy 0.3.0 documentation</title>
+    <title>medpy.graphcut.wrapper &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../../../index.html" >
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -46,9 +48,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../../../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../../../index.html">MedPy 0.4.0 documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -76,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +92,7 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for medpy.graphcut.wrapper</h1><div class="highlight"><pre>
-<span class="c1"># Copyright (C) 2013 Oskar Maier</span>
+<span></span><span class="c1"># Copyright (C) 2013 Oskar Maier</span>
 <span class="c1"># </span>
 <span class="c1"># This program is free software: you can redistribute it and/or modify</span>
 <span class="c1"># it under the terms of the GNU General Public License as published by</span>
@@ -114,6 +112,7 @@
 <span class="c1"># since 2012-06-25</span>
 <span class="c1"># status Release</span>
 
+
 <span class="c1"># build-in modules</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -123,11 +122,15 @@
 <span class="kn">import</span> <span class="nn">scipy</span>
 
 <span class="c1"># own modules</span>
-<span class="kn">from</span> <span class="nn">.energy_label</span> <span class="kn">import</span> <span class="n">boundary_stawiaski</span>
-<span class="kn">from</span> <span class="nn">.generate</span> <span class="kn">import</span> <span class="n">graph_from_labels</span>
-<span class="kn">from</span> <span class="nn">..core.exceptions</span> <span class="kn">import</span> <span class="n">ArgumentError</span>
-<span class="kn">from</span> <span class="nn">..core.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">..filter</span> <span class="kn">import</span> <span class="n">relabel</span><span class="p">,</span> <span class="n">relabel_map</span>
+<span class="kn">from</span> <span class="nn">.energy_label</span> <span class="k">import</span> <span class="n">boundary_stawiaski</span>
+<span class="kn">from</span> <span class="nn">.generate</span> <span class="k">import</span> <span class="n">graph_from_labels</span>
+<span class="kn">from</span> <span class="nn">..core.exceptions</span> <span class="k">import</span> <span class="n">ArgumentError</span>
+<span class="kn">from</span> <span class="nn">..core.logger</span> <span class="k">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">..filter</span> <span class="k">import</span> <span class="n">relabel</span><span class="p">,</span> <span class="n">relabel_map</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="split_marker"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.split_marker.html#medpy.graphcut.wrapper.split_marker">[docs]</a><span class="k">def</span> <span class="nf">split_marker</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="n">fg_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bg_id</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
@@ -155,14 +158,14 @@
     <span class="n">img_marker</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
     
     <span class="n">img_fgmarker</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img_marker</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
-    <span class="n">img_fgmarker</span><span class="p">[</span><span class="n">img_marker</span> <span class="o">==</span> <span class="n">fg_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">img_fgmarker</span><span class="p">[</span><span class="n">img_marker</span> <span class="o">==</span> <span class="n">fg_id</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     
     <span class="n">img_bgmarker</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img_marker</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
-    <span class="n">img_bgmarker</span><span class="p">[</span><span class="n">img_marker</span> <span class="o">==</span> <span class="n">bg_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">img_bgmarker</span><span class="p">[</span><span class="n">img_marker</span> <span class="o">==</span> <span class="n">bg_id</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     
     <span class="k">return</span> <span class="n">img_fgmarker</span><span class="p">,</span> <span class="n">img_bgmarker</span></div>
 
-<div class="viewcode-block" id="graphcut_split"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.graphcut_split.html#medpy.graphcut.wrapper.graphcut_split">[docs]</a><span class="k">def</span> <span class="nf">graphcut_split</span><span class="p">(</span><span class="n">graphcut_function</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">foreground</span><span class="p">,</span> <span class="n">background</span><span class="p">,</span> <span class="n">minimal_edge_length</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">overlap</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="graphcut_split"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.graphcut_split.html#medpy.graphcut.wrapper.graphcut_split">[docs]</a><span class="k">def</span> <span class="nf">graphcut_split</span><span class="p">(</span><span class="n">graphcut_function</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">foreground</span><span class="p">,</span> <span class="n">background</span><span class="p">,</span> <span class="n">minimal_edge_length</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">overlap</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes a graph cut by splitting the original volume into a number of sub-volumes of</span>
 <span class="sd">    a minimal edge length. These are then processed in subprocesses.</span>
@@ -215,10 +218,10 @@
     
     <span class="c1"># compute how to split the volumes into sub-volumes i.e. determine step-size for each image dimension</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">img_region</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="n">steps</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="n">minimal_edge_length</span><span class="p">),</span> <span class="n">shape</span><span class="p">)</span> <span class="c1"># we want integer division</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">//</span> <span class="n">minimal_edge_length</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">shape</span><span class="p">]</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">x</span> <span class="k">else</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">]</span> <span class="c1"># replace zeros by ones</span>
-    <span class="n">stepsizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">steps</span><span class="p">)]</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Using a minimal edge length of {}, a sub-volume size of {} was determined from the shape {}, which means {} sub-volumes.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">minimal_edge_length</span><span class="p">,</span> <span class="n">stepsizes</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">steps</span><span class="p">)))</span>
+    <span class="n">stepsizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">steps</span><span class="p">)]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Using a minimal edge length of </span><span class="si">{}</span><span class="s1">, a sub-volume size of </span><span class="si">{}</span><span class="s1"> was determined from the shape </span><span class="si">{}</span><span class="s1">, which means </span><span class="si">{}</span><span class="s1"> sub-volumes.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">minimal_edge_length</span><span class="p">,</span> <span class="n">stepsizes</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">steps</span><span class="p">)))</span>
     
     <span class="c1"># control step-sizes to definitely cover the whole image</span>
     <span class="n">covered_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">stepsizes</span><span class="p">)]</span>
@@ -226,7 +229,7 @@
         <span class="k">if</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="n">o</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The computed sub-volumes do not cover the complete image!&quot;</span><span class="p">)</span>
             
     <span class="c1"># iterate over the steps and extract subvolumes according to the stepsizes</span>
-    <span class="n">slicer_steps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">step</span> <span class="o">*</span> <span class="n">stepsize</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">stepsize</span><span class="p">))</span> <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">stepsize</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">stepsizes</span><span class="p">)]</span>
+    <span class="n">slicer_steps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">step</span> <span class="o">*</span> <span class="n">stepsize</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">stepsize</span><span class="p">)))</span> <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">stepsize</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">stepsizes</span><span class="p">)]</span>
     <span class="n">slicers</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">slice</span><span class="p">(</span><span class="n">_from</span><span class="p">,</span> <span class="n">_from</span> <span class="o">+</span> <span class="n">_offset</span> <span class="o">+</span> <span class="n">overlap</span><span class="p">)</span> <span class="k">for</span> <span class="n">_from</span><span class="p">,</span> <span class="n">_offset</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">slicer_step</span><span class="p">,</span> <span class="n">stepsizes</span><span class="p">)]</span> <span class="k">for</span> <span class="n">slicer_step</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">slicer_steps</span><span class="p">)]</span>
     <span class="n">subvolumes_input</span> <span class="o">=</span> <span class="p">[(</span><span class="n">img_region</span><span class="p">[</span><span class="n">slicer</span><span class="p">],</span>
                          <span class="n">img_gradient</span><span class="p">[</span><span class="n">slicer</span><span class="p">],</span>
@@ -239,13 +242,13 @@
     <span class="c1"># put back data together</span>
     <span class="n">img_result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img_region</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">slicer</span><span class="p">,</span> <span class="n">subvolume</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">slicers</span><span class="p">,</span> <span class="n">subvolumes_output</span><span class="p">):</span>
-        <span class="n">sslicer_antioverlap</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">img_result</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="n">sslicer_antioverlap</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">img_result</span><span class="o">.</span><span class="n">ndim</span>
         
         <span class="c1"># treat overlap area using logical-and (&amp;)</span>
         <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img_result</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
             <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">slicer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">:</span> <span class="k">continue</span>
-            <span class="n">sslicer_antioverlap</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">overlap</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-            <span class="n">sslicer_overlap</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">img_result</span><span class="o">.</span><span class="n">ndim</span>
+            <span class="n">sslicer_antioverlap</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">overlap</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">sslicer_overlap</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">img_result</span><span class="o">.</span><span class="n">ndim</span>
             <span class="n">sslicer_overlap</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">overlap</span><span class="p">)</span>
             <span class="n">img_result</span><span class="p">[</span><span class="n">slicer</span><span class="p">][</span><span class="n">sslicer_overlap</span><span class="p">]</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">img_result</span><span class="p">[</span><span class="n">slicer</span><span class="p">][</span><span class="n">sslicer_overlap</span><span class="p">],</span> <span class="n">subvolume</span><span class="p">[</span><span class="n">sslicer_overlap</span><span class="p">])</span>
             
@@ -255,7 +258,7 @@
     <span class="k">return</span> <span class="n">img_result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span></div>
     
 
-<div class="viewcode-block" id="graphcut_subprocesses"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.graphcut_subprocesses.html#medpy.graphcut.wrapper.graphcut_subprocesses">[docs]</a><span class="k">def</span> <span class="nf">graphcut_subprocesses</span><span class="p">(</span><span class="n">graphcut_function</span><span class="p">,</span> <span class="n">graphcut_arguments</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="graphcut_subprocesses"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.graphcut_subprocesses.html#medpy.graphcut.wrapper.graphcut_subprocesses">[docs]</a><span class="k">def</span> <span class="nf">graphcut_subprocesses</span><span class="p">(</span><span class="n">graphcut_function</span><span class="p">,</span> <span class="n">graphcut_arguments</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes multiple graph cuts in parallel.</span>
 <span class="sd">    This can result in a significant speed-up.</span>
@@ -282,7 +285,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">processes</span><span class="p">:</span> <span class="n">processes</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span> <span class="ow">or</span> <span class="n">processes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s1">&#39;The number processes can not be zero or negative.&#39;</span><span class="p">)</span>
     
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing graph cuts in {} subprocesses.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing graph cuts in </span><span class="si">{}</span><span class="s1"> subprocesses.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()))</span>
     
     <span class="c1"># creates subprocess pool and execute</span>
     <span class="n">pool</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span>
@@ -291,7 +294,7 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-<div class="viewcode-block" id="graphcut_stawiaski"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.graphcut_stawiaski.html#medpy.graphcut.wrapper.graphcut_stawiaski">[docs]</a><span class="k">def</span> <span class="nf">graphcut_stawiaski</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span> <span class="n">gradient</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">foreground</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">background</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="graphcut_stawiaski"><a class="viewcode-back" href="../../../generated/medpy.graphcut.wrapper.graphcut_stawiaski.html#medpy.graphcut.wrapper.graphcut_stawiaski">[docs]</a><span class="k">def</span> <span class="nf">graphcut_stawiaski</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span> <span class="n">gradient</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">foreground</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">background</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes a Stawiaski label graph cut.</span>
 <span class="sd">    </span>
@@ -343,12 +346,11 @@
     <span class="c1"># execute min-cut</span>
     <span class="n">maxflow</span> <span class="o">=</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">maxflow</span><span class="p">()</span> <span class="c1"># executes the cut and returns the maxflow value</span>
     
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Graph-cut terminated successfully with maxflow of {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maxflow</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Graph-cut terminated successfully with maxflow of </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maxflow</span><span class="p">))</span>
     
     <span class="c1"># apply results to the region image</span>
     <span class="n">mapping</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># no regions with id 1 exists in mapping, entry used as padding</span>
-    <span class="n">mapping</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">termtype</span><span class="o">.</span><span class="n">SINK</span> <span class="o">==</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">what_segment</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span>
-                       <span class="n">scipy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">img_region</span><span class="p">)))</span>
+    <span class="n">mapping</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">0</span> <span class="k">if</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">termtype</span><span class="o">.</span><span class="n">SINK</span> <span class="o">==</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">what_segment</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">scipy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">img_region</span><span class="p">)])</span>
     <span class="n">img_results</span> <span class="o">=</span> <span class="n">relabel_map</span><span class="p">(</span><span class="n">img_region</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">img_results</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span></div>
@@ -371,13 +373,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

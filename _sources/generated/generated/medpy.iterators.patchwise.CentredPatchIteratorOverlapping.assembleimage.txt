@@ -1,6 +1,0 @@
-medpy.iterators.patchwise.CentredPatchIteratorOverlapping.assembleimage
-=======================================================================
-
-.. currentmodule:: medpy.iterators.patchwise
-
-.. automethod:: CentredPatchIteratorOverlapping.assembleimage

@@ -1,6 +1,0 @@
-medpy.metric.histogram.chebyshev_neg
-====================================
-
-.. currentmodule:: medpy.metric.histogram
-
-.. autofunction:: chebyshev_neg

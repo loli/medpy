@@ -1,6 +1,0 @@
-medpy.itkvtk.filter.image.gradient_magnitude
-============================================
-
-.. currentmodule:: medpy.itkvtk.filter.image
-
-.. autofunction:: gradient_magnitude

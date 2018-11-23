@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>MedPy docker containers &mdash; MedPy 0.3.0 documentation</title>
+    <title>MedPy docker containers &mdash; MedPy 0.4.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="top" title="MedPy 0.3.0 documentation" href="../index.html" >
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="List of commandline tools" href="../information/commandline_tools_listing.html" >
     <link rel="prev" title="Installing ITK wrappers for Python (ITKv3)" href="../installation/itkwrapper3.2.html" > 
   </head>
@@ -47,9 +49,8 @@
     <ul class="nav nav-pills pull-left">
         <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-        <li class="active"><a href="https://hub.docker.com/r/loli/medpy/">Docker</a></li>
 	
-        <li class="active"><a href="../index.html">MedPy 0.3.0 documentation</a></li>
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
 	 
     </ul>
               
@@ -100,20 +101,17 @@
                         title="next chapter">List of commandline tools</a></p>
   <h3>This Page</h3>
   <div>
-    <a href="../_sources/docker/dockercontainers.txt"
+    <a href="../_sources/docker/dockercontainers.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -125,6 +123,7 @@
             
   <div class="section" id="medpy-docker-containers">
 <h1>MedPy docker containers<a class="headerlink" href="#medpy-docker-containers" title="Permalink to this headline">¶</a></h1>
+<p><em>Warning:</em> The docker containers are no longer maintained.</p>
 <div class="section" id="what-is-docker">
 <h2>What is docker?<a class="headerlink" href="#what-is-docker" title="Permalink to this headline">¶</a></h2>
 <p>Docker (<a class="reference external" href="https://www.docker.com/">https://www.docker.com/</a>) is a new and convenient way to collect all of an applications requirements in one container and then run it on any system independently of the host system. A layer-based approach allows the re-use of already existing containers and support a hierarchical structure.</p>
@@ -136,13 +135,13 @@
 <div class="section" id="medpy-as-docker-container">
 <h2>MedPy as docker container<a class="headerlink" href="#medpy-as-docker-container" title="Permalink to this headline">¶</a></h2>
 <p>MedPy is available as docker containers with a number of configurations:</p>
-<div class="highlight-python"><div class="highlight"><pre>* Ubuntu:14.04
-    * loli/medpy:dependencies
-        * loli/medpy:release
-        * loli/medpy:development
-        * loli/medpy:itk
-            * loli/medpy:release-itk
-            * loli/medpy:development-itk
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Ubuntu</span><span class="p">:</span><span class="mf">14.04</span>
+    <span class="o">*</span> <span class="n">loli</span><span class="o">/</span><span class="n">medpy</span><span class="p">:</span><span class="n">dependencies</span>
+        <span class="o">*</span> <span class="n">loli</span><span class="o">/</span><span class="n">medpy</span><span class="p">:</span><span class="n">release</span>
+        <span class="o">*</span> <span class="n">loli</span><span class="o">/</span><span class="n">medpy</span><span class="p">:</span><span class="n">development</span>
+        <span class="o">*</span> <span class="n">loli</span><span class="o">/</span><span class="n">medpy</span><span class="p">:</span><span class="n">itk</span>
+            <span class="o">*</span> <span class="n">loli</span><span class="o">/</span><span class="n">medpy</span><span class="p">:</span><span class="n">release</span><span class="o">-</span><span class="n">itk</span>
+            <span class="o">*</span> <span class="n">loli</span><span class="o">/</span><span class="n">medpy</span><span class="p">:</span><span class="n">development</span><span class="o">-</span><span class="n">itk</span>
 </pre></div>
 </div>
 </div>
@@ -171,13 +170,13 @@ Autobuilds of the current repository snapshots: <a class="reference external" hr
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2016, Oskar Maier.
+        &copy; Copyright 2018, Oskar Maier.
       </li>
       <li>
-      Last updated on Sep 20, 2017.
+      Last updated on Nov 23, 2018.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
       </li>
     </ul>
     </div>

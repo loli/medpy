@@ -1,6 +1,0 @@
-medpy.features.intensity.local_histogram
-========================================
-
-.. currentmodule:: medpy.features.intensity
-
-.. autofunction:: local_histogram

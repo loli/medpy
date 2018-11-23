@@ -1,6 +1,0 @@
-medpy.graphcut.graph.GCGraph.get_node_count
-===========================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. automethod:: GCGraph.get_node_count

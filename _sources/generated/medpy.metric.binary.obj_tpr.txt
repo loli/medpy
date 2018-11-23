@@ -1,6 +1,0 @@
-medpy.metric.binary.obj_tpr
-===========================
-
-.. currentmodule:: medpy.metric.binary
-
-.. autofunction:: obj_tpr

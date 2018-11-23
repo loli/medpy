@@ -1,6 +1,0 @@
-medpy.itkvtk.utilities.itku.getInformation
-==========================================
-
-.. currentmodule:: medpy.itkvtk.utilities.itku
-
-.. autofunction:: getInformation

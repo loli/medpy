@@ -1,6 +1,0 @@
-medpy.metric.histogram.cosine_2
-===============================
-
-.. currentmodule:: medpy.metric.histogram
-
-.. autofunction:: cosine_2

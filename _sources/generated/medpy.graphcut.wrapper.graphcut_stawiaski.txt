@@ -1,6 +1,0 @@
-medpy.graphcut.wrapper.graphcut_stawiaski
-=========================================
-
-.. currentmodule:: medpy.graphcut.wrapper
-
-.. autofunction:: graphcut_stawiaski

@@ -1,6 +1,0 @@
-medpy.core.exceptions.SubprocessError
-=====================================
-
-.. currentmodule:: medpy.core.exceptions
-
-.. autoexception:: SubprocessError

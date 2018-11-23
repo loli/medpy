@@ -1,6 +1,0 @@
-medpy.graphcut.graph.Graph.inconsistent
-=======================================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. automethod:: Graph.inconsistent

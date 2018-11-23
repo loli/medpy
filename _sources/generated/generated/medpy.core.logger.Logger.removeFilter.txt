@@ -1,6 +1,0 @@
-medpy.core.logger.Logger.removeFilter
-=====================================
-
-.. currentmodule:: medpy.core.logger
-
-.. automethod:: Logger.removeFilter

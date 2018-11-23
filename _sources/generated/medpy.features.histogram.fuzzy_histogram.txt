@@ -1,6 +1,0 @@
-medpy.features.histogram.fuzzy_histogram
-========================================
-
-.. currentmodule:: medpy.features.histogram
-
-.. autofunction:: fuzzy_histogram

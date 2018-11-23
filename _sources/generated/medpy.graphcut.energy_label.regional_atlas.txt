@@ -1,6 +1,0 @@
-medpy.graphcut.energy_label.regional_atlas
-==========================================
-
-.. currentmodule:: medpy.graphcut.energy_label
-
-.. autofunction:: regional_atlas

@@ -1,6 +1,0 @@
-medpy.graphcut.graph.Graph.MAX
-==============================
-
-.. currentmodule:: medpy.graphcut.graph
-
-.. autoattribute:: Graph.MAX
