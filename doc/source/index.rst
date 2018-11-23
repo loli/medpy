@@ -4,7 +4,7 @@ MedPy
 :Release: |release|
 :Date: |today|
 
-MedPy is a medical image processing library written in Python.
+MedPy is a medical image processing library written in Python. MedPy requires *Python 3*.
 
 Installation
 ------------
@@ -17,8 +17,9 @@ Installation
     installation/asuser
     installation/developmentmode
     installation/uninstall
-    installation/python3
+    installation/python2
     installation/graphcutsupport
+    installation/simpleitk
     installation/itkwrapper4.12.2    
     installation/itkwrapper4.7
     installation/itkwrapper3.2    

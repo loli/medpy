@@ -1,7 +1,13 @@
 Building the HTML documentation
 ###############################
 
-Run
+Install sphinx first in your environment. Make sure to have the right version.
+
+    pip3 install sphinx==1.6.7
+
+and test if the right binary is called. Higher versions break with the used numpydoc version.
+
+Then run
 
     sphinx-build -aE -b html source/ build/
     

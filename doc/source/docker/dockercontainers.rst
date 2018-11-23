@@ -2,6 +2,8 @@
 MedPy docker containers
 =======================
 
+*Warning:* The docker containers are no longer maintained.
+
 What is docker?
 ---------------
 Docker (https://www.docker.com/) is a new and convenient way to collect all of an applications requirements in one container and then run it on any system independently of the host system. A layer-based approach allows the re-use of already existing containers and support a hierarchical structure.

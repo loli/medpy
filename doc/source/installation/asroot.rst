@@ -3,7 +3,7 @@ Installing MedPy as root
 ========================
 .. note::
 
-    All installation instructions are for Ubuntu, but they should be simmilar for other distributions.
+    All installation instructions are for Ubuntu, but they should be similar for other distributions.
     
 When installed with root privileges, **MedPy** will be available for all uses of your machine.
 
