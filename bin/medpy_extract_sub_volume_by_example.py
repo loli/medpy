@@ -82,16 +82,10 @@ def main():
     
     # extract the position of the foreground object in the mask image
     logger.info('Extract the position of the foreground object...')
-    mask = mask_image.nonzero()
-    position = ((max(0, mask[0].min() - args.offset), mask[0].max() + 1 + args.offset), # crop negative values
-                (max(0, mask[1].min() - args.offset), mask[1].max() + 1 + args.offset),
-                (max(0, mask[2].min() - args.offset), mask[2].max() + 1 + args.offset)) # minx, maxx / miny, maxy / minz, maxz
-    
-    logger.debug('Extracted position is {}.'.format(position))
-
-    # unload mask and mask image
-    del mask
-    del mask_image
+    positions = mask_image.nonzero()
+    positions = [(max(0, positions[i].min() - args.offset), positions[i].max() + 1 + args.offset)
+                    for i in range(len(positions))] # crop negative values
+    logger.debug('Extracted position is {}.'.format(positions))
 
     # load image
     logger.info('Loading image {}...'.format(args.image))
@@ -103,7 +97,7 @@ def main():
     
     # execute extraction of the sub-area  
     logger.info('Extracting sub-volume...')
-    index = [slice(x[0], x[1]) for x in position]
+    index = tuple([slice(x[0], x[1]) for x in positions])
     volume = image_data[index]
     
     # check if the output image contains data
@@ -117,7 +111,7 @@ def main():
     origin_base = numpy.array([0] * image_data.ndim) # for backwards compatibility
         
     # modify the volume offset to imitate numpy behavior (e.g. wrap negative values)
-    offset = numpy.array([x[0] for x in position])
+    offset = numpy.array([x[0] for x in positions])
     for i in range(0, len(offset)):
         if None == offset[i]: offset[i] = 0
     offset[offset<0] += numpy.array(image_data.shape)[offset<0] # wrap around
