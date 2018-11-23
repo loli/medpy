@@ -268,18 +268,18 @@ class TestMetadataConsistency(unittest.TestCase):
             print('from\tto\tndim\tdtypes')
             for suffix_from in consistent_types:
                 for suffix_to in consistent_types[suffix_from]:
-                    for ndim, dtypes in consistent_types[suffix_from][suffix_to].items():
+                    for ndim, dtypes in list(consistent_types[suffix_from][suffix_to].items()):
                         if list == type(dtypes) and not 0 == len(dtypes):
-                            print('{}\t{}\t{}D\t{}'.format(suffix_from, suffix_to, ndim, [str(x).split('.')[-1][:-2] for x in dtypes]))
+                            print(('{}\t{}\t{}D\t{}'.format(suffix_from, suffix_to, ndim, [str(x).split('.')[-1][:-2] for x in dtypes])))
         if inconsistent:
             print('\nthe following form conversions are not meta-data consistent:')
             print('from\tto\tndim\tdtype\t\terror')
             for suffix_from in inconsistent_types:
                 for suffix_to in inconsistent_types[suffix_from]:
                     for ndim in inconsistent_types[suffix_from][suffix_to]:
-                        for dtype, msg in inconsistent_types[suffix_from][suffix_to][ndim].items():
+                        for dtype, msg in list(inconsistent_types[suffix_from][suffix_to][ndim].items()):
                             if msg:
-                                print('{}\t{}\t{}D\t{}\t\t{}'.format(suffix_from, suffix_to, ndim, str(dtype).split('.')[-1][:-2], msg))
+                                print(('{}\t{}\t{}D\t{}\t\t{}'.format(suffix_from, suffix_to, ndim, str(dtype).split('.')[-1][:-2], msg)))
             
         if unsupported:
             print('\nthe following form conversions could not be tested due to errors:')
@@ -287,9 +287,9 @@ class TestMetadataConsistency(unittest.TestCase):
             for suffix_from in unsupported_types:
                 for suffix_to in unsupported_types[suffix_from]:
                     for ndim in unsupported_types[suffix_from][suffix_to]:
-                        for dtype, msg in unsupported_types[suffix_from][suffix_to][ndim].items():
+                        for dtype, msg in list(unsupported_types[suffix_from][suffix_to][ndim].items()):
                             if msg:
-                                print('{}\t{}\t{}D\t{}\t\t{}'.format(suffix_from, suffix_to, ndim, str(dtype).split('.')[-1][:-2], msg))
+                                print(('{}\t{}\t{}D\t{}\t\t{}'.format(suffix_from, suffix_to, ndim, str(dtype).split('.')[-1][:-2], msg)))
             
     def __diff(self, hdr1, hdr2):
         """

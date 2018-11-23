@@ -17,7 +17,7 @@
 # version r0.1.0
 # since 2012-06-25
 # status Release
-from __future__ import division
+
 
 # build-in modules
 import multiprocessing

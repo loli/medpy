@@ -215,26 +215,26 @@ class TestIOFacilities(unittest.TestCase):
             print('\nsave() and load() support (at least) the following image configurations:')
             print('type\tndim\tdtypes')
             for suffix in valid_types:
-                for ndim, dtypes in valid_types[suffix].items():
+                for ndim, dtypes in list(valid_types[suffix].items()):
                     if list == type(dtypes) and not 0 == len(dtypes):
-                        print('{}\t{}D\t{}'.format(suffix, ndim, [str(x).split('.')[-1][:-2] for x in dtypes]))
+                        print(('{}\t{}D\t{}'.format(suffix, ndim, [str(x).split('.')[-1][:-2] for x in dtypes])))
         if notsupported:
             print('\nthe following configurations are not supported:')
             print('type\tndim\tdtype\t\terror')
             for suffix in unsupported_type:
                 for ndim in unsupported_type[suffix]:
-                    for dtype, msg in unsupported_type[suffix][ndim].items():
+                    for dtype, msg in list(unsupported_type[suffix][ndim].items()):
                         if msg:
-                            print('{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg))
+                            print(('{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg)))
             
         if inconsistent:
             print('\nthe following configurations show inconsistent saving and loading behaviour:')
             print('type\tndim\tdtype\t\terror')
             for suffix in invalid_types:
                 for ndim in invalid_types[suffix]:
-                    for dtype, msg in invalid_types[suffix][ndim].items():
+                    for dtype, msg in list(invalid_types[suffix][ndim].items()):
                         if msg:
-                            print('{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg))
+                            print(('{}\t{}D\t{}\t\t{}'.format(suffix, ndim, str(dtype).split('.')[-1][:-2], msg)))
         
     def __diff(self, arr1, arr2):
         """

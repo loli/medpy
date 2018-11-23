@@ -909,7 +909,7 @@ def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(result, reference, connectivity)
     slicers1 = find_objects(labelmap1)
     slicers2 = find_objects(labelmap2)
-    for lid2, lid1 in mapping.items():
+    for lid2, lid1 in list(mapping.items()):
         window = __combine_windows(slicers1[lid1 - 1], slicers2[lid2 - 1])
         object1 = labelmap1[window] == lid1
         object2 = labelmap2[window] == lid2

@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import, print_function
+
 
 import sys
 if sys.version_info[0] >= 3:
@@ -78,7 +78,7 @@ class CommentBlocker(object):
         if sys.version_info[0] >= 3:
             nxt = file.__next__
         else:
-            nxt = file.next
+            nxt = file.__next__
         for token in tokenize.generate_tokens(nxt):
             self.process_token(*token)
         self.make_index()
