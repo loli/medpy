@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-# version: 0.2.5
+# version: 0.2.6
 # Many thanks to simplejson for the idea on how to install c++-extention module optionally!
 # https://pypi.python.org/pypi/simplejson/
 
 import os
 import sys
+from ctypes.util import find_library
 from distutils.command.build_ext import build_ext
 from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatformError
 
@@ -45,6 +46,9 @@ if sys.platform == "darwin":
         boost_python_library = 'boost_python'
 else:
     boost_python_library = 'boost_python-py' + str(sys.version_info.major) + str(sys.version_info.minor)
+    if not find_library(boost_python_library):
+        # exact version not find, trying with major fit only as fallback
+        boost_python_library = 'boost_python-py' + str(sys.version_info.major)
 
 maxflow = Extension('medpy.graphcut.maxflow',
                     define_macros = [('MAJOR_VERSION', '0'),
@@ -126,9 +130,8 @@ def run_setup(with_compilation):
               #'Operating System :: Microsoft :: Windows',
               'Operating System :: POSIX',
               'Operating System :: Unix',
-              'Programming Language :: Python :: 2',
-              'Programming Language :: Python :: 2.6',
-              'Programming Language :: Python :: 2.7',
+              'Programming Language :: Python :: 3.5',
+              'Programming Language :: Python :: 3.6',
               'Programming Language :: C++',
               'Topic :: Scientific/Engineering :: Medical Science Apps.',
               'Topic :: Scientific/Engineering :: Image Recognition'
