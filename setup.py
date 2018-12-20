@@ -48,7 +48,7 @@ else:
     boost_python_library = 'boost_python-py' + str(sys.version_info.major) + str(sys.version_info.minor)
     if not find_library(boost_python_library):
         # exact version not find, trying with major fit only as fallback
-        boost_python_library = 'boost_python-py' + str(sys.version_info.major)
+        boost_python_library = 'boost_python' + str(sys.version_info.major)
 
 maxflow = Extension('medpy.graphcut.maxflow',
                     define_macros = [('MAJOR_VERSION', '0'),
