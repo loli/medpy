@@ -266,7 +266,7 @@ def __get_offset_pydicom(hdr):
             return tuple([0] * 3)
     else: # 2D case
         if "ImagePositionPatient" in hdr:
-            return tuple(map(float, hdr.ImagePositionPatient)[:2])
+            return tuple(map(float, hdr.ImagePositionPatient))[:2]
         else:
             logger = Logger.getInstance()
             logger.warning('No offset defined in DICOM header, assuming none exists.')
