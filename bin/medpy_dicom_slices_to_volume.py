@@ -23,7 +23,7 @@ import argparse
 import logging
 
 # third-party modules
-from dicom.contrib import pydicom_series
+from pydicom.contrib import pydicom_series
 
 # path changes
 

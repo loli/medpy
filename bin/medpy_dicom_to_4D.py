@@ -31,7 +31,7 @@ import scipy
 from medpy.core import Logger
 from medpy.io import save
 from medpy.core.exceptions import ArgumentError
-from dicom.contrib import pydicom_series
+from pydicom.contrib import pydicom_series
 
 
 # information

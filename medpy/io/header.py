@@ -366,7 +366,7 @@ def __is_header_pydicom(hdr):
     """
     Returns true is the supplied object is a valid pydicom image, otherwise False.
     """
-    import dicom
+    import pydicom
     return (type(hdr) == dicom.dataset.FileDataset)
 
 def __is_header_nibabel(hdr):

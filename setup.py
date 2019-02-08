@@ -141,7 +141,7 @@ def run_setup(with_compilation):
             "scipy >= 1.1.0",
             "numpy >= 1.6.1",
             "nibabel >= 1.3.0",
-            "pydicom >= 0.9.7"
+            "pydicom >= 1.1.0"
           ],
 
           extras_require = {

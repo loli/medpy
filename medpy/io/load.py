@@ -222,7 +222,7 @@ def __load_pydicom(image):
     @param image the image to load
     @return A tuple of 1. a scipy array with the image data, 2. a ImageHeader object with additional information
     """
-    import dicom
+    import pydicom
     
     logger = Logger.getInstance()
     logger.debug('Loading image {} with PyDicom...'.format(image))
