@@ -1,97 +1,120 @@
-=========
-  MedPy
-=========
+# MedPy
+
+[GitHub](https://github.com/loli/medpy/) | [Documentation](http://loli.github.io/medpy/) | [Tutorials](http://loli.github.io/medpy/) | [Issue tracker](https://github.com/loli/medpy/issues) | [Contact](oskar.maier@gmail.com)
 
 **MedPy** is a library and script collection for medical image processing in Python, providing basic functionalities for **reading**, **writing** and **manipulating** large images of **arbitrary dimensionality**.
-Its main contributions are n-dimensional versions of popular **image filters**, a collection of **image feature extractors**, ready to be used with `scikit-learn <http://scikit-learn.org/>`_, and an exhaustive n-dimensional **graph-cut** package.
+Its main contributions are n-dimensional versions of popular **image filters**, a collection of **image feature extractors**, ready to be used with [scikit-learn](http://scikit-learn.org), and an exhaustive n-dimensional **graph-cut** package.
 
-**Troubles?** Feel free to write me with any questions / comments / suggestions: oskar.maier@googlemail.com
+* [Installation](#installation)
+* [Getting started with the library](#getting-started-with-the-library)
+* [Getting started with the scripts](#getting-started-with-the-scripts)
+* [Read/write support for medical image formats](#read-write-support-for-medical-image-formats)
+* [Requirements](#requirements)
+* [License](#license)
 
-**Found a bug?** https://github.com/loli/medpy/issues
+## Installation
 
-**Too many depoendencies?** Try our docker images https://registry.hub.docker.com/u/loli/medpy/ (release) and https://registry.hub.docker.com/u/loli/medpy-autobuilds/ (development)
+```bash
+sudo apt-get install libboost-python-dev build-essential
+pip3 install medpy
+```
 
+**MedPy** requires **Python 3** and officially supports Ubuntu as well as other Debian derivatives.
+For installation instructions on other operating systems see the [documentation](http://loli.github.io/medpy/).
+While the library itself is written purely in Python, the **graph-cut** extension comes in C++ and has it's own requirements. More details can be found in the [documentation](http://loli.github.io/medpy/).
 
-Installing MedPy the fast way (Ubuntu and derivatives)
-======================================================
-First::
+### Using Python 2
 
-    sudo apt-get install python-pip python-numpy python-scipy libboost-python-dev build-essential
-    
-Then::
+**Python 2** is no longer supported. But you can still use the older releases.
 
-    sudo pip install nibabel pydicom medpy
- 
-Done. More installation instructions can be found in the `documentation <http://loli.github.io/medpy/>`_.
+```bash
+pip install medpy==0.3.0
+```
 
-Using Python 3?
----------------
-Try::
+## Getting started with the library
 
-  sudo pip install nibabel pydicom
-  sudo pip install https://github.com/user/repository/archive/Release_0.3.0p3.zip
-
-
-Getting started with the library
-================================
-If you already have one, whose format is support (see in the `documentation <http://loli.github.io/medpy/>`_.), then good.
-Otherwise navigate to http://www.nitrc.org/projects/inia19, click on the *Download Now* button, unpack and look for the *inia19-t1.nii* file.
-Open it in your favorite medical image viewer (I personally fancy `itksnap <http://www.itksnap.org>`_) and beware a the INIA19 primate brain atlas.
+If you already have a medical image whose format is support (see the [documentation](http://loli.github.io/medpy/>) for details), then good.
+Otherwise, navigate to http://www.nitrc.org/projects/inia19, click on the *Download Now* button, unpack and look for the *inia19-t1.nii* file. Open it in your favorite medical image viewer (I personally fancy [itksnap](http://www.itksnap.org)) and beware: the INIA19 primate brain atlas.
 
 Load the image
 
->>> from medpy.io import load
->>> image_data, image_header = load('/path/to/image.xxx')
+```python
+from medpy.io import load
+image_data, image_header = load('/path/to/image.xxx')
+```
 
-The data is stored in a numpy ndarray, the header is an object containing additional metadata, such as the voxel-spacing.
-Now lets take a look at some of the image metadata
+The data is stored in a numpy ndarray, the header is an object containing additional metadata, such as the voxel-spacing. Now lets take a look at some of the image metadata
 
->>> image_data.shape
-(168, 206, 128)
->>> image_data.dtype
-dtype(float32)
+```python
+image_data.shape
+```
+
+`(168, 206, 128)`
+
+```python
+image_data.dtype
+```
+
+`dtype(float32)`
 
 And the header gives us
 
->>> from medpy.io import header
->>> header.get_pixel_spacing(image_header)
-(0.5, 0.5, 0.5)
->>> header.get_offset(image_header)
-(0.0, 0.0, 0.0)
+```python
+from medpy.io import header
+header.get_pixel_spacing(image_header)
+```
 
-Now lets apply one of the **MedPy** filter, more exactly the Otsu thresholding, which can be used for automatic background removal
+`(0.5, 0.5, 0.5)`
 
->>> from medpy.filter import otsu
->>> threshold = otsu(image_data)
->>> output_data = image_data > threshold
+```python
+header.get_offset(image_header)
+```
+
+`(0.0, 0.0, 0.0)`
+
+Now lets apply one of the **MedPy** filter, more exactly the [Otsu thresholding](https://en.wikipedia.org/wiki/Otsu%27s_method), which can be used for automatic background removal
+
+```python
+from medpy.filter import otsu
+threshold = otsu(image_data)
+output_data = image_data > threshold
+```
 
 And save the binary image, marking the foreground
 
->>> from medpy.io import save
->>> save(output_data, '/path/to/otsu.xxx', image_header)
+```python
+from medpy.io import save
+save(output_data, '/path/to/otsu.xxx', image_header)
+```
 
-After taking a look at it, you might want to dive deeper with the `documentation <http://loli.github.io/medpy/>`_.
+After taking a look at it, you might want to dive deeper with the tutorials found in the [documentation](http://loli.github.io/medpy/).
+
+## Getting started with the scripts
+
+**MedPy** comes with a range of read-to-use commandline scripts, which are all prefixed by `medpy_`.
+To try these examples, first get an image as described in the previous section. Now call
+
+```bash
+medpy_info.py /path/to/image.xxx
+```
+
+will give you some details about the image. With
+
+```bash
+medpy_diff.py /path/to/image1.xxx /path/to/image2.xxx
+```
+
+you can compare two image. And
+
+```bash
+medpy_anisotropic_diffusion.py /path/to/image.xxx /path/to/output.xxx
+```
+
+lets you apply an edge preserving anisotropic diffusion filter. For a list of all scripts, see the [documentation](http://loli.github.io/medpy/).
 
 
-Getting started with the scripts
-================================
-Get an image as described above. Now::
+## Read/write support for medical image formats
 
-	medpy_info.py /path/to/image.xxx
-	
-will give you some details about the image. With::
-
-	medpy_diff.py /path/to/image1.xxx /path/to/image2.xxx
-
-you can compare two image. And::
-
-	medpy_anisotropic_diffusion.py /path/to/image.xxx /path/to/output.xxx
-	
-lets you apply an edge preserving anisotropic diffusion filter. For a list of all scripts, see the `documentation <http://loli.github.io/medpy/>`_.
-
-
-Read/write support for medical image formats
-============================================
 MedPy builds on 3rd party modules to load and save images. Currently
 implemented are the usages of
 
@@ -105,7 +128,7 @@ implemented are the usages of
 
 * NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
 * Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
-* and some others more (http://nipy.sourceforge.net/nibabel/)
+* and some others more (http://nipy.org/nibabel/)
 
 **PyDicom** enables support for:
 
@@ -122,39 +145,22 @@ implemented are the usages of
 
 For some functionalities, which are collected in the *medpy.itkvtk* package **ITK** is also required.
 
+## Requirements
 
-Code
-====
-You can find our sources and single-click downloads:
-
-* `Main repository <https://github.com/loli/medpy>`_ on Github.
-* API documentation for all releases and current development tree can be created using `Sphinx <http://www.sphinx-doc.org>`_
-* Download as a zip file the `current trunk <https://github.com/loli/medpy/archive/master.zip>`_.
-
-
-Tutorials and API Documentation
-===============================
-http://loli.github.io/medpy/
-
-Requirements
-============
 MedPy comes with a number of dependencies and optional functionality that can require you to install additional packages.
 
-Dependencies
-------------
+### Main dependencies
 
-* `scipy <http://www.scipy.org/>`_ >= 0.9.0
-* `numpy <http://www.numpy.org/>`_ >= 1.6.1
-* `nibabel <http://nipy.sourceforge.net/nibabel//>`_ >= 1.3.0 (enables support for NIfTI and Analyze image formats)
-* `pydicom <http://code.google.com/p/pydicom/>`_ >= 0.9.7 (enables support for DICOM image format)
+* [scipy](http://www.scipy.org)
+* [numpy](http://www.numpy.org)
+* [nibabel](http://nipy.org/nibabel/) (enables support for NIfTI and Analyze image formats)
+* [pydicom](https://pydicom.github.io/) (enables support for DICOM image format)
 
-Optional functionalities
-------------------------
+### Optional functionalities
+
 * compilation with `max-flow/min-cut` (enables the GraphCut functionalities)
-* `itk <http://www.itk.org/>`_ >= 3.16.0 with `WrapITK <http://code.google.com/p/wrapitk/>`_ (enables support for a large number of image formats)
+* [itk](http://www.itk.org)_ >= 3.16.0 with Python bindings (enables support for a large number of image formats)
 
+## License
 
-License
-=======
 MedPy is distributed under the GNU General Public License, a version of which can be found in the LICENSE.txt file.
-
