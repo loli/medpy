@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# version: 0.2.6
+# version: 0.2.7
 # Many thanks to simplejson for the idea on how to install c++-extention module optionally!
 # https://pypi.python.org/pypi/simplejson/
 
@@ -9,10 +9,6 @@ import sys
 from ctypes.util import find_library
 from distutils.command.build_ext import build_ext
 from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatformError
-
-# setuptools >= 0.7 supports 'python setup.py develop'
-from ez_setup import use_setuptools
-use_setuptools()
 from setuptools import setup, Extension, Command
 
 # CONSTANTS
@@ -108,17 +104,17 @@ def run_setup(with_compilation):
 
     setup(
           name='MedPy',
-          version='0.3.0', # major.minor.micro
+          version='0.4.0', # major.minor.micro
           description='Medical image processing in Python',
           author='Oskar Maier',
-          author_email='oskar.maier@googlemail.com',
+          author_email='oskar.maier@gmail.com',
           url='https://github.com/loli/medpy',
           license='LICENSE.txt',
           keywords='medical image processing dicom itk insight tool kit MRI CT US graph cut max-flow min-cut',
           long_description=read('README_PYPI.md'),
 
           classifiers=[
-              'Development Status :: 4 - Beta',
+              'Development Status :: 5 - Production/Stable',
               'Environment :: Console',
               'Environment :: Other Environment',
               'Intended Audience :: End Users/Desktop',
@@ -126,8 +122,8 @@ def run_setup(with_compilation):
               'Intended Audience :: Healthcare Industry',
               'Intended Audience :: Science/Research',
               'License :: OSI Approved :: GNU General Public License (GPL)',
-              #'Operating System :: MacOS :: MacOS X',
-              #'Operating System :: Microsoft :: Windows',
+              'Operating System :: MacOS :: MacOS X',
+              'Operating System :: Microsoft :: Windows',
               'Operating System :: POSIX',
               'Operating System :: Unix',
               'Programming Language :: Python :: 3.5',
