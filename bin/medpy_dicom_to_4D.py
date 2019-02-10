@@ -74,7 +74,7 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    data_3d, hdr = load(args.input)
+    data_3d, _ = load(args.input)
     
     # check parameters
     if args.dimension >= data_3d.ndim or args.dimension < 0:
