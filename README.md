@@ -2,7 +2,6 @@
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/MedPy.svg)](https://pypi.python.org/pypi/MedPy/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Downloads](https://pepy.tech/badge/medpy/month)](https://pepy.tech/project/medpy)
-
 ![travis auto-build](https://travis-ci.org/loli/medpy.svg?branch=master)
 [![DOI](https://zenodo.org/badge/4295983.svg)](https://zenodo.org/badge/latestdoi/4295983)
 
