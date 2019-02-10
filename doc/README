@@ -17,6 +17,7 @@ source/generated/medpy.graphcut.graph.Graph.rst
 source/generated/medpy.graphcut.graph.GCGraph.rst
 source/generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.rst
 source/generated/medpy.core.logger.Logger.rst
+source/generated/medpy.header.Header.rst
 source/generated/medpy.iterators.*
 
 by removing the line

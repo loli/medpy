@@ -3,19 +3,11 @@ Installing MedPy the fast way
 =============================
 .. note::
 
-    All installation instructions are for Ubuntu, but they should be simmilar for other distributions.
-    
-First
+    All installation instructions are for Debian derivates,
+    such as Ubuntu, but they should be simmilar for other distributions.
 
 .. code-block:: bash
 
-    sudo apt-get install python-pip python-numpy python-scipy libboost-python-dev build-essential
-    
-Then
-
-.. code-block:: bash
-
-    sudo pip install nibabel pydicom medpy
- 
-Done.
+    sudo apt-get install libboost-python-dev build-essential
+    sudo pip install medpy
 

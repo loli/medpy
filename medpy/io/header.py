@@ -147,29 +147,30 @@ def copy_meta_data(hdr_to, hdr_from):
 
 
 class Header:
+    r"""
+    A medpy header object.
+
+    Stores spacing, offset/origin, direction, and possibly further meta information.
+    Provide at least one of the parameters. Missing information is extracted from
+    the ``sitkimage`` or, if not supplied, set to a default value. 
+
+    Parameters
+    ----------
+    spacing : tuple of floats
+        the image's voxel spacing
+        defaults to a tuple of `1.0`s
+    offset : tuple of floats
+        the image's offset/origin
+        defaults to a tuple of `0.0`s
+    direction : ndarray
+        the image's affine transformation matrix
+        must be of square shape
+        default to the identity matrix
+    sitkimage : sitk.Image
+        the simple itk image as loaded
+    """
+
     def __init__(self, spacing=None, offset=None, direction=None, sitkimage=None):
-        """
-        A medpy header object.
-
-        Stores spacing, offset/origin, direction, and possibly further meta information.
-        Provide at least one of the parameters. Missing information is extracted from
-        the ``sitkimage`` or, if not supplied, set to a default value. 
-
-        Parameters
-        ----------
-        spacing : tuple of floats
-            the image's voxel spacing
-            defaults to a tuple of `1.0`s
-        offset : tuple of floats
-            the image's offset/origin
-            defaults to a tuple of `0.0`s
-        direction : ndarray
-            the image's affine transformation matrix
-            must be of square shape
-            default to the identity matrix
-        sitkimage : sitk.Image
-            the simple itk image as loaded
-        """
         assert \
             sitkimage is not None or \
             spacing is not None or \
@@ -279,6 +280,8 @@ class Header:
 
     def set_voxel_spacing(self, spacing):
         """
+        Set image's spacing.
+
         Parameters
         ----------
         spacing : tuple of floats
@@ -289,6 +292,8 @@ class Header:
     
     def set_offset(self, offset):
         """
+        Set image's offset.
+
         Parameters
         ----------
         offset : tuple of floats
@@ -299,6 +304,8 @@ class Header:
 
     def set_direction(self, direction):
         """
+        Set image's direction.
+
         Returns
         -------
         direction : tuple of floats
@@ -310,27 +317,33 @@ class Header:
     
     def get_voxel_spacing(self):
         """
+        Get image's spacing.
+        
         Returns
         -------
-        tuple
+        spacing : tuple of floats
             the image's spacing
         """
         return self.spacing
     
     def get_offset(self):
         """
+        Get image's offset.
+
         Returns
         -------
-        tuple
+        offset : tuple of floats
             the image's offset / origin
         """
         return self.offset
 
     def get_direction(self):
         """
+        Get image's direction.
+
         Returns
         -------
-        ndarray
+        direction : ndarray
             the image's direction / affine transformation matrix
             of square shape
         """
@@ -338,9 +351,11 @@ class Header:
 
     def get_sitkimage(self):
         """
+        Get underlying sitk Image object.
+        
         Returns
         -------
-        sitk.Image or None
+        image-object : sitk.Image or None
             the underlying sitk image object if set
         """
         return self.sitkimage

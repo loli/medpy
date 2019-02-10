@@ -46,6 +46,7 @@ def save(arr, filename, hdr = False, force = True, use_compression = False):
     The supported image file formats should include at least the following.
 
     Medical formats:
+    
     - ITK MetaImage (.mha/.raw, .mhd)
     - Neuroimaging Informatics Technology Initiative (NIfTI) (.nia, .nii, .nii.gz, .hdr, .img, .img.gz)
     - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
@@ -56,15 +57,18 @@ def save(arr, filename, hdr = False, force = True, use_compression = False):
     - Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)
 
     Microscopy formats:
+
     - Medical Research Council (MRC) (.mrc, .rec)
     - Bio-Rad (.pic, .PIC)
     - LSM (Zeiss) microscopy images (.tif, .TIF, .tiff, .TIFF, .lsm, .LSM)
     - Stimulate / Signal Data (SDT) (.sdt)
 
     Visualization formats:
+
     - VTK images (.vtk)
 
     Other formats:
+
     - Portable Network Graphics (PNG) (.png, .PNG)
     - Joint Photographic Experts Group (JPEG) (.jpg, .JPG, .jpeg, .JPEG)
     - Tagged Image File Format (TIFF) (.tif, .TIF, .tiff, .TIFF)

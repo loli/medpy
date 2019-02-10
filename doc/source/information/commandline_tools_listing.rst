@@ -14,7 +14,6 @@ Categories
 * :ref:`filter`
 * :ref:`mr`
 * :ref:`gc`
-* :ref:`itk`
 * :ref:`others`
 
 .. _basic:
@@ -219,27 +218,6 @@ GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algor
 .. topic:: medpy_label_superimposition.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_label_superimposition.py.ipynb>`_)
 
 	Takes to label maps and superimpose them to create a new label image with more regions.
-
-
-.. _itk:
-
-Scripts requiring ITK
-=====================
-:ref:`↑top <top>`
-
-All of the scripts in this section require the ITK Python bindings to be installed.
-
-.. topic:: medpy_itk_smoothing.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_smoothing.py.ipynb>`_)
-
-	Applies the edge preserving anisotropic diffusion filter to an image.
-
-.. topic:: medpy_itk_gradient.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_gradient.py.ipynb>`_)
-
-	Applies a gradient magnitude filter.
-
-.. topic:: medpy_itk_watershed.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_watershed.py.ipynb>`_)
-
-	Applies a watershed filter, results in a label map / region image.
 
 
 .. _others:

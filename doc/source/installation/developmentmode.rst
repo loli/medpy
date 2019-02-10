@@ -6,4 +6,4 @@ First follow all steps described in :doc:`asroot` except the last, then download
 
 .. code-block:: bash
 
-	sudo python setup.py develop
+	python setup.py develop

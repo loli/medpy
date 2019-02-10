@@ -13,26 +13,16 @@ Installation
     :maxdepth: 1
     
     installation/fastpath
+    installation/venv
     installation/asroot
     installation/asuser
     installation/developmentmode
-    installation/uninstall
-    installation/python2
     installation/graphcutsupport
-    installation/simpleitk
-    installation/itkwrapper4.12.2    
-    installation/itkwrapper4.7
-    installation/itkwrapper3.2    
-
-Docker
-------
-
-.. toctree::
-    :glob:
-    :maxdepth: 1
-    
-    docker/*
-
+    installation/windows
+    installation/osx
+    installation/conda
+    installation/python2
+    installation/uninstall
 
 Information
 -----------
@@ -77,7 +67,6 @@ Reference
     iterators
     neighbours
     graphcut
-    itkvtk
     core
     utilities
 
