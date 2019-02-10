@@ -14,156 +14,114 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # author Oskar Maier
-# version r0.1.3
+# version r0.2.3
 # since 2012-06-01
 # status Release
 
 # build-in modules
+import warnings
 
 # third-party modules
-import numpy
+import numpy as np
 
 # own modules
 from ..core import Logger
 
-# !TODO: Turn into an own class, with sub-classes for each 3rd party type (see _header.py).
-
 # code
-def get_pixel_spacing(hdr):
+def get_voxel_spacing(hdr):
     r"""
-    Extracts the pixels spacing from an image header.
+    Extracts the voxel spacing from an image header.
+
+    Notes
+    -----
+    It is recommended to call `hdr.get_voxel_spacing()` instead
+    of this function.
     
     Parameters
     ----------
-    hdr : object
+    hdr : medpy.io.Header
         An image header as returned by `load`.
     
     Returns
     -------
     pixel_spacing : tuple of floats
         The image's pixel spacing.
-        
-    Raises
-    ------
-    AttributeError
-        If the header is of an unknown type or does not support the reading of the pixel spacing.
     """
-    try:
-        if __is_header_nibabel(hdr):
-            return __get_pixel_spacing_nibabel(hdr)
-        elif __is_header_pydicom(hdr):
-            return __get_pixel_spacing_pydicom(hdr)
-        elif __is_header_itk(hdr):
-            return __get_pixel_spacing_itk(hdr)
-        else:
-            raise Exception()
-    except Exception:
-        raise AttributeError('The provided header {} is of unknown type or does not support queries for pixel spacing.'.format(type(hdr)))
+    return hdr.get_voxel_spacing()
+
+def get_pixel_spacing(hdr):
+    r"""Depreciated synonym of `~medpy.io.header.get_voxel_spacing`."""
+    warnings.warn('get_pixel_spacing() is depreciated, use set_voxel_spacing() instead', category=DeprecationWarning)
+    return get_voxel_spacing(hdr)
 
 def get_offset(hdr):
     r"""
-    Extracts the image offset from an image header.
+    Extracts the image offset (akak origin) from an image header.
+
+    Notes
+    -----
+    It is recommended to call `hdr.get_offset()` instead
+    of this function.
+    It can be assumed that the offset is measured from the center point of
+    the first pixel, which SimpleITK promises independent of the file format.
+    Some formats do not specify a header field for the offset, thus zeros
+    are returned.
     
     Parameters
     ----------
-    hdr : object
+    hdr : medpy.io.Header
         An image header as returned by `load`.
     
     Returns
     -------
     offset : tuple of floats
         The image's offset.
-    
-    Raises
-    ------
-    AttributeError
-        If the header is of an unknown type or does not support the reading of the offset.
+    """
+    return hdr.get_offset()
+
+def set_voxel_spacing(hdr, spacing):
+    r"""
+    Sets the voxel spacing in an image header.
     
     Notes
     -----
-    Usually it can be assumed that the offset is measured from the center point of
-    the first pixel, but this does not hold true for ITK versions < 3.16 and even for
-    later it can not be assured, as some compile flags change the behaviour.
-    
-    The Analyze format does not specify a header field for the offset, thus zeros
-    are returned in this case.
-    """
-    try:
-        if __is_header_nibabel(hdr):
-            return __get_offset_nibabel(hdr)
-        elif __is_header_pydicom(hdr):
-            return __get_offset_pydicom(hdr)
-        elif __is_header_itk(hdr):
-            return __get_offset_itk(hdr)
-        else:
-            raise Exception()
-    except Exception:
-        raise AttributeError('The provided header {} is of unknown type or does not support queries for offsets.'.format(type(hdr)))        
+    It is recommended to call `hdr.set_voxel_spacing()` instead
+    of this function.    
 
-def set_pixel_spacing(hdr, spacing):
-    r"""
-    Sets the pixels spacing in an image header.
-    
     Parameters
     ----------
-    hdr : object
+    hdr : medpy.io.Header
         An image header as returned by `load`.
     pixel_spacing : tuple of floats
         The desired pixel spacing.
-        
-    Raises
-    ------
-    AttributeError
-        If the header is of an unknown type or does not support the setting of the pixel spacing.
     """
-    try:
-        if __is_header_nibabel(hdr):
-            __set_pixel_spacing_nibabel(hdr, spacing)    
-        elif __is_header_pydicom(hdr):
-            __set_pixel_spacing_pydicom(hdr, spacing)
-        elif __is_header_itk(hdr):
-            __set_pixel_spacing_itk(hdr, spacing)
-        else:
-            raise Exception()
-    except AttributeError as e:
-        raise e
-    except Exception:
-        raise AttributeError('The provided header {} is of unknown type or does not support setting of pixel spacing.'.format(type(hdr)))
+    hdr.set_voxel_spacing(spacing)
 
+def set_pixel_spacing(hdr, spacing):
+    r"""Depreciated synonym of `~medpy.io.header.set_voxel_spacing`."""
+    warnings.warn('get_pixel_spacing() is depreciated, use set_voxel_spacing() instead', category=DeprecationWarning)
+    set_voxel_spacing(hdr, spacing)
+   
 def set_offset(hdr, offset):
     r"""
-    Sets the offset in the image header.
+    Sets the offset (aka origin) in the image header.
     
+    Notes
+    -----
+    It is recommended to call `hdr.set_offset()` instead
+    of this function.    
+    The offset is based on the center of the first voxel.
+    See also `get_offset` for more details.
+
     Parameters
     ----------
-    hdr : object
+    hdr : medpy.io.Header
         An image header as returned by `load`.
     offset : tuple of floats
         The desired offset.
-        
-    Raises
-    ------
-    AttributeError
-        If the header is of an unknown type or does not support the setting of the offset.
-        
-    Notes
-    -----
-    The offset is usually based on the center of the first voxel.
-    See also `get_offset` for more details.
     """
-    try:
-        if __is_header_nibabel(hdr):
-            __set_offset_nibabel(hdr, offset)
-        elif __is_header_pydicom(hdr):
-            __set_offset_pydicom(hdr, offset)
-        elif __is_header_itk(hdr):
-            __set_offset_itk(hdr, offset)
-        else:
-            raise Exception()
-    except AttributeError as e:
-        raise e
-    except Exception:
-        raise AttributeError('The provided header {} is of unknown type or does not support setting of offsets.'.format(type(hdr)))    
+    hdr.set_offset(offset)
+
 
 def copy_meta_data(hdr_to, hdr_from):
     r"""
@@ -175,12 +133,8 @@ def copy_meta_data(hdr_to, hdr_from):
         An image header as returned by `load`.
     hdr_from : object
         An image header as returned by `load`.
-        
-    Raises
-    ------
-    AttributeError
-        If one of the headers does not support the reading respectively writing of metadata.
     """
+    warnings.warn('copy_meta_data() is depreciated and may be removed in future versions', category=DeprecationWarning)
     logger = Logger.getInstance()
     try:
         set_pixel_spacing(hdr_to, get_pixel_spacing(hdr_from))
@@ -192,207 +146,201 @@ def copy_meta_data(hdr_to, hdr_from):
         logger.warning('The image offset could not be set correctly. Signaled error: {}'.format(e))
 
 
-def __get_pixel_spacing_itk(hdr):
-    return tuple([hdr.GetSpacing().GetElement(x) for x in range(hdr.GetSpacing().GetVectorDimension())])
-    
-def __get_pixel_spacing_nibabel(hdr):
-    dimensionality = sum(0 if 1 == x else 1 for x in hdr.shape) # required for Analyze format, which always assumes for dimensions, even if less present
-    return hdr.get_header().get_zooms()[0:dimensionality]
+class Header:
+    def __init__(self, spacing=None, offset=None, direction=None, sitkimage=None):
+        """
+        A medpy header object.
 
-def __get_pixel_spacing_pydicom(hdr):
-    """
-    @note The SpacingBetweenSlices gives the distance between the slice centers, while
-          SliceThickness gives the actual SliceThickness. This means that
-          SpacingBetweenSlices must contain a value as least as high as SliceThickness if
-          no overlap between the slices exists. We choose to simply query the
-          SliceThickness, as this value determines the thickness of the voxels.
-          But we flag a warning, if there might be a gap or overlap.
-    """
-    # 1. Check if PixelSpacing element is present
-    if "PixelSpacing" in hdr:
-        spacing = [x for x in hdr.PixelSpacing] # has to be copy, otherwise the value of the field is changed when spacing gets manipulated
-    else:
-        logger = Logger.getInstance()
-        logger.warning('No pixel spacing defined in DICOM header, assuming isotropic spacing.')
-        spacing = [1] * 2
-        
-    # Skip here if the number of frames is present and 1 or below, we ignore other values in this case
-    if "NumberOfFrames" in hdr and hdr.NumberOfFrames <= 1: # 2d case
-        return tuple(map(float, spacing))
-        
-    # 2. Check if SliceThickness element is present
-    if "SliceThickness" in hdr:
-        if "SpacingBetweenSlices" in hdr and hdr.SliceThickness != hdr.SpacingBetweenSlices:
-            logger = Logger.getInstance()
-            logger.debug('The DICOM headers SliceThickness tag does not correspond with the SpacingBetweenSlices tag. There might be gaps or overlaps between the slices.')
-        spacing += [hdr.SliceThickness]
-    elif "SpacingBetweenSlices" in hdr:
-        logger = Logger.getInstance()
-        logger.debug('No SliceThickness defined in DICOM header, falling back to SpacingBetweenSlices.')
-        spacing += [hdr.SpacingBetweenSlices]
-    elif "NumberOfFrames" in hdr and hdr.NumberOfFrames > 1: # 3d case \wo a given SliceThickness
-        logger = Logger.getInstance()
-        logger.debug('No SliceThickness defined in DICOM header, assuming isotropic spacing.')
-        spacing += [1]
-        
-    return tuple(map(float, spacing))
-    
-def __get_offset_nibabel(hdr):
-    """
-    @note Only Nifit has full support for image offsets. The two Analyze versions SPM2
-          and SPM99 can also define offsets, but the definition is rather unclear.
-          Instead zero sequences are returned in these cases, which is the standard
-          behaviour.
-    """ 
-    import nibabel
-    if type(hdr) == nibabel.nifti1.Nifti1Image or type(hdr) == nibabel.nifti1.Nifti1Pair: # The nifti image format supports offsets
-        hdr_real = hdr.get_header()
-        offset = [float(hdr_real['qoffset_x']), float(hdr_real['qoffset_y']), float(hdr_real['qoffset_z']), float(hdr_real['toffset'])][0:len(hdr.shape)]
-        # multiply with sign of diagonal of voxel-to-world affine to account for axis directions
-        axis_directions = numpy.sign(numpy.diagonal(hdr.get_affine())) 
-        offset_corrected = numpy.multiply(offset, axis_directions[0:len(offset)])
-        return tuple(offset_corrected)
-    else: # An Analyze or other image format
-        dimensionality = sum(0 if 1 == x else 1 for x in hdr.shape) # required for Analyze format, which always assumes four dimensions, even if less present
-        return tuple([0 for _ in range(len(hdr.shape))][0:dimensionality])
+        Stores spacing, offset/origin, direction, and possibly further meta information.
+        Provide at least one of the parameters. Missing information is extracted from
+        the ``sitkimage`` or, if not supplied, set to a default value. 
 
-def __get_offset_pydicom(hdr):
-    if "NumberOfFrames" in hdr and hdr.NumberOfFrames > 1: # 3D case
-        if "ImagePositionPatient" in hdr:
-            return tuple(map(float, hdr.ImagePositionPatient))
+        Parameters
+        ----------
+        spacing : tuple of floats
+            the image's voxel spacing
+            defaults to a tuple of `1.0`s
+        offset : tuple of floats
+            the image's offset/origin
+            defaults to a tuple of `0.0`s
+        direction : ndarray
+            the image's affine transformation matrix
+            must be of square shape
+            default to the identity matrix
+        sitkimage : sitk.Image
+            the simple itk image as loaded
+        """
+        assert \
+            sitkimage is not None or \
+            spacing is not None or \
+            offset is not None or \
+            direction is not None
+
+        # determin the image's ndim and default data types
+        if direction is not None:
+            direction = np.asarray(direction)
+            ndim = len(direction.shape[0])
+        elif offset is not None:
+            offset = tuple(offset)
+            ndim = len(offset)
+        elif spacing is not None:
+            spacing = tuple(spacing)
+            ndim = len(spacing)
         else:
-            logger = Logger.getInstance()
-            logger.warning('No offset defined in DICOM header, assuming none exists.')
-            return tuple([0] * 3)
-    else: # 2D case
-        if "ImagePositionPatient" in hdr:
-            return tuple(map(float, hdr.ImagePositionPatient))[:2]
+            ndim = len(sitkimage.GetSpacing())
+        
+        # set missing information to extracted or default values
+        if spacing is None:
+            spacing = sitkimage.GetSpacing() if sitkimage is not None else (1.0, ) * ndim
+        if offset is None:
+            offset = sitkimage.GetOrigin() if sitkimage is not None else (0.0, ) * ndim
+        if direction is None:
+            direction = np.asarray(sitkimage.GetDirection()).reshape(ndim, ndim) if sitkimage is not None else np.identity(ndim)
+            
+        # assert consistency
+        assert len(spacing) == len(offset)
+        assert direction.ndim == 2
+        assert len(spacing) == direction.shape[0]
+        assert direction.shape[0] == direction.shape[1]
+
+        # set members
+        self.spacing = spacing
+        self.offset = offset
+        self.direction = direction
+        self.sitkimage = sitkimage
+
+    def copy_to(self, sitkimage):
+        """
+        Copy all stored meta information info to an sitk Image.
+
+        Note that only the spacing and the offset/origin information
+        are guaranteed to be preserved, although the method also
+        tries to copy other meta information such as DICOM tags.
+
+        Parameters
+        ----------
+        sitkimage : sitk.Image
+            the sitk Image object to which to copy the information
+
+        Returns
+        -------
+        sitkimage : sitk.Image
+            the passed sitk Image object
+        """
+        if self.sitkimage is not None:
+            for k in self.sitkimage.GetMetaDataKeys():
+                sitkimage.SetMetaData(k, self.sitkimage.GetMetaData(k))
+
+        ndim = len(sitkimage.GetSize())
+        spacing, offset, direction = self.get_info_consistent(ndim)
+            
+        sitkimage.SetSpacing(spacing)
+        sitkimage.SetOrigin(offset)
+        sitkimage.SetDirection(tuple(direction.flatten()))
+        
+        return sitkimage
+        
+    def get_info_consistent(self, ndim):
+        """
+        Returns the main meta-data information adapted to the supplied
+        image dimensionality.
+
+        It will try to resolve inconsistencies and other conflicts,
+        altering the information avilable int he most plausible way.
+
+        Parameters
+        ----------
+        ndim : int
+            image's dimensionality
+        
+        Returns
+        -------
+        spacing : tuple of floats
+        offset : tuple of floats
+        direction : ndarray
+        """
+        if ndim > len(self.spacing):
+            spacing = self.spacing + (1.0, ) * (ndim - len(self.spacing))
         else:
-            logger = Logger.getInstance()
-            logger.warning('No offset defined in DICOM header, assuming none exists.')
-            return tuple([0] * 2)
+            spacing = self.spacing[:ndim]
 
-def __get_offset_itk(hdr):
-    origin = hdr.GetOrigin()
-    return tuple([origin.GetElement(i) for i in range(origin.Size())])
-    
-    
-def __set_offset_nibabel(hdr, offset):
-    """
-    @note Only works for Nifti images, not for Analyze or other formats.
-    """
-    import nibabel
-    if type(hdr) == nibabel.nifti1.Nifti1Image or type(hdr) == nibabel.nifti1.Nifti1Pair: # The nifti image format supports offsets
-        # check if the offset is of the expected length
-        if not len(hdr.shape) == len(offset):
-            raise AttributeError('Vector dimensions of header ({}) and supplied offset sequence ({}) differ.'.format(len(hdr.shape), len(offset)))
-        # check if the offset is too long
-        if not len(offset) <= 4:
-            raise AttributeError('Nifti supports a maximum offset of 4 elements (x, y, z and t), got {}. Note that Nifit naturally does not support images of more than 4 dimensions, although it can handle them.'.format(len(offset)))
-        # set offset in header
-        mapping = ['qoffset_x', 'qoffset_y', 'qoffset_z', 'toffset']
-        hdr_real = hdr.get_header()
-        for i in range(len(offset)):
-            hdr_real[mapping[i]] = offset[i]
-    else:
-        raise Exception() # always caught and dismissed
-    
-def __set_offset_pydicom(hdr, offset):
-    if not len(hdr.pixel_array.shape) == len(offset):
-        raise AttributeError('Vector dimensions of header ({}) and supplied offset sequence ({}) differ.'.format(len(hdr.pixel_array.shape), len(offset)))
-    hdr.ImagePositionPatient = list(map(float, offset))
-    
-def __set_offset_itk(hdr, offset):
-    origin = hdr.GetOrigin()
-    if not origin.Size() == len(offset):
-        raise AttributeError('Vector dimensions of header ({}) and supplied offset sequence ({}) differ.'.format(origin.Size(), len(offset)))
-    for i, o in enumerate(offset):
-        origin.SetElement(i, o)
-    
-def __set_pixel_spacing_itk(hdr, spacing):
-    """
-    Set the spacing value of the ITK header to spacing.
-    
-    @param hdr a valid ITK image
-    @param spacing a sequence of numbers
-    """
-    if not hdr.GetSpacing().GetVectorDimension() == len(spacing):
-        raise AttributeError('Vector dimensions of header ({}) and supplied spacing sequence ({}) differ.'.format(hdr.GetSpacing().GetVectorDimension(), len(spacing)))
-    for i in range(hdr.GetSpacing().GetVectorDimension()):
-        hdr.GetSpacing().SetElement(i, float(spacing[i]))
-                            
-def __set_pixel_spacing_nibabel(hdr, spacing):
-    """
-    Set the spacing value of the Nibabel header to spacing.
-    
-    @param hdr a valid NiBabel image
-    @param spacing a sequence of numbers
-    """
-    if not len(hdr.get_header().get_zooms()) == len(spacing):
-        raise AttributeError('Vector dimensions of header ({}) and supplied spacing sequence ({}) differ.'.format(len(hdr.get_header().get_zooms()), len(spacing)))
-    hdr.get_header().set_zooms([float(x) for x in spacing])
-    
-def __set_pixel_spacing_pydicom(hdr, spacing):
-    """
-    Set the spacing value of the PyDicom header to spacing.
-    
-    @note The SpacingBetweenSlices gives the distance between the slice centers, while
-          SliceThickness gives the actual SliceThickness. This means that
-          SpacingBetweenSlices must contain a value as least as high as SliceThickness if
-          no overlap between the slices exists. We choose to set both to the same value
-          when setting the pixel spacing, assuming neither overlap nor unrecorded image
-          space between the slice, which seems to be the normal behaviour. 
-    
-    @param hdr a valid PyDicom image
-    @param spacing a sequence of numbers
-    """
-    if not len(spacing) <= 3:
-        raise AttributeError('PyDicom supports a maximum dimensionality of 3, the supplied spacing sequence contains {} elements.'.format(len(spacing)))
-    
-    if len(spacing) >= 2:
-        hdr.PixelSpacing = [float(x) for x in spacing[0:2]]
-    if len(spacing) >= 3:
-        hdr.SliceThickness = float(spacing[2])
-        hdr.SpacingBetweenSlices = float(spacing[2])
-    
-def __update_header_from_array_nibabel(hdr, arr):
-    """
-    Update an original nibabel header with the data extracted from a scipy.ndarray.
-    """
-    hdr.get_header().set_data_shape(arr.shape)
-    hdr.get_header().set_data_dtype(arr.dtype)
+        if ndim > len(self.offset):
+            offset = self.offset + (0.0, ) * (ndim - len(self.offset))
+        else:
+            offset = self.offset[:ndim]
 
-def __is_header_pydicom(hdr):
-    """
-    Returns true is the supplied object is a valid pydicom image, otherwise False.
-    """
-    import pydicom
-    return (type(hdr) == dicom.dataset.FileDataset)
+        if ndim > self.direction.shape[0]:
+            direction = np.identity(ndim)
+            direction[:self.direction.shape[0], :self.direction.shape[0]] = self.direction
+        else:
+            direction = self.direction[:ndim, :ndim]
+        
+        return spacing, offset, direction
 
-def __is_header_nibabel(hdr):
-    """
-    Returns true is the supplied object is a valid nibabel image holding a header attribute, otherwise False.
-    """
-    try:
-        hdr.get_header()
-        return True
-    except Exception:
-        return False
+    def set_voxel_spacing(self, spacing):
+        """
+        Parameters
+        ----------
+        spacing : tuple of floats
+            the new image voxel spacing
+            take care that image and spacing dimensionalities match
+        """        
+        self.spacing = tuple(spacing)
+    
+    def set_offset(self, offset):
+        """
+        Parameters
+        ----------
+        offset : tuple of floats
+            the new image offset / origin
+            take care that image and offset dimensionalities match
+        """
+        self.offset = tuple(offset)
 
-def __is_header_itk(hdr):
-    """
-    Returns true is the supplied object is a valid itk image, otherwise False.
-    """
-    import itk
-    # try to convert pointer from smart pointer to normal pointer
-    try:
-        hdr = hdr.GetPointer()
-    except Exception:
-        pass
-    # see if itk header type (ITK v3.X)
-    for cl in list(itk.Image.__template__.values()):
-        if cl in type(hdr).__bases__: return True
-    # see if itk header type (ITK v4.X)
-    for cl in list(itk.Image.__template__.values()):
-        if cl == type(hdr): return True
-    return False
+    def set_direction(self, direction):
+        """
+        Returns
+        -------
+        direction : tuple of floats
+            the image's direction / affine transformation matrix
+            must be of square shape
+            default to the identity matrix
+        """
+        self.direction = np.asarray(direction)
+    
+    def get_voxel_spacing(self):
+        """
+        Returns
+        -------
+        tuple
+            the image's spacing
+        """
+        return self.spacing
+    
+    def get_offset(self):
+        """
+        Returns
+        -------
+        tuple
+            the image's offset / origin
+        """
+        return self.offset
+
+    def get_direction(self):
+        """
+        Returns
+        -------
+        ndarray
+            the image's direction / affine transformation matrix
+            of square shape
+        """
+        return self.direction    
+
+    def get_sitkimage(self):
+        """
+        Returns
+        -------
+        sitk.Image or None
+            the underlying sitk image object if set
+        """
+        return self.sitkimage

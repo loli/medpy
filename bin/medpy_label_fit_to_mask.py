@@ -68,7 +68,7 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # load input image using nibabel
+    # load input image
     logger.info('Loading image {}...'.format(args.input))
     image_labels_data, _ = load(args.image)    
     

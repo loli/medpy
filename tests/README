@@ -8,14 +8,17 @@ for instructions.
 
 Run for sub-module
 ------------------
-python -m "nose" <submodule>_/
+python3 -m "nose" <submodule>_/
 
 Note: metric_/ sub-module requires hypothesis package
 Note: You can also use the nosetests binary call, but this might faild due to python version conflicts in virtual environements.
 
 Check support for image formats
 -------------------------------
-python support.py
+python3 tests/support.py > myformats.log
+more myformats.log
+
+Note that this will take some time and producte a number of warnings that can be savely ignored.
 
 WARNING
 -------

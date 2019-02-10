@@ -23,24 +23,23 @@ import argparse
 import logging
 
 # third-party modules
-from pydicom.contrib import pydicom_series
 
 # path changes
 
 # own modules
 from medpy.core import Logger
-from medpy.io import save
+from medpy.io import load, save
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.1, 2012-06-13"
+__version__ = "r0.2.1, 2012-06-13"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
                   Converts a collection of DICOM slices (a DICOM series) into a proper
-                  image volume. Note that this operation does not preserve the voxel
-                  spacing (or any other header information, come to that).
+                  image volume. Note that this operation does not preserve header
+                  information.
                   
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
@@ -57,18 +56,16 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # load input slices
-    [series] = pydicom_series.read_files(args.input, False, True) # second to not show progress bar, third to retrieve data
-    data_input = series.get_pixel_array()
+    img, hdr = load(args.input)
     
     if args.spacing:
-        print('{} {}'.format(*series.info.PixelSpacing))
+        print('{}'.format(hdr.get_voxel_spacing()))
         return 0
     
-    logger.debug('Resulting shape is {}.'.format(data_input.shape))
+    logger.debug('Resulting shape is {}.'.format(img.shape))
 
     # save resulting volume
-    save(data_input, args.output, False, args.force)
+    save(img, args.output, hdr, args.force)
     
     logger.info("Successfully terminated.")    
     

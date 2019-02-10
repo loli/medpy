@@ -17,7 +17,7 @@ from medpy.core.logger import Logger
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.2, 2012-05-25"
+__version__ = "r0.2.2, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = "Input/output facilities unittest."
@@ -31,15 +31,6 @@ class TestIOFacilities(unittest.TestCase):
     # The most important image formats for medical image processing
     __important = ['.nii', '.nii.gz', '.hdr', '.img', '.img.gz', '.dcm', '.dicom', '.mhd', '.nrrd', '.mha']
     
-    # some image format potentially manageable by pydicom
-    __pydicom = ['.dcm', '.dicom']
-    
-    # some image format potentially manageable by nibabel
-    __nifti = ['.nii', '.nii.gz', '.hdr', '.img', '.img.gz']
-    
-    # some more image format potentially manageable by itk
-    __itk_more = ['.vtk', '.lsm', '.pic']
-    
     # list of image formats ITK is theoretically able to load
     __itk = ['.analyze', # failed saving
              '.hdr',
@@ -51,14 +42,21 @@ class TestIOFacilities(unittest.TestCase):
              '.4x', # failed saving
              '.5x', # failed saving
              '.ge', # failed saving
+             '.ge4', # failed saving
              '.ge4x', # failed saving
+             '.ge5', # failed saving
              '.ge5x', # failed saving
              '.gipl',
+             '.h5',
+             '.hdf5',
+             '.he5',
              '.ipl', # failed saving
              '.jpg',
              '.jpeg',
+             '.lsm',
              '.mha',
              '.mhd',
+             '.pic',
              '.png',
              '.raw', # failed saving
              '.vision', # failed saving
@@ -68,6 +66,7 @@ class TestIOFacilities(unittest.TestCase):
              '.stimulate', # failed saving
              '.tif',
              '.tiff',
+             '.vtk',
              '.bio', # failed saving
              '.biorad', # failed saving
              '.brains', # failed saving
@@ -96,7 +95,7 @@ class TestIOFacilities(unittest.TestCase):
     ##########
     # Combinations to avoid due to technical problems, dim->file ending pairs
     #########
-    __avoid = {4: ('.dcm', '.dicom')} # at least in version 3.16, trying to save a more than 3D dicom results in a memory corruption instead of an error
+    __avoid = {} # e.g. {4: ('.dcm', '.dicom')} 
     
     def test_SaveLoad(self):
         """
@@ -125,7 +124,7 @@ class TestIOFacilities(unittest.TestCase):
         # Print a list of image type, dimensions and pixel data types configurations,
         # that seem to work but failed the consistency tests. These should be handled
         # with special care, as they might be the source of errors.
-        inconsistent = True
+        inconsistent = False
         
         ####
         # OTHER SETTINGS
@@ -136,7 +135,7 @@ class TestIOFacilities(unittest.TestCase):
         
         # run test either for most important formats or for all
         #__suffixes = self.__important # (choice 1)
-        __suffixes = self.__pydicom + self.__nifti + self.__itk + self.__itk_more # (choice 2)
+        __suffixes = self.__important + self.__itk # (choice 2)
         
         
         # dimensions and dtypes to check
@@ -204,7 +203,10 @@ class TestIOFacilities(unittest.TestCase):
                             # remove image
                             if os.path.exists(image): os.remove(image)
                         except Exception as e: # clean up
-                            unsupported_type[suffix][ndim][dtype] = e.message
+                            try:
+                                unsupported_type[suffix][ndim][dtype] = str(e.args)
+                            except Exception as _:
+                                unsupported_type[suffix][ndim][dtype] = e.message
                             if os.path.exists(image): os.remove(image)
         except Exception:
             if not os.listdir(path): os.rmdir(path)

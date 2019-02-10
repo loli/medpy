@@ -73,7 +73,7 @@ def main():
     if args.dimension >= result_data.ndim:
         raise argparse.ArgumentError('The supplied stack-dimension {} exceeds the image dimensionality of 0 to {}.'.format(args.dimension, result_data.ndim - 1))
     
-    # reduce the image dimensions (nibabel Analyze always assumes 4)
+    # reduce the image dimensions
     if args.zero and result_data.all():
         result_data = numpy.zeros(result_data.shape, result_data.dtype)
     

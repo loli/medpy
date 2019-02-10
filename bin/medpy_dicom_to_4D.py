@@ -29,14 +29,13 @@ import scipy
 
 # own modules
 from medpy.core import Logger
-from medpy.io import save
+from medpy.io import load, save
 from medpy.core.exceptions import ArgumentError
-from pydicom.contrib import pydicom_series
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "d0.1.0, 2012-05-25"
+__version__ = "d0.2.0, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Development"
 __description__ = """
@@ -75,10 +74,7 @@ def main():
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
     
-    # load dicom slices
-    [series] = pydicom_series.read_files(args.input, False, True) # second to not show progress bar, third to retrieve data
-    #print series.sampling # Note: The first value is the mean of all differences between ImagePositionPatient-values of the DICOM slices - of course total bullshit
-    data_3d = series.get_pixel_array()
+    data_3d, hdr = load(args.input)
     
     # check parameters
     if args.dimension >= data_3d.ndim or args.dimension < 0:

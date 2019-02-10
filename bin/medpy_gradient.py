@@ -45,10 +45,6 @@ __description__ = """
                   filter.
                   The pixel type of the resulting image will be float.
                   
-                  Note that this script produces similar results as
-                  @see itkvtk.application.gradient, but is implemented in pure
-                  Python, instead of using ITKs GradientMagnitudeImageFilter. 
-                  
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see

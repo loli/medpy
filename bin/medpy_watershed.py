@@ -47,8 +47,6 @@ __description__ = """
                   Applies the watershed segmentation an image using the supplied
                   parameters.
                   Note that this version does not take the voxel-spacing into account.
-                  If you require this function, please take a look at the
-                  medpy_itk_watershed.py script.
                                   
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,

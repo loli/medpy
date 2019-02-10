@@ -33,13 +33,11 @@ import scipy
 from medpy.io import load, save, header
 from medpy.core import Logger
 from medpy.core.exceptions import ArgumentError
-from medpy.io.header import __update_header_from_array_nibabel,\
-    __is_header_nibabel
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.2, 2012-05-25"
+__version__ = "r0.1.3, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -48,11 +46,6 @@ __description__ = """
                   One common use is when a number of 3D volumes, each representing a
                   moment in time, are availabel. With this script they can be joined
                   into a proper 4D volume.
-                  
-                  WARNING: Setting the spacing of the new dimension to any other value
-                  than 1 only works when the first input image is of type NIfTI. In case
-                  of images loaded by the ITK wrapper (e.g. *.mha), this even leads to a
-                  segmentation fault!  
                   
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
@@ -102,13 +95,7 @@ def main():
     # set pixel spacing
     spacing = list(header.get_pixel_spacing(example_header))
     spacing = tuple(spacing[:args.position] + [args.spacing] + spacing[args.position:])
-    
-    # !TODO: Find a way to enable this also for PyDicom and ITK images
-    if __is_header_nibabel(example_header):
-        __update_header_from_array_nibabel(example_header, output_data)
-        header.set_pixel_spacing(example_header, spacing)
-    else:
-        raise ArgumentError("Sorry. Setting the voxel spacing of the new dimension only works with NIfTI images. See the description of this program for more details.")
+    example_header.set_voxel_spacing(spacing)
     
     # save created volume
     save(output_data, args.output, example_header, args.force)

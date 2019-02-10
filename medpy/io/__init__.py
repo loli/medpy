@@ -32,11 +32,7 @@ Reading / writing metadata (:mod:`medpy.io.header`)
 .. autosummary::
     :toctree: generated/
     
-    get_pixel_spacing
-    set_pixel_spacing
-    get_offset
-    set_offset
-    copy_meta_data
+    Header
 
 """
 
@@ -58,7 +54,11 @@ Reading / writing metadata (:mod:`medpy.io.header`)
 # import all functions/methods/classes into the module
 from .load import load
 from .save import save
-from .header import get_pixel_spacing, get_offset, set_pixel_spacing, set_offset, copy_meta_data
+from .header import \
+    Header, \
+    get_voxel_spacing, get_pixel_spacing, get_offset, \
+    set_voxel_spacing, set_pixel_spacing, set_offset, \
+    copy_meta_data
 
 # import all sub-modules in the __all__ variable
 __all__ = [s for s in dir() if not s.startswith('_')]

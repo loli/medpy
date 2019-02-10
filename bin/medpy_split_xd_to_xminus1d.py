@@ -32,12 +32,11 @@ import scipy
 from medpy.io import load, save, header
 from medpy.core import Logger
 from medpy.core.exceptions import ArgumentError
-from medpy.io.header import __update_header_from_array_nibabel
 
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.1, 2012-05-25"
+__version__ = "r0.1.2, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -87,8 +86,7 @@ def main():
         slices[args.dimension] = slice(idx, idx + 1)
         data_output = scipy.squeeze(data_input[slices])
         # update the header and set the voxel spacing
-        __update_header_from_array_nibabel(header_input, data_output)
-        header.set_pixel_spacing(header_input, spacing)
+        header_input.set_voxel_spacing(spacing)
         # save current slice
         save(data_output, name_output.format(idx), header_input, args.force)
         

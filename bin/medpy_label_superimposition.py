@@ -33,11 +33,10 @@ import scipy
 # own modules
 from medpy.io import load, save
 from medpy.core import Logger
-from medpy.utilities.nibabelu import image_like
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.0, 2011-01-04"
+__version__ = "r0.2.1, 2011-01-04"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -75,11 +74,11 @@ def main():
         if os.path.exists(image_superimposition_name):
             raise ArgumentError('The output image {} already exists. Please provide the -f/force flag, if you wish to override it.'.format(image_superimposition_name))
     
-    # load image1 using nibabel
+    # load image1 using
     logger.info('Loading image {}...'.format(args.image1))
     image1_data, image1_header = load(args.image1)
     
-    # load image2 using nibabel
+    # load image2 using
     logger.info('Loading image {}...'.format(args.image2))
     image2_data, _ = load(args.image2)
         

@@ -60,14 +60,13 @@ image_data.dtype
 And the header gives us
 
 ```python
-from medpy.io import header
-header.get_pixel_spacing(image_header)
+image_header.get_voxel_spacing()
 ```
 
 `(0.5, 0.5, 0.5)`
 
 ```python
-header.get_offset(image_header)
+image_header.get_offset()
 ```
 
 `(0.0, 0.0, 0.0)`
@@ -112,38 +111,41 @@ medpy_anisotropic_diffusion.py /path/to/image.xxx /path/to/output.xxx
 
 lets you apply an edge preserving anisotropic diffusion filter. For a list of all scripts, see the [documentation](http://loli.github.io/medpy/).
 
-
 ## Read/write support for medical image formats
 
-MedPy builds on 3rd party modules to load and save images. Currently
-implemented are the usages of
+MedPy relies on SimpleITK, which enables the power of ITK for image loading and saving.
+The supported image file formats should include at least the following. Note that not all might be supported by your machine.
 
-* NiBabel
-* PyDicom
-* ITK
+**Medical formats:**
 
-, each of which supports the following formats.
-
-**NiBabel** enables support for:
-
-* NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
+* ITK MetaImage (.mha/.raw, .mhd)
+* Neuroimaging Informatics Technology Initiative (NIfTI) (.nia, .nii, .nii.gz, .hdr, .img, .img.gz)
 * Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
-* and some others more (http://nipy.org/nibabel/)
+* Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)
+* Digital Imaging and Communications in Medicine (DICOM) series (<directory>/)
+* Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr) 
+* Medical Imaging NetCDF (MINC) (.mnc, .MNC)
+* Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)
 
-**PyDicom** enables support for:
+**Microscopy formats:**
 
-* Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
+* Medical Research Council (MRC) (.mrc, .rec)
+* Bio-Rad (.pic, .PIC)
+* LSM (Zeiss) microscopy images (.tif, .TIF, .tiff, .TIFF, .lsm, .LSM)
+* Stimulate / Signal Data (SDT) (.sdt)
 
-**ITK** enables support for:
+**Visualization formats:**
 
-* NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)
-* Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
-* Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)
-* Itk/Vtk MetaImage (.mhd, .mha/.raw)
-* Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)
-* and many others more (http://www.cmake.org/Wiki/ITK/File_Formats)
+* VTK images (.vtk)
 
-For some functionalities, which are collected in the *medpy.itkvtk* package **ITK** is also required.
+**Other formats:**
+
+* Portable Network Graphics (PNG) (.png, .PNG)
+* Joint Photographic Experts Group (JPEG) (.jpg, .JPG, .jpeg, .JPEG)
+* Tagged Image File Format (TIFF) (.tif, .TIF, .tiff, .TIFF)
+* Windows bitmap (.bmp, .BMP)
+* Hierarchical Data Format (HDF5) (.h5 , .hdf5 , .he5)
+* MSX-DOS Screen-x (.ge4, .ge5)
 
 ## Requirements
 
@@ -153,13 +155,11 @@ MedPy comes with a number of dependencies and optional functionality that can re
 
 * [scipy](http://www.scipy.org)
 * [numpy](http://www.numpy.org)
-* [nibabel](http://nipy.org/nibabel/) (enables support for NIfTI and Analyze image formats)
-* [pydicom](https://pydicom.github.io/) (enables support for DICOM image format)
+* [SimpleITK](https://simpleitk.readthedocs.io)
 
 ### Optional functionalities
 
 * compilation with `max-flow/min-cut` (enables the GraphCut functionalities)
-* [itk](http://www.itk.org)_ >= 3.16.0 with Python bindings (enables support for a large number of image formats)
 
 ## License
 

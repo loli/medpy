@@ -31,15 +31,6 @@ class TestMetadataConsistency(unittest.TestCase):
     # The most important image formats for medical image processing
     __important = ['.nii', '.nii.gz', '.hdr', '.img', '.img.gz', '.dcm', '.dicom', '.mhd', '.nrrd', '.mha']
     
-    # some image format potentially manageable by pydicom
-    __pydicom = ['.dcm', '.dicom']
-    
-    # some image format potentially manageable by nibabel
-    __nifti = ['.nii', '.nii.gz', '.hdr', '.img', '.img.gz']
-    
-    # some more image format potentially manageable by itk
-    __itk_more = ['.vtk', '.lsm', '.pic']
-    
     # list of image formats ITK is theoretically able to load
     __itk = ['.analyze', # failed saving
              '.hdr',
@@ -51,14 +42,21 @@ class TestMetadataConsistency(unittest.TestCase):
              '.4x', # failed saving
              '.5x', # failed saving
              '.ge', # failed saving
+             '.ge4', # failed saving
              '.ge4x', # failed saving
+             '.ge5', # failed saving
              '.ge5x', # failed saving
              '.gipl',
+             '.h5',
+             '.hdf5',
+             '.he5',
              '.ipl', # failed saving
              '.jpg',
              '.jpeg',
+             '.lsm',
              '.mha',
              '.mhd',
+             '.pic',
              '.png',
              '.raw', # failed saving
              '.vision', # failed saving
@@ -68,6 +66,7 @@ class TestMetadataConsistency(unittest.TestCase):
              '.stimulate', # failed saving
              '.tif',
              '.tiff',
+             '.vtk',
              '.bio', # failed saving
              '.biorad', # failed saving
              '.brains', # failed saving
@@ -96,7 +95,7 @@ class TestMetadataConsistency(unittest.TestCase):
     ##########
     # Combinations to avoid due to technical problems, dim->file ending pairs
     ##########
-    __avoid = {4: ('.dcm', '.dicom')} # at least in version 3.16, trying to save a more than 3D dicom results in a memory corruption instead of an error
+    __avoid = {} # {4: ('.dcm', '.dicom')}
     
     ##########
     # Error delta: the maximum difference between to meta-data entries that is still considered consistent (required, as there may be rounding errors)
@@ -133,7 +132,7 @@ class TestMetadataConsistency(unittest.TestCase):
         # Print a list of format to format conversion which preserve meta-data
         consistent = True
         # Print a list of format to format conversion which do not preserve meta-data
-        inconsistent = True
+        inconsistent = False
         # Print a list of formats that failed conversion in general
         unsupported = False
         
@@ -146,7 +145,7 @@ class TestMetadataConsistency(unittest.TestCase):
         
         # run test either for most important formats or for all (see loadsave.TestIOFacilities)
         #__suffixes = self.__important # (choice 1)
-        __suffixes = self.__pydicom + self.__nifti + self.__itk + self.__itk_more # (choice 2)
+        __suffixes = self.__important + self.__itk # (choice 2)
         
         # dimensions and dtypes to check
         __suffixes = list(set(__suffixes))
@@ -205,14 +204,15 @@ class TestMetadataConsistency(unittest.TestCase):
                             if not os.path.exists(image_from):
                                 raise Exception('Image of type {} with shape={}/dtype={} has been saved without exception, but the file does not exist.'.format(suffix_from, arr_save.shape, dtype))
                         except Exception as e:
-                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = e.message
+                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = e.message if hasattr(e, 'message') else str(e.args)
                             continue
                         
                         try:
                             img_from, hdr_from = load(image_from)
                             img_from = img_from.astype(dtype) # change dtype of loaded image again, as sometimes the type is higher (e.g. int64 instead of int32) after loading!
                         except Exception as e:
-                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = 'Saved reference image of type {} with shape={}/dtype={} could not be loaded. Reason: {}'.format(suffix_from, arr_save.shape, dtype, e.message)
+                            _message = e.message if hasattr(e, 'message') else str(e.args)
+                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = 'Saved reference image of type {} with shape={}/dtype={} could not be loaded. Reason: {}'.format(suffix_from, arr_save.shape, dtype, _message)
                             continue
 
                         header.set_pixel_spacing(hdr_from, [scipy.random.rand() * scipy.random.randint(1, 10) for _ in range(img_from.ndim)])
@@ -221,7 +221,7 @@ class TestMetadataConsistency(unittest.TestCase):
                             header.set_offset(hdr_from, [scipy.random.rand() * scipy.random.randint(1, 10) for _ in range(img_from.ndim)])
                         except Exception as e:
                             logger.error('Could not set the header meta-data for image of type {} with shape={}/dtype={}. This should not happen and hints to a bug in the code. Signaled reason is: {}'.format(suffix_from, arr_save.shape, dtype, e))
-                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = e.message             
+                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = e.message if hasattr(e, 'message') else str(e.args)           
                             continue
 
                         for suffix_to in __suffixes:
@@ -237,13 +237,14 @@ class TestMetadataConsistency(unittest.TestCase):
                                 if not os.path.exists(image_to):
                                     raise Exception('Image of type {} with shape={}/dtype={} has been saved without exception, but the file does not exist.'.format(suffix_to, arr_save.shape, dtype))
                             except Exception as e:
-                                unsupported_types[suffix_from][suffix_from][ndim][dtype] = e.message
+                                unsupported_types[suffix_from][suffix_from][ndim][dtype] = e.message if hasattr(e, 'message') else str(e.args)
                                 continue
                             
                             try:
                                 _, hdr_to = load(image_to)
                             except Exception as e:
-                                unsupported_types[suffix_from][suffix_to][ndim][dtype] = 'Saved testing image of type {} with shape={}/dtype={} could not be loaded. Reason: {}'.format(suffix_to, arr_save.shape, dtype, e.message)
+                                _message = e.message if hasattr(e, 'message') else str(e.args)
+                                unsupported_types[suffix_from][suffix_to][ndim][dtype] = 'Saved testing image of type {} with shape={}/dtype={} could not be loaded. Reason: {}'.format(suffix_to, arr_save.shape, dtype, _message)
                                 continue
                             
                             msg = self.__diff(hdr_from, hdr_to)

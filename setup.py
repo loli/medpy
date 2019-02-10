@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# version: 0.2.7
+# version: 0.2.8
 # Many thanks to simplejson for the idea on how to install c++-extention module optionally!
 # https://pypi.python.org/pypi/simplejson/
 
@@ -20,9 +20,6 @@ PACKAGES= [
     'medpy.filter',
     'medpy.graphcut',
     'medpy.io',
-    'medpy.itkvtk',
-    'medpy.itkvtk.filter',
-    'medpy.itkvtk.utilities',
     'medpy.metric',
     'medpy.utilities'
 ]
@@ -135,14 +132,9 @@ def run_setup(with_compilation):
 
           install_requires=[
             "scipy >= 1.1.0",
-            "numpy >= 1.6.1",
-            "nibabel >= 1.3.0",
-            "pydicom >= 1.1.0"
+            "numpy >= 1.11.0",
+            "SimpleITK >= 1.1.0"
           ],
-
-          extras_require = {
-            'extra_formats' : ["itk >= 3.16.0"]
-          },
 
           packages = PACKAGES + ap,
 
@@ -171,9 +163,6 @@ def run_setup(with_compilation):
             'bin/medpy_info.py',
             'bin/medpy_intensity_range_standardization.py',
             'bin/medpy_intersection.py',
-            'bin/medpy_itk_gradient.py',
-            'bin/medpy_itk_smoothing.py',
-            'bin/medpy_itk_watershed.py',
             'bin/medpy_join_masks.py',
             'bin/medpy_join_xd_to_xplus1d.py',
             'bin/medpy_label_count.py',
