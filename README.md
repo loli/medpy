@@ -1,11 +1,11 @@
-[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![PyPI version fury.io](https://badge.fury.io/py/MedPy.svg)](https://pypi.python.org/pypi/MedPy/)
+[![PyPI license](https://img.shields.io/pypi/l/MedPy.svg)](https://pypi.python.org/pypi/MedPy/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/MedPy.svg)](https://pypi.python.org/pypi/MedPy/)
 
 ![travis auto-build](https://travis-ci.org/loli/medpy.svg?branch=master)
 [![DOI](https://zenodo.org/badge/4295983.svg)](https://zenodo.org/badge/latestdoi/4295983)
 [![Downloads](https://pepy.tech/badge/medpy/month)](https://pepy.tech/project/medpy)
-[![PyPI download month](https://img.shields.io/pypi/dm/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![PyPI download month](https://img.shields.io/pypi/dm/MedPy.svg)](https://pypi.python.org/pypi/MedPy/)
 
 [GitHub](https://github.com/loli/medpy/) | [Documentation](http://loli.github.io/medpy/) | [Tutorials](http://loli.github.io/medpy/) | [Issue tracker](https://github.com/loli/medpy/issues) | [Contact](oskar.maier@gmail.com)
 
