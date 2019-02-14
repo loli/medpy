@@ -86,9 +86,7 @@
   <ul>
 <li><a class="reference internal" href="#">Installing MedPy as user</a><ul>
 <li><a class="reference internal" href="#installing-using-pip">Installing using PIP</a></li>
-<li><a class="reference internal" href="#installing-using-easy-install">Installing using easy_install</a></li>
 <li><a class="reference internal" href="#installing-from-source">Installing from source</a></li>
-<li><a class="reference internal" href="#how-do-i-enable-the-graph-cut-packages">How do I enable the graph-cut packages</a></li>
 </ul>
 </li>
 </ul>
@@ -125,7 +123,8 @@
 <h1>Installing MedPy as user<a class="headerlink" href="#installing-medpy-as-user" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">All installation instructions are for Ubuntu, but they will work similar for other distributions.</p>
+<p class="last">All installation instructions are for Debian derivates,
+such as Ubuntu, but they should be simmilar for other distributions.</p>
 </div>
 <p>The local install will place <strong>MedPy</strong> in your user site-packages directory and does not require root privileges. You can find our the location of your personal site-packages directory by calling:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import site;print site.USER_SITE&#39;</span>
@@ -145,44 +144,20 @@ e.g. <em class="xref py py-obj">/home/&lt;user&gt;/.local/lib/python2.7/site-pac
 <div class="section" id="installing-using-pip">
 <h2>Installing using <a class="reference external" href="https://pypi.python.org/pypi/pip">PIP</a><a class="headerlink" href="#installing-using-pip" title="Permalink to this headline">¶</a></h2>
 <p>Requires <a class="reference external" href="https://pypi.python.org/pypi/pip">PIP</a> to be installed on your machine.</p>
-<p>First install the Python requirements locally</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install --user numpy scipy nibabel pydicom
+<p>To enable the graph-cut package, we also need the following, which required administrator rights.
+If you do not plan on using the graph-cut functionality of <strong>MedPy</strong>, you can skip this step.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install libboost-python-dev build-essential
 </pre></div>
 </div>
-<p>and then <strong>MedPy</strong></p>
+<p>To install <strong>MedPy</strong> itself, simply call</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>pip install --user medpy
-</pre></div>
-</div>
-</div>
-<div class="section" id="installing-using-easy-install">
-<h2>Installing using <a class="reference external" href="https://pypi.python.org/pypi/setuptools">easy_install</a><a class="headerlink" href="#installing-using-easy-install" title="Permalink to this headline">¶</a></h2>
-<p>Requires <a class="reference external" href="https://pypi.python.org/pypi/setuptools">easy_install</a> to be installed on your machine.</p>
-<p>First install the Python requirements locally</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>easy_install --user numpy scipy nibabel pydicom
-</pre></div>
-</div>
-<p>and then <strong>MedPy</strong></p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>easy_install --user medpy
 </pre></div>
 </div>
 </div>
 <div class="section" id="installing-from-source">
 <h2>Installing from source<a class="headerlink" href="#installing-from-source" title="Permalink to this headline">¶</a></h2>
-<p>No PIP, easy_install or a friendly administrator? There is one last option.
-First, install <a class="reference external" href="http://www.numpy.org/">numpy</a>, <a class="reference external" href="http://www.scipy.org/">scipy</a>,
-<a class="reference external" href="http://nipy.org/nibabel/">nibabel</a> and <a class="reference external" href="https://code.google.com/p/pydicom/">pydicom</a>
-from source (see there respective webpages for details) as user.</p>
-<p>The download the sources from <a class="reference external" href="https://pypi.python.org/pypi/MedPy/">https://pypi.python.org/pypi/MedPy/</a>, unpack them, enter the directory and run</p>
+<p>No PIP? Download the sources from <a class="reference external" href="https://pypi.python.org/pypi/MedPy/">https://pypi.python.org/pypi/MedPy/</a>, unpack them, enter the directory and run</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python setup.py install --user
-</pre></div>
-</div>
-</div>
-<div class="section" id="how-do-i-enable-the-graph-cut-packages">
-<h2>How do I enable the graph-cut packages<a class="headerlink" href="#how-do-i-enable-the-graph-cut-packages" title="Permalink to this headline">¶</a></h2>
-<p>The graph-cut package shipped with <strong>MedPy</strong> requires Boost.Python and some standard C++ building tools.
-If these are not available during the installation, the package will not be compiled.
-You will have to ask your administrator to install the requirements for you (before installing <strong>MedPy</strong>):</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install libboost-python-dev build-essential
 </pre></div>
 </div>
 </div>
@@ -206,10 +181,10 @@ You will have to ask your administrator to install the requirements for you (bef
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

@@ -28,7 +28,7 @@
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
-    <link rel="next" title="Installing MedPy as root" href="asroot.html" >
+    <link rel="next" title="Installing MedPy in a virtual environement" href="venv.html" >
     <link rel="prev" title="MedPy" href="../index.html" > 
   </head>
   <body>
@@ -65,7 +65,7 @@
            >modules</a>
       </li>
       <li class="active">
-        <a href="asroot.html" title="Installing MedPy as root"
+        <a href="venv.html" title="Installing MedPy in a virtual environement"
            accesskey="N">next</a>
       </li>
       <li class="active">
@@ -86,8 +86,8 @@
   <p class="topless"><a href="../index.html"
                         title="previous chapter">MedPy</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="asroot.html"
-                        title="next chapter">Installing MedPy as root</a></p>
+  <p class="topless"><a href="venv.html"
+                        title="next chapter">Installing MedPy in a virtual environement</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/installation/fastpath.rst.txt"
@@ -114,17 +114,13 @@
 <h1>Installing MedPy the fast way<a class="headerlink" href="#installing-medpy-the-fast-way" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">All installation instructions are for Ubuntu, but they should be simmilar for other distributions.</p>
+<p class="last">All installation instructions are for Debian derivates,
+such as Ubuntu, but they should be simmilar for other distributions.</p>
 </div>
-<p>First</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install python-pip python-numpy python-scipy libboost-python-dev build-essential
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install libboost-python-dev build-essential
+sudo pip install medpy
 </pre></div>
 </div>
-<p>Then</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo pip install nibabel pydicom medpy
-</pre></div>
-</div>
-<p>Done.</p>
 </div>
 
 
@@ -145,10 +141,10 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

@@ -114,36 +114,44 @@
 <h1>Supported medical image formats<a class="headerlink" href="#supported-medical-image-formats" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">You can check you currently supported image formats by grabbing the source code from <a class="reference external" href="https://github.com/loli/medpy/">Github</a> and running <em>tests/support.py</em>,</p>
+<p class="last">You can check your currently supported image formats by grabbing the source code from <a class="reference external" href="https://github.com/loli/medpy/">Github</a> and running <em>python3 tests/support.py</em>.</p>
 </div>
-<p>MedPy builds on 3rd party modules to load and save images. Currently
-implemented are the usages of</p>
+<p><strong>MedPy</strong> relies on <em>SimpleITK</em>, which enables the power of ITK for image loading and saving.
+The supported image file formats should include at least the following.</p>
+<p>Medical formats:</p>
 <ul class="simple">
-<li>NiBabel</li>
-<li>PyDicom</li>
-<li>ITK</li>
-</ul>
-<p>, each of which supports the following formats.</p>
-<p><strong>NiBabel</strong> enables support for:</p>
-<ul class="simple">
-<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+<li>ITK MetaImage (.mha/.raw, .mhd)</li>
+<li>Neuroimaging Informatics Technology Initiative (NIfTI) (.nia, .nii, .nii.gz, .hdr, .img, .img.gz)</li>
 <li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
-<li>and some others more (<a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a>)</li>
+<li>Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)</li>
+<li>Digital Imaging and Communications in Medicine (DICOM) series (&lt;directory&gt;/)</li>
+<li>Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr)</li>
+<li>Medical Imaging NetCDF (MINC) (.mnc, .MNC)</li>
+<li>Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)</li>
 </ul>
-<p><strong>PyDicom</strong> enables support for:</p>
+<p>Microscopy formats:</p>
 <ul class="simple">
-<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
+<li>Medical Research Council (MRC) (.mrc, .rec)</li>
+<li>Bio-Rad (.pic, .PIC)</li>
+<li>LSM (Zeiss) microscopy images (.tif, .TIF, .tiff, .TIFF, .lsm, .LSM)</li>
+<li>Stimulate / Signal Data (SDT) (.sdt)</li>
 </ul>
-<p><strong>ITK</strong> enables support for:</p>
+<p>Visualization formats:</p>
 <ul class="simple">
-<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
-<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
-<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
-<li>Itk/Vtk MetaImage (.mhd, .mha/.raw)</li>
-<li>Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</li>
-<li>and many others more (<a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a>)</li>
+<li>VTK images (.vtk)</li>
 </ul>
-<p>For some functionalities, which are collected in the <em>medpy.itkvtk</em> package <strong>ITK</strong> is also required.</p>
+<p>Other formats:</p>
+<ul class="simple">
+<li>Portable Network Graphics (PNG) (.png, .PNG)</li>
+<li>Joint Photographic Experts Group (JPEG) (.jpg, .JPG, .jpeg, .JPEG)</li>
+<li>Tagged Image File Format (TIFF) (.tif, .TIF, .tiff, .TIFF)</li>
+<li>Windows bitmap (.bmp, .BMP)</li>
+<li>Hierarchical Data Format (HDF5) (.h5 , .hdf5 , .he5)</li>
+<li>MSX-DOS Screen-x (.ge4, .ge5)</li>
+</ul>
+<p>For informations about which image formats, dimensionalities and pixel data types
+your current configuration supports, run <em class="xref py py-obj">python3 tests/support.py &gt; myformats.log</em>.</p>
+<p>Further information see <a class="reference external" href="https://simpleitk.readthedocs.io">https://simpleitk.readthedocs.io</a> .</p>
 </div>
 
 
@@ -164,10 +172,10 @@ implemented are the usages of</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

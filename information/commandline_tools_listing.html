@@ -29,7 +29,7 @@
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="Supported medical image formats" href="imageformats.html" >
-    <link rel="prev" title="MedPy docker containers" href="../docker/dockercontainers.html" > 
+    <link rel="prev" title="Uninstall MedPy" href="../installation/uninstall.html" > 
   </head>
   <body>
 
@@ -69,7 +69,7 @@
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="../docker/dockercontainers.html" title="MedPy docker containers"
+        <a href="../installation/uninstall.html" title="Uninstall MedPy"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -92,7 +92,6 @@
 <li><a class="reference internal" href="#image-filters">Image filters</a></li>
 <li><a class="reference internal" href="#magnetic-resonance-mr-related">Magnetic resonance (MR) related</a></li>
 <li><a class="reference internal" href="#graph-cut">Graph-cut</a></li>
-<li><a class="reference internal" href="#scripts-requiring-itk">Scripts requiring ITK</a></li>
 <li><a class="reference internal" href="#others">Others</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
@@ -100,8 +99,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../docker/dockercontainers.html"
-                        title="previous chapter">MedPy docker containers</a></p>
+  <p class="topless"><a href="../installation/uninstall.html"
+                        title="previous chapter">Uninstall MedPy</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="imageformats.html"
                         title="next chapter">Supported medical image formats</a></p>
@@ -140,7 +139,6 @@ All are prefixed with <strong>medpy_</strong>.</p>
 <li><a class="reference internal" href="#filter"><span class="std std-ref">Image filters</span></a></li>
 <li><a class="reference internal" href="#mr"><span class="std std-ref">Magnetic resonance (MR) related</span></a></li>
 <li><a class="reference internal" href="#gc"><span class="std std-ref">Graph-cut</span></a></li>
-<li><a class="reference internal" href="#itk"><span class="std std-ref">Scripts requiring ITK</span></a></li>
 <li><a class="reference internal" href="#others"><span class="std std-ref">Others</span></a></li>
 </ul>
 </div>
@@ -295,7 +293,7 @@ All are prefixed with <strong>medpy_</strong>.</p>
 <div class="section" id="graph-cut">
 <span id="gc"></span><h2>Graph-cut<a class="headerlink" href="#graph-cut" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<p>GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algorithm, version 3.01 <a class="footnote-reference" href="#id45" id="id32">[1]</a>.</p>
+<p>GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algorithm, version 3.01 <a class="footnote-reference" href="#id42" id="id32">[1]</a>.</p>
 <div class="topic">
 <p class="topic-title first">medpy_graphcut_voxel.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_voxel.py.ipynb">notebook</a>)</p>
 <p>Executes a voxel based graph cut. Only supports the boundary term.</p>
@@ -329,30 +327,13 @@ All are prefixed with <strong>medpy_</strong>.</p>
 <p>Takes to label maps and superimpose them to create a new label image with more regions.</p>
 </div>
 </div>
-<div class="section" id="scripts-requiring-itk">
-<span id="itk"></span><h2>Scripts requiring ITK<a class="headerlink" href="#scripts-requiring-itk" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<p>All of the scripts in this section require the ITK Python bindings to be installed.</p>
-<div class="topic">
-<p class="topic-title first">medpy_itk_smoothing.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_smoothing.py.ipynb">notebook</a>)</p>
-<p>Applies the edge preserving anisotropic diffusion filter to an image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_itk_gradient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_gradient.py.ipynb">notebook</a>)</p>
-<p>Applies a gradient magnitude filter.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_itk_watershed.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_itk_watershed.py.ipynb">notebook</a>)</p>
-<p>Applies a watershed filter, results in a label map / region image.</p>
-</div>
-</div>
 <div class="section" id="others">
-<span id="id44"></span><h2>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h2>
+<span id="id41"></span><h2>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<table class="docutils footnote" frame="void" id="id45" rules="none">
+<table class="docutils footnote" frame="void" id="id42" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id32">[1]</a></td><td><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></td></tr>
@@ -379,10 +360,10 @@ All are prefixed with <strong>medpy_</strong>.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

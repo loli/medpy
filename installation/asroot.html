@@ -29,7 +29,7 @@
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="next" title="Installing MedPy as user" href="asuser.html" >
-    <link rel="prev" title="Installing MedPy the fast way" href="fastpath.html" > 
+    <link rel="prev" title="Installing MedPy in a virtual environement" href="venv.html" > 
   </head>
   <body>
 
@@ -69,7 +69,7 @@
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="fastpath.html" title="Installing MedPy the fast way"
+        <a href="venv.html" title="Installing MedPy in a virtual environement"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -83,8 +83,8 @@
       <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="fastpath.html"
-                        title="previous chapter">Installing MedPy the fast way</a></p>
+  <p class="topless"><a href="venv.html"
+                        title="previous chapter">Installing MedPy in a virtual environement</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="asuser.html"
                         title="next chapter">Installing MedPy as user</a></p>
@@ -114,27 +114,13 @@
 <h1>Installing MedPy as root<a class="headerlink" href="#installing-medpy-as-root" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">All installation instructions are for Ubuntu, but they should be similar for other distributions.</p>
+<p class="last">All installation instructions are for Debian derivates,
+such as Ubuntu, but they should be simmilar for other distributions.</p>
 </div>
 <p>When installed with root privileges, <strong>MedPy</strong> will be available for all uses of your machine.</p>
-<p>To install Python packages from <a class="reference external" href="https://pypi.python.org">PyPi</a>, we recommend <a class="reference external" href="https://pypi.python.org/pypi/pip">PIP</a></p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install python-pip
-</pre></div>
-</div>
-<p>Furthermore, you’ll require <code class="docutils literal"><span class="pre">numpy</span></code> and <code class="docutils literal"><span class="pre">scipy</span></code>, which you can either install from the repositories</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install python-numpy python-scipy
-</pre></div>
-</div>
-<p>Or via PIP</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo pip install numpy scipy
-</pre></div>
-</div>
-<p>To enable the graph-cut package, we also need the following</p>
+<p>To install Python packages from <a class="reference external" href="https://pypi.python.org">PyPi</a>, we recommend <a class="reference external" href="https://pypi.python.org/pypi/pip">PIP</a>.
+To enable the graph-cut package, we need the following</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install libboost-python-dev build-essential
-</pre></div>
-</div>
-<p>And to enable the loading/saving of various image formats, at least <code class="docutils literal"><span class="pre">nibabel</span></code> and <code class="docutils literal"><span class="pre">pydicom</span></code> should be installed</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo pip install nibabel pydicom
 </pre></div>
 </div>
 <p>Now we can install <strong>MedPy</strong></p>
@@ -161,10 +147,10 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

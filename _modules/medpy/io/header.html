@@ -108,156 +108,114 @@
 <span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
 <span class="c1">#</span>
 <span class="c1"># author Oskar Maier</span>
-<span class="c1"># version r0.1.3</span>
+<span class="c1"># version r0.2.3</span>
 <span class="c1"># since 2012-06-01</span>
 <span class="c1"># status Release</span>
 
 <span class="c1"># build-in modules</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="c1"># third-party modules</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># own modules</span>
 <span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">Logger</span>
 
-<span class="c1"># !TODO: Turn into an own class, with sub-classes for each 3rd party type (see _header.py).</span>
-
 <span class="c1"># code</span>
-<div class="viewcode-block" id="get_pixel_spacing"><a class="viewcode-back" href="../../../generated/medpy.io.header.get_pixel_spacing.html#medpy.io.header.get_pixel_spacing">[docs]</a><span class="k">def</span> <span class="nf">get_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_voxel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts the pixels spacing from an image header.</span>
+<span class="sd">    Extracts the voxel spacing from an image header.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    It is recommended to call `hdr.get_voxel_spacing()` instead</span>
+<span class="sd">    of this function.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    hdr : object</span>
+<span class="sd">    hdr : medpy.io.Header</span>
 <span class="sd">        An image header as returned by `load`.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    pixel_spacing : tuple of floats</span>
 <span class="sd">        The image&#39;s pixel spacing.</span>
-<span class="sd">        </span>
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    AttributeError</span>
-<span class="sd">        If the header is of an unknown type or does not support the reading of the pixel spacing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">__is_header_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">__get_pixel_spacing_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">__get_pixel_spacing_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">__get_pixel_spacing_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support queries for pixel spacing.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="n">hdr</span><span class="o">.</span><span class="n">get_voxel_spacing</span><span class="p">()</span>
+
+<div class="viewcode-block" id="get_pixel_spacing"><a class="viewcode-back" href="../../../generated/medpy.io.header.get_pixel_spacing.html#medpy.io.header.get_pixel_spacing">[docs]</a><span class="k">def</span> <span class="nf">get_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Depreciated synonym of `~medpy.io.header.get_voxel_spacing`.&quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;get_pixel_spacing() is depreciated, use set_voxel_spacing() instead&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_voxel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="get_offset"><a class="viewcode-back" href="../../../generated/medpy.io.header.get_offset.html#medpy.io.header.get_offset">[docs]</a><span class="k">def</span> <span class="nf">get_offset</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts the image offset from an image header.</span>
+<span class="sd">    Extracts the image offset (akak origin) from an image header.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    It is recommended to call `hdr.get_offset()` instead</span>
+<span class="sd">    of this function.</span>
+<span class="sd">    It can be assumed that the offset is measured from the center point of</span>
+<span class="sd">    the first pixel, which SimpleITK promises independent of the file format.</span>
+<span class="sd">    Some formats do not specify a header field for the offset, thus zeros</span>
+<span class="sd">    are returned.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    hdr : object</span>
+<span class="sd">    hdr : medpy.io.Header</span>
 <span class="sd">        An image header as returned by `load`.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    offset : tuple of floats</span>
 <span class="sd">        The image&#39;s offset.</span>
-<span class="sd">    </span>
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    AttributeError</span>
-<span class="sd">        If the header is of an unknown type or does not support the reading of the offset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">hdr</span><span class="o">.</span><span class="n">get_offset</span><span class="p">()</span></div>
+
+<span class="k">def</span> <span class="nf">set_voxel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the voxel spacing in an image header.</span>
 <span class="sd">    </span>
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Usually it can be assumed that the offset is measured from the center point of</span>
-<span class="sd">    the first pixel, but this does not hold true for ITK versions &lt; 3.16 and even for</span>
-<span class="sd">    later it can not be assured, as some compile flags change the behaviour.</span>
-<span class="sd">    </span>
-<span class="sd">    The Analyze format does not specify a header field for the offset, thus zeros</span>
-<span class="sd">    are returned in this case.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">__is_header_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">__get_offset_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">__get_offset_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">__get_offset_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support queries for offsets.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span>        </div>
+<span class="sd">    It is recommended to call `hdr.set_voxel_spacing()` instead</span>
+<span class="sd">    of this function.    </span>
 
-<div class="viewcode-block" id="set_pixel_spacing"><a class="viewcode-back" href="../../../generated/medpy.io.header.set_pixel_spacing.html#medpy.io.header.set_pixel_spacing">[docs]</a><span class="k">def</span> <span class="nf">set_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sets the pixels spacing in an image header.</span>
-<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    hdr : object</span>
+<span class="sd">    hdr : medpy.io.Header</span>
 <span class="sd">        An image header as returned by `load`.</span>
 <span class="sd">    pixel_spacing : tuple of floats</span>
 <span class="sd">        The desired pixel spacing.</span>
-<span class="sd">        </span>
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    AttributeError</span>
-<span class="sd">        If the header is of an unknown type or does not support the setting of the pixel spacing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">__is_header_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="n">__set_pixel_spacing_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>    
-        <span class="k">elif</span> <span class="n">__is_header_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="n">__set_pixel_spacing_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="n">__set_pixel_spacing_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">e</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support setting of pixel spacing.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span></div>
+    <span class="n">hdr</span><span class="o">.</span><span class="n">set_voxel_spacing</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
 
+<div class="viewcode-block" id="set_pixel_spacing"><a class="viewcode-back" href="../../../generated/medpy.io.header.set_pixel_spacing.html#medpy.io.header.set_pixel_spacing">[docs]</a><span class="k">def</span> <span class="nf">set_pixel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Depreciated synonym of `~medpy.io.header.set_voxel_spacing`.&quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;get_pixel_spacing() is depreciated, use set_voxel_spacing() instead&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+    <span class="n">set_voxel_spacing</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span></div>
+   
 <div class="viewcode-block" id="set_offset"><a class="viewcode-back" href="../../../generated/medpy.io.header.set_offset.html#medpy.io.header.set_offset">[docs]</a><span class="k">def</span> <span class="nf">set_offset</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sets the offset in the image header.</span>
+<span class="sd">    Sets the offset (aka origin) in the image header.</span>
 <span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    It is recommended to call `hdr.set_offset()` instead</span>
+<span class="sd">    of this function.    </span>
+<span class="sd">    The offset is based on the center of the first voxel.</span>
+<span class="sd">    See also `get_offset` for more details.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    hdr : object</span>
+<span class="sd">    hdr : medpy.io.Header</span>
 <span class="sd">        An image header as returned by `load`.</span>
 <span class="sd">    offset : tuple of floats</span>
 <span class="sd">        The desired offset.</span>
-<span class="sd">        </span>
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    AttributeError</span>
-<span class="sd">        If the header is of an unknown type or does not support the setting of the offset.</span>
-<span class="sd">        </span>
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The offset is usually based on the center of the first voxel.</span>
-<span class="sd">    See also `get_offset` for more details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">__is_header_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="n">__set_offset_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="n">__set_offset_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-            <span class="n">__set_offset_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">e</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;The provided header </span><span class="si">{}</span><span class="s1"> is of unknown type or does not support setting of offsets.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)))</span>    </div>
+    <span class="n">hdr</span><span class="o">.</span><span class="n">set_offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="copy_meta_data"><a class="viewcode-back" href="../../../generated/medpy.io.header.copy_meta_data.html#medpy.io.header.copy_meta_data">[docs]</a><span class="k">def</span> <span class="nf">copy_meta_data</span><span class="p">(</span><span class="n">hdr_to</span><span class="p">,</span> <span class="n">hdr_from</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -269,12 +227,8 @@
 <span class="sd">        An image header as returned by `load`.</span>
 <span class="sd">    hdr_from : object</span>
 <span class="sd">        An image header as returned by `load`.</span>
-<span class="sd">        </span>
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    AttributeError</span>
-<span class="sd">        If one of the headers does not support the reading respectively writing of metadata.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;copy_meta_data() is depreciated and may be removed in future versions&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">set_pixel_spacing</span><span class="p">(</span><span class="n">hdr_to</span><span class="p">,</span> <span class="n">get_pixel_spacing</span><span class="p">(</span><span class="n">hdr_from</span><span class="p">))</span>
@@ -286,210 +240,219 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The image offset could not be set correctly. Signaled error: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 
-<span class="k">def</span> <span class="nf">__get_pixel_spacing_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetElement</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">())])</span>
-    
-<span class="k">def</span> <span class="nf">__get_pixel_spacing_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="n">dimensionality</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">x</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># required for Analyze format, which always assumes for dimensions, even if less present</span>
-    <span class="k">return</span> <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="n">dimensionality</span><span class="p">]</span>
+<div class="viewcode-block" id="Header"><a class="viewcode-back" href="../../../generated/medpy.io.header.Header.html#medpy.io.header.Header">[docs]</a><span class="k">class</span> <span class="nc">Header</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A medpy header object.</span>
 
-<span class="k">def</span> <span class="nf">__get_pixel_spacing_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    @note The SpacingBetweenSlices gives the distance between the slice centers, while</span>
-<span class="sd">          SliceThickness gives the actual SliceThickness. This means that</span>
-<span class="sd">          SpacingBetweenSlices must contain a value as least as high as SliceThickness if</span>
-<span class="sd">          no overlap between the slices exists. We choose to simply query the</span>
-<span class="sd">          SliceThickness, as this value determines the thickness of the voxels.</span>
-<span class="sd">          But we flag a warning, if there might be a gap or overlap.</span>
+<span class="sd">    Stores spacing, offset/origin, direction, and possibly further meta information.</span>
+<span class="sd">    Provide at least one of the parameters. Missing information is extracted from</span>
+<span class="sd">    the ``sitkimage`` or, if not supplied, set to a default value. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spacing : tuple of floats</span>
+<span class="sd">        the image&#39;s voxel spacing</span>
+<span class="sd">        defaults to a tuple of `1.0`s</span>
+<span class="sd">    offset : tuple of floats</span>
+<span class="sd">        the image&#39;s offset/origin</span>
+<span class="sd">        defaults to a tuple of `0.0`s</span>
+<span class="sd">    direction : ndarray</span>
+<span class="sd">        the image&#39;s affine transformation matrix</span>
+<span class="sd">        must be of square shape</span>
+<span class="sd">        default to the identity matrix</span>
+<span class="sd">    sitkimage : sitk.Image</span>
+<span class="sd">        the simple itk image as loaded</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># 1. Check if PixelSpacing element is present</span>
-    <span class="k">if</span> <span class="s2">&quot;PixelSpacing&quot;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
-        <span class="n">spacing</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hdr</span><span class="o">.</span><span class="n">PixelSpacing</span><span class="p">]</span> <span class="c1"># has to be copy, otherwise the value of the field is changed when spacing gets manipulated</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No pixel spacing defined in DICOM header, assuming isotropic spacing.&#39;</span><span class="p">)</span>
-        <span class="n">spacing</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
-        
-    <span class="c1"># Skip here if the number of frames is present and 1 or below, we ignore other values in this case</span>
-    <span class="k">if</span> <span class="s2">&quot;NumberOfFrames&quot;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="n">hdr</span><span class="o">.</span><span class="n">NumberOfFrames</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># 2d case</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">spacing</span><span class="p">))</span>
-        
-    <span class="c1"># 2. Check if SliceThickness element is present</span>
-    <span class="k">if</span> <span class="s2">&quot;SliceThickness&quot;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;SpacingBetweenSlices&quot;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="n">hdr</span><span class="o">.</span><span class="n">SliceThickness</span> <span class="o">!=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">SpacingBetweenSlices</span><span class="p">:</span>
-            <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;The DICOM headers SliceThickness tag does not correspond with the SpacingBetweenSlices tag. There might be gaps or overlaps between the slices.&#39;</span><span class="p">)</span>
-        <span class="n">spacing</span> <span class="o">+=</span> <span class="p">[</span><span class="n">hdr</span><span class="o">.</span><span class="n">SliceThickness</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="s2">&quot;SpacingBetweenSlices&quot;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;No SliceThickness defined in DICOM header, falling back to SpacingBetweenSlices.&#39;</span><span class="p">)</span>
-        <span class="n">spacing</span> <span class="o">+=</span> <span class="p">[</span><span class="n">hdr</span><span class="o">.</span><span class="n">SpacingBetweenSlices</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="s2">&quot;NumberOfFrames&quot;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="n">hdr</span><span class="o">.</span><span class="n">NumberOfFrames</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># 3d case \wo a given SliceThickness</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;No SliceThickness defined in DICOM header, assuming isotropic spacing.&#39;</span><span class="p">)</span>
-        <span class="n">spacing</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">spacing</span><span class="p">))</span>
-    
-<span class="k">def</span> <span class="nf">__get_offset_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    @note Only Nifit has full support for image offsets. The two Analyze versions SPM2</span>
-<span class="sd">          and SPM99 can also define offsets, but the definition is rather unclear.</span>
-<span class="sd">          Instead zero sequences are returned in these cases, which is the standard</span>
-<span class="sd">          behaviour.</span>
-<span class="sd">    &quot;&quot;&quot;</span> 
-    <span class="kn">import</span> <span class="nn">nibabel</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Pair</span><span class="p">:</span> <span class="c1"># The nifti image format supports offsets</span>
-        <span class="n">hdr_real</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">hdr_real</span><span class="p">[</span><span class="s1">&#39;qoffset_x&#39;</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">hdr_real</span><span class="p">[</span><span class="s1">&#39;qoffset_y&#39;</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">hdr_real</span><span class="p">[</span><span class="s1">&#39;qoffset_z&#39;</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">hdr_real</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">])][</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
-        <span class="c1"># multiply with sign of diagonal of voxel-to-world affine to account for axis directions</span>
-        <span class="n">axis_directions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">get_affine</span><span class="p">()))</span> 
-        <span class="n">offset_corrected</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">axis_directions</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)])</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">offset_corrected</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span> <span class="c1"># An Analyze or other image format</span>
-        <span class="n">dimensionality</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">x</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># required for Analyze format, which always assumes four dimensions, even if less present</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">))][</span><span class="mi">0</span><span class="p">:</span><span class="n">dimensionality</span><span class="p">])</span>
 
-<span class="k">def</span> <span class="nf">__get_offset_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;NumberOfFrames&quot;</span> <span class="ow">in</span> <span class="n">hdr</span> <span class="ow">and</span> <span class="n">hdr</span><span class="o">.</span><span class="n">NumberOfFrames</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># 3D case</span>
-        <span class="k">if</span> <span class="s2">&quot;ImagePositionPatient&quot;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">))</span>
+<div class="viewcode-block" id="Header.__init__"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.__init__.html#medpy.io.header.Header.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sitkimage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">assert</span> \
+            <span class="n">sitkimage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> \
+            <span class="n">spacing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> \
+            <span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> \
+            <span class="n">direction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="c1"># determin the image&#39;s ndim and default data types</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+            <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+            <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">spacing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spacing</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
+            <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No offset defined in DICOM header, assuming none exists.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span> <span class="c1"># 2D case</span>
-        <span class="k">if</span> <span class="s2">&quot;ImagePositionPatient&quot;</span> <span class="ow">in</span> <span class="n">hdr</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">hdr</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sitkimage</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">())</span>
+        
+        <span class="c1"># set missing information to extracted or default values</span>
+        <span class="k">if</span> <span class="n">spacing</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spacing</span> <span class="o">=</span> <span class="n">sitkimage</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span> <span class="k">if</span> <span class="n">sitkimage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="n">ndim</span>
+        <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">sitkimage</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span> <span class="k">if</span> <span class="n">sitkimage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="n">ndim</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sitkimage</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ndim</span><span class="p">,</span> <span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">sitkimage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span>
+            
+        <span class="c1"># assert consistency</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">direction</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">==</span> <span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># set members</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="n">spacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sitkimage</span> <span class="o">=</span> <span class="n">sitkimage</span></div>
+
+<div class="viewcode-block" id="Header.copy_to"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.copy_to.html#medpy.io.header.Header.copy_to">[docs]</a>    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sitkimage</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copy all stored meta information info to an sitk Image.</span>
+
+<span class="sd">        Note that only the spacing and the offset/origin information</span>
+<span class="sd">        are guaranteed to be preserved, although the method also</span>
+<span class="sd">        tries to copy other meta information such as DICOM tags.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sitkimage : sitk.Image</span>
+<span class="sd">            the sitk Image object to which to copy the information</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        sitkimage : sitk.Image</span>
+<span class="sd">            the passed sitk Image object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sitkimage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sitkimage</span><span class="o">.</span><span class="n">GetMetaDataKeys</span><span class="p">():</span>
+                <span class="n">sitkimage</span><span class="o">.</span><span class="n">SetMetaData</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sitkimage</span><span class="o">.</span><span class="n">GetMetaData</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sitkimage</span><span class="o">.</span><span class="n">GetSize</span><span class="p">())</span>
+        <span class="n">spacing</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_consistent</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span>
+            
+        <span class="n">sitkimage</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
+        <span class="n">sitkimage</span><span class="o">.</span><span class="n">SetOrigin</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="n">sitkimage</span><span class="o">.</span><span class="n">SetDirection</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">direction</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+        
+        <span class="k">return</span> <span class="n">sitkimage</span></div>
+        
+<div class="viewcode-block" id="Header.get_info_consistent"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.get_info_consistent.html#medpy.io.header.Header.get_info_consistent">[docs]</a>    <span class="k">def</span> <span class="nf">get_info_consistent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ndim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the main meta-data information adapted to the supplied</span>
+<span class="sd">        image dimensionality.</span>
+
+<span class="sd">        It will try to resolve inconsistencies and other conflicts,</span>
+<span class="sd">        altering the information avilable int he most plausible way.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ndim : int</span>
+<span class="sd">            image&#39;s dimensionality</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spacing : tuple of floats</span>
+<span class="sd">        offset : tuple of floats</span>
+<span class="sd">        direction : ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacing</span><span class="p">):</span>
+            <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ndim</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacing</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No offset defined in DICOM header, assuming none exists.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span><span class="p">[:</span><span class="n">ndim</span><span class="p">]</span>
 
-<span class="k">def</span> <span class="nf">__get_offset_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="n">origin</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">origin</span><span class="o">.</span><span class="n">GetElement</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">Size</span><span class="p">())])</span>
-    
-    
-<span class="k">def</span> <span class="nf">__set_offset_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    @note Only works for Nifti images, not for Analyze or other formats.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">nibabel</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Pair</span><span class="p">:</span> <span class="c1"># The nifti image format supports offsets</span>
-        <span class="c1"># check if the offset is of the expected length</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied offset sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
-        <span class="c1"># check if the offset is too long</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Nifti supports a maximum offset of 4 elements (x, y, z and t), got </span><span class="si">{}</span><span class="s1">. Note that Nifit naturally does not support images of more than 4 dimensions, although it can handle them.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
-        <span class="c1"># set offset in header</span>
-        <span class="n">mapping</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;qoffset_x&#39;</span><span class="p">,</span> <span class="s1">&#39;qoffset_y&#39;</span><span class="p">,</span> <span class="s1">&#39;qoffset_z&#39;</span><span class="p">,</span> <span class="s1">&#39;toffset&#39;</span><span class="p">]</span>
-        <span class="n">hdr_real</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)):</span>
-            <span class="n">hdr_real</span><span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">offset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span> <span class="c1"># always caught and dismissed</span>
-    
-<span class="k">def</span> <span class="nf">__set_offset_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied offset sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
-    <span class="n">hdr</span><span class="o">.</span><span class="n">ImagePositionPatient</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
-    
-<span class="k">def</span> <span class="nf">__set_offset_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
-    <span class="n">origin</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">origin</span><span class="o">.</span><span class="n">Size</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied offset sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">Size</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)))</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">offset</span><span class="p">):</span>
-        <span class="n">origin</span><span class="o">.</span><span class="n">SetElement</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
-    
-<span class="k">def</span> <span class="nf">__set_pixel_spacing_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set the spacing value of the ITK header to spacing.</span>
-<span class="sd">    </span>
-<span class="sd">    @param hdr a valid ITK image</span>
-<span class="sd">    @param spacing a sequence of numbers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied spacing sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">GetVectorDimension</span><span class="p">()):</span>
-        <span class="n">hdr</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">()</span><span class="o">.</span><span class="n">SetElement</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-                            
-<span class="k">def</span> <span class="nf">__set_pixel_spacing_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set the spacing value of the Nibabel header to spacing.</span>
-<span class="sd">    </span>
-<span class="sd">    @param hdr a valid NiBabel image</span>
-<span class="sd">    @param spacing a sequence of numbers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Vector dimensions of header (</span><span class="si">{}</span><span class="s1">) and supplied spacing sequence (</span><span class="si">{}</span><span class="s1">) differ.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()),</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
-    <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">set_zooms</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">spacing</span><span class="p">])</span>
-    
-<span class="k">def</span> <span class="nf">__set_pixel_spacing_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set the spacing value of the PyDicom header to spacing.</span>
-<span class="sd">    </span>
-<span class="sd">    @note The SpacingBetweenSlices gives the distance between the slice centers, while</span>
-<span class="sd">          SliceThickness gives the actual SliceThickness. This means that</span>
-<span class="sd">          SpacingBetweenSlices must contain a value as least as high as SliceThickness if</span>
-<span class="sd">          no overlap between the slices exists. We choose to set both to the same value</span>
-<span class="sd">          when setting the pixel spacing, assuming neither overlap nor unrecorded image</span>
-<span class="sd">          space between the slice, which seems to be the normal behaviour. </span>
-<span class="sd">    </span>
-<span class="sd">    @param hdr a valid PyDicom image</span>
-<span class="sd">    @param spacing a sequence of numbers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;PyDicom supports a maximum dimensionality of 3, the supplied spacing sequence contains </span><span class="si">{}</span><span class="s1"> elements.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)))</span>
-    
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">hdr</span><span class="o">.</span><span class="n">PixelSpacing</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">spacing</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">hdr</span><span class="o">.</span><span class="n">SliceThickness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-        <span class="n">hdr</span><span class="o">.</span><span class="n">SpacingBetweenSlices</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">spacing</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-    
-<span class="k">def</span> <span class="nf">__update_header_from_array_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">,</span> <span class="n">arr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update an original nibabel header with the data extracted from a scipy.ndarray.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">set_data_shape</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">):</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ndim</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[:</span><span class="n">ndim</span><span class="p">]</span>
 
-<span class="k">def</span> <span class="nf">__is_header_pydicom</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns true is the supplied object is a valid pydicom image, otherwise False.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">dicom</span>
-    <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span> <span class="o">==</span> <span class="n">dicom</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">FileDataset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span>
+            <span class="n">direction</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">[:</span><span class="n">ndim</span><span class="p">,</span> <span class="p">:</span><span class="n">ndim</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">direction</span></div>
 
-<span class="k">def</span> <span class="nf">__is_header_nibabel</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns true is the supplied object is a valid nibabel image holding a header attribute, otherwise False.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">hdr</span><span class="o">.</span><span class="n">get_header</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+<div class="viewcode-block" id="Header.set_voxel_spacing"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.set_voxel_spacing.html#medpy.io.header.Header.set_voxel_spacing">[docs]</a>    <span class="k">def</span> <span class="nf">set_voxel_spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set image&#39;s spacing.</span>
 
-<span class="k">def</span> <span class="nf">__is_header_itk</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns true is the supplied object is a valid itk image, otherwise False.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">itk</span>
-    <span class="c1"># try to convert pointer from smart pointer to normal pointer</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdr</span><span class="o">.</span><span class="n">GetPointer</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="c1"># see if itk header type (ITK v3.X)</span>
-    <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__template__</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">)</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
-    <span class="c1"># see if itk header type (ITK v4.X)</span>
-    <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">itk</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__template__</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="n">cl</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">hdr</span><span class="p">):</span> <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        spacing : tuple of floats</span>
+<span class="sd">            the new image voxel spacing</span>
+<span class="sd">            take care that image and spacing dimensionalities match</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Header.set_offset"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.set_offset.html#medpy.io.header.Header.set_offset">[docs]</a>    <span class="k">def</span> <span class="nf">set_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set image&#39;s offset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        offset : tuple of floats</span>
+<span class="sd">            the new image offset / origin</span>
+<span class="sd">            take care that image and offset dimensionalities match</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Header.set_direction"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.set_direction.html#medpy.io.header.Header.set_direction">[docs]</a>    <span class="k">def</span> <span class="nf">set_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set image&#39;s direction.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        direction : tuple of floats</span>
+<span class="sd">            the image&#39;s direction / affine transformation matrix</span>
+<span class="sd">            must be of square shape</span>
+<span class="sd">            default to the identity matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Header.get_voxel_spacing"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.get_voxel_spacing.html#medpy.io.header.Header.get_voxel_spacing">[docs]</a>    <span class="k">def</span> <span class="nf">get_voxel_spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get image&#39;s spacing.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spacing : tuple of floats</span>
+<span class="sd">            the image&#39;s spacing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span></div>
+    
+<div class="viewcode-block" id="Header.get_offset"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.get_offset.html#medpy.io.header.Header.get_offset">[docs]</a>    <span class="k">def</span> <span class="nf">get_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get image&#39;s offset.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        offset : tuple of floats</span>
+<span class="sd">            the image&#39;s offset / origin</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span></div>
+
+<div class="viewcode-block" id="Header.get_direction"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.get_direction.html#medpy.io.header.Header.get_direction">[docs]</a>    <span class="k">def</span> <span class="nf">get_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get image&#39;s direction.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        direction : ndarray</span>
+<span class="sd">            the image&#39;s direction / affine transformation matrix</span>
+<span class="sd">            of square shape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>    </div>
+
+<div class="viewcode-block" id="Header.get_sitkimage"><a class="viewcode-back" href="../../../generated/generated/medpy.io.header.Header.get_sitkimage.html#medpy.io.header.Header.get_sitkimage">[docs]</a>    <span class="k">def</span> <span class="nf">get_sitkimage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get underlying sitk Image object.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        image-object : sitk.Image or None</span>
+<span class="sd">            the underlying sitk image object if set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sitkimage</span></div></div>
 </pre></div>
 
           </div>
@@ -509,10 +472,10 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

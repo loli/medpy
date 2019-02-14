@@ -27,10 +27,7 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
-    <link rel="up" title="Image I/O functionalities (medpy.io)" href="../io.html" >
-    <link rel="next" title="medpy.io.header.get_offset" href="medpy.io.header.get_offset.html" >
-    <link rel="prev" title="medpy.io.header.get_pixel_spacing" href="medpy.io.header.get_pixel_spacing.html" > 
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" > 
   </head>
   <body>
 
@@ -52,8 +49,7 @@
         <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
 	
         <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
-	
-          <li class="active"><a href="../io.html" accesskey="U">Image I/O functionalities (<code class="docutils literal"><span class="pre">medpy.io</span></code>)</a></li> 
+	 
     </ul>
               
               
@@ -66,14 +62,6 @@
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
-      <li class="active">
-        <a href="medpy.io.header.get_offset.html" title="medpy.io.header.get_offset"
-           accesskey="N">next</a>
-      </li>
-      <li class="active">
-        <a href="medpy.io.header.get_pixel_spacing.html" title="medpy.io.header.get_pixel_spacing"
-           accesskey="P">previous</a>
-      </li>
     </ul>
               
 	    </div>
@@ -84,12 +72,6 @@
 	<div class="row-fluid">
       <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="medpy.io.header.get_pixel_spacing.html"
-                        title="previous chapter">medpy.io.header.get_pixel_spacing</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="medpy.io.header.get_offset.html"
-                        title="next chapter">medpy.io.header.get_offset</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/generated/medpy.io.header.set_pixel_spacing.rst.txt"
@@ -117,29 +99,7 @@
 <dl class="function">
 <dt id="medpy.io.header.set_pixel_spacing">
 <code class="descclassname">medpy.io.header.</code><code class="descname">set_pixel_spacing</code><span class="sig-paren">(</span><em>hdr</em>, <em>spacing</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/header.html#set_pixel_spacing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.header.set_pixel_spacing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the pixels spacing in an image header.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>hdr</strong> : object</p>
-<blockquote>
-<div><p>An image header as returned by <em class="xref py py-obj">load</em>.</p>
-</div></blockquote>
-<p><strong>pixel_spacing</strong> : tuple of floats</p>
-<blockquote>
-<div><p>The desired pixel spacing.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>AttributeError</strong></p>
-<blockquote class="last">
-<div><p>If the header is of an unknown type or does not support the setting of the pixel spacing.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Depreciated synonym of <code class="xref py py-obj docutils literal"><span class="pre">set_voxel_spacing</span></code>.</p>
 </dd></dl>
 
 </div>
@@ -162,10 +122,10 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

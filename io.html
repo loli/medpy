@@ -133,7 +133,7 @@ as well as the handling of image metadata.</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.load.load.html#medpy.io.load.load" title="medpy.io.load.load"><code class="xref py py-obj docutils literal"><span class="pre">load</span></code></a>(image)</td>
-<td>Loads the <code class="docutils literal"><span class="pre">image</span></code> and returns a ndarray with the image’s pixel content as well as an image format specific header object.</td>
+<td>Loads the <code class="docutils literal"><span class="pre">image</span></code> and returns a ndarray with the image’s pixel content as well as a header object.</td>
 </tr>
 </tbody>
 </table>
@@ -146,7 +146,7 @@ as well as the handling of image metadata.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.save.save.html#medpy.io.save.save" title="medpy.io.save.save"><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></a>(arr,&nbsp;filename[,&nbsp;hdr,&nbsp;force])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.save.save.html#medpy.io.save.save" title="medpy.io.save.save"><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></a>(arr,&nbsp;filename[,&nbsp;hdr,&nbsp;force,&nbsp;…])</td>
 <td>Save the image <code class="docutils literal"><span class="pre">arr</span></code> as filename using information encoded in <code class="docutils literal"><span class="pre">hdr</span></code>.</td>
 </tr>
 </tbody>
@@ -160,20 +160,8 @@ as well as the handling of image metadata.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.get_pixel_spacing.html#medpy.io.header.get_pixel_spacing" title="medpy.io.header.get_pixel_spacing"><code class="xref py py-obj docutils literal"><span class="pre">get_pixel_spacing</span></code></a>(hdr)</td>
-<td>Extracts the pixels spacing from an image header.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.set_pixel_spacing.html#medpy.io.header.set_pixel_spacing" title="medpy.io.header.set_pixel_spacing"><code class="xref py py-obj docutils literal"><span class="pre">set_pixel_spacing</span></code></a>(hdr,&nbsp;spacing)</td>
-<td>Sets the pixels spacing in an image header.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.get_offset.html#medpy.io.header.get_offset" title="medpy.io.header.get_offset"><code class="xref py py-obj docutils literal"><span class="pre">get_offset</span></code></a>(hdr)</td>
-<td>Extracts the image offset from an image header.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.set_offset.html#medpy.io.header.set_offset" title="medpy.io.header.set_offset"><code class="xref py py-obj docutils literal"><span class="pre">set_offset</span></code></a>(hdr,&nbsp;offset)</td>
-<td>Sets the offset in the image header.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.copy_meta_data.html#medpy.io.header.copy_meta_data" title="medpy.io.header.copy_meta_data"><code class="xref py py-obj docutils literal"><span class="pre">copy_meta_data</span></code></a>(hdr_to,&nbsp;hdr_from)</td>
-<td>Copy image meta data (voxel spacing and offset) from one header to another.</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.Header.html#medpy.io.header.Header" title="medpy.io.header.Header"><code class="xref py py-obj docutils literal"><span class="pre">Header</span></code></a>([spacing,&nbsp;offset,&nbsp;direction,&nbsp;sitkimage])</td>
+<td>A medpy header object.</td>
 </tr>
 </tbody>
 </table>
@@ -198,10 +186,10 @@ as well as the handling of image metadata.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

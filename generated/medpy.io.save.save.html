@@ -29,7 +29,7 @@
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
     <link rel="up" title="Image I/O functionalities (medpy.io)" href="../io.html" >
-    <link rel="next" title="medpy.io.header.get_pixel_spacing" href="medpy.io.header.get_pixel_spacing.html" >
+    <link rel="next" title="medpy.io.header.Header" href="medpy.io.header.Header.html" >
     <link rel="prev" title="medpy.io.load.load" href="medpy.io.load.load.html" > 
   </head>
   <body>
@@ -67,7 +67,7 @@
            >modules</a>
       </li>
       <li class="active">
-        <a href="medpy.io.header.get_pixel_spacing.html" title="medpy.io.header.get_pixel_spacing"
+        <a href="medpy.io.header.Header.html" title="medpy.io.header.Header"
            accesskey="N">next</a>
       </li>
       <li class="active">
@@ -88,8 +88,8 @@
   <p class="topless"><a href="medpy.io.load.load.html"
                         title="previous chapter">medpy.io.load.load</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="medpy.io.header.get_pixel_spacing.html"
-                        title="next chapter">medpy.io.header.get_pixel_spacing</a></p>
+  <p class="topless"><a href="medpy.io.header.Header.html"
+                        title="next chapter">medpy.io.header.Header</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/generated/medpy.io.save.save.rst.txt"
@@ -116,73 +116,57 @@
 <h1>medpy.io.save.save<a class="headerlink" href="#medpy-io-save-save" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="medpy.io.save.save">
-<code class="descclassname">medpy.io.save.</code><code class="descname">save</code><span class="sig-paren">(</span><em>arr</em>, <em>filename</em>, <em>hdr=False</em>, <em>force=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/save.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.save.save" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">medpy.io.save.</code><code class="descname">save</code><span class="sig-paren">(</span><em>arr</em>, <em>filename</em>, <em>hdr=False</em>, <em>force=True</em>, <em>use_compression=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/save.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.save.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the image <code class="docutils literal"><span class="pre">arr</span></code> as filename using information encoded in <code class="docutils literal"><span class="pre">hdr</span></code>. The target image
 format is determined by the <code class="docutils literal"><span class="pre">filename</span></code> suffix. If the <code class="docutils literal"><span class="pre">force</span></code> parameter is set to true,
 an already existing image is overwritten silently. Otherwise an error is thrown.</p>
-<p>The header (<code class="docutils literal"><span class="pre">hdr</span></code>) object is the one returned by <a class="reference internal" href="medpy.io.load.load.html#medpy.io.load.load" title="medpy.io.load.load"><code class="xref py py-obj docutils literal"><span class="pre">load</span></code></a> and is only used
-if the source and target image formats are the same.</p>
+<p>The header (<code class="docutils literal"><span class="pre">hdr</span></code>) object is the one returned by <a class="reference internal" href="medpy.io.load.load.html#medpy.io.load.load" title="medpy.io.load.load"><code class="xref py py-obj docutils literal"><span class="pre">load</span></code></a> and is used
+opportunistically, possibly loosing some meta-information.</p>
 <p>Generally this function does not guarantee, that metadata other than the image shape
 and pixel data type are kept.</p>
-<p>The supported file formats depend on the installed third party modules. This method
-includes support for the NiBabel package and for ITK python wrappers created with
-WrapITK. Note that for the later it is import how it has been compiled.</p>
-<p>NiBabel enables support for:</p>
-<blockquote>
-<div><ul class="simple">
-<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+<p>MedPy relies on SimpleITK, which enables the power of ITK for image loading and saving.
+The supported image file formats should include at least the following.</p>
+<p>Medical formats:</p>
+<ul class="simple">
+<li>ITK MetaImage (.mha/.raw, .mhd)</li>
+<li>Neuroimaging Informatics Technology Initiative (NIfTI) (.nia, .nii, .nii.gz, .hdr, .img, .img.gz)</li>
 <li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
-<li>and some others (<a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a>)</li>
+<li>Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)</li>
+<li>Digital Imaging and Communications in Medicine (DICOM) series (&lt;directory&gt;/)</li>
+<li>Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr)</li>
+<li>Medical Imaging NetCDF (MINC) (.mnc, .MNC)</li>
+<li>Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)</li>
 </ul>
-</div></blockquote>
-<p>WrapITK enables support for:</p>
-<blockquote>
-<div><ul class="simple">
-<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
-<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
-<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
-<li>Itk/Vtk MetaImage (.mhd, .mha/.raw)</li>
-<li>Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</li>
-<li>and many others (<a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a>)</li>
+<p>Microscopy formats:</p>
+<ul class="simple">
+<li>Medical Research Council (MRC) (.mrc, .rec)</li>
+<li>Bio-Rad (.pic, .PIC)</li>
+<li>LSM (Zeiss) microscopy images (.tif, .TIF, .tiff, .TIFF, .lsm, .LSM)</li>
+<li>Stimulate / Signal Data (SDT) (.sdt)</li>
 </ul>
-</div></blockquote>
-<p>Generally we advise to use the nibabel third party tool, which is implemented in pure
-python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
-and comprehensive.</p>
+<p>Visualization formats:</p>
+<ul class="simple">
+<li>VTK images (.vtk)</li>
+</ul>
+<p>Other formats:</p>
+<ul class="simple">
+<li>Portable Network Graphics (PNG) (.png, .PNG)</li>
+<li>Joint Photographic Experts Group (JPEG) (.jpg, .JPG, .jpeg, .JPEG)</li>
+<li>Tagged Image File Format (TIFF) (.tif, .TIF, .tiff, .TIFF)</li>
+<li>Windows bitmap (.bmp, .BMP)</li>
+<li>Hierarchical Data Format (HDF5) (.h5 , .hdf5 , .he5)</li>
+<li>MSX-DOS Screen-x (.ge4, .ge5)</li>
+</ul>
 <p>For informations about which image formats, dimensionalities and pixel data types
-your current configuration supports, see <code class="xref py py-mod docutils literal"><span class="pre">test.io.loadsave</span></code> . There you can
-find an automated test method.</p>
-<p>Some known restrictions are explicit, independent of the third party modules or how
-they were compiled:</p>
-<blockquote>
-<div><ul class="simple">
-<li>DICOM does not support images of 4 or more dimensions (Danger: ITK actually
-saves the image without signaling an error. But the dimensionality is reduced
-to 3 dimensions).</li>
-<li>DICOM does not support pixel data of uint32/64 and float32/64/128.</li>
-<li>ITK does not support images with less than 2 dimensions.</li>
-<li>ITK does not support pixel data of uint64, int64 and float128.</li>
-<li>JPEG, PIC are unstable in the sense, that differences between the saved and the
-loaded data can occure.</li>
-<li>GIPL images are always loaded as 3D, even if they have been saved as 2D images.</li>
-<li>PNG images are always loaded as 2D, even if they have been saved as 3D images.</li>
-</ul>
-</div></blockquote>
-<p>Further information:</p>
-<blockquote>
-<div><ul class="simple">
-<li><a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a> : The NiBabel python module</li>
-<li><a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a> : Supported file formats and data types by ITK</li>
-<li><a class="reference external" href="http://code.google.com/p/pydicom/">http://code.google.com/p/pydicom/</a> : The PyDicom python module</li>
-</ul>
-</div></blockquote>
+your current configuration supports, run <em class="xref py py-obj">python3 tests/support.py &gt; myformats.log</em>.</p>
+<p>Further information see <a class="reference external" href="https://simpleitk.readthedocs.io">https://simpleitk.readthedocs.io</a> .</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>arr</strong> : array_like</p>
 <blockquote>
-<div><p>The image data.</p>
+<div><p>The image data with order <em class="xref py py-obj">x,y,z,c</em>.</p>
 </div></blockquote>
 <p><strong>filename</strong> : string</p>
 <blockquote>
@@ -196,18 +180,13 @@ loaded data can occure.</li>
 <blockquote>
 <div><p>Set to True to overwrite already exiting image silently.</p>
 </div></blockquote>
+<p><strong>use_compression</strong> : bool</p>
+<blockquote>
+<div><p>Use data compression of the target format supports it.</p>
+</div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ImageTypeError</strong></p>
-<blockquote>
-<div><p>If attempting to save as an unsupported image type.</p>
-</div></blockquote>
-<p><strong>DependencyError</strong></p>
-<blockquote>
-<div><p>If an required third party module is not existent or has been
-compiled without support for the target image format</p>
-</div></blockquote>
-<p><strong>ImageSavingError</strong></p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ImageSavingError</strong></p>
 <blockquote class="last">
 <div><p>If the image could not be saved due to various reasons</p>
 </div></blockquote>
@@ -237,10 +216,10 @@ compiled without support for the target image format</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

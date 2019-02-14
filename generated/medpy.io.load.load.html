@@ -118,60 +118,49 @@
 <dt id="medpy.io.load.load">
 <code class="descclassname">medpy.io.load.</code><code class="descname">load</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/load.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.load.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the <code class="docutils literal"><span class="pre">image</span></code> and returns a ndarray with the image’s pixel content as well as
-an image format specific header object.</p>
-<p>The type of the returned header object depends on the third party module used to load
-the image. It can, with restrictions, be used to extract additional meta-information
-about the image (e.g. using the methods in <a class="reference internal" href="../io.html#module-medpy.io.header" title="medpy.io.header"><code class="xref py py-mod docutils literal"><span class="pre">medpy.io.header</span></code></a>). Additionally it serves
-as meta-data container that can be passes to <a class="reference internal" href="medpy.io.save.save.html#medpy.io.save.save" title="medpy.io.save.save"><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></a> when the altered
-image is saved to the hard drive again. Note that the transfer of meta-data is only
-possible, and even then not guaranteed, when the source and target image formats are
-the same.</p>
-<p>The supported file formats depend on the installed third party modules. This method
-includes support for the NiBabel package and for ITK python wrappers created with
-WrapITK. Note that for the later it is import how it has been compiled.</p>
-<p>NiBabel enables support for:</p>
-<blockquote>
-<div><ul class="simple">
-<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
+a header object.</p>
+<p>The header can, with restrictions, be used to extract additional meta-information
+about the image (e.g. using the methods in <code class="xref py py-obj docutils literal"><span class="pre">Header</span></code>). Additionally
+it serves as meta-data container that can be passes to <a class="reference internal" href="medpy.io.save.save.html#medpy.io.save.save" title="medpy.io.save.save"><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></a> when the
+altered image is saved to the hard drive again. Note that the transfer of meta-data is
+only possible, and even then not guaranteed, when the source and target image formats
+are the same.</p>
+<p>MedPy relies on SimpleITK, which enables the power of ITK for image loading and saving.
+The supported image file formats should include at least the following.</p>
+<p>Medical formats:</p>
+<ul class="simple">
+<li>ITK MetaImage (.mha/.raw, .mhd)</li>
+<li>Neuroimaging Informatics Technology Initiative (NIfTI) (.nia, .nii, .nii.gz, .hdr, .img, .img.gz)</li>
 <li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
-<li>and some others (<a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a>)</li>
+<li>Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)</li>
+<li>Digital Imaging and Communications in Medicine (DICOM) series (&lt;directory&gt;/)</li>
+<li>Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr)</li>
+<li>Medical Imaging NetCDF (MINC) (.mnc, .MNC)</li>
+<li>Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)</li>
 </ul>
-</div></blockquote>
-<p>PyDicom:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
+<p>Microscopy formats:</p>
+<ul class="simple">
+<li>Medical Research Council (MRC) (.mrc, .rec)</li>
+<li>Bio-Rad (.pic, .PIC)</li>
+<li>LSM (Zeiss) microscopy images (.tif, .TIF, .tiff, .TIFF, .lsm, .LSM)</li>
+<li>Stimulate / Signal Data (SDT) (.sdt)</li>
 </ul>
-</div></blockquote>
-<p>WrapITK enables support for:</p>
-<blockquote>
-<div><ul class="simple">
-<li>NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</li>
-<li>Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</li>
-<li>Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</li>
-<li>Itk/Vtk MetaImage (.mhd, .mha/.raw)</li>
-<li>Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</li>
-<li>and many others (<a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a>)</li>
+<p>Visualization formats:</p>
+<ul class="simple">
+<li>VTK images (.vtk)</li>
 </ul>
-</div></blockquote>
-<p>Generally we advise to use the nibabel third party tool, which is implemented in pure
-python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent
-and comprehensive.</p>
+<p>Other formats:</p>
+<ul class="simple">
+<li>Portable Network Graphics (PNG) (.png, .PNG)</li>
+<li>Joint Photographic Experts Group (JPEG) (.jpg, .JPG, .jpeg, .JPEG)</li>
+<li>Tagged Image File Format (TIFF) (.tif, .TIF, .tiff, .TIFF)</li>
+<li>Windows bitmap (.bmp, .BMP)</li>
+<li>Hierarchical Data Format (HDF5) (.h5 , .hdf5 , .he5)</li>
+<li>MSX-DOS Screen-x (.ge4, .ge5)</li>
+</ul>
 <p>For informations about which image formats, dimensionalities and pixel data types
-your current configuration supports, see <code class="xref py py-mod docutils literal"><span class="pre">tests.io.loadsave</span></code>. There you can
-find an automated test method.</p>
-<p>Further information:</p>
-<blockquote>
-<div><ul class="simple">
-<li><a class="reference external" href="http://nipy.sourceforge.net/nibabel/">http://nipy.sourceforge.net/nibabel/</a> : The NiBabel python module</li>
-<li><a class="reference external" href="http://www.cmake.org/Wiki/ITK/File_Formats">http://www.cmake.org/Wiki/ITK/File_Formats</a> : Supported file formats and data types by ITK</li>
-<li><a class="reference external" href="http://code.google.com/p/pydicom/">http://code.google.com/p/pydicom/</a> : The PyDicom python module</li>
-</ul>
-</div></blockquote>
-<p>Internally first tries to figure out the image type and the associated loader to use.
-If this fails due to some reason, a brute-force approach is chosen. In some cases a
-third party module might be able to load an image for which it is not registered as
-responsible.</p>
+your current configuration supports, run <em class="xref py py-obj">python3 tests/support.py &gt; myformats.log</em>.</p>
+<p>Further information see <a class="reference external" href="https://simpleitk.readthedocs.io">https://simpleitk.readthedocs.io</a> .</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -184,26 +173,17 @@ responsible.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>image_data</strong> : ndarray</p>
 <blockquote>
-<div><p>The image data as numpy array.</p>
+<div><p>The image data as numpy array with order <em class="xref py py-obj">x,y,z,c</em>.</p>
 </div></blockquote>
-<p><strong>image_header</strong> : object</p>
+<p><strong>image_header</strong> : Header</p>
 <blockquote>
-<div><p>The image metadata as header object to be processed with the methods in <a class="reference internal" href="../io.html#module-medpy.io.header" title="medpy.io.header"><code class="xref py py-mod docutils literal"><span class="pre">medpy.io.header</span></code></a>.</p>
+<div><p>The image metadata as <code class="xref py py-mod docutils literal"><span class="pre">medpy.io.Header</span></code>.</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ImageLoadingError</strong></p>
-<blockquote>
-<div><p>If the image could not be loaded due to some reason.</p>
-</div></blockquote>
-<p><strong>ImageTypeError</strong></p>
-<blockquote>
-<div><p>If the image type is not supported.</p>
-</div></blockquote>
-<p><strong>DependencyError</strong></p>
 <blockquote class="last">
-<div><p>If a required third-party module is missing or has been
-compiled without the required support</p>
+<div><p>If the image could not be loaded due to some reason.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -231,10 +211,10 @@ compiled without the required support</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

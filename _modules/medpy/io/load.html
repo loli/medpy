@@ -108,80 +108,73 @@
 <span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
 <span class="c1">#</span>
 <span class="c1"># author Oskar Maier</span>
-<span class="c1"># version r0.2.1</span>
+<span class="c1"># version r0.3.1</span>
 <span class="c1"># since 2012-05-28</span>
 <span class="c1"># status Release</span>
 
 <span class="c1"># build-in modules</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
 
 <span class="c1"># third-party modules</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">SimpleITK</span> <span class="k">as</span> <span class="nn">sitk</span>
 
 <span class="c1"># own modules</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">header</span>
+<span class="kn">from</span> <span class="nn">.header</span> <span class="k">import</span> <span class="n">Header</span>
 <span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">ImageTypeError</span><span class="p">,</span> <span class="n">DependencyError</span><span class="p">,</span>\
-    <span class="n">ImageLoadingError</span>
-
-<span class="c1"># !TODO: Change to not work with the Exceptions anymore, as these hides bugs!</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">ImageLoadingError</span>
 
 <span class="c1"># code</span>
 <div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../generated/medpy.io.load.load.html#medpy.io.load.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads the ``image`` and returns a ndarray with the image&#39;s pixel content as well as</span>
-<span class="sd">    an image format specific header object.</span>
+<span class="sd">    a header object.</span>
 <span class="sd">    </span>
-<span class="sd">    The type of the returned header object depends on the third party module used to load</span>
-<span class="sd">    the image. It can, with restrictions, be used to extract additional meta-information</span>
-<span class="sd">    about the image (e.g. using the methods in :mod:`medpy.io.header`). Additionally it serves</span>
-<span class="sd">    as meta-data container that can be passes to `~medpy.io.save.save` when the altered</span>
-<span class="sd">    image is saved to the hard drive again. Note that the transfer of meta-data is only</span>
-<span class="sd">    possible, and even then not guaranteed, when the source and target image formats are</span>
-<span class="sd">    the same.</span>
+<span class="sd">    The header can, with restrictions, be used to extract additional meta-information</span>
+<span class="sd">    about the image (e.g. using the methods in `~medpy.io.Header`). Additionally</span>
+<span class="sd">    it serves as meta-data container that can be passes to `~medpy.io.save.save` when the</span>
+<span class="sd">    altered image is saved to the hard drive again. Note that the transfer of meta-data is</span>
+<span class="sd">    only possible, and even then not guaranteed, when the source and target image formats</span>
+<span class="sd">    are the same.</span>
 <span class="sd">    </span>
-<span class="sd">    The supported file formats depend on the installed third party modules. This method</span>
-<span class="sd">    includes support for the NiBabel package and for ITK python wrappers created with</span>
-<span class="sd">    WrapITK. Note that for the later it is import how it has been compiled.</span>
+<span class="sd">    MedPy relies on SimpleITK, which enables the power of ITK for image loading and saving.</span>
+<span class="sd">    The supported image file formats should include at least the following.</span>
+
+<span class="sd">    Medical formats:</span>
+
+<span class="sd">    - ITK MetaImage (.mha/.raw, .mhd)</span>
+<span class="sd">    - Neuroimaging Informatics Technology Initiative (NIfTI) (.nia, .nii, .nii.gz, .hdr, .img, .img.gz)</span>
+<span class="sd">    - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</span>
+<span class="sd">    - Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)</span>
+<span class="sd">    - Digital Imaging and Communications in Medicine (DICOM) series (&lt;directory&gt;/)</span>
+<span class="sd">    - Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr) </span>
+<span class="sd">    - Medical Imaging NetCDF (MINC) (.mnc, .MNC)</span>
+<span class="sd">    - Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)</span>
+
+<span class="sd">    Microscopy formats:</span>
+
+<span class="sd">    - Medical Research Council (MRC) (.mrc, .rec)</span>
+<span class="sd">    - Bio-Rad (.pic, .PIC)</span>
+<span class="sd">    - LSM (Zeiss) microscopy images (.tif, .TIF, .tiff, .TIFF, .lsm, .LSM)</span>
+<span class="sd">    - Stimulate / Signal Data (SDT) (.sdt)</span>
+
+<span class="sd">    Visualization formats:</span>
+
+<span class="sd">    - VTK images (.vtk)</span>
+
+<span class="sd">    Other formats:</span>
 <span class="sd">    </span>
-<span class="sd">    NiBabel enables support for:</span>
-<span class="sd">    </span>
-<span class="sd">        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</span>
-<span class="sd">        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</span>
-<span class="sd">        - and some others (http://nipy.sourceforge.net/nibabel/)</span>
-<span class="sd">        </span>
-<span class="sd">    PyDicom:</span>
-<span class="sd">    </span>
-<span class="sd">        - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</span>
-<span class="sd">        </span>
-<span class="sd">    WrapITK enables support for:</span>
-<span class="sd">    </span>
-<span class="sd">        - NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)</span>
-<span class="sd">        - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)</span>
-<span class="sd">        - Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)</span>
-<span class="sd">        - Itk/Vtk MetaImage (.mhd, .mha/.raw)</span>
-<span class="sd">        - Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)</span>
-<span class="sd">        - and many others (http://www.cmake.org/Wiki/ITK/File_Formats)</span>
-<span class="sd">        </span>
-<span class="sd">    Generally we advise to use the nibabel third party tool, which is implemented in pure</span>
-<span class="sd">    python and whose support for Nifti (.nii) and Analyze 7.5 (.hdr/.img) is excellent</span>
-<span class="sd">    and comprehensive.</span>
+<span class="sd">    - Portable Network Graphics (PNG) (.png, .PNG)</span>
+<span class="sd">    - Joint Photographic Experts Group (JPEG) (.jpg, .JPG, .jpeg, .JPEG)</span>
+<span class="sd">    - Tagged Image File Format (TIFF) (.tif, .TIF, .tiff, .TIFF)</span>
+<span class="sd">    - Windows bitmap (.bmp, .BMP)</span>
+<span class="sd">    - Hierarchical Data Format (HDF5) (.h5 , .hdf5 , .he5)</span>
+<span class="sd">    - MSX-DOS Screen-x (.ge4, .ge5)</span>
 <span class="sd">        </span>
 <span class="sd">    For informations about which image formats, dimensionalities and pixel data types</span>
-<span class="sd">    your current configuration supports, see :mod:`tests.io.loadsave`. There you can</span>
-<span class="sd">    find an automated test method.    </span>
-<span class="sd">    </span>
-<span class="sd">    Further information:</span>
-<span class="sd">    </span>
-<span class="sd">        - http://nipy.sourceforge.net/nibabel/ : The NiBabel python module</span>
-<span class="sd">        - http://www.cmake.org/Wiki/ITK/File_Formats : Supported file formats and data types by ITK</span>
-<span class="sd">        - http://code.google.com/p/pydicom/ : The PyDicom python module</span>
-<span class="sd">    </span>
-<span class="sd">    </span>
-<span class="sd">    Internally first tries to figure out the image type and the associated loader to use.</span>
-<span class="sd">    If this fails due to some reason, a brute-force approach is chosen. In some cases a</span>
-<span class="sd">    third party module might be able to load an image for which it is not registered as</span>
-<span class="sd">    responsible.</span>
+<span class="sd">    your current configuration supports, run `python3 tests/support.py &gt; myformats.log`.</span>
+
+<span class="sd">    Further information see https://simpleitk.readthedocs.io .</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -191,200 +184,38 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    image_data : ndarray</span>
-<span class="sd">        The image data as numpy array.</span>
-<span class="sd">    image_header : object</span>
-<span class="sd">        The image metadata as header object to be processed with the methods in :mod:`medpy.io.header`.</span>
+<span class="sd">        The image data as numpy array with order `x,y,z,c`.</span>
+<span class="sd">    image_header : Header</span>
+<span class="sd">        The image metadata as :mod:`medpy.io.Header`.</span>
 <span class="sd">    </span>
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ImageLoadingError</span>
 <span class="sd">        If the image could not be loaded due to some reason.</span>
-<span class="sd">    ImageTypeError</span>
-<span class="sd">        If the image type is not supported.</span>
-<span class="sd">    DependencyError</span>
-<span class="sd">        If a required third-party module is missing or has been</span>
-<span class="sd">        compiled without the required support</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">###############################</span>
-    <span class="c1"># responsibility dictionaries #</span>
-    <span class="c1">###############################</span>
-    <span class="c1"># These dictionaries determine which third-party module is responsible to load which</span>
-    <span class="c1"># image type. For extending the loaders functionality, just create the required</span>
-    <span class="c1"># private loader functions (__load_&lt;name&gt;) and register them here.</span>
-    <span class="n">suffix_to_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nii&#39;</span><span class="p">:</span> <span class="s1">&#39;nifti&#39;</span><span class="p">,</span> <span class="c1"># mapping from file suffix to type string</span>
-                      <span class="s1">&#39;nii.gz&#39;</span><span class="p">:</span> <span class="s1">&#39;nifti&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;hdr&#39;</span><span class="p">:</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;img&#39;</span><span class="p">:</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;img.gz&#39;</span><span class="p">:</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;dcm&#39;</span><span class="p">:</span> <span class="s1">&#39;dicom&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;dicom&#39;</span><span class="p">:</span> <span class="s1">&#39;dicom&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;mhd&#39;</span><span class="p">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;mha&#39;</span><span class="p">:</span> <span class="s1">&#39;meta&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;nrrd&#39;</span><span class="p">:</span> <span class="s1">&#39;nrrd&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;nhdr&#39;</span><span class="p">:</span> <span class="s1">&#39;nrrd&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="s1">&#39;png&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;bmp&#39;</span><span class="p">:</span> <span class="s1">&#39;bmp&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;tif&#39;</span><span class="p">:</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;tiff&#39;</span><span class="p">:</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;jpg&#39;</span><span class="p">:</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;jpeg&#39;</span><span class="p">:</span> <span class="s1">&#39;jpg&#39;</span><span class="p">}</span>
-    
-    <span class="n">type_to_string</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nifti&#39;</span><span class="p">:</span> <span class="s1">&#39;NifTi - Neuroimaging Informatics Technology Initiative (.nii, nii.gz)&#39;</span><span class="p">,</span> <span class="c1"># mapping from type string to description string</span>
-                      <span class="s1">&#39;analyze&#39;</span><span class="p">:</span> <span class="s1">&#39;Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;dicom&#39;</span><span class="p">:</span> <span class="s1">&#39;Dicom - Digital Imaging and Communications in Medicine (.dcm, .dicom)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="s1">&#39;Itk/Vtk MetaImage (.mhd, .mha/.raw)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;nrrd&#39;</span><span class="p">:</span> <span class="s1">&#39;Nrrd - Nearly Raw Raster Data (.nhdr, .nrrd)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="s1">&#39;Portable Network Graphics (.png)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;bmp&#39;</span><span class="p">:</span> <span class="s1">&#39;Bitmap Image File (.bmp)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;tif&#39;</span><span class="p">:</span> <span class="s1">&#39;Tagged Image File Format (.tif,.tiff)&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;jpg&#39;</span><span class="p">:</span> <span class="s1">&#39;Joint Photographic Experts Group (.jpg, .jpeg)&#39;</span><span class="p">}</span>
-    
-    <span class="n">type_to_function</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nifti&#39;</span><span class="p">:</span> <span class="n">__load_nibabel</span><span class="p">,</span> <span class="c1"># mapping from type string to responsible loader function</span>
-                        <span class="s1">&#39;analyze&#39;</span><span class="p">:</span> <span class="n">__load_nibabel</span><span class="p">,</span>
-                        <span class="s1">&#39;dicom&#39;</span><span class="p">:</span> <span class="n">__load_pydicom</span><span class="p">,</span>
-                        <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="n">__load_itk</span><span class="p">,</span>
-                        <span class="s1">&#39;nrrd&#39;</span><span class="p">:</span> <span class="n">__load_itk</span><span class="p">,</span>
-                        <span class="s1">&#39;png&#39;</span><span class="p">:</span> <span class="n">__load_itk</span><span class="p">,</span>
-                        <span class="s1">&#39;bmp&#39;</span><span class="p">:</span> <span class="n">__load_itk</span><span class="p">,</span>
-                        <span class="s1">&#39;tif&#39;</span><span class="p">:</span> <span class="n">__load_itk</span><span class="p">,</span>
-                        <span class="s1">&#39;jpg&#39;</span><span class="p">:</span> <span class="n">__load_itk</span><span class="p">}</span>
-    
-    <span class="n">load_fallback_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">__load_nibabel</span><span class="p">,</span> <span class="n">__load_pydicom</span><span class="p">,</span> <span class="n">__load_itk</span><span class="p">]</span> <span class="c1"># list and order of loader function to use in case of fallback to brute-force</span>
-    
-    <span class="c1">########</span>
-    <span class="c1"># code #</span>
-    <span class="c1">########</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
-    
-    <span class="c1"># Check image file existence</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;The supplied image </span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
-    
-    <span class="c1"># Try normal loading</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># determine two suffixes (the second one of the compound of the two last elements)</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffix_to_type</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]])</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffix_to_type</span><span class="p">:</span> <span class="c1"># otherwise throw an Exception that will be caught later on</span>
-                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">()</span>
-        <span class="c1"># determine image type by ending</span>
-        <span class="n">image_type</span> <span class="o">=</span> <span class="n">suffix_to_type</span><span class="p">[</span><span class="n">suffix</span><span class="p">]</span>
-        <span class="c1"># determine responsible function</span>
-        <span class="n">loader</span> <span class="o">=</span> <span class="n">type_to_function</span><span class="p">[</span><span class="n">image_type</span><span class="p">]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># load the image</span>
-            <span class="k">return</span> <span class="n">loader</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="n">DependencyError</span><span class="p">(</span><span class="s1">&#39;Loading images of type </span><span class="si">{}</span><span class="s1"> requires a third-party module that could not be encountered. Reason: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;Failes to load image </span><span class="si">{}</span><span class="s1"> as </span><span class="si">{}</span><span class="s1">. Reason signaled by third-party module: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">type_to_string</span><span class="p">[</span><span class="n">image_type</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="n">err</span> <span class="o">=</span> <span class="n">ImageTypeError</span><span class="p">(</span><span class="s1">&#39;The ending </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1"> could not be associated with any known image type. Supported types are: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">image</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">type_to_string</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
 
-    <span class="c1"># Try brute force</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Normal loading failed. Entering brute force mode.&#39;</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">loader</span> <span class="ow">in</span> <span class="n">load_fallback_order</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">loader</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module </span><span class="si">{}</span><span class="s1"> signaled error: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-    
-    <span class="k">raise</span> <span class="n">err</span></div>
-    
-<span class="k">def</span> <span class="nf">__load_nibabel</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Image loader using the third-party module nibabel.</span>
-<span class="sd">    @param image the image to load</span>
-<span class="sd">    @return A tuple of 1. a scipy array with the image data, 2. a ImageHeader object with additional information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">nibabel</span>
-    
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1"> with NiBabel...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
-    
-    <span class="n">img</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">get_data</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+        <span class="c1"># !TODO: this does not load the meta-data, find a way to load it from a series, too</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading image as DICOM series. If more than one found in folder </span><span class="si">{}</span><span class="s1"> defaulting to first.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+        <span class="n">sitkimage</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ReadImage</span><span class="p">(</span><span class="n">sitk</span><span class="o">.</span><span class="n">ImageSeriesReader_GetGDCMSeriesFileNames</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sitkimage</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">ReadImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        
+    <span class="c1"># Make image array data and header</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">sitkimage</span><span class="o">=</span><span class="n">sitkimage</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">sitkimage</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">arr</span><span class="p">,</span> <span class="n">img</span>
+    <span class="c1"># Roll axes from z,y,x,c to x,y,z,c</span>
+    <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">T</span>
 
-<span class="k">def</span> <span class="nf">__load_pydicom</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Image loader using the third-party module pydicom.</span>
-<span class="sd">    @param image the image to load</span>
-<span class="sd">    @return A tuple of 1. a scipy array with the image data, 2. a ImageHeader object with additional information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">dicom</span>
-    
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1"> with PyDicom...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">dicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">dicom</span><span class="o">.</span><span class="n">filereader</span><span class="o">.</span><span class="n">InvalidDicomError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module pydicom signaled error: </span><span class="si">{}</span><span class="s1">. Attempting to force loading nevertheless&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">dicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">pixel_array</span>
-    
-    <span class="c1"># Dicom images are difficult and require special treatment:</span>
-    <span class="c1"># (1) Usually, when saved as DICOM image, row and solumn direction as exchanged as</span>
-    <span class="c1">#     compared to other image modailites.</span>
-    <span class="c1"># (2) Furthermore PyDicom loads DICOM images with the 3rd dimension (Frames/Slices)</span>
-    <span class="c1">#     in the first numpy ndarray position.</span>
-    <span class="c1"># Thus, to ensure consistency between the loaded data independent of the 3rd party</span>
-    <span class="c1"># tool or image format used, we have to</span>
-    <span class="c1"># (a) transpose the data array, which counters both, point (1) and point (2) in one go</span>
-    <span class="c1"># (b) flip the first and second (column and row) element of the pixel spacing</span>
-    <span class="c1"># Note: Strangely the offset i.e. PatientPosition does not have do be flipped... why?  </span>
-    <span class="n">pixel_spacing</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">get_pixel_spacing</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pixel_spacing</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">pixel_spacing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixel_spacing</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">pixel_spacing</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
-    <span class="n">header</span><span class="o">.</span><span class="n">set_pixel_spacing</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pixel_spacing</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">img</span>
-
-<span class="k">def</span> <span class="nf">__load_itk</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Image loader using the third-party module itk.</span>
-<span class="sd">    @param image the image to load</span>
-<span class="sd">    @return A tuple of 1. a scipy array with the image data, 2. a ImageHeader object with additional information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">itk</span>
-    <span class="kn">from</span> <span class="nn">..itkvtk.utilities</span> <span class="k">import</span> <span class="n">itku</span>
-    
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading image </span><span class="si">{}</span><span class="s1"> with ITK...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
-    
-    <span class="c1"># determine the image type</span>
-    <span class="n">image_type</span> <span class="o">=</span> <span class="n">itku</span><span class="o">.</span><span class="n">getImageTypeFromFile</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">image_type</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ImageLoadingError</span><span class="p">(</span><span class="s1">&#39;This image can not be loaded with ITK.&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># load image</span>
-    <span class="n">reader</span> <span class="o">=</span> <span class="n">itk</span><span class="o">.</span><span class="n">ImageFileReader</span><span class="p">[</span><span class="n">image_type</span><span class="p">]</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
-    <span class="n">reader</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-    <span class="n">reader</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span>
-    
-    <span class="c1"># convert to scipy</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">itku</span><span class="o">.</span><span class="n">getArrayFromImage</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    
-    <span class="c1">############</span>
-    <span class="c1"># !BUG: WrapITK returns a itk.SS,3 image as pointer, while a itk.US, 4 image is</span>
-    <span class="c1"># returned as intelligent pointer - what is this?</span>
-    <span class="c1">############</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">img_copy</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
-        <span class="n">img_copy</span><span class="o">.</span><span class="n">Graft</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">img_copy</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">GetPointer</span><span class="p">()</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
-        <span class="n">img_copy</span><span class="o">.</span><span class="n">Graft</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">GetPointer</span><span class="p">())</span>
-
-    <span class="k">return</span> <span class="n">arr</span><span class="p">,</span> <span class="n">img_copy</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">header</span></div>
 </pre></div>
 
           </div>
@@ -404,10 +235,10 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2018, Oskar Maier.
+        &copy; Copyright 2013-2019, Oskar Maier.
       </li>
       <li>
-      Last updated on Nov 23, 2018.
+      Last updated on Feb 14, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.

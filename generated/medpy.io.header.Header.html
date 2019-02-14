@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>medpy.io.header.Header &mdash; MedPy 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
+    <link rel="up" title="Image I/O functionalities (medpy.io)" href="../io.html" >
+    <link rel="next" title="medpy.io.header.Header.__init__" href="generated/medpy.io.header.Header.__init__.html" >
+    <link rel="prev" title="medpy.io.save.save" href="medpy.io.save.save.html" > 
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
+        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
+	
+        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
+	
+          <li class="active"><a href="../io.html" accesskey="U">Image I/O functionalities (<code class="docutils literal"><span class="pre">medpy.io</span></code>)</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="generated/medpy.io.header.Header.__init__.html" title="medpy.io.header.Header.__init__"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="medpy.io.save.save.html" title="medpy.io.save.save"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="medpy.io.save.save.html"
+                        title="previous chapter">medpy.io.save.save</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/medpy.io.header.Header.__init__.html"
+                        title="next chapter">medpy.io.header.Header.__init__</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/generated/medpy.io.header.Header.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="medpy-io-header-header">
+<h1>medpy.io.header.Header<a class="headerlink" href="#medpy-io-header-header" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="medpy.io.header.Header">
+<em class="property">class </em><code class="descclassname">medpy.io.header.</code><code class="descname">Header</code><span class="sig-paren">(</span><em>spacing=None</em>, <em>offset=None</em>, <em>direction=None</em>, <em>sitkimage=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medpy/io/header.html#Header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#medpy.io.header.Header" title="Permalink to this definition">¶</a></dt>
+<dd><p>A medpy header object.</p>
+<p>Stores spacing, offset/origin, direction, and possibly further meta information.
+Provide at least one of the parameters. Missing information is extracted from
+the <code class="docutils literal"><span class="pre">sitkimage</span></code> or, if not supplied, set to a default value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>spacing</strong> : tuple of floats</p>
+<blockquote>
+<div><p>the image’s voxel spacing
+defaults to a tuple of <a href="#id1"><span class="problematic" id="id2">`</span></a>1.0`s</p>
+</div></blockquote>
+<p><strong>offset</strong> : tuple of floats</p>
+<blockquote>
+<div><p>the image’s offset/origin
+defaults to a tuple of <a href="#id3"><span class="problematic" id="id4">`</span></a>0.0`s</p>
+</div></blockquote>
+<p><strong>direction</strong> : ndarray</p>
+<blockquote>
+<div><p>the image’s affine transformation matrix
+must be of square shape
+default to the identity matrix</p>
+</div></blockquote>
+<p><strong>sitkimage</strong> : sitk.Image</p>
+<blockquote class="last">
+<div><p>the simple itk image as loaded</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.Header.__init__.html#medpy.io.header.Header.__init__" title="medpy.io.header.Header.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>([spacing,&nbsp;offset,&nbsp;direction,&nbsp;sitkimage])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.Header.copy_to.html#medpy.io.header.Header.copy_to" title="medpy.io.header.Header.copy_to"><code class="xref py py-obj docutils literal"><span class="pre">copy_to</span></code></a>(sitkimage)</td>
+<td>Copy all stored meta information info to an sitk Image.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.Header.get_direction.html#medpy.io.header.Header.get_direction" title="medpy.io.header.Header.get_direction"><code class="xref py py-obj docutils literal"><span class="pre">get_direction</span></code></a>()</td>
+<td>Get image’s direction.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.Header.get_info_consistent.html#medpy.io.header.Header.get_info_consistent" title="medpy.io.header.Header.get_info_consistent"><code class="xref py py-obj docutils literal"><span class="pre">get_info_consistent</span></code></a>(ndim)</td>
+<td>Returns the main meta-data information adapted to the supplied image dimensionality.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.Header.get_offset.html#medpy.io.header.Header.get_offset" title="medpy.io.header.Header.get_offset"><code class="xref py py-obj docutils literal"><span class="pre">get_offset</span></code></a>()</td>
+<td>Get image’s offset.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.Header.get_sitkimage.html#medpy.io.header.Header.get_sitkimage" title="medpy.io.header.Header.get_sitkimage"><code class="xref py py-obj docutils literal"><span class="pre">get_sitkimage</span></code></a>()</td>
+<td>Get underlying sitk Image object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.Header.get_voxel_spacing.html#medpy.io.header.Header.get_voxel_spacing" title="medpy.io.header.Header.get_voxel_spacing"><code class="xref py py-obj docutils literal"><span class="pre">get_voxel_spacing</span></code></a>()</td>
+<td>Get image’s spacing.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.Header.set_direction.html#medpy.io.header.Header.set_direction" title="medpy.io.header.Header.set_direction"><code class="xref py py-obj docutils literal"><span class="pre">set_direction</span></code></a>(direction)</td>
+<td>Set image’s direction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.io.header.Header.set_offset.html#medpy.io.header.Header.set_offset" title="medpy.io.header.Header.set_offset"><code class="xref py py-obj docutils literal"><span class="pre">set_offset</span></code></a>(offset)</td>
+<td>Set image’s offset.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/medpy.io.header.Header.set_voxel_spacing.html#medpy.io.header.Header.set_voxel_spacing" title="medpy.io.header.Header.set_voxel_spacing"><code class="xref py py-obj docutils literal"><span class="pre">set_voxel_spacing</span></code></a>(spacing)</td>
+<td>Set image’s spacing.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2013-2019, Oskar Maier.
+      </li>
+      <li>
+      Last updated on Feb 14, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
