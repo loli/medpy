@@ -109,6 +109,7 @@ def run_setup(with_compilation):
           license='LICENSE.txt',
           keywords='medical image processing dicom itk insight tool kit MRI CT US graph cut max-flow min-cut',
           long_description=read('README_PYPI.md'),
+          long_description_content_type='text/markdown',
 
           classifiers=[
               'Development Status :: 5 - Production/Stable',
