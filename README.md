@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Downloads](https://pepy.tech/badge/medpy/month)](https://pepy.tech/project/medpy)
 ![travis auto-build](https://travis-ci.org/loli/medpy.svg?branch=master)
-[![DOI](https://zenodo.org/badge/4295983.svg)](https://zenodo.org/badge/latestdoi/4295983)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2565940.svg)](https://doi.org/10.5281/zenodo.2565940)
 
 [GitHub](https://github.com/loli/medpy/) | [Documentation](http://loli.github.io/medpy/) | [Tutorials](http://loli.github.io/medpy/) | [Issue tracker](https://github.com/loli/medpy/issues) | [Contact](oskar.maier@gmail.com)
 
