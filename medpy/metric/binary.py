@@ -76,7 +76,7 @@ def dc(result, reference):
     try:
         dc = 2. * intersection / float(size_i1 + size_i2)
     except ZeroDivisionError:
-        dc = 0.0
+        dc = 1.0
     
     return dc
 
