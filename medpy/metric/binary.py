@@ -450,7 +450,7 @@ def assd(result, reference, voxelspacing=None, connectivity=1):
     
     The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (asd(result, reference, voxelspacing, connectivity), asd(reference, result, voxelspacing, connectivity)) )
+    assd = numpy.mean( (__surface_distances(result, reference, voxelspacing, connectivity), __surface_distances(reference, result, voxelspacing, connectivity)) )
     return assd
 
 def asd(result, reference, voxelspacing=None, connectivity=1):
@@ -771,7 +771,7 @@ def obj_assd(result, reference, voxelspacing=None, connectivity=1):
     
     The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (obj_asd(result, reference, voxelspacing, connectivity), obj_asd(reference, result, voxelspacing, connectivity)) )
+    assd = numpy.mean( _obj_surface_distances(result, reference, voxelspacing, connectivity), _obj_surface_distances(reference, result, voxelspacing, connectivity)) )
     return assd
     
     
@@ -917,6 +917,63 @@ def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     asd = numpy.mean(sds)
     return asd
     
+def _obj_surface_distances(result, reference, voxelspacing=None, connectivity=1):
+    """
+    Average surface distance between objects.
+    
+    First correspondences between distinct binary objects in reference and result are
+    established. Then the average surface distance is only computed between corresponding
+    objects. Correspondence is defined as unique and at least one voxel overlap.
+    
+    Parameters
+    ----------
+    result : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    reference : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    voxelspacing : float or sequence of floats, optional
+        The voxelspacing in a distance unit i.e. spacing of elements
+        along each dimension. If a sequence, must be of length equal to
+        the input rank; if a single number, this is used for all axes. If
+        not specified, a grid spacing of unity is implied.
+    connectivity : int
+        The neighbourhood/connectivity considered when determining what accounts
+        for a distinct binary object as well as when determining the surface
+        of the binary objects. This value is passed to
+        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        The decision on the connectivity is important, as it can influence the results
+        strongly. If in doubt, leave it as it is.
+        
+    Returns
+    -------
+    asd : float
+        The average surface distance between all mutually existing distinct binary
+        object(s) in ``result`` and ``reference``. The distance unit is the same as for the
+        spacing of elements along each dimension, which is usually given in mm.
+        
+    See also
+    --------
+    :func:`obj_assd`
+    :func:`obj_tpr`
+    :func:`obj_fpr`
+        
+    Notes
+    -----
+    This is the prior step for the calculation of obj_assd.
+    """
+    sds = list()
+    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(result, reference, connectivity)
+    slicers1 = find_objects(labelmap1)
+    slicers2 = find_objects(labelmap2)
+    for lid2, lid1 in list(mapping.items()):
+        window = __combine_windows(slicers1[lid1 - 1], slicers2[lid2 - 1])
+        object1 = labelmap1[window] == lid1
+        object2 = labelmap2[window] == lid2
+        sds.extend(__surface_distances(object1, object2, voxelspacing, connectivity))
+    return sds
+
 def obj_fpr(result, reference, connectivity=1):
     """
     The false positive rate of distinct binary object detection.
