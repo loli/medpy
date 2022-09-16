@@ -76,7 +76,7 @@ def dc(result, reference):
     try:
         dc = 2. * intersection / float(size_i1 + size_i2)
     except ZeroDivisionError:
-        dc = 0.0
+        dc = 1.0
     
     return dc
 
@@ -111,7 +111,10 @@ def jc(result, reference):
     intersection = numpy.count_nonzero(result & reference)
     union = numpy.count_nonzero(result | reference)
     
-    jc = float(intersection) / float(union)
+    try:
+        jc = float(intersection) / float(union)
+    except ZeroDivisionError:
+        jc = 1.0
     
     return jc
 
