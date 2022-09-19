@@ -443,17 +443,17 @@ def assd(result, reference, voxelspacing=None, connectivity=1):
     
     Notes
     -----
-    This is a real metric, obtained by calling and averaging
+    This is a real metric, obtained by calling
     
-    >>> asd(result, reference)
+    >>> __surface_distances(result, reference)
     
     and
     
-    >>> asd(reference, result)
+    >>> __surface_distances(reference, result)
     
-    The binary images can therefore be supplied in any order.
+    and then averaging the two lists. The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (asd(result, reference, voxelspacing, connectivity), asd(reference, result, voxelspacing, connectivity)) )
+    assd = numpy.mean( (__surface_distances(result, reference, voxelspacing, connectivity), __surface_distances(reference, result, voxelspacing, connectivity)) )
     return assd
 
 def asd(result, reference, voxelspacing=None, connectivity=1):
@@ -764,20 +764,19 @@ def obj_assd(result, reference, voxelspacing=None, connectivity=1):
     
     Notes
     -----
-    This is a real metric, obtained by calling and averaging
+    This is a real metric, obtained by calling 
     
-    >>> obj_asd(result, reference)
+    >>> __obj_surface_distances(result, reference)
     
     and
     
-    >>> obj_asd(reference, result)
+    >>> __obj_surface_distances(reference, result)
     
-    The binary images can therefore be supplied in any order.
+    and then averaging the two lists. The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (obj_asd(result, reference, voxelspacing, connectivity), obj_asd(reference, result, voxelspacing, connectivity)) )
+    assd = numpy.mean( (__obj_surface_distances(result, reference, voxelspacing, connectivity), __obj_surface_distances(reference, result, voxelspacing, connectivity)) )
     return assd
-    
-    
+
 def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     """
     Average surface distance between objects.
@@ -908,15 +907,7 @@ def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     Note that the connectivity also influence the notion of what is considered an object
     surface voxels.
     """
-    sds = list()
-    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(result, reference, connectivity)
-    slicers1 = find_objects(labelmap1)
-    slicers2 = find_objects(labelmap2)
-    for lid2, lid1 in list(mapping.items()):
-        window = __combine_windows(slicers1[lid1 - 1], slicers2[lid2 - 1])
-        object1 = labelmap1[window] == lid1
-        object2 = labelmap2[window] == lid2
-        sds.extend(__surface_distances(object1, object2, voxelspacing, connectivity))
+    sds = __obj_surface_distances(result, reference, voxelspacing, connectivity)
     asd = numpy.mean(sds)
     return asd
     
@@ -1227,6 +1218,22 @@ def __surface_distances(result, reference, voxelspacing=None, connectivity=1):
     dt = distance_transform_edt(~reference_border, sampling=voxelspacing)
     sds = dt[result_border]
     
+    return sds
+
+def __obj_surface_distances(result, reference, voxelspacing=None, connectivity=1):
+    """
+    The distances between the surface voxel between all corresponding binary
+    objects in result and reference. Correspondence is defined as unique and at least one voxel overlap.
+    """
+    sds = list()
+    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(result, reference, connectivity)
+    slicers1 = find_objects(labelmap1)
+    slicers2 = find_objects(labelmap2)
+    for lid2, lid1 in list(mapping.items()):
+        window = __combine_windows(slicers1[lid1 - 1], slicers2[lid2 - 1])
+        object1 = labelmap1[window] == lid1
+        object2 = labelmap2[window] == lid2
+        sds.extend(__surface_distances(object1, object2, voxelspacing, connectivity))
     return sds
 
 def __combine_windows(w1, w2):
