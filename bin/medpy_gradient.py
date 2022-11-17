@@ -25,7 +25,7 @@ import logging
 
 # third-party modules
 import scipy
-from scipy.ndimage.filters import generic_gradient_magnitude, prewitt
+from scipy.ndimage import generic_gradient_magnitude, prewitt
 
 # path changes
 

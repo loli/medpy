@@ -26,9 +26,9 @@ import argparse
 
 # third-party modules
 import numpy
-from scipy.ndimage.interpolation import zoom
-from scipy.ndimage.morphology import distance_transform_edt, binary_erosion
-from scipy.ndimage.measurements import label
+from scipy.ndimage import zoom
+from scipy.ndimage import distance_transform_edt, binary_erosion
+from scipy.ndimage import label
 
 # own modules
 from medpy.core import Logger

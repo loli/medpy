@@ -23,7 +23,7 @@ from operator import  lt, le, gt, ge, ne, eq
 
 # third-party modules
 import numpy 
-from scipy.ndimage.measurements import label
+from scipy.ndimage import label
 
 # own modules
 

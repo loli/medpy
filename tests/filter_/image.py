@@ -16,7 +16,7 @@ import numpy
 
 # own modules
 from medpy.filter.image import ssd, sls, sum_filter, average_filter
-from scipy.ndimage.filters import gaussian_filter
+from scipy.ndimage import gaussian_filter
 
 # code
 class TestMetrics(unittest.TestCase):

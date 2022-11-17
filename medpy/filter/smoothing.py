@@ -22,7 +22,7 @@
 
 # third-party modules
 import numpy
-from scipy.ndimage.filters import gaussian_filter
+from scipy.ndimage import gaussian_filter
 
 # path changes
 
@@ -35,7 +35,7 @@ def gauss_xminus1d(img, sigma, dim=2):
     r"""
     Applies a X-1D gauss to a copy of a XD image, slicing it along dim.
 
-    Essentially uses `scipy.ndimage.filters.gaussian_filter`, but
+    Essentially uses `scipy.ndimage.gaussian_filter`, but
     applies it to a dimension less than the image has.
 
     Parameters

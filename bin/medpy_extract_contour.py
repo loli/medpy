@@ -26,7 +26,7 @@ import math
 
 # third-party modules
 import numpy
-from scipy.ndimage.morphology import binary_erosion, binary_dilation,\
+from scipy.ndimage import binary_erosion, binary_dilation,\
     generate_binary_structure
 
 # path changes

@@ -25,7 +25,7 @@ import logging
 
 # third-party modules
 import numpy
-from scipy.ndimage.morphology import binary_fill_holes, binary_dilation,\
+from scipy.ndimage import binary_fill_holes, binary_dilation,\
     binary_erosion
 
 # path changes

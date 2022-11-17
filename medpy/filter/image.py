@@ -25,9 +25,9 @@ import math
 
 # third-party modules
 import numpy
-from scipy.ndimage.filters import convolve, gaussian_filter, minimum_filter
+from scipy.ndimage import convolve, gaussian_filter, minimum_filter
 from scipy.ndimage._ni_support import _get_output
-from scipy.ndimage.interpolation import zoom
+from scipy.ndimage import zoom
 
 # own modules
 from .utilities import pad, __make_footprint
@@ -273,7 +273,7 @@ def average_filter(input, size=None, footprint=None, output=None, mode="reflect"
 
     See Also
     --------
-    scipy.ndimage.filters.convolve : Convolve an image with a kernel.
+    scipy.ndimage.convolve : Convolve an image with a kernel.
     """
     footprint = __make_footprint(input, size, footprint)
     filter_size = footprint.sum()
@@ -330,7 +330,7 @@ def sum_filter(input, size=None, footprint=None, output=None, mode="reflect", cv
 
     See Also
     --------
-    scipy.ndimage.filters.convolve : Convolve an image with a kernel.
+    scipy.ndimage.convolve : Convolve an image with a kernel.
     """
     footprint = __make_footprint(input, size, footprint)
     slicer = [slice(None, None, -1)] * footprint.ndim 
