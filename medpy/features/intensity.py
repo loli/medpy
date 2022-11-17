@@ -22,10 +22,10 @@
 
 # third-party modules
 import numpy
-from scipy.ndimage.filters import gaussian_filter, median_filter
-from scipy.ndimage.filters import gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude
+from scipy.ndimage import gaussian_filter, median_filter
+from scipy.ndimage import gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude
 from scipy.interpolate.interpolate import interp1d
-from scipy.ndimage.morphology import distance_transform_edt
+from scipy.ndimage import distance_transform_edt
 from scipy.ndimage._ni_support import _get_output
 
 # own modules

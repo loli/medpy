@@ -22,7 +22,7 @@
 
 # third-party modules
 import numpy
-from scipy.ndimage.filters import uniform_filter, sobel, maximum_filter, minimum_filter, gaussian_filter
+from scipy.ndimage import uniform_filter, sobel, maximum_filter, minimum_filter, gaussian_filter
 from scipy import stats
 from math import factorial
 

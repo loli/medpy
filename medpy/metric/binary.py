@@ -23,9 +23,9 @@
 # third-party modules
 import numpy
 from scipy.ndimage import _ni_support
-from scipy.ndimage.morphology import distance_transform_edt, binary_erosion,\
+from scipy.ndimage import distance_transform_edt, binary_erosion,\
     generate_binary_structure
-from scipy.ndimage.measurements import label, find_objects
+from scipy.ndimage import label, find_objects
 from scipy.stats import pearsonr
 
 # own modules
@@ -329,7 +329,7 @@ def hd(result, reference, voxelspacing=None, connectivity=1):
     connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         Note that the connectivity influences the result in the case of the Hausdorff distance.
         
     Returns
@@ -378,7 +378,7 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         Note that the connectivity influences the result in the case of the Hausdorff distance.
 
     Returns
@@ -425,7 +425,7 @@ def assd(result, reference, voxelspacing=None, connectivity=1):
     connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.         
         
@@ -478,7 +478,7 @@ def asd(result, reference, voxelspacing=None, connectivity=1):
     connectivity : int
         The neighbourhood/connectivity considered when determining the surface
         of the binary objects. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
     
@@ -507,7 +507,7 @@ def asd(result, reference, voxelspacing=None, connectivity=1):
     The `connectivity` determines what pixels/voxels are considered the surface of a
     binary object. Take the following binary image showing a cross
     
-    >>> from scipy.ndimage.morphology import generate_binary_structure
+    >>> from scipy.ndimage import generate_binary_structure
     >>> cross = generate_binary_structure(2, 1)
     array([[0, 1, 0],
            [1, 1, 1],
@@ -747,7 +747,7 @@ def obj_assd(result, reference, voxelspacing=None, connectivity=1):
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object as well as when determining the surface
         of the binary objects. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
@@ -802,7 +802,7 @@ def obj_asd(result, reference, voxelspacing=None, connectivity=1):
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object as well as when determining the surface
         of the binary objects. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
@@ -934,7 +934,7 @@ def obj_fpr(result, reference, connectivity=1):
     connectivity : int
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         
@@ -1045,7 +1045,7 @@ def obj_tpr(result, reference, connectivity=1):
     connectivity : int
         The neighbourhood/connectivity considered when determining what accounts
         for a distinct binary object. This value is passed to
-        `scipy.ndimage.morphology.generate_binary_structure` and should usually be :math:`> 1`.
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
         The decision on the connectivity is important, as it can influence the results
         strongly. If in doubt, leave it as it is.
         

@@ -23,7 +23,7 @@
 # third-party modules
 import numpy
 from scipy.ndimage import _ni_support
-from scipy.ndimage.filters import convolve1d
+from scipy.ndimage import convolve1d
 
 # own modules
 

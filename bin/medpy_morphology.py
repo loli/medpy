@@ -24,7 +24,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy.ndimage.morphology
+import scipy.ndimage
 
 # path changes
 
@@ -64,23 +64,23 @@ def main():
         
     # perform opening resp. closing
     # in 3D case: size 1 = 6-connectedness, 2 = 12-connectedness, 3 = 18-connectedness, etc.
-    footprint = scipy.ndimage.morphology.generate_binary_structure(image_smoothed_data.ndim, args.size)
+    footprint = scipy.ndimage.generate_binary_structure(image_smoothed_data.ndim, args.size)
     if 'erosion' == args.type:
         logger.info('Applying erosion...')
-        image_smoothed_data = scipy.ndimage.morphology.binary_erosion(image_smoothed_data, footprint, iterations=args.iterations)
+        image_smoothed_data = scipy.ndimage.binary_erosion(image_smoothed_data, footprint, iterations=args.iterations)
     elif 'dilation' == args.type:
         logger.info('Applying dilation...')
-        image_smoothed_data = scipy.ndimage.morphology.binary_dilation(image_smoothed_data, footprint, iterations=args.iterations)
+        image_smoothed_data = scipy.ndimage.binary_dilation(image_smoothed_data, footprint, iterations=args.iterations)
     elif 'opening' == args.type:
         logger.info('Applying opening...')
-        image_smoothed_data = scipy.ndimage.morphology.binary_opening(image_smoothed_data, footprint, iterations=args.iterations)
+        image_smoothed_data = scipy.ndimage.binary_opening(image_smoothed_data, footprint, iterations=args.iterations)
     else: # closing
         logger.info('Applying closing...')
-        image_smoothed_data = scipy.ndimage.morphology.binary_closing(image_smoothed_data, footprint, iterations=args.iterations)
+        image_smoothed_data = scipy.ndimage.binary_closing(image_smoothed_data, footprint, iterations=args.iterations)
 
     # apply additional hole closing step
     logger.info('Closing holes...')
-    image_smoothed_data = scipy.ndimage.morphology.binary_fill_holes(image_smoothed_data)
+    image_smoothed_data = scipy.ndimage.binary_fill_holes(image_smoothed_data)
 
     # save resulting mas
     save(image_smoothed_data, args.output, image_header, args.force)

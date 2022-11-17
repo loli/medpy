@@ -25,7 +25,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy.ndimage.interpolation
+import scipy.ndimage
 
 # path changes
 
@@ -83,7 +83,7 @@ def main():
     logger.debug('zoom-factors: {}'.format(zoom_factors))
 
     # zoom image
-    img = scipy.ndimage.interpolation.zoom(img, zoom_factors, order=args.order)
+    img = scipy.ndimage.zoom(img, zoom_factors, order=args.order)
     logger.debug('new image shape: {}'.format(img.shape))
 
     # set new voxel spacing

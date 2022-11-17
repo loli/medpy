@@ -86,7 +86,7 @@ def boundary_difference_of_means(graph, label_image, original_image): # label im
     
     # compute the mean intensities of all regions
     # Note: Bug in mean implementation: means over labels is only computed if the indexes are also supplied
-    means = scipy.ndimage.measurements.mean(original_image, labels=label_image, index=labels_unique)
+    means = scipy.ndimage.mean(original_image, labels=label_image, index=labels_unique)
     
     # compute the maximum possible intensity difference
     max_difference = float(abs(min(means) - max(means)))

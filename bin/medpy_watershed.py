@@ -27,7 +27,7 @@ import os
 
 # third-party modules
 import numpy
-from scipy.ndimage.measurements import label
+from scipy.ndimage import label
 from skimage.morphology import watershed
 
 # path changes
