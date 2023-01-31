@@ -10,7 +10,7 @@ the Dimacs graph standard [5]_ and/or processed (i.e. cut) using 3rd party graph
 algorithms.
 
 This module makes use of a custom *Boost.Python* [2]_ wrapper written for a modified
-version of Boykov and Kolmogorovs max-flow/min-cut algorithm (v3.01) [4]_ that can be found at [3]_. 
+version of Boykov and Kolmogorovs max-flow/min-cut algorithm (v3.01) [4]_ that can be found at [3]_.
 
 Supports voxel- as well as label/region-based graph-cuts.
 
@@ -25,21 +25,21 @@ Use together with an energy term from :mod:`~medpy.graphcut.energy_voxel` respec
 .. module:: medpy.graphcut.generate
 .. autosummary::
     :toctree: generated/
-    
+
     graph_from_voxels
     graph_from_labels
-    
+
 Energy terms for voxel-based graph-cuts :mod:`medpy.graphcut.energy_voxel`
 ==========================================================================
 Run-time optimized energy functions for the graph generation. Voxel based [7]_.
 
 .. module:: medpy.graphcut.energy_voxel
-    
+
 Boundary energy terms
 ---------------------
 .. autosummary::
-    :toctree: generated/    
-    
+    :toctree: generated/
+
     boundary_maximum_linear
     boundary_difference_linear
     boundary_maximum_exponential
@@ -48,14 +48,14 @@ Boundary energy terms
     boundary_difference_division
     boundary_maximum_power
     boundary_difference_power
-    
+
 Regional energy terms
 ---------------------
 .. autosummary::
     :toctree: generated/
-    
+
     regional_probability_map
-    
+
 Energy terms for label-based graph-cuts :mod:`medpy.graphcut.energy_label`
 ==========================================================================
 Run-time optimized energy functions for the graph generation. Label/Superpixel based [6]_.
@@ -65,18 +65,18 @@ Run-time optimized energy functions for the graph generation. Label/Superpixel b
 Boundary energy terms
 ---------------------
 .. autosummary::
-    :toctree: generated/    
-    
+    :toctree: generated/
+
     boundary_difference_of_means
     boundary_stawiaski
     boundary_stawiaski_directed
-    
+
 Regional energy terms
 ---------------------
 .. autosummary::
     :toctree: generated/
-    
-    regional_atlas    
+
+    regional_atlas
 
 Persist a graph :mod:`medpy.graphcut.write`
 ===========================================
@@ -85,7 +85,7 @@ Functions to persist a graph in file formats like Dimacs [5]_, which can be read
 .. module:: medpy.graphcut.write
 .. autosummary::
     :toctree: generated/
-    
+
     graph_to_dimacs
 
 Graph :mod:`medpy.graphcut.graph`
@@ -95,10 +95,10 @@ Graph objects that can be used to generate a custom graph and execute a graph-cu
 .. module:: medpy.graphcut.graph
 .. autosummary::
     :toctree: generated/
-    
+
     GCGraph
     Graph
-    
+
 Maxflow :mod:`medpy.graphcut.maxflow`
 =====================================
 C++ wrapper around the max-flow/min-cut implementation of [4]_ using Boost.Python.
@@ -107,11 +107,11 @@ Do not use these directly, but rather the graph objects supplied by :mod:`medpy.
 .. module:: medpy.graphcut.maxflow
 .. autosummary::
     :toctree: generated/
-    
+
     GraphDouble
     GraphFloat
     GraphInt
-    
+
 Wrapper :mod:`medpy.graphcut.wrapper`
 =====================================
 Wrappers for executing graph cuts in a memory-friendly way and other convenience functions.
@@ -119,7 +119,7 @@ Wrappers for executing graph cuts in a memory-friendly way and other convenience
 .. module:: medpy.graphcut.wrapper
 .. autosummary::
     :toctree: generated/
-    
+
     split_marker
     graphcut_split
     graphcut_subprocesses
@@ -159,9 +159,9 @@ Executing the graph-cut (depending on the image size, this might take a while).
 Building the resulting segmentation image, with True values for foreground and False
 values for background voxels.
 
->>> result_image_data = numpy.zeros(image_data.size, dtype=numpy.bool)
+>>> result_image_data = numpy.zeros(image_data.size, dtype=numpy.bool_)
 >>> for idx in range(len(result_image_data)):
-        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1    
+        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1
 >>> result_image_data = result_image_data.reshape(image_data.shape)
 
 
@@ -182,17 +182,17 @@ References
 """
 
 # Copyright (C) 2013 Oskar Maier
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 

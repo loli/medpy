@@ -47,11 +47,11 @@ __description__ = """
                   Applies the watershed segmentation an image using the supplied
                   parameters.
                   Note that this version does not take the voxel-spacing into account.
-                                  
+
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
 
 # code
@@ -60,24 +60,24 @@ def main():
     parser = getParser()
     parser.parse_args()
     args = getArguments(parser)
-    
+
     # prepare logger
     logger = Logger.getInstance()
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
-    
+
     # check if output image exists (will also be performed before saving, but as the watershed might be very time intensity, a initial check can save frustration)
     if not args.force:
         if os.path.exists(args.output):
             raise ArgumentError('The output image {} already exists.'.format(args.output))
-    
+
     # loading images
     data_input, header_input = load(args.input)
     if args.mask:
-        mask = load(args.mask)[0].astype(numpy.bool)
+        mask = load(args.mask)[0].astype(numpy.bool_)
     else:
         mask = None
-    
+
     # extract local minima and convert to markers
     logger.info('Extract local minima with minimum distance of {}...'.format(args.mindist))
     lm, _ = local_minima(data_input, args.mindist)
@@ -87,14 +87,14 @@ def main():
     if not None == mask:
         minima_labels[~mask] = 0
     minima_labels, _ = label(minima_labels)
-    
+
     # apply the watershed
     logger.info('Watershedding...')
     data_output = watershed(data_input, minima_labels, mask=mask)
 
     # save file
     save(data_output, args.output, header_input, args.force)
-    
+
     logger.info('Successfully terminated.')
 
 def getArguments(parser):
@@ -111,8 +111,8 @@ def getParser():
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
-    
+
     return parser
-    
+
 if __name__ == "__main__":
     main()

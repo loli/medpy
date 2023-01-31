@@ -30,7 +30,7 @@ import numpy
 # path changes
 
 # own modules
-from medpy.io import load, save 
+from medpy.io import load, save
 from medpy.core import Logger
 from medpy.filter import fit_labels_to_mask
 
@@ -49,11 +49,11 @@ __description__ = """
                   and if the value exceeds 50% of the total region size, it is marked
                   as mask, otherwise as background. For more details on how the fitting
                   is performed @see filter.fit_labels_to_mask.
-                  
+
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
 
 # code
@@ -62,36 +62,36 @@ def main():
     parser = getParser()
     parser.parse_args()
     args = getArguments(parser)
-    
+
     # prepare logger
     logger = Logger.getInstance()
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
-    
+
     # load input image
     logger.info('Loading image {}...'.format(args.input))
-    image_labels_data, _ = load(args.image)    
-    
+    image_labels_data, _ = load(args.image)
+
     # load mask image
     logger.info('Loading mask {}...'.format(args.mask))
     image_mask_data, image_mask_data_header = load(args.mask)
-    
+
     # check if output image exists
     if not args.force:
         if os.path.exists(args.output):
             logger.warning('The output image {} already exists. Skipping this image.'.format(args.output))
-    
+
     # create a mask from the label image
     logger.info('Reducing the label image...')
     image_reduced_data = fit_labels_to_mask(image_labels_data, image_mask_data)
-    
+
     # save resulting mask
     logger.info('Saving resulting mask as {} in the same format as input mask, only with data-type int8...'.format(args.output))
-    image_reduced_data = image_reduced_data.astype(numpy.bool, copy=False) # bool sadly not recognized
+    image_reduced_data = image_reduced_data.astype(numpy.bool_, copy=False) # bool sadly not recognized
     save(image_reduced_data, args.output, image_mask_data_header, args.force)
-    
+
     logger.info('Successfully terminated.')
-        
+
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     return parser.parse_args()
@@ -106,8 +106,8 @@ def getParser():
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
-    
-    return parser    
-    
+
+    return parser
+
 if __name__ == "__main__":
-    main()        
+    main()
