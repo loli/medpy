@@ -71,7 +71,7 @@ def coarseness(image, voxelspacing = None, mask = slice(None)):
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
-            mask = numpy.array(mask, copy=False, dtype = numpy.bool)
+            mask = numpy.array(mask, copy=False, dtype = bool)
     image = image[mask]
     
     # set default voxel spacing if not suppliec
@@ -152,7 +152,7 @@ def contrast(image, mask = slice(None)):
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
-            mask = numpy.array(mask, copy=False, dtype = numpy.bool)
+            mask = numpy.array(mask, copy=False, dtype = bool)
     image = image[mask]
     
     standard_deviation = numpy.std(image)
@@ -214,7 +214,7 @@ def directionality(image, min_distance = 4, threshold = 0.1, voxelspacing = None
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
-            mask = numpy.array(mask, copy=False, dtype = numpy.bool)
+            mask = numpy.array(mask, copy=False, dtype = bool)
     image = image[mask]
            
     # set default voxel spacing if not suppliec
