@@ -46,16 +46,16 @@ __description__ = """
                   contour width, the surface of the volume will correspond with the
                   middle of the contour line. In the case of an odd contour width, the
                   contour will be shifted by one voxel towards the inside of the volume.
-                  
+
                   In the case of 3D volumes, the contours result in shells, which might
                   not be desired, as they do not visualize well in 2D views. With the
                   '--dimension' argument, a dimension along which to extract the contours
                   can be supplied.
-                  
+
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
 
 # code
@@ -66,22 +66,22 @@ def main():
     logger = Logger.getInstance()
     if args.debug: logger.setLevel(logging.DEBUG)
     elif args.verbose: logger.setLevel(logging.INFO)
-    
+
     # load input image
     data_input, header_input = load(args.input)
-    
+
     # treat as binary
-    data_input = data_input.astype(numpy.bool)
-    
+    data_input = data_input.astype(numpy.bool_)
+
     # check dimension argument
     if args.dimension and (not args.dimension >= 0 or not args.dimension < data_input.ndim):
         argparse.ArgumentError(args.dimension, 'Invalid dimension of {} supplied. Image has only {} dimensions.'.format(args.dimension, data_input.ndim))
-        
+
     # compute erosion and dilation steps
     erosions = int(math.ceil(args.width / 2.))
     dilations = int(math.floor(args.width / 2.))
     logger.debug("Performing {} erosions and {} dilations to achieve a contour of width {}.".format(erosions, dilations, args.width))
-    
+
     # erode, dilate and compute contour
     if not args.dimension:
         eroded = binary_erosion(data_input, iterations=erosions) if not 0 == erosions else data_input
@@ -95,7 +95,7 @@ def main():
             slicer[args.dimension] = slice(sl, sl+1)
             bs_slicer[args.dimension] = slice(1, 2)
             bs = generate_binary_structure(data_input.ndim, 1)
-            
+
             eroded = binary_erosion(data_input[slicer], structure=bs[bs_slicer], iterations=erosions) if not 0 == erosions else data_input[slicer]
             dilated = binary_dilation(data_input[slicer], structure=bs[bs_slicer], iterations=dilations) if not 0 == dilations else data_input[slicer]
             data_output[slicer] = dilated - eroded
@@ -103,9 +103,9 @@ def main():
 
     # save resulting volume
     save(data_output, args.output, header_input, args.force)
-    
-    logger.info("Successfully terminated.")    
-    
+
+    logger.info("Successfully terminated.")
+
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
@@ -123,7 +123,7 @@ def getParser():
     parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
     parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
     parser.add_argument('-f', dest='force', action='store_true', help='Silently override existing output images.')
-    return parser    
+    return parser
 
 if __name__ == "__main__":
-    main()        
+    main()

@@ -1,15 +1,15 @@
 # Copyright (C) 2013 Oskar Maier
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -32,11 +32,11 @@ def xminus1d(img, fun, dim, *args, **kwargs):
     r"""
     Applies the function fun along all X-1D dimensional volumes of the images img
     dimension dim.
-    
+
     E.g. you want to apply a gauss filter to each slice of a 3D MRI brain image,
     simply supply the function as fun, the image as img and the dimension along which
     to iterate as dim.
-    
+
     Parameters
     ----------
     img : ndarray
@@ -45,12 +45,12 @@ def xminus1d(img, fun, dim, *args, **kwargs):
         A image modification function.
     dim : integer
         The dimension along which to apply the function.
-    
+
     Returns
     -------
     output : ndarray
         The result of the operation over the image ``img``.
-    
+
     Notes
     -----
     With ``*args`` and ``**kwargs``, arguments can be passed to the function ``fun``.
@@ -66,13 +66,13 @@ def xminus1d(img, fun, dim, *args, **kwargs):
 def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0):
     r"""
     Returns a copy of the input, padded by the supplied structuring element.
-    
+
     In the case of odd dimensionality, the structure element will be centered as
     following on the currently processed position::
-    
+
         [[T, Tx, T],
          [T, T , T]]
-         
+
     , where Tx denotes the center of the structure element.
 
     Simulates the behaviour of scipy.ndimage filters.
@@ -104,17 +104,17 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     cval : scalar, optional
         Value to fill past edges of input if `mode` is 'constant'. Default
         is 0.0
-        
+
     Returns
     -------
     output : ndarray
         The padded version of the input image.
-        
+
     Notes
     -----
     Since version 1.7.0, numpy supplied a pad function `numpy.pad` that provides
     the same functionality and should be preferred.
-    
+
     Raises
     ------
     ValueError
@@ -131,7 +131,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     fshape = [ii for ii in footprint.shape if ii > 0]
     if len(fshape) != input.ndim:
         raise RuntimeError('filter footprint array has incorrect shape.')
-    
+
     if numpy.any([x > 2*y for x, y in zip(footprint.shape, input.shape)]):
         raise ValueError('The size of the padding element is not allowed to be more than double the size of the input array in any dimension.')
 
@@ -168,7 +168,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
         reverse_slice = slice(None)
     else:
         raise RuntimeError('boundary mode not supported')
-    
+
     output[input_slicer] = input
     for dim, to_slice, from_slice in dim_slices:
         slicer_reverse = [reverse_slice if d == dim else slice(None) for d in range(output.ndim)]
@@ -182,10 +182,10 @@ def intersection(i1, h1, i2, h2):
         r"""
         Returns the intersecting parts of two images in real world coordinates.
         Takes both, voxelspacing and image offset into account.
-        
+
         Note that the returned new offset might be inaccurate up to 1/2 voxel size for
         each dimension due to averaging.
-        
+
         Parameters
         ----------
         i1 : array_like
@@ -194,7 +194,7 @@ def intersection(i1, h1, i2, h2):
         h1 : MedPy image header
         h2 : MedPy image header
             The corresponding headers.
-            
+
         Returns
         -------
         v1 : ndarray
@@ -204,24 +204,24 @@ def intersection(i1, h1, i2, h2):
         offset : tuple of floats
             The new offset of ``v1`` and ``v2`` in real world coordinates.
         """
-        
+
         # compute image bounding boxes in real-world coordinates
         os1 = numpy.asarray(header.get_offset(h1))
         ps1 = numpy.asarray(header.get_pixel_spacing(h1))
         bb1 = (os1, numpy.asarray(i1.shape) * ps1 + os1)
-        
-        
+
+
         os2 = numpy.asarray(header.get_offset(h2))
         ps2 = numpy.asarray(header.get_pixel_spacing(h2))
         bb2 = (os2, numpy.asarray(i2.shape) * ps2 + os2)
-        
+
         # compute intersection
         ib = (numpy.maximum(bb1[0], bb2[0]), numpy.minimum(bb1[1], bb2[1]))
-        
+
         # transfer intersection to respective image coordinates image
-        ib1 = [ ((ib[0] - os1) / numpy.asarray(ps1)).astype(numpy.int), ((ib[1] - os1) / numpy.asarray(ps1)).astype(numpy.int) ]
-        ib2 = [ ((ib[0] - os2) / numpy.asarray(ps2)).astype(numpy.int), ((ib[1] - os2) / numpy.asarray(ps2)).astype(numpy.int) ]
-        
+        ib1 = [ ((ib[0] - os1) / numpy.asarray(ps1)).astype(int), ((ib[1] - os1) / numpy.asarray(ps1)).astype(int) ]
+        ib2 = [ ((ib[0] - os2) / numpy.asarray(ps2)).astype(int), ((ib[1] - os2) / numpy.asarray(ps2)).astype(int) ]
+
         # ensure that both sub-volumes are of same size (might be affected by rounding errors); only reduction allowed
         s1 = ib1[1] - ib1[0]
         s2 = ib2[1] - ib2[0]
@@ -231,16 +231,16 @@ def intersection(i1, h1, i2, h2):
         d2[d2 > 0] = 0
         ib1[1] -= d1
         ib2[1] -= d2
-        
+
         # compute new image offsets (in real-world coordinates); averaged to account for rounding errors due to world-to-voxel mapping
         nos1 = ib1[0] * ps1 + os1 # real offset for image 1
         nos2 = ib2[0] * ps2 + os2 # real offset for image 2
         nos = numpy.average([nos1, nos2], 0)
-        
+
         # build slice lists
         sl1 = [slice(l, u) for l, u in zip(*ib1)]
         sl2 = [slice(l, u) for l, u in zip(*ib2)]
-        
+
         return i1[sl1], i2[sl2], nos
 
 def __make_footprint(input, size, footprint):
