@@ -122,7 +122,7 @@ def run_setup(with_compilation):
 
     setup(
         name="MedPy",
-        version="0.4.0",  # major.minor.micro
+        version="0.5.0",  # major.minor.micro
         description="Medical image processing in Python",
         author="Oskar Maier",
         author_email="oskar.maier@gmail.com",
