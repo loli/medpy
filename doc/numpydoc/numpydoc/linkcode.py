@@ -41,10 +41,7 @@ def doctree_read(app, doctree):
         raise LinkcodeError("Function `linkcode_resolve` is not given in conf.py")
 
     domain_keys = dict(
-        py=["module", "fullname"],
-        c=["names"],
-        cpp=["names"],
-        js=["object", "fullname"],
+        py=["module", "fullname"], c=["names"], cpp=["names"], js=["object", "fullname"]
     )
 
     for objnode in doctree.traverse(addnodes.desc):

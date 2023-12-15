@@ -40,8 +40,5 @@ def test_anisotropic_diffusion_voxel_spacing_array():
     # Purpose of this test is to ensure the filter code does not crash
     # Depending on Python versions
     arr = np.random.uniform(size=(60, 31, 3))
-    filtered = anisotropic_diffusion(
-        arr,
-        voxelspacing=np.array([1, 1, 1.0]),
-    )
+    filtered = anisotropic_diffusion(arr, voxelspacing=np.array([1, 1, 1.0]))
     assert filtered.shape == arr.shape
