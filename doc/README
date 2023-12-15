@@ -10,7 +10,7 @@ and test if the right binary is called. Higher versions break with the used nump
 Then run
 
     sphinx-build -aE -b html source/ build/
-    
+
 , then edit .rst files belong to Python classes
 
 source/generated/medpy.graphcut.graph.Graph.rst
@@ -23,15 +23,15 @@ source/generated/medpy.iterators.*
 by removing the line
 
     .. automethod:: __init__
-    
+
 and adding the line
-    
+
     :toctree: generated/
-    
+
 beneath each ".. autosummary::" command.
 
 Finally rerun the build
-    
+
     sphinx-build -aE -b html source/ build/
 
 
@@ -41,7 +41,7 @@ Enabling the search box
 Remove
 
     scipy-sphinx-theme/_theme/scipy/searchbox.html
-    
+
 from the scipy template, as it somehow overrides the search box with a custom link to edit the .rst files in-place online.
 
 
@@ -51,4 +51,3 @@ Generate the API documentation files
 Run
 
     sphinx-apidoc -efF -H MedPy -A "Oskar Maier" -V 0.2 -R 1 -o generated/ ../../medpy/medpy/
-

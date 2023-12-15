@@ -10,4 +10,3 @@ Installing MedPy the fast way
 
     sudo apt-get install libboost-python-dev build-essential
     sudo pip install medpy
-

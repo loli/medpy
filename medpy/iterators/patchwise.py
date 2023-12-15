@@ -20,18 +20,19 @@
 
 # build-in modules
 from itertools import product
+from operator import itemgetter
 
 # third-party modules
 import numpy
-from operator import itemgetter
 from scipy.ndimage import find_objects
 
 # own modules
 
 # constants
 
+
 # code
-class SlidingWindowIterator():
+class SlidingWindowIterator:
     r"""
     Moves a sliding window over the array, where the first patch is places centered on
     the top-left voxel and outside-of-image values filled with `cval`. The returned
@@ -56,7 +57,7 @@ class SlidingWindowIterator():
         Value to fill undefined positions.
     """
 
-    def __init__(self, array, psize, cval = 0):
+    def __init__(self, array, psize, cval=0):
         # process arguments
         self.array = numpy.asarray(array)
         if is_integer(psize):
@@ -67,18 +68,24 @@ class SlidingWindowIterator():
 
         # validate
         if numpy.any([x <= 0 for x in self.psize]):
-            raise ValueError('The patch size must be at least 1 in any dimension.')
+            raise ValueError("The patch size must be at least 1 in any dimension.")
         elif len(self.psize) != self.array.ndim:
-            raise ValueError('The patch dimensionality must equal the array dimensionality.')
+            raise ValueError(
+                "The patch dimensionality must equal the array dimensionality."
+            )
 
         # compute required padding as pairs
-        self.padding = [(p / 2, p / 2 - (p-1) % 2) for p in self.psize]
+        self.padding = [(p / 2, p / 2 - (p - 1) % 2) for p in self.psize]
 
         # pad array
-        self.array = numpy.pad(self.array, self.padding, mode='constant', constant_values=self.cval)
+        self.array = numpy.pad(
+            self.array, self.padding, mode="constant", constant_values=self.cval
+        )
 
         # initialize slicers
-        slicepoints = [list(range(0, s - p + 1)) for s, p in zip(self.array.shape, self.psize)]
+        slicepoints = [
+            list(range(0, s - p + 1)) for s, p in zip(self.array.shape, self.psize)
+        ]
         self.__slicepointiter = product(*slicepoints)
 
     def __iter__(self):
@@ -98,14 +105,18 @@ class SlidingWindowIterator():
             List of slicers to apply the same operation to another array (using applyslicer()).
         """
         # trigger internal iterators
-        spointset = next(self.__slicepointiter) # will raise StopIteration when empty
+        spointset = next(self.__slicepointiter)  # will raise StopIteration when empty
         # compute slicer object
         slicer = []
         padder = []
         for dim, sp in enumerate(spointset):
-            slicer.append( slice(sp, sp + self.psize[dim]) )
-            padder.append( (max(0, -1 * (sp - self.padding[dim][0])),
-                            max(0, (sp + self.psize[dim]) - (self.array.shape[dim] -1) )) )
+            slicer.append(slice(sp, sp + self.psize[dim]))
+            padder.append(
+                (
+                    max(0, -1 * (sp - self.padding[dim][0])),
+                    max(0, (sp + self.psize[dim]) - (self.array.shape[dim] - 1)),
+                )
+            )
 
         # create patch and patch mask
         def_slicer = [slice(x, None if 0 == y else -1 * y) for x, y in padder]
@@ -118,7 +129,7 @@ class SlidingWindowIterator():
 
     next = __next__
 
-    def applyslicer(self, array, slicer, cval = None):
+    def applyslicer(self, array, slicer, cval=None):
         r"""
         Apply a slicer returned by the iterator to a new array of the same
         dimensionality as the one used to initialize the iterator.
@@ -145,12 +156,12 @@ class SlidingWindowIterator():
         if cval is None:
             cval = self.cval
         _padding = self.padding + [(0, 0)] * (array.ndim - len(self.padding))
-        array = numpy.pad(array, _padding, mode='constant', constant_values=cval)
-        _psize = self.psize + list(array.shape[len(self.psize):])
+        array = numpy.pad(array, _padding, mode="constant", constant_values=cval)
+        _psize = self.psize + list(array.shape[len(self.psize) :])
         return array[slicer].reshape(_psize)
 
 
-class CentredPatchIterator():
+class CentredPatchIterator:
     r"""
     Iterated patch-wise over the array, where the central patch is centred on the
     image centre.
@@ -248,7 +259,7 @@ class CentredPatchIterator():
 
     """
 
-    def __init__(self, array, psize, cval = 0):
+    def __init__(self, array, psize, cval=0):
         # process arguments
         self.array = numpy.asarray(array)
         if is_integer(psize):
@@ -259,22 +270,37 @@ class CentredPatchIterator():
 
         # validate
         if numpy.any([x <= 0 for x in self.psize]):
-            raise ValueError('The patch size must be at least 1 in any dimension.')
+            raise ValueError("The patch size must be at least 1 in any dimension.")
         elif len(self.psize) != self.array.ndim:
-            raise ValueError('The patch dimensionality must equal the array dimensionality.')
+            raise ValueError(
+                "The patch dimensionality must equal the array dimensionality."
+            )
         elif numpy.any([x > y for x, y in zip(self.psize, self.array.shape)]):
-            raise ValueError('The patch is not allowed to be larger than the array in any dimension.')
+            raise ValueError(
+                "The patch is not allowed to be larger than the array in any dimension."
+            )
 
         # compute required padding
-        even_even_correction = [(1 - s%2) * (1 - ps%2) for s, ps in zip(self.array.shape, self.psize)]
-        array_centre = [s/2 - (1 - s%2) for s in self.array.shape]
-        remainder = [(c - ps/2 + ee,
-                      s - c - (ps+1)/2 - ee) for c, s, ps, ee in zip(array_centre, self.array.shape, self.psize, even_even_correction)]
-        padding = [((ps - l % ps) % ps,
-                   (ps - r % ps) % ps) for (l, r), ps in zip(remainder, self.psize)]
+        even_even_correction = [
+            (1 - s % 2) * (1 - ps % 2) for s, ps in zip(self.array.shape, self.psize)
+        ]
+        array_centre = [s / 2 - (1 - s % 2) for s in self.array.shape]
+        remainder = [
+            (c - ps / 2 + ee, s - c - (ps + 1) / 2 - ee)
+            for c, s, ps, ee in zip(
+                array_centre, self.array.shape, self.psize, even_even_correction
+            )
+        ]
+        padding = [
+            ((ps - l % ps) % ps, (ps - r % ps) % ps)
+            for (l, r), ps in zip(remainder, self.psize)
+        ]
 
         # determine slice-points for each dimension and initialize internal slice-point iterator
-        slicepoints = [list(range(-l, s + r, ps)) for s, ps, (l, r) in zip(self.array.shape, self.psize, padding)]
+        slicepoints = [
+            list(range(-l, s + r, ps))
+            for s, ps, (l, r) in zip(self.array.shape, self.psize, padding)
+        ]
         self.__slicepointiter = product(*slicepoints)
 
         # initialize internal grid-id iterator
@@ -299,25 +325,35 @@ class CentredPatchIterator():
             A list of `slice()` instances definind the patch.
         """
         # trigger internal iterators
-        spointset = next(self.__slicepointiter) # will raise StopIteration when empty
+        spointset = next(self.__slicepointiter)  # will raise StopIteration when empty
         gridid = next(self.__grididiter)
         # compute slicer object and padder tuples
         slicer = []
         padder = []
         for dim, sp in enumerate(spointset):
-            slicer.append( slice(max(0, sp),
-                                 min(sp + self.psize[dim], self.array.shape[dim])) )
-            padder.append( (max(0, -1 * sp), max(0, sp + self.psize[dim] - self.array.shape[dim])) )
+            slicer.append(
+                slice(max(0, sp), min(sp + self.psize[dim], self.array.shape[dim]))
+            )
+            padder.append(
+                (max(0, -1 * sp), max(0, sp + self.psize[dim] - self.array.shape[dim]))
+            )
         # create patch and patch mask
-        patch = numpy.pad(self.array[slicer], padder, mode='constant', constant_values=self.cval)
-        pmask = numpy.pad(numpy.ones(self.array[slicer].shape, dtype=numpy.bool_), padder, mode='constant', constant_values=0)
+        patch = numpy.pad(
+            self.array[slicer], padder, mode="constant", constant_values=self.cval
+        )
+        pmask = numpy.pad(
+            numpy.ones(self.array[slicer].shape, dtype=numpy.bool_),
+            padder,
+            mode="constant",
+            constant_values=0,
+        )
 
         return patch, pmask, gridid, slicer
 
     next = __next__
 
     @staticmethod
-    def applyslicer(array, slicer, pmask, cval = 0):
+    def applyslicer(array, slicer, pmask, cval=0):
         r"""
         Apply a slicer returned by the iterator to a new array of the same
         dimensionality as the one used to initialize the iterator.
@@ -352,9 +388,12 @@ class CentredPatchIterator():
         """
         l = len(slicer)
         patch = numpy.zeros(list(pmask.shape[:l]) + list(array.shape[l:]), array.dtype)
-        if not 0 == cval: patch.fill(cval)
+        if not 0 == cval:
+            patch.fill(cval)
         sliced = array[slicer]
-        patch[pmask] = sliced.reshape([numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:]))
+        patch[pmask] = sliced.reshape(
+            [numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:])
+        )
         return patch
 
     @staticmethod
@@ -411,15 +450,26 @@ class CentredPatchIterator():
             gridids = []
             pmasks = []
             for groupid, group in list(groups.items()):
-                patches.append(numpy.concatenate([p for p, _, _ in sorted(group, key=itemgetter(2))], d))
-                pmasks.append(numpy.concatenate([m for _, m, _ in sorted(group, key=itemgetter(2))], d))
+                patches.append(
+                    numpy.concatenate(
+                        [p for p, _, _ in sorted(group, key=itemgetter(2))], d
+                    )
+                )
+                pmasks.append(
+                    numpy.concatenate(
+                        [m for _, m, _ in sorted(group, key=itemgetter(2))], d
+                    )
+                )
                 gridids.append(groupid)
         objs = find_objects(pmasks[0])
         if not 1 == len(objs):
-            raise ValueError('The assembled patch masks contain more than one binary object.')
+            raise ValueError(
+                "The assembled patch masks contain more than one binary object."
+            )
         return patches[0][objs[0]]
 
-class CentredPatchIteratorOverlapping():
+
+class CentredPatchIteratorOverlapping:
     r"""
     Iterated patch-wise over the array, where the central patch is centred on the
     image centre.
@@ -519,7 +569,7 @@ class CentredPatchIteratorOverlapping():
 
     """
 
-    def __init__(self, array, psize, offset=None, cval = 0):
+    def __init__(self, array, psize, offset=None, cval=0):
         # process arguments
         self.array = numpy.asarray(array)
         if is_integer(psize):
@@ -536,22 +586,37 @@ class CentredPatchIteratorOverlapping():
 
         # validate
         if numpy.any([x <= 0 for x in self.psize]):
-            raise ValueError('The patch size must be at least 1 in any dimension.')
+            raise ValueError("The patch size must be at least 1 in any dimension.")
         elif len(self.psize) != self.array.ndim:
-            raise ValueError('The patch dimensionality must equal the array dimensionality.')
+            raise ValueError(
+                "The patch dimensionality must equal the array dimensionality."
+            )
         elif numpy.any([x > y for x, y in zip(self.psize, self.array.shape)]):
-            raise ValueError('The patch is not allowed to be larger than the array in any dimension.')
+            raise ValueError(
+                "The patch is not allowed to be larger than the array in any dimension."
+            )
 
         # compute required padding
-        even_even_correction = [(1 - s%2) * (1 - ps%2) for s, ps in zip(self.array.shape, self.psize)]
-        array_centre = [s/2 - (1 - s%2) for s in self.array.shape]
-        remainder = [(c - ps/2 + ee,
-                      s - c - (ps+1)/2 - ee) for c, s, ps, ee in zip(array_centre, self.array.shape, self.psize, even_even_correction)]
-        padding = [((ps - l % ps) % ps,
-                   (ps - r % ps) % ps) for (l, r), ps in zip(remainder, self.psize)]
+        even_even_correction = [
+            (1 - s % 2) * (1 - ps % 2) for s, ps in zip(self.array.shape, self.psize)
+        ]
+        array_centre = [s / 2 - (1 - s % 2) for s in self.array.shape]
+        remainder = [
+            (c - ps / 2 + ee, s - c - (ps + 1) / 2 - ee)
+            for c, s, ps, ee in zip(
+                array_centre, self.array.shape, self.psize, even_even_correction
+            )
+        ]
+        padding = [
+            ((ps - l % ps) % ps, (ps - r % ps) % ps)
+            for (l, r), ps in zip(remainder, self.psize)
+        ]
 
         # determine slice-points for each dimension and initialize internal slice-point iterator
-        slicepoints = [list(range(-l, s + r, os)) for s, os, (l, r) in zip(self.array.shape, offset, padding)]
+        slicepoints = [
+            list(range(-l, s + r, os))
+            for s, os, (l, r) in zip(self.array.shape, offset, padding)
+        ]
         self.__slicepointiter = product(*slicepoints)
 
         # initialize internal grid-id iterator
@@ -576,25 +641,35 @@ class CentredPatchIteratorOverlapping():
             A list of `slice()` instances definind the patch.
         """
         # trigger internal iterators
-        spointset = next(self.__slicepointiter) # will raise StopIteration when empty
+        spointset = next(self.__slicepointiter)  # will raise StopIteration when empty
         gridid = next(self.__grididiter)
         # compute slicer object and padder tuples
         slicer = []
         padder = []
         for dim, sp in enumerate(spointset):
-            slicer.append( slice(max(0, sp),
-                                 min(sp + self.psize[dim], self.array.shape[dim])) )
-            padder.append( (max(0, -1 * sp), max(0, sp + self.psize[dim] - self.array.shape[dim])) )
+            slicer.append(
+                slice(max(0, sp), min(sp + self.psize[dim], self.array.shape[dim]))
+            )
+            padder.append(
+                (max(0, -1 * sp), max(0, sp + self.psize[dim] - self.array.shape[dim]))
+            )
         # create patch and patch mask
-        patch = numpy.pad(self.array[slicer], padder, mode='constant', constant_values=self.cval)
-        pmask = numpy.pad(numpy.ones(self.array[slicer].shape, dtype=numpy.bool_), padder, mode='constant', constant_values=0)
+        patch = numpy.pad(
+            self.array[slicer], padder, mode="constant", constant_values=self.cval
+        )
+        pmask = numpy.pad(
+            numpy.ones(self.array[slicer].shape, dtype=numpy.bool_),
+            padder,
+            mode="constant",
+            constant_values=0,
+        )
 
         return patch, pmask, gridid, slicer
 
     next = __next__
 
     @staticmethod
-    def applyslicer(array, slicer, pmask, cval = 0):
+    def applyslicer(array, slicer, pmask, cval=0):
         r"""
         Apply a slicer returned by the iterator to a new array of the same
         dimensionality as the one used to initialize the iterator.
@@ -629,9 +704,12 @@ class CentredPatchIteratorOverlapping():
         """
         l = len(slicer)
         patch = numpy.zeros(list(pmask.shape[:l]) + list(array.shape[l:]), array.dtype)
-        if not 0 == cval: patch.fill(cval)
+        if not 0 == cval:
+            patch.fill(cval)
         sliced = array[slicer]
-        patch[pmask] = sliced.reshape([numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:]))
+        patch[pmask] = sliced.reshape(
+            [numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:])
+        )
         return patch
 
     @staticmethod
@@ -692,12 +770,22 @@ class CentredPatchIteratorOverlapping():
             gridids = []
             pmasks = []
             for groupid, group in list(groups.items()):
-                patches.append(numpy.concatenate([p for p, _, _ in sorted(group, key=itemgetter(2))], d))
-                pmasks.append(numpy.concatenate([m for _, m, _ in sorted(group, key=itemgetter(2))], d))
+                patches.append(
+                    numpy.concatenate(
+                        [p for p, _, _ in sorted(group, key=itemgetter(2))], d
+                    )
+                )
+                pmasks.append(
+                    numpy.concatenate(
+                        [m for _, m, _ in sorted(group, key=itemgetter(2))], d
+                    )
+                )
                 gridids.append(groupid)
         objs = find_objects(pmasks[0])
         if not 1 == len(objs):
-            raise ValueError('The assembled patch masks contain more than one binary object.')
+            raise ValueError(
+                "The assembled patch masks contain more than one binary object."
+            )
         return patches[0][objs[0]]
 
 

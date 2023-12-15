@@ -196,15 +196,10 @@ References
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import from compile C++ Python module
-from .maxflow import GraphDouble, GraphFloat, GraphInt # this always triggers an error in Eclipse, but is right
 
 # import all functions/methods/classes into the module
-from .graph import Graph, GCGraph
-from .write import graph_to_dimacs
-from .generate import graph_from_labels, graph_from_voxels
-from . import energy_label
-from . import energy_voxel
+
+# import from compile C++ Python module
 
 # import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith('_')]
+__all__ = [s for s in dir() if not s.startswith("_")]

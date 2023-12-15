@@ -15,92 +15,86 @@ for Traits is required.
 """
 
 
-import inspect
-import os
-import pydoc
 import collections
+import inspect
+import pydoc
 
-from . import docscrape
-from . import docscrape_sphinx
-from .docscrape_sphinx import SphinxClassDoc, SphinxFunctionDoc, SphinxDocString
+from . import comment_eater, docscrape, numpydoc
+from .docscrape_sphinx import SphinxClassDoc, SphinxDocString, SphinxFunctionDoc
 
-from . import numpydoc
-
-from . import comment_eater
 
 class SphinxTraitsDoc(SphinxClassDoc):
-    def __init__(self, cls, modulename='', func_doc=SphinxFunctionDoc):
+    def __init__(self, cls, modulename="", func_doc=SphinxFunctionDoc):
         if not inspect.isclass(cls):
             raise ValueError("Initialise using a class. Got %r" % cls)
         self._cls = cls
 
-        if modulename and not modulename.endswith('.'):
-            modulename += '.'
+        if modulename and not modulename.endswith("."):
+            modulename += "."
         self._mod = modulename
         self._name = cls.__name__
         self._func_doc = func_doc
 
         docstring = pydoc.getdoc(cls)
-        docstring = docstring.split('\n')
+        docstring = docstring.split("\n")
 
         # De-indent paragraph
         try:
-            indent = min(len(s) - len(s.lstrip()) for s in docstring
-                         if s.strip())
+            indent = min(len(s) - len(s.lstrip()) for s in docstring if s.strip())
         except ValueError:
             indent = 0
 
-        for n,line in enumerate(docstring):
+        for n, line in enumerate(docstring):
             docstring[n] = docstring[n][indent:]
 
         self._doc = docscrape.Reader(docstring)
         self._parsed_data = {
-            'Signature': '',
-            'Summary': '',
-            'Description': [],
-            'Extended Summary': [],
-            'Parameters': [],
-            'Returns': [],
-            'Raises': [],
-            'Warns': [],
-            'Other Parameters': [],
-            'Traits': [],
-            'Methods': [],
-            'See Also': [],
-            'Notes': [],
-            'References': '',
-            'Example': '',
-            'Examples': '',
-            'index': {}
-            }
+            "Signature": "",
+            "Summary": "",
+            "Description": [],
+            "Extended Summary": [],
+            "Parameters": [],
+            "Returns": [],
+            "Raises": [],
+            "Warns": [],
+            "Other Parameters": [],
+            "Traits": [],
+            "Methods": [],
+            "See Also": [],
+            "Notes": [],
+            "References": "",
+            "Example": "",
+            "Examples": "",
+            "index": {},
+        }
 
         self._parse()
 
     def _str_summary(self):
-        return self['Summary'] + ['']
+        return self["Summary"] + [""]
 
     def _str_extended_summary(self):
-        return self['Description'] + self['Extended Summary'] + ['']
+        return self["Description"] + self["Extended Summary"] + [""]
 
     def __str__(self, indent=0, func_role="func"):
         out = []
         out += self._str_signature()
-        out += self._str_index() + ['']
+        out += self._str_index() + [""]
         out += self._str_summary()
         out += self._str_extended_summary()
-        for param_list in ('Parameters', 'Traits', 'Methods',
-                           'Returns','Raises'):
+        for param_list in ("Parameters", "Traits", "Methods", "Returns", "Raises"):
             out += self._str_param_list(param_list)
         out += self._str_see_also("obj")
-        out += self._str_section('Notes')
+        out += self._str_section("Notes")
         out += self._str_references()
-        out += self._str_section('Example')
-        out += self._str_section('Examples')
-        out = self._str_indent(out,indent)
-        return '\n'.join(out)
+        out += self._str_section("Example")
+        out += self._str_section("Examples")
+        out = self._str_indent(out, indent)
+        return "\n".join(out)
+
 
 def looks_like_issubclass(obj, classname):
-    """ Return True if the object has a class or superclass with the given class
+    """Return True if the object has a class or superclass with the given class
     name.
 
     Ignores old-style classes.
@@ -113,30 +107,31 @@ def looks_like_issubclass(obj, classname):
             return True
     return False
 
+
 def get_doc_object(obj, what=None, config=None):
     if what is None:
         if inspect.isclass(obj):
-            what = 'class'
+            what = "class"
         elif inspect.ismodule(obj):
-            what = 'module'
+            what = "module"
         elif isinstance(obj, collections.Callable):
-            what = 'function'
+            what = "function"
         else:
-            what = 'object'
-    if what == 'class':
-        doc = SphinxTraitsDoc(obj, '', func_doc=SphinxFunctionDoc, config=config)
-        if looks_like_issubclass(obj, 'HasTraits'):
+            what = "object"
+    if what == "class":
+        doc = SphinxTraitsDoc(obj, "", func_doc=SphinxFunctionDoc, config=config)
+        if looks_like_issubclass(obj, "HasTraits"):
             for name, trait, comment in comment_eater.get_class_traits(obj):
                 # Exclude private traits.
-                if not name.startswith('_'):
-                    doc['Traits'].append((name, trait, comment.splitlines()))
+                if not name.startswith("_"):
+                    doc["Traits"].append((name, trait, comment.splitlines()))
         return doc
-    elif what in ('function', 'method'):
-        return SphinxFunctionDoc(obj, '', config=config)
+    elif what in ("function", "method"):
+        return SphinxFunctionDoc(obj, "", config=config)
     else:
         return SphinxDocString(pydoc.getdoc(obj), config=config)
+
 
 def setup(app):
     # init numpydoc
     numpydoc.setup(app, get_doc_object)
-

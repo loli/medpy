@@ -4,20 +4,31 @@ Unit and Hypothesis Tests for histogram metrics
 """
 
 import numpy as np
-from hypothesis import given, strategies, assume, Verbosity, note, event
+from hypothesis import assume, given
 from hypothesis import settings as hyp_settings
+from hypothesis import strategies
 
 from medpy.metric import histogram
 
-metric_list = ['manhattan', 'minowski', 'euclidean', 'noelle_2', 'noelle_4', 'noelle_5']
-metric_list_to_doublecheck = ['cosine_1']
+metric_list = ["manhattan", "minowski", "euclidean", "noelle_2", "noelle_4", "noelle_5"]
+metric_list_to_doublecheck = ["cosine_1"]
 
-unknown_property = ['histogram_intersection']
-still_under_dev  = ['quadratic_forms']
-similarity_funcs = ['correlate', 'cosine', 'cosine_2', 'cosine_alt', 'fidelity_based']
-semi_metric_list = ['kullback_leibler', 'jensen_shannon', 'chi_square', 'chebyshev', 'chebyshev_neg',
-                    'histogram_intersection_1', 'relative_deviation', 'relative_bin_deviation',
-                    'noelle_1', 'noelle_3', 'correlate_1']
+unknown_property = ["histogram_intersection"]
+still_under_dev = ["quadratic_forms"]
+similarity_funcs = ["correlate", "cosine", "cosine_2", "cosine_alt", "fidelity_based"]
+semi_metric_list = [
+    "kullback_leibler",
+    "jensen_shannon",
+    "chi_square",
+    "chebyshev",
+    "chebyshev_neg",
+    "histogram_intersection_1",
+    "relative_deviation",
+    "relative_bin_deviation",
+    "noelle_1",
+    "noelle_3",
+    "correlate_1",
+]
 
 default_feature_dim = 1000
 default_num_bins = 20
@@ -46,23 +57,28 @@ def within_tolerance(x, y):
 def make_random_histogram(length=default_feature_dim, num_bins=default_num_bins):
     "Returns a sequence of histogram density values that sum to 1.0"
 
-    hist, bin_edges = np.histogram(np.random.random(length),
-                                   bins=num_bins, density=True)
+    hist, bin_edges = np.histogram(
+        np.random.random(length), bins=num_bins, density=True
+    )
 
     # to ensure they sum to 1.0
     hist = hist / sum(hist)
 
     if len(hist) < 2:
-        raise ValueError('Invalid histogram')
+        raise ValueError("Invalid histogram")
 
     return hist
 
 
 # Increasing the number of examples to try
-@hyp_settings(max_examples=1000, min_satisfying_examples=100)  # , verbosity=Verbosity.verbose)
-@given(strategies.sampled_from(metric_list),
-       strategies.integers(range_feature_dim[0], range_feature_dim[1]),
-       strategies.integers(range_num_bins[0], range_num_bins[1]))
+@hyp_settings(
+    max_examples=1000, min_satisfying_examples=100
+)  # , verbosity=Verbosity.verbose)
+@given(
+    strategies.sampled_from(metric_list),
+    strategies.integers(range_feature_dim[0], range_feature_dim[1]),
+    strategies.integers(range_num_bins[0], range_num_bins[1]),
+)
 def test_math_properties_metric(method_str, feat_dim, num_bins):
     """Trying to test the four properties on the same set of histograms"""
 
@@ -103,7 +119,7 @@ def check_nonnegativity(method, h1, h2):
 
 
 def check_triangle_inequality(method, h1, h2, h3):
-    """ Classic test for a metric: dist(a,b) < dist(a,b) + dist(a,c)"""
+    """Classic test for a metric: dist(a,b) < dist(a,b) + dist(a,c)"""
 
     d12 = method(h1, h2)
     d23 = method(h2, h3)

@@ -25,17 +25,16 @@ import logging
 
 # third-party modules
 import numpy
-from scipy.ndimage import binary_fill_holes, binary_dilation,\
-    binary_erosion
-
-# path changes
+from scipy.ndimage import binary_dilation, binary_erosion, binary_fill_holes
 
 # own modules
 from medpy.core import Logger
-from medpy.io import load, save, header
-from medpy.filter import otsu
 from medpy.core.exceptions import ArgumentError
+from medpy.filter import otsu
 from medpy.filter.binary import largest_connected_component
+from medpy.io import header, load, save
+
+# path changes
 
 
 # information
@@ -84,14 +83,17 @@ and you are welcome to redistribute it under certain conditions; see
 the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
 
+
 # code
 def main():
     args = getArguments(getParser())
 
     # prepare logger
     logger = Logger.getInstance()
-    if args.debug: logger.setLevel(logging.DEBUG)
-    elif args.verbose: logger.setLevel(logging.INFO)
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    elif args.verbose:
+        logger.setLevel(logging.INFO)
 
     # loading input images
     b0img, b0hdr = load(args.b0image)
@@ -103,28 +105,42 @@ def main():
 
     # check if image are compatible
     if not b0img.shape == bximg.shape:
-        raise ArgumentError('The input images shapes differ i.e. {} != {}.'.format(b0img.shape, bximg.shape))
+        raise ArgumentError(
+            "The input images shapes differ i.e. {} != {}.".format(
+                b0img.shape, bximg.shape
+            )
+        )
     if not header.get_pixel_spacing(b0hdr) == header.get_pixel_spacing(bxhdr):
-        raise ArgumentError('The input images voxel spacing differs i.e. {} != {}.'.format(header.get_pixel_spacing(b0hdr), header.get_pixel_spacing(bxhdr)))
+        raise ArgumentError(
+            "The input images voxel spacing differs i.e. {} != {}.".format(
+                header.get_pixel_spacing(b0hdr), header.get_pixel_spacing(bxhdr)
+            )
+        )
 
     # check if supplied threshold value as well as the b value is above 0
     if args.threshold is not None and not args.threshold >= 0:
-        raise ArgumentError('The supplied threshold value must be greater than 0, otherwise a division through 0 might occur.')
+        raise ArgumentError(
+            "The supplied threshold value must be greater than 0, otherwise a division through 0 might occur."
+        )
     if not args.b > 0:
-        raise ArgumentError('The supplied b-value must be greater than 0.')
+        raise ArgumentError("The supplied b-value must be greater than 0.")
 
     # compute threshold value if not supplied
     if args.threshold is None:
-        b0thr = otsu(b0img, 32) / 4. # divide by 4 to decrease impact
-        bxthr = otsu(bximg, 32) / 4.
+        b0thr = otsu(b0img, 32) / 4.0  # divide by 4 to decrease impact
+        bxthr = otsu(bximg, 32) / 4.0
         if 0 >= b0thr:
-            raise ArgumentError('The supplied b0image seems to contain negative values.')
+            raise ArgumentError(
+                "The supplied b0image seems to contain negative values."
+            )
         if 0 >= bxthr:
-            raise ArgumentError('The supplied bximage seems to contain negative values.')
+            raise ArgumentError(
+                "The supplied bximage seems to contain negative values."
+            )
     else:
         b0thr = bxthr = args.threshold
 
-    logger.debug('thresholds={}/{}, b-value={}'.format(b0thr, bxthr, args.b))
+    logger.debug("thresholds={}/{}, b-value={}".format(b0thr, bxthr, args.b))
 
     # threshold b0 + bx DW image to obtain a mask
     # b0 mask avoid division through 0, bx mask avoids a zero in the ln(x) computation
@@ -135,11 +151,15 @@ def main():
     mask = largest_connected_component(mask)
     mask = binary_dilation(mask, iterations=1)
 
-    logger.debug('excluding {} of {} voxels from the computation and setting them to zero'.format(numpy.count_nonzero(mask), numpy.prod(mask.shape)))
+    logger.debug(
+        "excluding {} of {} voxels from the computation and setting them to zero".format(
+            numpy.count_nonzero(mask), numpy.prod(mask.shape)
+        )
+    )
 
     # compute the ADC
     adc = numpy.zeros(b0img.shape, b0img.dtype)
-    adc[mask] = -1. * args.b * numpy.log(bximg[mask] / b0img[mask])
+    adc[mask] = -1.0 * args.b * numpy.log(bximg[mask] / b0img[mask])
     adc[adc < 0] = 0
 
     # saving the resulting image
@@ -150,20 +170,49 @@ def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     return parser.parse_args()
 
+
 def getParser():
     "Creates and returns the argparse parser object."
-    parser = argparse.ArgumentParser(description=__description__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('b0image', help='the diffusion weighted image required with b=0')
-    parser.add_argument('bximage', help='the diffusion weighted image required with b=x')
-    parser.add_argument('b', type=int, help='the b-value used to acquire the bx-image (i.e. x)')
-    parser.add_argument('output', help='the computed apparent diffusion coefficient image')
+    parser = argparse.ArgumentParser(
+        description=__description__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "b0image", help="the diffusion weighted image required with b=0"
+    )
+    parser.add_argument(
+        "bximage", help="the diffusion weighted image required with b=x"
+    )
+    parser.add_argument(
+        "b", type=int, help="the b-value used to acquire the bx-image (i.e. x)"
+    )
+    parser.add_argument(
+        "output", help="the computed apparent diffusion coefficient image"
+    )
 
-    parser.add_argument('-t', '--threshold', type=int, dest='threshold', help='set a fixed threshold for the input images to mask the computation')
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        type=int,
+        dest="threshold",
+        help="set a fixed threshold for the input images to mask the computation",
+    )
 
-    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='verbose output')
-    parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
-    parser.add_argument('-f', '--force', dest='force', action='store_true', help='overwrite existing files')
+    parser.add_argument(
+        "-v", "--verbose", dest="verbose", action="store_true", help="verbose output"
+    )
+    parser.add_argument(
+        "-d", dest="debug", action="store_true", help="Display debug information."
+    )
+    parser.add_argument(
+        "-f",
+        "--force",
+        dest="force",
+        action="store_true",
+        help="overwrite existing files",
+    )
     return parser
+
 
 if __name__ == "__main__":
     main()

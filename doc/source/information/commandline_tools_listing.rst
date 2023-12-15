@@ -71,18 +71,18 @@ Image volume manipulation
 
 .. topic:: medpy_extract_sub_volume_auto.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume_auto.py.ipynb>`_)
 
-	Splits a volume into a number of sub volumes along a given dimension. 
+	Splits a volume into a number of sub volumes along a given dimension.
 
 .. topic:: medpy_extract_sub_volume_by_example.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume_by_example.py.ipynb>`_)
 
 	Takes an image and a second image containing a binary mask, then extracts the sub volume of the first image defined by the bounding box of the foreground object in the binary image.
-	
+
 .. topic:: medpy_fit_into_shape.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_fit_into_shape.py.ipynb>`_)
-	
+
 	Fit an existing image into a new shape by either extending or cutting all dimensions symmetrically.
-	
+
 .. topic:: medpy_intersection.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_intersection.py.ipynb>`_)
-	
+
   Extracts the intersecting parts of two volumes regarding offset and voxel-spacing.
 
 .. topic:: medpy_join_xd_to_xplus1d.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_join_xd_to_xplus1d.py.ipynb>`_)
@@ -133,7 +133,7 @@ Binary image manipulation
   Converts a binary volume into a surface contour.
 
 .. topic:: medpy_join_masks.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_join_masks.py.ipynb>`_)
-  
+
   Joins a number of binary images into a single conjunction using sum, avg, max or min.
 
 .. topic:: medpy_merge.py (`notebook <https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_merge.py.ipynb>`_)
