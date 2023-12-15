@@ -118,7 +118,7 @@ td.field-body blockquote {
 td.field-body blockquote p,
 dl.class blockquote p,
 dl.function blockquote p,
-dl.method blockquote p 
+dl.method blockquote p
 {
     font-family: inherit;
     font-size: inherit;

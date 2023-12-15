@@ -15,7 +15,7 @@ Custom types for the `argparse <https://docs.python.org/3/library/argparse.html>
 .. module:: medpy.utilities.argparseu
 .. autosummary::
     :toctree: generated/
-    
+
     sequenceOfIntegers
     sequenceOfIntegersGt
     sequenceOfIntegersGe
@@ -29,4 +29,6 @@ Custom types for the `argparse <https://docs.python.org/3/library/argparse.html>
     sequenceOfFloatsLe
 
 """
-from . import argparseu
+from . import argparseu as argparseu  # nopycln: import
+
+_all__ = ["argparseu"]

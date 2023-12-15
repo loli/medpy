@@ -1,2 +1,6 @@
-from .houghtransform import TestHoughTransform
-from .IntensityRangeStandardization import TestIntensityRangeStandardization
+from .houghtransform import TestHoughTransform as TestHoughTransform
+from .IntensityRangeStandardization import (
+    TestIntensityRangeStandardization as TestIntensityRangeStandardization,
+)
+
+__all__ = ["TestHoughTransform", "TestIntensityRangeStandardization"]

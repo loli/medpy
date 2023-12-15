@@ -18,9 +18,10 @@
 # since 2014-10-15
 # status Release
 
+import warnings
+
 # build-in modules
 from itertools import combinations
-import warnings
 
 # third-party modules
 import numpy
@@ -30,8 +31,11 @@ from scipy.sparse.csr import csr_matrix
 
 # constants
 
+
 # code
-def mkneighbors_graph(observations, n_neighbours, metric, mode='connectivity', metric_params = None):
+def mkneighbors_graph(
+    observations, n_neighbours, metric, mode="connectivity", metric_params=None
+):
     """
     Computes the (weighted) graph of mutual k-Neighbors for observations.
 
@@ -68,7 +72,7 @@ def mkneighbors_graph(observations, n_neighbours, metric, mode='connectivity', m
     pdists = pdist(observations, metric)
 
     # get the k nearest neighbours for each patch
-    k_nearest_nbhs = numpy.argsort(pdists)[:,:n_neighbours]
+    k_nearest_nbhs = numpy.argsort(pdists)[:, :n_neighbours]
 
     # create a mask denoting the k nearest neighbours in image_pdist
     k_nearest_mutual_nbhs_mask = numpy.zeros(pdists.shape, numpy.bool_)
@@ -85,14 +89,15 @@ def mkneighbors_graph(observations, n_neighbours, metric, mode='connectivity', m
     if numpy.any(pdists[k_nearest_mutual_nbhs_mask] == 0):
         warnings.warn('The graph contains at least one edge with a weight of "0".')
 
-    if 'connectivity' == mode:
+    if "connectivity" == mode:
         return csr_matrix(k_nearest_mutual_nbhs_mask)
-    elif 'distance' == mode:
+    elif "distance" == mode:
         return csr_matrix(pdists)
     else:
         return csr_matrix(k_nearest_mutual_nbhs_mask), csr_matrix(pdists)
 
-def pdist(objects, dmeasure, diagval = numpy.inf):
+
+def pdist(objects, dmeasure, diagval=numpy.inf):
     """
     Compute the pair-wise distances between arbitrary objects.
 

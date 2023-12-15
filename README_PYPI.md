@@ -123,7 +123,7 @@ The supported image file formats should include at least the following. Note tha
 * Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
 * Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)
 * Digital Imaging and Communications in Medicine (DICOM) series (<directory>/)
-* Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr) 
+* Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr)
 * Medical Imaging NetCDF (MINC) (.mnc, .MNC)
 * Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)
 

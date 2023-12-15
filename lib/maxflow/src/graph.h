@@ -5,7 +5,7 @@
 
 		"An Experimental Comparison of Min-Cut/Max-Flow Algorithms for Energy Minimization in Vision."
 		Yuri Boykov and Vladimir Kolmogorov.
-		In IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), 
+		In IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI),
 		September 2004
 
 	This algorithm was developed by Yuri Boykov and Vladimir Kolmogorov
@@ -58,7 +58,7 @@ public:
 	{
 		SOURCE	= 0,
 		SINK	= 1
-	} termtype; // terminals 
+	} termtype; // terminals
 	typedef int node_id;
 
 	/////////////////////////////////////////////////////////////////////////
@@ -66,16 +66,16 @@ public:
     //              (should be enough for most applications)               //
 	/////////////////////////////////////////////////////////////////////////
 
-	// Constructor. 
+	// Constructor.
 	// The first argument gives an estimate of the maximum number of nodes that can be added
 	// to the graph, and the second argument is an estimate of the maximum number of edges.
-	// The last (optional) argument is the pointer to the function which will be called 
-	// if an error occurs; an error message is passed to this function. 
+	// The last (optional) argument is the pointer to the function which will be called
+	// if an error occurs; an error message is passed to this function.
 	// If this argument is omitted, exit(1) will be called.
 	//
-	// IMPORTANT: It is possible to add more nodes to the graph than node_num_max 
-	// (and node_num_max can be zero). However, if the count is exceeded, then 
-	// the internal memory is reallocated (increased by 50%) which is expensive. 
+	// IMPORTANT: It is possible to add more nodes to the graph than node_num_max
+	// (and node_num_max can be zero). However, if the count is exceeded, then
+	// the internal memory is reallocated (increased by 50%) which is expensive.
 	// Also, temporarily the amount of allocated memory would be more than twice than needed.
 	// Similarly for edges.
 	// If you wish to avoid this overhead, you can download version 2.2, where nodes and edges are stored in blocks.
@@ -84,13 +84,13 @@ public:
 	// Destructor
 	~Graph();
 
-	// Adds node(s) to the graph. By default, one node is added (num=1); then first call returns 0, second call returns 1, and so on. 
+	// Adds node(s) to the graph. By default, one node is added (num=1); then first call returns 0, second call returns 1, and so on.
 	// If num>1, then several nodes are added, and node_id of the first one is returned.
-	// IMPORTANT: see note about the constructor 
+	// IMPORTANT: see note about the constructor
 	node_id add_node(int num = 1);
 
 	// Adds a bidirectional edge between 'i' and 'j' with the weights 'cap' and 'rev_cap'.
-	// IMPORTANT: see note about the constructor 
+	// IMPORTANT: see note about the constructor
 	// NOTE: One call to this function adds two arcs (i->j and j->i) to the graph. But in
 	// the sense of the memory allocation passed to the constructor, these count as one
 	// single edge!
@@ -155,8 +155,8 @@ public:
 	// 1. Reallocating graph. //
 	////////////////////////////
 
-	// Removes all nodes and edges. 
-	// After that functions add_node() and add_edge() must be called again. 
+	// Removes all nodes and edges.
+	// After that functions add_node() and add_edge() must be called again.
 	//
 	// Advantage compared to deleting Graph and allocating it again:
 	// no calls to delete/new (which could be quite slow).
@@ -195,7 +195,7 @@ public:
 	///////////////////////////////////////////////////
 
 	// returns residual capacity of SOURCE->i minus residual capacity of i->SINK
-	tcaptype get_trcap(node_id i); 
+	tcaptype get_trcap(node_id i);
 	// returns residual capacity of arc a
 	captype get_rcap(arc* a);
 
@@ -205,7 +205,7 @@ public:
 	//    returned by maxflow() will not be valid!                 //
 	/////////////////////////////////////////////////////////////////
 
-	void set_trcap(node_id i, tcaptype trcap); 
+	void set_trcap(node_id i, tcaptype trcap);
 	void set_rcap(arc* a, captype rcap);
 
 	////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ public:
 	////////////////////////////////////////////////////////////////////
 
 	// If flag reuse_trees is true while calling maxflow(), then search trees
-	// are reused from previous maxflow computation. 
+	// are reused from previous maxflow computation.
 	// In this case before calling maxflow() the user must
 	// specify which parts of the graph have changed by calling mark_node():
 	//   add_tweights(i),set_trcap(i)    => call mark_node(i)
@@ -221,12 +221,12 @@ public:
 	//
 	// This option makes sense only if a small part of the graph is changed.
 	// The initialization procedure goes only through marked nodes then.
-	// 
+	//
 	// mark_node(i) can either be called before or after graph modification.
 	// Can be called more than once per node, but calls after the first one
 	// do not have any effect.
-	// 
-	// NOTE: 
+	//
+	// NOTE:
 	//   - This option cannot be used in the first call to maxflow().
 	//   - It is not necessary to call mark_node() if the change is ``not essential'',
 	//     i.e. sign(trcap) is preserved for a node and zero/nonzero status is preserved for an arc.
@@ -262,16 +262,16 @@ public:
 	//			changed_list->Reset();
 	//		}
 	//		delete changed_list;
-	//		
+	//
 	// NOTE:
 	//  - If changed_list option is used, then reuse_trees must be used as well.
 	//  - In the example above, the user may omit calls g->remove_from_changed_list(i) and changed_list->Reset() in a given iteration.
 	//    Then during the next call to maxflow(true, &changed_list) new nodes will be added to changed_list.
 	//  - If the next call to maxflow() does not use option reuse_trees, then calling remove_from_changed_list()
 	//    is not necessary. ("changed_list->Reset()" or "delete changed_list" should still be called, though).
-	void remove_from_changed_list(node_id i) 
-	{ 
-		assert(i>=0 && i<node_num && nodes[i].is_in_changed_list); 
+	void remove_from_changed_list(node_id i)
+	{
+		assert(i>=0 && i<node_num && nodes[i].is_in_changed_list);
 		nodes[i].is_in_changed_list = 0;
 	}
 
@@ -283,7 +283,7 @@ public:
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
-	
+
 private:
 	// internal variables and functions
 
@@ -298,10 +298,10 @@ private:
 		int			DIST;		// distance to the terminal
 		int			is_sink : 1;	// flag showing whether the node is in the source or in the sink tree (if parent!=NULL)
 		int			is_marked : 1;	// set by mark_node()
-		int			is_in_changed_list : 1; // set by maxflow if 
+		int			is_in_changed_list : 1; // set by maxflow if
 
 		tcaptype	tr_cap;		// if tr_cap > 0 then tr_cap is residual capacity of the arc SOURCE->node
-								// otherwise         -tr_cap is residual capacity of the arc node->SINK 
+								// otherwise         -tr_cap is residual capacity of the arc node->SINK
 
 	};
 
@@ -384,7 +384,7 @@ private:
 
 
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline typename Graph<captype,tcaptype,flowtype>::node_id Graph<captype,tcaptype,flowtype>::add_node(int num)
 {
 	assert(num > 0);
@@ -412,7 +412,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 	}
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline void Graph<captype,tcaptype,flowtype>::add_tweights(node_id i, tcaptype cap_source, tcaptype cap_sink)
 {
 	assert(i >= 0 && i < node_num);
@@ -424,7 +424,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 	nodes[i].tr_cap = cap_source - cap_sink;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline void Graph<captype,tcaptype,flowtype>::add_edge(node_id _i, node_id _j, captype cap, captype rev_cap)
 {
 	assert(_i >= 0 && _i < node_num);
@@ -508,19 +508,19 @@ template <typename captype, typename tcaptype, typename flowtype> // Added by Os
 	return NULL;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline typename Graph<captype,tcaptype,flowtype>::arc* Graph<captype,tcaptype,flowtype>::get_first_arc()
 {
 	return arcs;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
-	inline typename Graph<captype,tcaptype,flowtype>::arc* Graph<captype,tcaptype,flowtype>::get_next_arc(arc* a) 
+template <typename captype, typename tcaptype, typename flowtype>
+	inline typename Graph<captype,tcaptype,flowtype>::arc* Graph<captype,tcaptype,flowtype>::get_next_arc(arc* a)
 {
-	return a + 1; 
+	return a + 1;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline void Graph<captype,tcaptype,flowtype>::get_arc_ends(arc* a, node_id& i, node_id& j)
 {
 	assert(a >= arcs && a < arc_last);
@@ -528,28 +528,28 @@ template <typename captype, typename tcaptype, typename flowtype>
 	j = (node_id) (a->head - nodes);
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline tcaptype Graph<captype,tcaptype,flowtype>::get_trcap(node_id i)
 {
 	assert(i>=0 && i<node_num);
 	return nodes[i].tr_cap;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline captype Graph<captype,tcaptype,flowtype>::get_rcap(arc* a)
 {
 	assert(a >= arcs && a < arc_last);
 	return a->r_cap;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline void Graph<captype,tcaptype,flowtype>::set_trcap(node_id i, tcaptype trcap)
 {
-	assert(i>=0 && i<node_num); 
+	assert(i>=0 && i<node_num);
 	nodes[i].tr_cap = trcap;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline void Graph<captype,tcaptype,flowtype>::set_rcap(arc* a, captype rcap)
 {
 	assert(a >= arcs && a < arc_last);
@@ -557,7 +557,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 }
 
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline typename Graph<captype,tcaptype,flowtype>::termtype Graph<captype,tcaptype,flowtype>::what_segment(node_id i, termtype default_segm)
 {
 	if (nodes[i].parent)
@@ -570,7 +570,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 	}
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	inline void Graph<captype,tcaptype,flowtype>::mark_node(node_id _i)
 {
 	node* i = nodes + _i;

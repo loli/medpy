@@ -20,17 +20,25 @@
 
 # build-in modules
 
+from math import factorial
+
 # third-party modules
 import numpy
-from scipy.ndimage import uniform_filter, sobel, maximum_filter, minimum_filter, gaussian_filter
 from scipy import stats
-from math import factorial
+from scipy.ndimage import (
+    gaussian_filter,
+    maximum_filter,
+    minimum_filter,
+    sobel,
+    uniform_filter,
+)
 
 # own modules
 
 # constants
 
-def coarseness(image, voxelspacing = None, mask = slice(None)):
+
+def coarseness(image, voxelspacing=None, mask=slice(None)):
     r"""
     Takes a simple or multi-spectral image and returns the coarseness of the texture.
 
@@ -67,65 +75,72 @@ def coarseness(image, voxelspacing = None, mask = slice(None)):
 
     image = numpy.asarray(image, dtype=numpy.float32)
 
-
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
-            mask = numpy.array(mask, copy=False, dtype = numpy.bool_)
+            mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
     image = image[mask]
 
     # set default voxel spacing if not suppliec
     if None == voxelspacing:
-        voxelspacing = tuple([1.] * image.ndim)
+        voxelspacing = tuple([1.0] * image.ndim)
 
     if len(voxelspacing) != image.ndim:
         print("Voxel spacing and image dimensions do not fit.")
         return None
     # set padding for image border control
-    padSize = numpy.asarray([(numpy.rint((2**5.0) * voxelspacing[jj]),0) for jj in range(image.ndim)]).astype(int)
-    Apad = numpy.pad(image,pad_width=padSize, mode='reflect')
+    padSize = numpy.asarray(
+        [(numpy.rint((2**5.0) * voxelspacing[jj]), 0) for jj in range(image.ndim)]
+    ).astype(int)
+    Apad = numpy.pad(image, pad_width=padSize, mode="reflect")
 
     # Allocate memory
-    E = numpy.empty((6,image.ndim)+image.shape)
+    E = numpy.empty((6, image.ndim) + image.shape)
 
     # prepare some slicer
-    rawSlicer           = [slice(None)] * image.ndim
-    slicerForImageInPad = [slice(padSize[d][0],None)for d in range(image.ndim)]
+    rawSlicer = [slice(None)] * image.ndim
+    slicerForImageInPad = [slice(padSize[d][0], None) for d in range(image.ndim)]
 
     for k in range(6):
-
-        size_vs = tuple(numpy.rint((2**k) * voxelspacing[jj]) for jj in range(image.ndim))
-        A = uniform_filter(Apad, size = size_vs, mode = 'mirror')
+        size_vs = tuple(
+            numpy.rint((2**k) * voxelspacing[jj]) for jj in range(image.ndim)
+        )
+        A = uniform_filter(Apad, size=size_vs, mode="mirror")
 
         # Step2: At each pixel, compute absolute differences E(x,y) between
         # the pairs of non overlapping averages in the horizontal and vertical directions.
         for d in range(image.ndim):
             borders = numpy.rint((2**k) * voxelspacing[d])
 
-            slicerPad_k_d   = slicerForImageInPad[:]
-            slicerPad_k_d[d]= slice((padSize[d][0]-borders if borders < padSize[d][0] else 0),None)
-            A_k_d           = A[slicerPad_k_d]
+            slicerPad_k_d = slicerForImageInPad[:]
+            slicerPad_k_d[d] = slice(
+                (padSize[d][0] - borders if borders < padSize[d][0] else 0), None
+            )
+            A_k_d = A[slicerPad_k_d]
 
-            AslicerL        = rawSlicer[:]
-            AslicerL[d]     = slice(0, -borders)
+            AslicerL = rawSlicer[:]
+            AslicerL[d] = slice(0, -borders)
 
-            AslicerR        = rawSlicer[:]
-            AslicerR[d]     = slice(borders, None)
+            AslicerR = rawSlicer[:]
+            AslicerR[d] = slice(borders, None)
 
-            E[k,d,...] = numpy.abs(A_k_d[AslicerL] - A_k_d[AslicerR])
+            E[k, d, ...] = numpy.abs(A_k_d[AslicerL] - A_k_d[AslicerR])
 
     # step3: At each pixel, find the value of k that maximises the difference Ek(x,y)
     # in either direction and set the best size Sbest(x,y)=2**k
 
     k_max = E.max(1).argmax(0)
     dim = E.argmax(1)
-    dim_vox_space = numpy.asarray([voxelspacing[dim[k_max.flat[i]].flat[i]] for i in range(k_max.size)]).reshape(k_max.shape)
+    dim_vox_space = numpy.asarray(
+        [voxelspacing[dim[k_max.flat[i]].flat[i]] for i in range(k_max.size)]
+    ).reshape(k_max.shape)
     S = (2**k_max) * dim_vox_space
 
     # step4: Compute the coarseness feature Fcrs by averaging Sbest(x,y) over the entire image.
     return S.mean()
 
-def contrast(image, mask = slice(None)):
+
+def contrast(image, mask=slice(None)):
     r"""
     Takes a simple or multi-spectral image and returns the contrast of the texture.
 
@@ -152,18 +167,21 @@ def contrast(image, mask = slice(None)):
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
-            mask = numpy.array(mask, copy=False, dtype = numpy.bool_)
+            mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
     image = image[mask]
 
     standard_deviation = numpy.std(image)
     kurtosis = stats.kurtosis(image, axis=None, bias=True, fisher=False)
-    n = 0.25 # The value n=0.25 is recommended as the best for discriminating the textures.
+    n = 0.25  # The value n=0.25 is recommended as the best for discriminating the textures.
 
     Fcon = standard_deviation / (kurtosis**n)
 
     return Fcon
 
-def directionality(image, min_distance = 4, threshold = 0.1, voxelspacing = None, mask = slice(None)):
+
+def directionality(
+    image, min_distance=4, threshold=0.1, voxelspacing=None, mask=slice(None)
+):
     r"""
     Takes a simple or multi-spectral image and returns the directionality of the image texture.
     It is just a value representing the strength of directionality, not the specific direction.
@@ -214,32 +232,32 @@ def directionality(image, min_distance = 4, threshold = 0.1, voxelspacing = None
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
-            mask = numpy.array(mask, copy=False, dtype = numpy.bool_)
+            mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
     image = image[mask]
 
     # set default voxel spacing if not suppliec
     if None == voxelspacing:
-        voxelspacing = tuple([1.] * ndim)
+        voxelspacing = tuple([1.0] * ndim)
 
     if len(voxelspacing) != ndim:
         print("Voxel spacing and image dimensions do not fit.")
         return None
 
-   # Calculate amount of combinations: n choose k, normalizing factor r and voxel spacing.
-    n = (factorial(ndim)/(2*factorial(ndim-2)))
-    pi1_2 = numpy.pi/2.0
-    r=1.0 / (pi1_2**2)
-    vs = [slice(None,None,numpy.rint(ii)) for ii in voxelspacing]
+    # Calculate amount of combinations: n choose k, normalizing factor r and voxel spacing.
+    n = factorial(ndim) / (2 * factorial(ndim - 2))
+    pi1_2 = numpy.pi / 2.0
+    r = 1.0 / (pi1_2**2)
+    vs = [slice(None, None, numpy.rint(ii)) for ii in voxelspacing]
 
     # Allocate memory, define constants
     Fdir = numpy.empty(n)
 
     # calculate differences by using Sobel-filter. (Maybe other filter kernel like Prewitt will do a better job)
-    E = [sobel(image, axis=ndim-1-i) for i in range(ndim)]
+    E = [sobel(image, axis=ndim - 1 - i) for i in range(ndim)]
 
     # The edge strength e(x,y) is used for thresholding.
     e = sum(E) / float(ndim)
-    border = [numpy.percentile(e, 1),numpy.percentile(e, 99)]
+    border = [numpy.percentile(e, 1), numpy.percentile(e, 99)]
     e[e < border[0]] = 0
     e[e > border[1]] = border[1]
     e -= border[0]
@@ -247,53 +265,66 @@ def directionality(image, min_distance = 4, threshold = 0.1, voxelspacing = None
     em = e > threshold
 
     for i in range(n):
-        A = numpy.arctan((E[(i + (ndim+i)/ndim) % ndim][vs]) / (E[i%ndim][vs]+numpy.spacing(1))) # [0 , pi/2]
+        A = numpy.arctan(
+            (E[(i + (ndim + i) / ndim) % ndim][vs])
+            / (E[i % ndim][vs] + numpy.spacing(1))
+        )  # [0 , pi/2]
         A = A[em[vs]]
         # Calculate number of bins for the histogram. Watch out, this is just a work around!
         # @TODO: Write a more stable code to prevent for minimum and maximum repetition when the same value in the Histogram appears multiple times in a row. Example: image = numpy.zeros([10,10]), image[:,::3] = 1
         bins = numpy.unique(A).size + min_distance
-        H = numpy.histogram(A, bins = bins, density=True)[0] # [0 , 1]
-        H[H < numpy.percentile(H,1)] = 0.0
+        H = numpy.histogram(A, bins=bins, density=True)[0]  # [0 , 1]
+        H[H < numpy.percentile(H, 1)] = 0.0
         H_peaks, H_valleys, H_range = find_valley_range(H)
         summe = 0.0
         for idx_ap in range(len(H_peaks)):
-            for range_idx in range( H_valleys[idx_ap], H_valleys[idx_ap]+H_range[idx_ap]):
-                a=range_idx % len(H)
-                summe += (((pi1_2*a)/bins - (pi1_2 * H_peaks[idx_ap])/bins) **2) * H[a]
+            for range_idx in range(
+                H_valleys[idx_ap], H_valleys[idx_ap] + H_range[idx_ap]
+            ):
+                a = range_idx % len(H)
+                summe += (
+                    ((pi1_2 * a) / bins - (pi1_2 * H_peaks[idx_ap]) / bins) ** 2
+                ) * H[a]
         Fdir[i] = 1.0 - r * summe
 
     return Fdir
 
 
-def local_maxima(vector,min_distance = 4, brd_mode = "wrap"):
+def local_maxima(vector, min_distance=4, brd_mode="wrap"):
     """
     Internal finder for local maxima .
     Returns UNSORTED indices of maxima in input vector.
     """
-    fits = gaussian_filter(numpy.asarray(vector,dtype=numpy.float32),1., mode=brd_mode)
+    fits = gaussian_filter(
+        numpy.asarray(vector, dtype=numpy.float32), 1.0, mode=brd_mode
+    )
     for ii in range(len(fits)):
-        if fits[ii] == fits[ii-1]:
-            fits[ii-1] = 0.0
-    maxfits     = maximum_filter(fits, size=min_distance, mode=brd_mode)
+        if fits[ii] == fits[ii - 1]:
+            fits[ii - 1] = 0.0
+    maxfits = maximum_filter(fits, size=min_distance, mode=brd_mode)
     maxima_mask = fits == maxfits
-    maximum     = numpy.transpose(maxima_mask.nonzero())
+    maximum = numpy.transpose(maxima_mask.nonzero())
     return numpy.asarray(maximum)
 
-def local_minima(vector,min_distance = 4, brd_mode = "wrap"):
+
+def local_minima(vector, min_distance=4, brd_mode="wrap"):
     """
     Internal finder for local minima .
     Returns UNSORTED indices of minima in input vector.
     """
-    fits = gaussian_filter(numpy.asarray(vector,dtype=numpy.float32),1., mode=brd_mode)
+    fits = gaussian_filter(
+        numpy.asarray(vector, dtype=numpy.float32), 1.0, mode=brd_mode
+    )
     for ii in range(len(fits)):
-        if fits[ii] == fits[ii-1]:
-            fits[ii-1] = numpy.pi/2.0
+        if fits[ii] == fits[ii - 1]:
+            fits[ii - 1] = numpy.pi / 2.0
     minfits = minimum_filter(fits, size=min_distance, mode=brd_mode)
     minima_mask = fits == minfits
     minima = numpy.transpose(minima_mask.nonzero())
     return numpy.asarray(minima)
 
-def find_valley_range(vector, min_distance = 4):
+
+def find_valley_range(vector, min_distance=4):
     """
     Internal finder peaks and valley ranges.
     Returns UNSORTED indices of maxima in input vector.
@@ -303,22 +334,27 @@ def find_valley_range(vector, min_distance = 4):
     # http://users.monash.edu.au/~dengs/resource/papers/icme08.pdf
     # find min and max with mode = wrap
     mode = "wrap"
-    minima = local_minima(vector,min_distance,mode)
-    maxima = local_maxima(vector,min_distance,mode)
+    minima = local_minima(vector, min_distance, mode)
+    maxima = local_maxima(vector, min_distance, mode)
 
-    if len(maxima)>len(minima):
+    if len(maxima) > len(minima):
         if vector[maxima[0]] >= vector[maxima[-1]]:
-            maxima=maxima[1:]
+            maxima = maxima[1:]
         else:
-            maxima=maxima[:-1]
+            maxima = maxima[:-1]
 
-    if len(maxima)==len(minima):
-        valley_range = numpy.asarray([minima[ii+1] - minima[ii] for ii in range(len(minima)-1)] + [len(vector)-minima[-1]+minima[0]])
+    if len(maxima) == len(minima):
+        valley_range = numpy.asarray(
+            [minima[ii + 1] - minima[ii] for ii in range(len(minima) - 1)]
+            + [len(vector) - minima[-1] + minima[0]]
+        )
         if minima[0] < maxima[0]:
             minima = numpy.asarray(list(minima) + [minima[0]])
         else:
             minima = numpy.asarray(list(minima) + [minima[-1]])
     else:
-        valley_range = numpy.asarray([minima[ii+1] - minima[ii] for ii in range(len(maxima))])
+        valley_range = numpy.asarray(
+            [minima[ii + 1] - minima[ii] for ii in range(len(maxima))]
+        )
 
     return maxima, minima, valley_range

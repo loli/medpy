@@ -28,8 +28,9 @@ from scipy.interpolate.interpolate import interp1d
 
 # own modules
 
+
 # code
-class IntensityRangeStandardization (object):
+class IntensityRangeStandardization(object):
     r"""
     Class to standardize intensity ranges between a number of images.
 
@@ -187,54 +188,73 @@ class IntensityRangeStandardization (object):
     L4 = [10, 20, 30, 40, 50, 60, 70, 80, 90]
     """9-value landmark points model."""
 
-    def __init__(self, cutoffp = (1, 99), landmarkp = L4, stdrange = 'auto'):
+    def __init__(self, cutoffp=(1, 99), landmarkp=L4, stdrange="auto"):
         # check parameters
         if not IntensityRangeStandardization.is_sequence(cutoffp):
-            raise ValueError('cutoffp must be a sequence')
+            raise ValueError("cutoffp must be a sequence")
         if not 2 == len(cutoffp):
-            raise ValueError('cutoffp must be of length 2, not {}'.format(len(cutoffp)))
+            raise ValueError("cutoffp must be of length 2, not {}".format(len(cutoffp)))
         if not IntensityRangeStandardization.are_numbers(cutoffp):
-            raise ValueError('cutoffp elements must be numbers')
-        if not IntensityRangeStandardization.are_in_interval(cutoffp, 0, 100, 'included'):
-            raise ValueError('cutoffp elements must be in [0, 100]')
+            raise ValueError("cutoffp elements must be numbers")
+        if not IntensityRangeStandardization.are_in_interval(
+            cutoffp, 0, 100, "included"
+        ):
+            raise ValueError("cutoffp elements must be in [0, 100]")
         if not cutoffp[1] > cutoffp[0]:
-            raise ValueError('the second element of cutoffp must be larger than the first')
+            raise ValueError(
+                "the second element of cutoffp must be larger than the first"
+            )
 
         if not IntensityRangeStandardization.is_sequence(landmarkp):
-            raise ValueError('landmarkp must be a sequence')
+            raise ValueError("landmarkp must be a sequence")
         if not 1 <= len(landmarkp):
-            raise ValueError('landmarkp must be of length >= 1, not {}'.format(len(landmarkp)))
+            raise ValueError(
+                "landmarkp must be of length >= 1, not {}".format(len(landmarkp))
+            )
         if not IntensityRangeStandardization.are_numbers(landmarkp):
-            raise ValueError('landmarkp elements must be numbers')
-        if not IntensityRangeStandardization.are_in_interval(landmarkp, 0, 100, 'included'):
-            raise ValueError('landmarkp elements must be in [0, 100]')
-        if not IntensityRangeStandardization.are_in_interval(landmarkp, cutoffp[0], cutoffp[1], 'excluded'):
-            raise ValueError('landmarkp elements must be in between the elements of cutoffp')
+            raise ValueError("landmarkp elements must be numbers")
+        if not IntensityRangeStandardization.are_in_interval(
+            landmarkp, 0, 100, "included"
+        ):
+            raise ValueError("landmarkp elements must be in [0, 100]")
+        if not IntensityRangeStandardization.are_in_interval(
+            landmarkp, cutoffp[0], cutoffp[1], "excluded"
+        ):
+            raise ValueError(
+                "landmarkp elements must be in between the elements of cutoffp"
+            )
         if not len(landmarkp) == len(numpy.unique(landmarkp)):
-            raise ValueError('landmarkp elements must be unique')
+            raise ValueError("landmarkp elements must be unique")
 
-        if 'auto' == stdrange:
-            stdrange = ('auto', 'auto')
+        if "auto" == stdrange:
+            stdrange = ("auto", "auto")
         else:
             if not IntensityRangeStandardization.is_sequence(stdrange):
-                raise ValueError('stdrange must be a sequence or \'auto\'')
+                raise ValueError("stdrange must be a sequence or 'auto'")
             if not 2 == len(stdrange):
-                raise ValueError('stdrange must be of length 2, not {}'.format(len(stdrange)))
-            if not 'auto' in stdrange:
+                raise ValueError(
+                    "stdrange must be of length 2, not {}".format(len(stdrange))
+                )
+            if not "auto" in stdrange:
                 if not IntensityRangeStandardization.are_numbers(stdrange):
-                    raise ValueError('stdrange elements must be numbers or \'auto\'')
+                    raise ValueError("stdrange elements must be numbers or 'auto'")
                 if not stdrange[1] > stdrange[0]:
-                    raise ValueError('the second element of stdrange must be larger than the first')
-            elif 'auto' == stdrange[0] and not IntensityRangeStandardization.is_number(stdrange[1]):
-                raise ValueError('stdrange elements must be numbers or \'auto\'')
-            elif 'auto' == stdrange[1] and not IntensityRangeStandardization.is_number(stdrange[0]):
-                raise ValueError('stdrange elements must be numbers or \'auto\'')
-
+                    raise ValueError(
+                        "the second element of stdrange must be larger than the first"
+                    )
+            elif "auto" == stdrange[0] and not IntensityRangeStandardization.is_number(
+                stdrange[1]
+            ):
+                raise ValueError("stdrange elements must be numbers or 'auto'")
+            elif "auto" == stdrange[1] and not IntensityRangeStandardization.is_number(
+                stdrange[0]
+            ):
+                raise ValueError("stdrange elements must be numbers or 'auto'")
 
         # process parameters
         self.__cutoffp = IntensityRangeStandardization.to_float(cutoffp)
         self.__landmarkp = IntensityRangeStandardization.to_float(sorted(landmarkp))
-        self.__stdrange = ['auto' if 'auto' == x else float(x) for x in stdrange]
+        self.__stdrange = ["auto" if "auto" == x else float(x) for x in stdrange]
 
         # initialize remaining instance parameters
         self.__model = None
@@ -268,15 +288,25 @@ class IntensityRangeStandardization (object):
 
             # treat single intensity accumulation error
             if not len(numpy.unique(numpy.concatenate((ci, li)))) == len(ci) + len(li):
-                raise SingleIntensityAccumulationError('Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.'.format(idx))
+                raise SingleIntensityAccumulationError(
+                    "Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.".format(
+                        idx
+                    )
+                )
 
-        self.__model = [self.__stdrange[0]] + list(numpy.mean(lim, 0)) + [self.__stdrange[1]]
-        self.__sc_umins = [self.__stdrange[0]] + list(numpy.min(lim, 0)) + [self.__stdrange[1]]
-        self.__sc_umaxs = [self.__stdrange[0]] + list(numpy.max(lim, 0)) + [self.__stdrange[1]]
+        self.__model = (
+            [self.__stdrange[0]] + list(numpy.mean(lim, 0)) + [self.__stdrange[1]]
+        )
+        self.__sc_umins = (
+            [self.__stdrange[0]] + list(numpy.min(lim, 0)) + [self.__stdrange[1]]
+        )
+        self.__sc_umaxs = (
+            [self.__stdrange[0]] + list(numpy.max(lim, 0)) + [self.__stdrange[1]]
+        )
 
         return self
 
-    def transform(self, image, surpress_mapping_check = False):
+    def transform(self, image, surpress_mapping_check=False):
         r"""
         Transform an images intensity values to the learned standard intensity space.
 
@@ -307,19 +337,23 @@ class IntensityRangeStandardization (object):
             If no model has been trained before
         """
         if None == self.__model:
-            raise UntrainedException('Model not trained. Call train() first.')
+            raise UntrainedException("Model not trained. Call train() first.")
 
         image = numpy.asarray(image)
 
         # determine image intensity values at cut-off percentiles & landmark percentiles
-        li = numpy.percentile(image, [self.__cutoffp[0]] + self.__landmarkp + [self.__cutoffp[1]])
+        li = numpy.percentile(
+            image, [self.__cutoffp[0]] + self.__landmarkp + [self.__cutoffp[1]]
+        )
 
         # treat single intensity accumulation error
         if not len(numpy.unique(li)) == len(li):
-            raise SingleIntensityAccumulationError('The image shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. The only other possibility would be to re-train the model with a reduced number of landmark percentiles landmarkp or a changed distribution.')
+            raise SingleIntensityAccumulationError(
+                "The image shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. The only other possibility would be to re-train the model with a reduced number of landmark percentiles landmarkp or a changed distribution."
+            )
 
         # create linear mapping models for the percentile segments to the learned standard intensity space
-        ipf = interp1d(li, self.__model, bounds_error = False)
+        ipf = interp1d(li, self.__model, bounds_error=False)
 
         # transform the input image intensity values
         output = ipf(image)
@@ -332,11 +366,13 @@ class IntensityRangeStandardization (object):
         output[image > li[-1]] = rlm(image[image > li[-1]])
 
         if not surpress_mapping_check and not self.__check_mapping(li):
-            raise InformationLossException('Image can not be transformed to the learned standard intensity space without loss of information. Please re-train.')
+            raise InformationLossException(
+                "Image can not be transformed to the learned standard intensity space without loss of information. Please re-train."
+            )
 
         return output
 
-    def train_transform(self, images, surpress_mapping_check = False):
+    def train_transform(self, images, surpress_mapping_check=False):
         r"""
         See also
         --------
@@ -417,7 +453,7 @@ class IntensityRangeStandardization (object):
         stdrange : (float, float)
             The borders of the computed standard intensity range.
         """
-        if not 'auto' in self.__stdrange:
+        if not "auto" in self.__stdrange:
             return self.__stdrange
 
         copl, copu = self.__cutoffp
@@ -433,7 +469,11 @@ class IntensityRangeStandardization (object):
 
             # treat single intensity accumulation error
             if 0 in s[-1]:
-                raise SingleIntensityAccumulationError('Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.'.format(idx))
+                raise SingleIntensityAccumulationError(
+                    "Image no.{} shows an unusual single-intensity accumulation that leads to a situation where two percentile values are equal. This situation is usually caused, when the background has not been removed from the image. Another possibility would be to reduce the number of landmark percentiles landmarkp or to change their distribution.".format(
+                        idx
+                    )
+                )
 
         # select the maximum and minimum of each percentile segment over all images
         maxs = numpy.max(s, 0)
@@ -449,9 +489,9 @@ class IntensityRangeStandardization (object):
         im = numpy.mean(m)
 
         # return interval with borders according to settings
-        if 'auto' == self.__stdrange[0] and 'auto' == self.__stdrange[1]:
+        if "auto" == self.__stdrange[0] and "auto" == self.__stdrange[1]:
             return im - intv / 2, im + intv / 2
-        elif 'auto' == self.__stdrange[0]:
+        elif "auto" == self.__stdrange[0]:
             return self.__stdrange[1] - intv, self.__stdrange[1]
         else:
             return self.__stdrange[0], self.__stdrange[0] + intv
@@ -462,7 +502,9 @@ class IntensityRangeStandardization (object):
         be transformed to the learned standard intensity space without loss of
         information.
         """
-        sc_udiff = numpy.asarray(self.__sc_umaxs)[1:] - numpy.asarray(self.__sc_umins)[:-1]
+        sc_udiff = (
+            numpy.asarray(self.__sc_umaxs)[1:] - numpy.asarray(self.__sc_umins)[:-1]
+        )
         l_diff = numpy.asarray(landmarks)[1:] - numpy.asarray(landmarks)[:-1]
         return numpy.all(sc_udiff > numpy.asarray(l_diff))
 
@@ -474,9 +516,11 @@ class IntensityRangeStandardization (object):
 
         Credits to Steve R. Hastings a.k.a steveha @ http://stackoverflow.com
         """
-        return (not hasattr(arg, "strip") and
-            hasattr(arg, "__getitem__") or
-            hasattr(arg, "__iter__"))
+        return (
+            not hasattr(arg, "strip")
+            and hasattr(arg, "__getitem__")
+            or hasattr(arg, "__iter__")
+        )
 
     @staticmethod
     def is_number(arg):
@@ -484,6 +528,7 @@ class IntensityRangeStandardization (object):
         Checks whether the passed argument is a valid number or not.
         """
         import numbers
+
         return isinstance(arg, numbers.Number)
 
     @staticmethod
@@ -494,24 +539,26 @@ class IntensityRangeStandardization (object):
         return numpy.all([IntensityRangeStandardization.is_number(x) for x in arg])
 
     @staticmethod
-    def is_in_interval(n, l, r, border = 'included'):
+    def is_in_interval(n, l, r, border="included"):
         """
         Checks whether a number is inside the interval l, r.
         """
-        if 'included' == border:
+        if "included" == border:
             return (n >= l) and (n <= r)
-        elif 'excluded' == border:
+        elif "excluded" == border:
             return (n > l) and (n < r)
         else:
-            raise ValueError('borders must be either \'included\' or \'excluded\'')
+            raise ValueError("borders must be either 'included' or 'excluded'")
 
     @staticmethod
-    def are_in_interval(s, l, r, border = 'included'):
+    def are_in_interval(s, l, r, border="included"):
         """
         Checks whether all number in the sequence s lie inside the interval formed by
         l and r.
         """
-        return numpy.all([IntensityRangeStandardization.is_in_interval(x, l, r, border) for x in s])
+        return numpy.all(
+            [IntensityRangeStandardization.is_in_interval(x, l, r, border) for x in s]
+        )
 
     @staticmethod
     def to_float(s):
@@ -533,20 +580,25 @@ class IntensityRangeStandardization (object):
         b = y1 - (m * x1)
         return lambda x: m * x + b
 
+
 class SingleIntensityAccumulationError(Exception):
     """
     Thrown when an image shows an unusual single-intensity peaks which would obstruct
     both, training and transformation.
     """
 
+
 class InformationLossException(Exception):
     """
     Thrown when a transformation can not be guaranteed to be lossless.
     """
+
     pass
+
 
 class UntrainedException(Exception):
     """
     Thrown when a transformation is attempted before training.
     """
+
     pass

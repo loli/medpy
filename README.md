@@ -24,6 +24,12 @@ MedPy is an image processing library and collection of scripts targeted towards 
 - Download (development version): https://github.com/loli/medpy
 - HTML documentation and installation instruction (development version): create this from doc/ folder following instructions in contained README file
 
+## Contribute
+
+- Clone `master` branch from [github](https://github.com/loli/medpy)
+- Install [pre-commit] hooks
+- Submit your change as a PR request
+
 ## Python 2 version
 
 Python 2 is no longer supported. But you can still use the older releases `<=0.3.0`.
