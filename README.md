@@ -27,7 +27,7 @@ MedPy is an image processing library and collection of scripts targeted towards 
 ## Contribute
 
 - Clone `master` branch from [github](https://github.com/loli/medpy)
-- Install [pre-commit] hooks
+- Install [pre-commit](https://pre-commit.com/) hooks
 - Submit your change as a PR request
 
 ## Python 2 version
