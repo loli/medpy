@@ -61,9 +61,9 @@ copyright = "2013-2019, Oskar Maier"
 # built documents.
 #
 # The short X.Y version.
-version = "0.4"
+version = "0.5"
 # The full version, including alpha/beta/rc tags.
-release = "0.4.0"
+release = "0.5.0"
 
 # Automatically created autosummary entries (thus no need to call sphinx-autogen)
 autosummary_generate = True
