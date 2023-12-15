@@ -144,7 +144,7 @@ class TestTextureFeatures(unittest.TestCase):
             ),
         )
 
-        res = directionality(self.image1, min_distance=10.0)
+        res = directionality(self.image1, min_distance=10)
         self.assertEqual(
             res,
             1.0,

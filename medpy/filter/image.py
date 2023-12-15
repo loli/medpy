@@ -192,7 +192,7 @@ def sls(
         variance, sigma=3
     )  #!TODO: Figure out if a fixed sigma is desirable here... I think that yes
     if "global" == noise:
-        variance = variance.sum() / float(numpy.product(variance.shape))
+        variance = variance.sum() / float(numpy.prod(variance.shape))
     # variance[variance < variance_global / 10.] = variance_global / 10. #!TODO: Should I keep this i.e. regularizing the variance to be at least 10% of the global one?
 
     # compute sls
@@ -356,8 +356,7 @@ def average_filter(
     sum_filter(
         input, footprint=footprint, output=output, mode=mode, cval=cval, origin=origin
     )
-    output /= filter_size
-    return output
+    return output / filter_size
 
 
 def sum_filter(

@@ -133,13 +133,13 @@ def graph_from_voxels(
 
     # check supplied functions and their signature
     if not hasattr(regional_term, "__call__") or not 2 == len(
-        inspect.getargspec(regional_term)[0]
+        inspect.getfullargspec(regional_term)[0]
     ):
         raise AttributeError(
             "regional_term has to be a callable object which takes two parameter."
         )
     if not hasattr(boundary_term, "__call__") or not 2 == len(
-        inspect.getargspec(boundary_term)[0]
+        inspect.getfullargspec(boundary_term)[0]
     ):
         raise AttributeError(
             "boundary_term has to be a callable object which takes two parameters."

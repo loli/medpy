@@ -443,7 +443,7 @@ def __compute_edges_nd(label_image):
         for di in range(label_image.ndim):
             slices_x.append(slice(None, -1 if di == dim else None))
             slices_y.append(slice(1 if di == dim else None, None))
-        vappend(label_image[slices_x], label_image[slices_y])
+        vappend(label_image[tuple(slices_x)], label_image[tuple(slices_y)])
 
     return Er
 

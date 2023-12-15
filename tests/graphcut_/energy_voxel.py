@@ -7,11 +7,13 @@ Unittest for the medpy.graphcut.energy_voxel methods.
 @status Release
 """
 
-# build-in modules
 import unittest
 
 # third-party modules
 import numpy
+
+# build-in modules
+import pytest
 from numpy.testing import assert_array_equal
 
 # own modules
@@ -151,6 +153,7 @@ class TestEnergyVoxel(unittest.TestCase):
         image = numpy.asarray([[-1, 1, -4], [2, -7, 3], [-2.3, 3, -7]], dtype=float)
         self.__test_all_on_image(image)
 
+    @pytest.mark.filterwarnings("ignore:invalid value encountered")
     def test_zero_image(self):
         image = numpy.asarray([[0, 0, 0], [0, 0, 0], [0, 0, 0]], dtype=float)
         self.__test_all_on_image(image)

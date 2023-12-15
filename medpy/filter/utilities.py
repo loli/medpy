@@ -139,7 +139,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
             "The size of the padding element is not allowed to be more than double the size of the input array in any dimension."
         )
 
-    padding_offset = [((s - 1) / 2, s / 2) for s in fshape]
+    padding_offset = [((s - 1) // 2, s // 2) for s in fshape]
     input_slicer = [slice(l, None if 0 == r else -1 * r) for l, r in padding_offset]
     output_shape = [s + sum(os) for s, os in zip(input.shape, padding_offset)]
     output = _ni_support._get_output(output, input, output_shape)

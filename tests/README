@@ -25,7 +25,3 @@ more mymetacompatibility.log
 ```
 
 Note that this will take some time and producte a number of warnings that can be savely ignored.
-
-WARNING
--------
-`graphcut_/` tests are faulty.

@@ -71,9 +71,7 @@ def make_random_histogram(length=default_feature_dim, num_bins=default_num_bins)
 
 
 # Increasing the number of examples to try
-@hyp_settings(
-    max_examples=1000, min_satisfying_examples=100
-)  # , verbosity=Verbosity.verbose)
+@hyp_settings(max_examples=1000)  # , verbosity=Verbosity.verbose)
 @given(
     strategies.sampled_from(metric_list),
     strategies.integers(range_feature_dim[0], range_feature_dim[1]),

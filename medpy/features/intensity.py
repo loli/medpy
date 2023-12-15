@@ -887,6 +887,8 @@ def _extract_intensities(image, mask=slice(None)):
     """
     Internal, single-image version of `intensities`.
     """
+    if type(mask) is list and type(mask[0]) is slice:
+        mask = tuple(mask)
     return numpy.array(image, copy=True)[mask].ravel()
 
 

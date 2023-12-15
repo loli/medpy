@@ -90,7 +90,10 @@ def coarseness(image, voxelspacing=None, mask=slice(None)):
         return None
     # set padding for image border control
     padSize = numpy.asarray(
-        [(numpy.rint((2**5.0) * voxelspacing[jj]), 0) for jj in range(image.ndim)]
+        [
+            (int(numpy.rint((2**5.0) * voxelspacing[jj])), 0)
+            for jj in range(image.ndim)
+        ]
     ).astype(int)
     Apad = numpy.pad(image, pad_width=padSize, mode="reflect")
 
@@ -103,18 +106,18 @@ def coarseness(image, voxelspacing=None, mask=slice(None)):
 
     for k in range(6):
         size_vs = tuple(
-            numpy.rint((2**k) * voxelspacing[jj]) for jj in range(image.ndim)
+            int(numpy.rint((2**k) * voxelspacing[jj])) for jj in range(image.ndim)
         )
         A = uniform_filter(Apad, size=size_vs, mode="mirror")
 
         # Step2: At each pixel, compute absolute differences E(x,y) between
         # the pairs of non overlapping averages in the horizontal and vertical directions.
         for d in range(image.ndim):
-            borders = numpy.rint((2**k) * voxelspacing[d])
+            borders = int(numpy.rint((2**k) * voxelspacing[d]))
 
             slicerPad_k_d = slicerForImageInPad[:]
             slicerPad_k_d[d] = slice(
-                (padSize[d][0] - borders if borders < padSize[d][0] else 0), None
+                (int(padSize[d][0] - borders) if borders < padSize[d][0] else 0), None
             )
             A_k_d = A[tuple(slicerPad_k_d)]
 
@@ -231,6 +234,7 @@ def directionality(
     """
     image = numpy.asarray(image)
     ndim = image.ndim
+    min_distance = int(min_distance)
     # set default mask or apply given mask
     if not type(mask) is slice:
         if not type(mask[0] is slice):
@@ -246,10 +250,10 @@ def directionality(
         return None
 
     # Calculate amount of combinations: n choose k, normalizing factor r and voxel spacing.
-    n = factorial(ndim) / (2 * factorial(ndim - 2))
+    n = factorial(ndim) // (2 * factorial(ndim - 2))
     pi1_2 = numpy.pi / 2.0
     r = 1.0 / (pi1_2**2)
-    vs = [slice(None, None, numpy.rint(ii)) for ii in voxelspacing]
+    vs = [slice(None, None, int(numpy.rint(ii))) for ii in voxelspacing]
 
     # Allocate memory, define constants
     Fdir = numpy.empty(n)
@@ -268,10 +272,10 @@ def directionality(
 
     for i in range(n):
         A = numpy.arctan(
-            (E[(i + (ndim + i) / ndim) % ndim][tuple(vs)])
-            / (E[i % ndim][tuple(vs)] + numpy.spacing(1))
+            (E[int((i + (ndim + i) / ndim) % ndim)][tuple(vs)])
+            / (E[int(i % ndim)][tuple(vs)] + numpy.spacing(1))
         )  # [0 , pi/2]
-        A = A[em[vs]]
+        A = A[em[tuple(vs)]]
         # Calculate number of bins for the histogram. Watch out, this is just a work around!
         # @TODO: Write a more stable code to prevent for minimum and maximum repetition when the same value in the Histogram appears multiple times in a row. Example: image = numpy.zeros([10,10]), image[:,::3] = 1
         bins = numpy.unique(A).size + min_distance
@@ -281,13 +285,14 @@ def directionality(
         summe = 0.0
         for idx_ap in range(len(H_peaks)):
             for range_idx in range(
-                H_valleys[idx_ap], H_valleys[idx_ap] + H_range[idx_ap]
+                numpy.squeeze(H_valleys[idx_ap]),
+                numpy.squeeze(H_valleys[idx_ap] + H_range[idx_ap]),
             ):
                 a = range_idx % len(H)
                 summe += (
                     ((pi1_2 * a) / bins - (pi1_2 * H_peaks[idx_ap]) / bins) ** 2
                 ) * H[a]
-        Fdir[i] = 1.0 - r * summe
+        Fdir[i] = 1.0 - r * numpy.squeeze(summe)
 
     return Fdir
 
