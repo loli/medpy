@@ -26,7 +26,7 @@ import sys
 from functools import reduce
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import Logger
@@ -87,7 +87,7 @@ def main():
             "Voxel differ: {} of {} total voxels".format(voxel_difference, voxel_total)
         )
         print(
-            "Max difference: {}".format(scipy.absolute(data_input1 - data_input2).max())
+            "Max difference: {}".format(numpy.absolute(data_input1 - data_input2).max())
         )
     else:
         print("No other difference.")

@@ -94,11 +94,11 @@ def main():
                 slicers_cut[-1] = slice(cutoff_left, -1 * cutoff_right)
 
     # crop original image
-    img = img[slicers_cut]
+    img = img[tuple(slicers_cut)]
 
     # create output image and place input image centered
     out = numpy.zeros(args.shape, img.dtype)
-    out[slicers_extend] = img
+    out[tuple(slicers_extend)] = img
 
     # saving the resulting image
     save(out, args.output, hdr, args.force)

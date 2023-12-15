@@ -24,7 +24,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import Logger
@@ -71,7 +71,7 @@ def main():
     new_shape[args.dimension] = 1 + (new_shape[args.dimension] - 1) / (args.discard + 1)
 
     # prepare output image
-    output_data = scipy.zeros(new_shape, dtype=input_data.dtype)
+    output_data = numpy.zeros(new_shape, dtype=input_data.dtype)
 
     # prepare slicers
     slicer_in = [slice(None)] * input_data.ndim
@@ -87,7 +87,7 @@ def main():
             # transfer slice
             slicer_in[args.dimension] = slice(idx, idx + 1)
             slicer_out[args.dimension] = slice(slicec, slicec + 1)
-            output_data[slicer_out] = input_data[slicer_in]
+            output_data[tuple(slicer_out)] = input_data[tuple(slicer_in)]
 
             # resert resp. increase counter
             skipc = args.discard

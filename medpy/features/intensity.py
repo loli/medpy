@@ -22,7 +22,7 @@
 
 # third-party modules
 import numpy
-from scipy.interpolate.interpolate import interp1d
+from scipy.interpolate import interp1d
 from scipy.ndimage import distance_transform_edt, gaussian_filter
 from scipy.ndimage import (
     gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude,
@@ -95,7 +95,7 @@ def centerdistance(image, voxelspacing=None, mask=slice(None)):
     centerdistance_xdminus1
 
     """
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
     return _extract_feature(
@@ -143,7 +143,7 @@ def centerdistance_xdminus1(image, dim, voxelspacing=None, mask=slice(None)):
 
     """
     # pre-process arguments
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
     if type(dim) is int:
@@ -170,7 +170,7 @@ def centerdistance_xdminus1(image, dim, voxelspacing=None, mask=slice(None)):
     slicer = [slice(None)] * image.ndim
     for dim in dims:
         slicer[dim] = slice(1)
-    subvolume = numpy.squeeze(image[slicer])
+    subvolume = numpy.squeeze(image[tuple(slicer)])
 
     # compute centerdistance for sub-volume and reshape to original sub-volume shape (note that normalization and mask are not passed on in this step)
     o = centerdistance(subvolume, voxelspacing).reshape(subvolume.shape)
@@ -214,7 +214,7 @@ def indices(image, voxelspacing=None, mask=slice(None)):
     a multi-spectral image has been supplied.
 
     """
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
     if not type(mask) is slice:
@@ -303,7 +303,7 @@ def mask_distance(image, voxelspacing=None, mask=slice(None)):
         Each voxels distance to the mask borders.
 
     """
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
     return _extract_mask_distance(image, mask=mask, voxelspacing=voxelspacing)
@@ -641,16 +641,16 @@ def _extract_hemispheric_difference(
     # this is assumed to be consistent with a cut of the brain along the medial longitudinal fissure, thus separating it into its hemispheres
     slicer = [slice(None)] * image.ndim
     slicer[cut_plane] = slice(None, medial_longitudinal_fissure)
-    left_hemisphere = image[slicer]
+    left_hemisphere = image[tuple(slicer)]
 
     slicer[cut_plane] = slice(
         medial_longitudinal_fissure + medial_longitudinal_fissure_excluded, None
     )
-    right_hemisphere = image[slicer]
+    right_hemisphere = image[tuple(slicer)]
 
     # flip right hemisphere image along cut plane
     slicer[cut_plane] = slice(None, None, -1)
-    right_hemisphere = right_hemisphere[slicer]
+    right_hemisphere = right_hemisphere[tuple(slicer)]
 
     # substract once left from right and once right from left hemisphere, including smoothing steps
     right_hemisphere_difference = _substract_hemispheres(
@@ -661,7 +661,7 @@ def _extract_hemispheric_difference(
     )
 
     # re-flip right hemisphere image to original orientation
-    right_hemisphere_difference = right_hemisphere_difference[slicer]
+    right_hemisphere_difference = right_hemisphere_difference[tuple(slicer)]
 
     # estimate the medial longitudinal fissure if required
     if 1 == medial_longitudinal_fissure_excluded:
@@ -669,14 +669,14 @@ def _extract_hemispheric_difference(
         right_slicer = [slice(None)] * image.ndim
         left_slicer[cut_plane] = slice(-1 * INTERPOLATION_RANGE, None)
         right_slicer[cut_plane] = slice(None, INTERPOLATION_RANGE)
-        interp_data_left = left_hemisphere_difference[left_slicer]
-        interp_data_right = right_hemisphere_difference[right_slicer]
+        interp_data_left = left_hemisphere_difference[tuple(left_slicer)]
+        interp_data_right = right_hemisphere_difference[tuple(right_slicer)]
         interp_indices_left = list(range(-1 * interp_data_left.shape[cut_plane], 0))
         interp_indices_right = list(range(1, interp_data_right.shape[cut_plane] + 1))
         interp_data = numpy.concatenate(
             (
-                left_hemisphere_difference[left_slicer],
-                right_hemisphere_difference[right_slicer],
+                left_hemisphere_difference[tuple(left_slicer)],
+                right_hemisphere_difference[tuple(right_slicer)],
             ),
             cut_plane,
         )
@@ -689,7 +689,7 @@ def _extract_hemispheric_difference(
         # add singleton dimension
         slicer[cut_plane] = numpy.newaxis
         medial_longitudinal_fissure_estimated = medial_longitudinal_fissure_estimated[
-            slicer
+            tuple(slicer)
         ]
 
     # stich images back together
@@ -743,7 +743,7 @@ def _extract_local_histogram(
 
     _, bin_edges = numpy.histogram([], bins=bins, range=rang)
     output = _get_output(
-        float if None == output else output, image, shape=[bins] + list(image.shape)
+        float if output is None else output, image, shape=[bins] + list(image.shape)
     )
 
     # threshold the image into the histogram bins represented by the output images first dimension, treat last bin separately, since upper border is inclusive
@@ -830,7 +830,7 @@ def _extract_shifted_mean_gauss(
     for o in offset:
         in_slicer.append(slice(o, None))
         out_slicer.append(slice(None, -1 * o))
-    shifted[out_slicer] = smoothed[in_slicer]
+    shifted[tuple(out_slicer)] = smoothed[tuple(in_slicer)]
 
     return _extract_intensities(shifted, mask)
 
@@ -941,7 +941,7 @@ def _extract_feature(fun, image, mask=slice(None), **kwargs):
     if not type(mask) is slice:
         mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
 
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         return join(*[fun(i, mask, **kwargs) for i in image])
     else:
         return fun(image, mask, **kwargs)

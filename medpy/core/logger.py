@@ -92,7 +92,7 @@ class Logger(NativeLogger):
 
     def __init__(self, name="MedPyLogger", level=0):
         # To guarantee that no one created more than one instance of Logger:
-        if not Logger._instance == None:
+        if Logger._instance is not None:
             raise RuntimeError("Only one instance of Logger is allowed!")
 
         # initialize parent
@@ -115,7 +115,7 @@ class Logger(NativeLogger):
         If none should be replaces, but just one added, use the parent classes
         addHandler() method.
         """
-        if None != self._handler:
+        if self._handler is not None:
             self.removeHandler(self._handler)
         self._handler = hdlr
         self.addHandler(self._handler)

@@ -130,7 +130,7 @@ def main():
 
         # extracting sub-volume
         index[args.dimension] = slice(dic["cut"][0], dic["cut"][1])
-        volume = image_data[index]
+        volume = image_data[tuple(index)]
 
         logger.debug("Extracted volume is of shape {}.".format(volume.shape))
 

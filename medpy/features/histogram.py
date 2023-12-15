@@ -22,6 +22,7 @@
 import math
 
 # third-party modules
+import numpy
 import scipy.stats
 
 # own modules
@@ -94,8 +95,8 @@ def fuzzy_histogram(
 
     """
     # check and prepare parameters
-    a = scipy.asarray(a).ravel()
-    if None == range:
+    a = numpy.asarray(a).ravel()
+    if range is None:
         range = (a.min(), a.max())
     if range[1] <= range[0]:
         raise AttributeError("max must be larger than min in range parameter.")
@@ -107,16 +108,16 @@ def fuzzy_histogram(
         raise AttributeError(
             "Unknown type: {}. Must be one of {}.".format(membership, __MBS)
         )
-    if not None == smoothness and smoothness <= 0.0:
+    if smoothness is not None and smoothness <= 0.0:
         raise AttributeError("smoothness must be greater than zero.")
 
     # set default smoothness values
-    if None == smoothness:
+    if smoothness is None:
         smoothness = 0.25 if "trapezoid" == membership else 0.5
 
     if not guarantee:  # compute bin distribution in no guarantee case
         binw = (range[1] - range[0]) / float(bins)
-        bins = scipy.asarray([i * binw + range[0] for i in scipy.arange(bins + 1)])
+        bins = numpy.asarray([i * binw + range[0] for i in numpy.arange(bins + 1)])
     else:  # compute bin distribution for guarantee case
         bins_core = bins - 2 * int(math.ceil(smoothness))
         if bins_core <= 0:
@@ -126,7 +127,7 @@ def fuzzy_histogram(
             range[0] - int(math.ceil(smoothness)) * binw,
             range[1] + int(math.ceil(smoothness)) * binw,
         )
-        bins = scipy.asarray([i * binw + range[0] for i in scipy.arange(bins + 1)])
+        bins = numpy.asarray([i * binw + range[0] for i in numpy.arange(bins + 1)])
 
     # create membership function (centered at 0)
     if "triangular" == membership:
@@ -141,11 +142,11 @@ def fuzzy_histogram(
     # compute histogram i.e. memberships of values across neighbourhood (determined by smoothness)
     neighbourhood = int(math.ceil(smoothness))
     l = len(bins) - 2
-    histogram = scipy.zeros(l + 1)
+    histogram = numpy.zeros(l + 1)
     m = range[0]
     for v in a:  # for each value
         idx = min(l, int((v - m) / binw))
-        for i in scipy.arange(
+        for i in numpy.arange(
             max(0, idx - neighbourhood), min(l + 1, idx + neighbourhood + 1)
         ):  # for crips bin neighbourhood
             start = bins[i]
@@ -505,30 +506,3 @@ def sigmoidal_difference_membership(bin_center, bin_width, smoothness):
         return math.pow(sigmoid1, -1) - math.pow(sigmoid2, -1)
 
     return fun
-
-
-# def generalized_bell_membership(alpha, beta, zeta):
-#    """
-#    Create a generalized bell function as membership function for a fuzzy histogram bin.
-#
-#    @param alpha controls the width of the plateau
-#    @param beta controls the width of the base
-#    @param zeta the center of the function
-#
-#    Recommended values are:
-#        - alpha: bin-width/2
-#        - beta: bin-width/2
-#        - zeta: bin center
-#
-#    The bell membership function is defined as
-#    \f[
-#     \mu_{bell}(x) = \left[1+\left|\frac{x-\zeta}{\alpha}\right|^{2\beta}\right]^{-1}
-#    \f]
-#    """
-#    def fun(x):
-#        try:
-#            return math.pow(1 + math.pow(abs((x - zeta)/float(alpha)), 2. * beta), -1)
-#        except Exception as e:
-#            print x, zeta, alpha, beta
-#            raise e
-#    return fun

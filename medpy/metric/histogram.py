@@ -22,7 +22,7 @@
 import math
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 
@@ -96,7 +96,7 @@ def minowski(
             return __minowski_low_positive_integer_p(h1, h2, p)
         elif p < 0 and p > -25:
             return __minowski_low_negative_integer_p(h1, h2, p)
-    return math.pow(scipy.sum(scipy.power(scipy.absolute(h1 - h2), p)), 1.0 / p)
+    return math.pow(numpy.sum(numpy.power(numpy.absolute(h1 - h2), p)), 1.0 / p)
 
 
 def __minowski_low_positive_integer_p(
@@ -107,11 +107,11 @@ def __minowski_low_positive_integer_p(
     @note do not use this function directly, but the general @link minowski() method.
     @note the passed histograms must be scipy arrays.
     """
-    mult = scipy.absolute(h1 - h2)
+    mult = numpy.absolute(h1 - h2)
     dif = mult
     for _ in range(p - 1):
-        dif = scipy.multiply(dif, mult)
-    return math.pow(scipy.sum(dif), 1.0 / p)
+        dif = numpy.multiply(dif, mult)
+    return math.pow(numpy.sum(dif), 1.0 / p)
 
 
 def __minowski_low_negative_integer_p(
@@ -122,11 +122,11 @@ def __minowski_low_negative_integer_p(
     @note do not use this function directly, but the general @link minowski() method.
     @note the passed histograms must be scipy arrays.
     """
-    mult = scipy.absolute(h1 - h2)
+    mult = numpy.absolute(h1 - h2)
     dif = mult
     for _ in range(-p + 1):
-        dif = scipy.multiply(dif, mult)
-    return math.pow(scipy.sum(1.0 / dif), 1.0 / p)
+        dif = numpy.multiply(dif, mult)
+    return math.pow(numpy.sum(1.0 / dif), 1.0 / p)
 
 
 def manhattan(h1, h2):  # # 7 us @array, 31 us @list \w 100 bins
@@ -138,7 +138,7 @@ def manhattan(h1, h2):  # # 7 us @array, 31 us @list \w 100 bins
     minowski
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    return scipy.sum(scipy.absolute(h1 - h2))
+    return numpy.sum(numpy.absolute(h1 - h2))
 
 
 def euclidean(h1, h2):  # 9 us @array, 33 us @list \w 100 bins
@@ -150,7 +150,7 @@ def euclidean(h1, h2):  # 9 us @array, 33 us @list \w 100 bins
     minowski
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    return math.sqrt(scipy.sum(scipy.square(scipy.absolute(h1 - h2))))
+    return math.sqrt(numpy.sum(numpy.square(numpy.absolute(h1 - h2))))
 
 
 def chebyshev(h1, h2):  # 12 us @array, 36 us @list \w 100 bins
@@ -204,7 +204,7 @@ def chebyshev(h1, h2):  # 12 us @array, 36 us @list \w 100 bins
     minowski, chebyshev_neg
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    return max(scipy.absolute(h1 - h2))
+    return max(numpy.absolute(h1 - h2))
 
 
 def chebyshev_neg(h1, h2):  # 12 us @array, 36 us @list \w 100 bins
@@ -258,7 +258,7 @@ def chebyshev_neg(h1, h2):  # 12 us @array, 36 us @list \w 100 bins
     minowski, chebyshev
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    return min(scipy.absolute(h1 - h2))
+    return min(numpy.absolute(h1 - h2))
 
 
 def histogram_intersection(h1, h2):  # 6 us @array, 30 us @list \w 100 bins
@@ -303,7 +303,7 @@ def histogram_intersection(h1, h2):  # 6 us @array, 30 us @list \w 100 bins
         Intersection between the two histograms.
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    return scipy.sum(scipy.minimum(h1, h2))
+    return numpy.sum(numpy.minimum(h1, h2))
 
 
 def histogram_intersection_1(h1, h2):  # 7 us @array, 31 us @list \w 100 bins
@@ -403,9 +403,9 @@ def relative_deviation(h1, h2):  # 18 us @array, 42 us @list \w 100 bins
         Relative deviation between the two histograms.
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    numerator = math.sqrt(scipy.sum(scipy.square(h1 - h2)))
+    numerator = math.sqrt(numpy.sum(numpy.square(h1 - h2)))
     denominator = (
-        math.sqrt(scipy.sum(scipy.square(h1))) + math.sqrt(scipy.sum(scipy.square(h2)))
+        math.sqrt(numpy.sum(numpy.square(h1))) + math.sqrt(numpy.sum(numpy.square(h2)))
     ) / 2.0
     return numerator / denominator
 
@@ -463,17 +463,17 @@ def relative_bin_deviation(h1, h2):  # 79 us @array, 104 us @list \w 100 bins
         Relative bin deviation between the two histograms.
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    numerator = scipy.sqrt(scipy.square(h1 - h2))
-    denominator = (scipy.sqrt(scipy.square(h1)) + scipy.sqrt(scipy.square(h2))) / 2.0
-    old_err_state = scipy.seterr(
+    numerator = numpy.sqrt(numpy.square(h1 - h2))
+    denominator = (numpy.sqrt(numpy.square(h1)) + numpy.sqrt(numpy.square(h2))) / 2.0
+    old_err_state = numpy.seterr(
         invalid="ignore"
     )  # divide through zero only occurs when the bin is zero in both histograms, in which case the division is 0/0 and leads to (and should lead to) 0
     result = numerator / denominator
-    scipy.seterr(**old_err_state)
+    numpy.seterr(**old_err_state)
     result[
-        scipy.isnan(result)
-    ] = 0  # faster than scipy.nan_to_num, which checks for +inf and -inf also
-    return scipy.sum(result)
+        numpy.isnan(result)
+    ] = 0  # faster than numpy.nan_to_num, which checks for +inf and -inf also
+    return numpy.sum(result)
 
 
 def chi_square(h1, h2):  # 23 us @array, 49 us @list \w 100
@@ -526,15 +526,15 @@ def chi_square(h1, h2):  # 23 us @array, 49 us @list \w 100
         Chi-square distance.
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    old_err_state = scipy.seterr(
+    old_err_state = numpy.seterr(
         invalid="ignore"
     )  # divide through zero only occurs when the bin is zero in both histograms, in which case the division is 0/0 and leads to (and should lead to) 0
-    result = scipy.square(h1 - h2) / (h1 + h2)
-    scipy.seterr(**old_err_state)
+    result = numpy.square(h1 - h2) / (h1 + h2)
+    numpy.seterr(**old_err_state)
     result[
-        scipy.isnan(result)
-    ] = 0  # faster than scipy.nan_to_num, which checks for +inf and -inf also
-    return scipy.sum(result)
+        numpy.isnan(result)
+    ] = 0  # faster than numpy.nan_to_num, which checks for +inf and -inf also
+    return numpy.sum(result)
 
 
 def kullback_leibler(h1, h2):  # 83 us @array, 109 us @list \w 100 bins
@@ -582,14 +582,14 @@ def kullback_leibler(h1, h2):  # 83 us @array, 109 us @list \w 100 bins
         Kullback-Leibler divergence.
 
     """
-    old_err_state = scipy.seterr(divide="raise")
+    old_err_state = numpy.seterr(divide="raise")
     try:
         h1, h2 = __prepare_histogram(h1, h2)
         result = (__kullback_leibler(h1, h2) + __kullback_leibler(h2, h1)) / 2.0
-        scipy.seterr(**old_err_state)
+        numpy.seterr(**old_err_state)
         return result
     except FloatingPointError:
-        scipy.seterr(**old_err_state)
+        numpy.seterr(**old_err_state)
         raise ValueError(
             "h1 can only contain zero values where h2 also contains zero values and vice-versa"
         )
@@ -598,12 +598,12 @@ def kullback_leibler(h1, h2):  # 83 us @array, 109 us @list \w 100 bins
 def __kullback_leibler(h1, h2):  # 36.3 us
     """
     The actual KL implementation. @see kullback_leibler() for details.
-    Expects the histograms to be of type scipy.ndarray.
+    Expects the histograms to be of type numpy.ndarray.
     """
-    result = h1.astype(scipy.float_)
+    result = h1.astype(float)
     mask = h1 != 0
-    result[mask] = scipy.multiply(h1[mask], scipy.log(h1[mask] / h2[mask]))
-    return scipy.sum(result)
+    result[mask] = numpy.multiply(h1[mask], numpy.log(h1[mask] / h2[mask]))
+    return numpy.sum(result)
 
 
 def jensen_shannon(h1, h2):  # 85 us @array, 110 us @list \w 100 bins
@@ -711,7 +711,7 @@ def fidelity_based(h1, h2):  # 25 us @array, 51 us @list \w 100 bins
     cosine between their square roots :math:`\sqrt{H}` and :math:`\sqrt{H'}`.
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    result = scipy.sum(scipy.sqrt(h1 * h2))
+    result = numpy.sum(numpy.sqrt(h1 * h2))
     result = 0 if 0 > result else result  # for rounding errors
     result = 1 if 1 < result else result  # for rounding errors
     return result
@@ -963,8 +963,8 @@ def cosine_alt(h1, h2):  # 17 us @array, 42 us @list \w 100 bins
     h1, h2 = __prepare_histogram(h1, h2)
     return (
         -1
-        * float(scipy.sum(h1 * h2))
-        / (scipy.sum(scipy.power(h1, 2)) * scipy.sum(scipy.power(h2, 2)))
+        * float(numpy.sum(h1 * h2))
+        / (numpy.sum(numpy.power(h1, 2)) * numpy.sum(numpy.power(h2, 2)))
     )
 
 
@@ -1020,8 +1020,8 @@ def cosine(h1, h2):  # 17 us @array, 42 us @list \w 100 bins
     indicating intermediate similarity or dissimilarity.
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    return scipy.sum(h1 * h2) / math.sqrt(
-        scipy.sum(scipy.square(h1)) * scipy.sum(scipy.square(h2))
+    return numpy.sum(h1 * h2) / math.sqrt(
+        numpy.sum(numpy.square(h1)) * numpy.sum(numpy.square(h2))
     )
 
 
@@ -1173,10 +1173,10 @@ def correlate(h1, h2):  # 31 us @array, 55 us @list \w 100 bins
 
     """
     h1, h2 = __prepare_histogram(h1, h2)
-    h1m = h1 - scipy.sum(h1) / float(h1.size)
-    h2m = h2 - scipy.sum(h2) / float(h2.size)
-    a = scipy.sum(scipy.multiply(h1m, h2m))
-    b = math.sqrt(scipy.sum(scipy.square(h1m)) * scipy.sum(scipy.square(h2m)))
+    h1m = h1 - numpy.sum(h1) / float(h1.size)
+    h2m = h2 - numpy.sum(h2) / float(h2.size)
+    a = numpy.sum(numpy.multiply(h1m, h2m))
+    b = math.sqrt(numpy.sum(numpy.square(h1m)) * numpy.sum(numpy.square(h2m)))
     return 0 if 0 == b else a / b
 
 
@@ -1290,10 +1290,10 @@ def __quadratic_forms_matrix_euclidean(h1, h2):
     --------
     quadratic_forms
     """
-    A = scipy.repeat(
-        h2[:, scipy.newaxis], h1.size, 1
+    A = numpy.repeat(
+        h2[:, numpy.newaxis], h1.size, 1
     )  # repeat second array to form a matrix
-    A = scipy.absolute(A - h1)  # euclidean distances
+    A = numpy.absolute(A - h1)  # euclidean distances
     return 1 - (A / float(A.max()))
 
 
@@ -1303,9 +1303,9 @@ def __quadratic_forms_matrix_euclidean(h1, h2):
 
 
 def __prepare_histogram(h1, h2):
-    """Convert the histograms to scipy.ndarrays if required."""
-    h1 = h1 if scipy.ndarray == type(h1) else scipy.asarray(h1)
-    h2 = h2 if scipy.ndarray == type(h2) else scipy.asarray(h2)
+    """Convert the histograms to numpy.ndarrays if required."""
+    h1 = h1 if numpy.ndarray == type(h1) else numpy.asarray(h1)
+    h2 = h2 if numpy.ndarray == type(h2) else numpy.asarray(h2)
     if h1.shape != h2.shape or h1.size != h2.size:
         raise ValueError("h1 and h2 must be of same shape and size")
     return h1, h2

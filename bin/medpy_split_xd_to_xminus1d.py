@@ -24,7 +24,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
+import numpy
 
 from medpy.core import Logger
 from medpy.core.exceptions import ArgumentError
@@ -92,7 +92,7 @@ def main():
     for idx in range(data_input.shape[args.dimension]):
         # cut the current slice from the original image
         slices[args.dimension] = slice(idx, idx + 1)
-        data_output = scipy.squeeze(data_input[slices])
+        data_output = numpy.squeeze(data_input[tuple(slices)])
         # update the header and set the voxel spacing
         header_input.set_voxel_spacing(spacing)
         # save current slice

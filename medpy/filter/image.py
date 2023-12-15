@@ -173,7 +173,7 @@ def sls(
     ssds = [
         ssd(
             minuend,
-            subtrahend[slicer],
+            subtrahend[tuple(slicer)],
             normalized=True,
             signed=signed,
             size=pn_size,
@@ -412,7 +412,7 @@ def sum_filter(
     """
     footprint = __make_footprint(input, size, footprint)
     slicer = [slice(None, None, -1)] * footprint.ndim
-    return convolve(input, footprint[slicer], output, mode, cval, origin)
+    return convolve(input, footprint[tuple(slicer)], output, mode, cval, origin)
 
 
 def otsu(img, bins=64):

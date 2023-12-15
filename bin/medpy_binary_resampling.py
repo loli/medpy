@@ -168,14 +168,14 @@ def shape_based_slice_interpolation(img, dim, nslices):
             out = numpy.concatenate((out, numpy.delete(chunk, -1, dim)), dim)
 
     slicer[dim] = numpy.newaxis
-    out = numpy.concatenate((out, sl2[slicer]), dim)
+    out = numpy.concatenate((out, sl2[tuple(slicer)]), dim)
 
     slicer[dim] = slice(0, 1)
     for _ in range(nslices // 2):
-        out = numpy.concatenate((img[slicer], out), dim)
+        out = numpy.concatenate((img[tuple(slicer)], out), dim)
     slicer[dim] = slice(-1, None)
     for _ in range(nslices // 2):
-        out = numpy.concatenate((out, img[slicer]), dim)
+        out = numpy.concatenate((out, img[tuple(slicer)]), dim)
 
     return out
 
@@ -255,7 +255,7 @@ def shape_based_slice_insertation(sl1, sl2, dim, nslices, order=3):
 
     slicer = [slice(None)] * dt1.ndim
     slicer = slicer[:dim] + [numpy.newaxis] + slicer[dim:]
-    out = numpy.concatenate((dt1[slicer], dt2[slicer]), axis=dim)
+    out = numpy.concatenate((dt1[tuple(slicer)], dt2[tuple(slicer)]), axis=dim)
     zoom_factors = [1] * dt1.ndim
     zoom_factors = zoom_factors[:dim] + [(nslices + 2) / 2.0] + zoom_factors[dim:]
     out = zoom(out, zoom_factors, order=order)

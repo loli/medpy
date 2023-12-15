@@ -27,7 +27,7 @@ import os
 from argparse import RawTextHelpFormatter
 
 # third-party modules
-import scipy
+import numpy
 
 from medpy import graphcut
 
@@ -174,7 +174,7 @@ def main():
 
     # reshape results to form a valid mask
     logger.info("Applying results...")
-    result_image_data = scipy.zeros(bgmarkers_image_data.size, dtype=scipy.bool_)
+    result_image_data = numpy.zeros(bgmarkers_image_data.size, dtype=numpy.bool_)
     for idx in range(len(result_image_data)):
         result_image_data[idx] = (
             0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1
@@ -183,7 +183,7 @@ def main():
 
     # save resulting mask
     save(
-        result_image_data.astype(scipy.bool_), args.output, reference_header, args.force
+        result_image_data.astype(numpy.bool_), args.output, reference_header, args.force
     )
 
     logger.info("Successfully terminated.")

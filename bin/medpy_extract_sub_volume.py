@@ -28,7 +28,7 @@ import sys
 from argparse import RawTextHelpFormatter
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import ArgumentError, Logger
@@ -109,7 +109,7 @@ def main():
     # execute extraction of the sub-area
     logger.info("Extracting sub-volume...")
     index = [slice(x[0], x[1]) for x in args.volume]
-    volume = image_data[index]
+    volume = image_data[tuple(index)]
 
     # check if the output image contains data
     if 0 == len(volume):
@@ -119,7 +119,7 @@ def main():
         sys.exit(-1)
 
     # squeeze extracted sub-volume for the case in which one dimensions has been eliminated
-    volume = scipy.squeeze(volume)
+    volume = numpy.squeeze(volume)
 
     logger.debug("Extracted volume is of shape {}.".format(volume.shape))
 

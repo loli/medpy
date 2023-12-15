@@ -50,7 +50,7 @@ pngmath_dvipng_args = ["-gamma 1.5", "-D 96", "-bg Transparent"]
 
 plot_pre_code = """
 import numpy as np
-import scipy as sp
+import numpy as sp
 np.random.seed(123)
 """
 plot_include_source = True

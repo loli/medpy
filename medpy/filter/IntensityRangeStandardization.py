@@ -22,7 +22,7 @@
 
 # third-party modules
 import numpy
-from scipy.interpolate.interpolate import interp1d
+from scipy.interpolate import interp1d
 
 # path changes
 

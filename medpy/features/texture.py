@@ -82,7 +82,7 @@ def coarseness(image, voxelspacing=None, mask=slice(None)):
     image = image[mask]
 
     # set default voxel spacing if not suppliec
-    if None == voxelspacing:
+    if voxelspacing is None:
         voxelspacing = tuple([1.0] * image.ndim)
 
     if len(voxelspacing) != image.ndim:
@@ -116,7 +116,7 @@ def coarseness(image, voxelspacing=None, mask=slice(None)):
             slicerPad_k_d[d] = slice(
                 (padSize[d][0] - borders if borders < padSize[d][0] else 0), None
             )
-            A_k_d = A[slicerPad_k_d]
+            A_k_d = A[tuple(slicerPad_k_d)]
 
             AslicerL = rawSlicer[:]
             AslicerL[d] = slice(0, -borders)
@@ -124,7 +124,7 @@ def coarseness(image, voxelspacing=None, mask=slice(None)):
             AslicerR = rawSlicer[:]
             AslicerR[d] = slice(borders, None)
 
-            E[k, d, ...] = numpy.abs(A_k_d[AslicerL] - A_k_d[AslicerR])
+            E[k, d, ...] = numpy.abs(A_k_d[tuple(AslicerL)] - A_k_d[tuple(AslicerR)])
 
     # step3: At each pixel, find the value of k that maximises the difference Ek(x,y)
     # in either direction and set the best size Sbest(x,y)=2**k
@@ -168,6 +168,8 @@ def contrast(image, mask=slice(None)):
     if not type(mask) is slice:
         if not type(mask[0] is slice):
             mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
+        else:
+            mask = tuple(mask)
     image = image[mask]
 
     standard_deviation = numpy.std(image)
@@ -236,7 +238,7 @@ def directionality(
     image = image[mask]
 
     # set default voxel spacing if not suppliec
-    if None == voxelspacing:
+    if voxelspacing is None:
         voxelspacing = tuple([1.0] * ndim)
 
     if len(voxelspacing) != ndim:
@@ -266,8 +268,8 @@ def directionality(
 
     for i in range(n):
         A = numpy.arctan(
-            (E[(i + (ndim + i) / ndim) % ndim][vs])
-            / (E[i % ndim][vs] + numpy.spacing(1))
+            (E[(i + (ndim + i) / ndim) % ndim][tuple(vs)])
+            / (E[i % ndim][tuple(vs)] + numpy.spacing(1))
         )  # [0 , pi/2]
         A = A[em[vs]]
         # Calculate number of bins for the histogram. Watch out, this is just a work around!

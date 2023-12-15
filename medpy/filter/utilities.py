@@ -60,7 +60,7 @@ def xminus1d(img, fun, dim, *args, **kwargs):
     output = []
     for slid in range(img.shape[dim]):
         slicer[dim] = slice(slid, slid + 1)
-        output.append(fun(numpy.squeeze(img[slicer]), *args, **kwargs))
+        output.append(fun(numpy.squeeze(img[tuple(slicer)]), *args, **kwargs))
     return numpy.rollaxis(numpy.asarray(output), 0, dim + 1)
 
 
@@ -146,10 +146,10 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
 
     if "constant" == mode:
         output += cval
-        output[input_slicer] = input
+        output[tuple(input_slicer)] = input
         return output
     elif "nearest" == mode:
-        output[input_slicer] = input
+        output[tuple(input_slicer)] = input
         dim_mult_slices = [
             (d, l, slice(None, l), slice(l, l + 1))
             for d, (l, _) in zip(list(range(output.ndim)), padding_offset)
@@ -170,7 +170,9 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
                 from_slice if d == dim else slice(None) for d in range(output.ndim)
             ]
             if not 0 == mult:
-                output[slicer_to] = numpy.concatenate([output[slicer_from]] * mult, dim)
+                output[tuple(slicer_to)] = numpy.concatenate(
+                    [output[tuple(slicer_from)]] * mult, dim
+                )
         return output
     elif "mirror" == mode:
         dim_slices = [
@@ -217,7 +219,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
     else:
         raise RuntimeError("boundary mode not supported")
 
-    output[input_slicer] = input
+    output[tuple(input_slicer)] = input
     for dim, to_slice, from_slice in dim_slices:
         slicer_reverse = [
             reverse_slice if d == dim else slice(None) for d in range(output.ndim)
@@ -226,7 +228,7 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
         slicer_from = [
             from_slice if d == dim else slice(None) for d in range(output.ndim)
         ]
-        output[slicer_to] = output[slicer_from][slicer_reverse]
+        output[tuple(slicer_to)] = output[tuple(slicer_from)][tuple(slicer_reverse)]
 
     return output
 
@@ -299,7 +301,7 @@ def intersection(i1, h1, i2, h2):
     sl1 = [slice(l, u) for l, u in zip(*ib1)]
     sl2 = [slice(l, u) for l, u in zip(*ib2)]
 
-    return i1[sl1], i2[sl2], nos
+    return i1[tuple(sl1)], i2[tuple(sl2)], nos
 
 
 def __make_footprint(input, size, footprint):

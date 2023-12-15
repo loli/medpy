@@ -28,7 +28,7 @@ import os
 from argparse import RawTextHelpFormatter
 
 # third-party modules
-import scipy
+import numpy
 from scipy import ndimage
 
 from medpy import filter, graphcut
@@ -161,13 +161,13 @@ def main():
     mapping.extend(
         [
             0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1
-            for x in scipy.unique(region_image_data)
+            for x in numpy.unique(region_image_data)
         ]
     )
     region_image_data = filter.relabel_map(region_image_data, mapping)
 
     # generating final image by increasing the size again
-    output_image_data = scipy.zeros(old_size, dtype=scipy.bool_)
+    output_image_data = numpy.zeros(old_size, dtype=numpy.bool_)
     output_image_data[cut_xy] = region_image_data
 
     # save resulting mask
@@ -188,7 +188,7 @@ def __get_bg_bounding_pipe(bgmarkers):
     slicer[xdim] = bb[0]
     slicer[ydim] = bb[1]
 
-    return slicer
+    return tuple(slicer)
 
 
 def __xd_iterator_pass_on(arr, view, fun):
@@ -207,7 +207,7 @@ def __xd_iterator_pass_on(arr, view, fun):
         slicer = [
             slice(None) if idx is None else slice(idx, idx + 1) for idx in indices
         ]
-        passon = fun(scipy.squeeze(arr[slicer]), passon)
+        passon = fun(numpy.squeeze(arr[tuple(slicer)]), passon)
 
     return passon
 
@@ -228,7 +228,7 @@ def __extract_bbox(arr, bb_old):
         bb_old[i] = slice(
             min(bb_old[i].start, bb[i].start), max(bb_old[i].stop, bb[i].stop)
         )
-    return bb_old
+    return tuple(bb_old)
 
 
 def getArguments(parser):

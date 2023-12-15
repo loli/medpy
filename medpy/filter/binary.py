@@ -137,4 +137,4 @@ def bounding_box(img):
     locations = numpy.argwhere(img)
     mins = locations.min(0)
     maxs = locations.max(0) + 1
-    return [slice(x, y) for x, y in zip(mins, maxs)]
+    return tuple([slice(x, y) for x, y in zip(mins, maxs)])

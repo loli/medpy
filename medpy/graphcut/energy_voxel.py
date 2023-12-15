@@ -25,7 +25,6 @@ import sys
 
 # third-party modules
 import numpy
-import scipy
 
 # own modules
 
@@ -59,7 +58,7 @@ def regional_probability_map(graph, xxx_todo_changeme):
     be called with ``regional_term_args`` set to the probability atlas image.
     """
     (probability_map, alpha) = xxx_todo_changeme
-    probability_map = scipy.asarray(probability_map)
+    probability_map = numpy.asarray(probability_map)
     probabilities = numpy.vstack(
         [(probability_map * alpha).flat, ((1 - probability_map) * alpha).flat]
     ).T
@@ -94,7 +93,7 @@ def boundary_maximum_linear(graph, xxx_todo_changeme1):
     gradient image.
     """
     (gradient_image, spacing) = xxx_todo_changeme1
-    gradient_image = scipy.asarray(gradient_image)
+    gradient_image = numpy.asarray(gradient_image)
 
     # compute maximum intensity to encounter
     max_intensity = float(numpy.abs(gradient_image).max())
@@ -169,7 +168,7 @@ def boundary_difference_linear(graph, xxx_todo_changeme2):
     original image.
     """
     (original_image, spacing) = xxx_todo_changeme2
-    original_image = scipy.asarray(original_image)
+    original_image = numpy.asarray(original_image)
 
     # compute maximum (possible) intensity difference
     max_intensity_difference = float(abs(original_image.max() - original_image.min()))
@@ -222,17 +221,17 @@ def boundary_maximum_exponential(graph, xxx_todo_changeme3):
     gradient image.
     """
     (gradient_image, sigma, spacing) = xxx_todo_changeme3
-    gradient_image = scipy.asarray(gradient_image)
+    gradient_image = numpy.asarray(gradient_image)
 
     def boundary_term_exponential(intensities):
         """
         Implementation of a exponential boundary term computation over an array.
         """
         # apply exp-(x**2/sigma**2)
-        intensities = scipy.power(intensities, 2)
+        intensities = numpy.power(intensities, 2)
         intensities /= math.pow(sigma, 2)
         intensities *= -1
-        intensities = scipy.exp(intensities)
+        intensities = numpy.exp(intensities)
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
 
@@ -286,17 +285,17 @@ def boundary_difference_exponential(graph, xxx_todo_changeme4):
     original image.
     """
     (original_image, sigma, spacing) = xxx_todo_changeme4
-    original_image = scipy.asarray(original_image)
+    original_image = numpy.asarray(original_image)
 
     def boundary_term_exponential(intensities):
         """
         Implementation of a exponential boundary term computation over an array.
         """
         # apply exp-(x**2/sigma**2)
-        intensities = scipy.power(intensities, 2)
+        intensities = numpy.power(intensities, 2)
         intensities /= math.pow(sigma, 2)
         intensities *= -1
-        intensities = scipy.exp(intensities)
+        intensities = numpy.exp(intensities)
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
 
@@ -333,7 +332,7 @@ def boundary_maximum_division(graph, xxx_todo_changeme5):
     gradient image.
     """
     (gradient_image, sigma, spacing) = xxx_todo_changeme5
-    gradient_image = scipy.asarray(gradient_image)
+    gradient_image = numpy.asarray(gradient_image)
 
     def boundary_term_division(intensities):
         """
@@ -395,7 +394,7 @@ def boundary_difference_division(graph, xxx_todo_changeme6):
     original image.
     """
     (original_image, sigma, spacing) = xxx_todo_changeme6
-    original_image = scipy.asarray(original_image)
+    original_image = numpy.asarray(original_image)
 
     def boundary_term_division(intensities):
         """
@@ -440,7 +439,7 @@ def boundary_maximum_power(graph, xxx_todo_changeme7):
     gradient image.
     """
     (gradient_image, sigma, spacing) = xxx_todo_changeme7
-    gradient_image = scipy.asarray(gradient_image)
+    gradient_image = numpy.asarray(gradient_image)
 
     def boundary_term_power(intensities):
         """
@@ -448,7 +447,7 @@ def boundary_maximum_power(graph, xxx_todo_changeme7):
         """
         # apply (1 / (1  + x))^sigma
         intensities = 1.0 / (intensities + 1)
-        intensities = scipy.power(intensities, sigma)
+        intensities = numpy.power(intensities, sigma)
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
 
@@ -502,7 +501,7 @@ def boundary_difference_power(graph, xxx_todo_changeme8):
     original image.
     """
     (original_image, sigma, spacing) = xxx_todo_changeme8
-    original_image = scipy.asarray(original_image)
+    original_image = numpy.asarray(original_image)
 
     def boundary_term_power(intensities):
         """
@@ -510,7 +509,7 @@ def boundary_difference_power(graph, xxx_todo_changeme8):
         """
         # apply (1 / (1  + x))^sigma
         intensities = 1.0 / (intensities + 1)
-        intensities = scipy.power(intensities, sigma)
+        intensities = numpy.power(intensities, sigma)
         intensities[intensities <= 0] = sys.float_info.min
         return intensities
 
@@ -554,7 +553,7 @@ def __skeleton_maximum(graph, image, boundary_term, spacing):
         Takes two voxel arrays constituting neighbours and computes the maximum between
         their intensities.
         """
-        return scipy.maximum(neighbour_one, neighbour_two)
+        return numpy.maximum(neighbour_one, neighbour_two)
 
     __skeleton_base(graph, numpy.abs(image), boundary_term, intensity_maximum, spacing)
 
@@ -604,7 +603,7 @@ def __skeleton_difference(graph, image, boundary_term, spacing):
         Takes two voxel arrays constituting neighbours and computes the absolute
         intensity differences.
         """
-        return scipy.absolute(neighbour_one - neighbour_two)
+        return numpy.absolute(neighbour_one - neighbour_two)
 
     __skeleton_base(graph, image, boundary_term, intensity_difference, spacing)
 
@@ -631,8 +630,8 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function, spacing
                    False, no distance based weighting of the graph edges is performed.
     @param spacing sequence | False
     """
-    image = scipy.asarray(image)
-    image = image.astype(scipy.float_)
+    image = numpy.asarray(image)
+    image = image.astype(float)
 
     # iterate over the image dimensions and for each create the appropriate edges and compute the associated weights
     for dim in range(image.ndim):
@@ -643,7 +642,7 @@ def __skeleton_base(graph, image, boundary_term, neighbourhood_function, spacing
         slices_exclude_first[dim] = slice(1, None)
         # compute difference between all layers in the current dimensions direction
         neighbourhood_intensity_term = neighbourhood_function(
-            image[slices_exclude_last], image[slices_exclude_first]
+            image[tuple(slices_exclude_last)], image[tuple(slices_exclude_first)]
         )
         # apply boundary term
         neighbourhood_intensity_term = boundary_term(neighbourhood_intensity_term)

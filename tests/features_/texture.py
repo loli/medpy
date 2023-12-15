@@ -11,10 +11,12 @@ Unittest for medpy.features.texture.
 # build-in modules
 import unittest
 
-# own modules
-from medpy.features.texture import *
-
 # third-party modules
+import numpy
+from scipy import stats
+
+# own modules
+from medpy.features.texture import coarseness, contrast, directionality
 
 
 # code
@@ -29,7 +31,7 @@ class TestTextureFeatures(unittest.TestCase):
         self.image1 = numpy.zeros([100, 100])
         self.image1[:, ::3] = 1
         self.voxelspacing1 = (1.0, 3.0)
-        self.mask1 = [slice(0, 50, 1), slice(0, 50, 1)]
+        self.mask1 = tuple([slice(0, 50, 1), slice(0, 50, 1)])
 
     def test_Coarseness(self):
         res = coarseness(self.image1)

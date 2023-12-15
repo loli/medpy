@@ -18,9 +18,8 @@
 # since 2014-10-15
 # status Release
 
-import warnings
-
 # build-in modules
+import warnings
 from itertools import combinations
 
 # third-party modules

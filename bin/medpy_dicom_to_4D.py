@@ -23,7 +23,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import Logger
@@ -100,7 +100,7 @@ def main():
     volumes_3d = data_3d.shape[args.dimension] / args.offset
     shape_4d = list(data_3d.shape)
     shape_4d[args.dimension] = volumes_3d
-    data_4d = scipy.zeros([args.offset] + shape_4d, dtype=data_3d.dtype)
+    data_4d = numpy.zeros([args.offset] + shape_4d, dtype=data_3d.dtype)
 
     logger.debug(
         "Separating {} slices into {} 3D volumes of thickness {}.".format(
@@ -119,10 +119,10 @@ def main():
             idx_to = [slice(None), slice(None), slice(None)]
             idx_to[args.dimension] = slice(sl, sl + 1)
             # print 'Slice {} to {}.'.format(idx_from, idx_to)
-            data_4d[idx][idx_to] = data_3d[idx_from]
+            data_4d[idx][tuple(idx_to)] = data_3d[tuple(idx_from)]
 
     # flip dimensions such that the newly created is the last
-    data_4d = scipy.swapaxes(data_4d, 0, 3)
+    data_4d = numpy.swapaxes(data_4d, 0, 3)
 
     # save resulting 4D volume
     save(data_4d, args.output, False, args.force)

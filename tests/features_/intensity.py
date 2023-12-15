@@ -7,18 +7,15 @@ Unittest for medpy.features.intensity.
 @status Development
 """
 
-
-import math
-
 # build-in modules
+import math
 import unittest
 
 # third-party modules
 import numpy
 
-from medpy.core.exceptions import ArgumentError
-
 # own modules
+from medpy.core.exceptions import ArgumentError
 from medpy.features.intensity import (
     centerdistance,
     centerdistance_xdminus1,
@@ -83,7 +80,7 @@ class TestIntensityFeatures(unittest.TestCase):
         numpy.testing.assert_allclose(
             r,
             e,
-            err_msg="local histogram: 2D rang over complete image \w cutoffp failed",
+            err_msg="local histogram: 2D rang over complete image \\w cutoffp failed",
         )
 
         i = numpy.asarray([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
@@ -245,7 +242,7 @@ class TestIntensityFeatures(unittest.TestCase):
         r = indices(i, voxelspacing=(1, 2.5))
         e = [[0, 0], [0, 2.5], [1, 0], [1, 2.5]]
         numpy.testing.assert_allclose(
-            r, e, err_msg="indices: 2D \w voxelspacing failed"
+            r, e, err_msg="indices: 2D \\w voxelspacing failed"
         )
 
         # 2D with mask

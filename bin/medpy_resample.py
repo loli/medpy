@@ -25,13 +25,13 @@ import logging
 # build-in modules
 import os
 
-# third-party modules
-import scipy.ndimage
-
 # own modules
 from medpy.core import Logger
 from medpy.io import header, load, save
 from medpy.utilities import argparseu
+
+# third-party modules
+
 
 # path changes
 

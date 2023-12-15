@@ -22,9 +22,8 @@
 import math
 import sys
 
-import numpy
-
 # third-party modules
+import numpy
 import scipy.ndimage
 
 # own modules
@@ -77,18 +76,18 @@ def boundary_difference_of_means(
     This function is tested on 2D and 3D images and theoretically works for all dimensionalities.
     """
     # convert to arrays if necessary
-    label_image = scipy.asarray(label_image)
-    original_image = scipy.asarray(original_image)
+    label_image = numpy.asarray(label_image)
+    original_image = numpy.asarray(original_image)
 
     if label_image.flags[
         "F_CONTIGUOUS"
     ]:  # strangely one this one is required to be ctype ordering
-        label_image = scipy.ascontiguousarray(label_image)
+        label_image = numpy.ascontiguousarray(label_image)
 
     __check_label_image(label_image)
 
     # create a lookup-table that translates from a label id to its position in the sorted unique vector
-    labels_unique = scipy.unique(label_image)
+    labels_unique = numpy.unique(label_image)
 
     # compute the mean intensities of all regions
     # Note: Bug in mean implementation: means over labels is only computed if the indexes are also supplied
@@ -177,13 +176,13 @@ def boundary_stawiaski(
            Using Graph-cuts and watershed" MICCAI 2008 participation
     """
     # convert to arrays if necessary
-    label_image = scipy.asarray(label_image)
-    gradient_image = scipy.asarray(gradient_image)
+    label_image = numpy.asarray(label_image)
+    gradient_image = numpy.asarray(gradient_image)
 
     if label_image.flags[
         "F_CONTIGUOUS"
     ]:  # strangely, this one is required to be ctype ordering
-        label_image = scipy.ascontiguousarray(label_image)
+        label_image = numpy.ascontiguousarray(label_image)
 
     __check_label_image(label_image)
 
@@ -194,13 +193,14 @@ def boundary_stawiaski(
         slicer_from[dim] = slice(None, -1)
         slicer_to[dim] = slice(1, None)
         # slice views of keys
-        keys_from = label_image[slicer_from]
-        keys_to = label_image[slicer_to]
+        keys_from = label_image[tuple(slicer_from)]
+        keys_to = label_image[tuple(slicer_to)]
         # determine not equal keys
         valid_edges = keys_from != keys_to
         # determine largest gradient
         gradient_max = numpy.maximum(
-            numpy.abs(gradient_image[slicer_from]), numpy.abs(gradient_image[slicer_to])
+            numpy.abs(gradient_image[tuple(slicer_from)]),
+            numpy.abs(gradient_image[tuple(slicer_to)]),
         )[valid_edges]
         # determine key order
         keys_max = numpy.maximum(keys_from, keys_to)[valid_edges]
@@ -289,13 +289,13 @@ def boundary_stawiaski_directed(
            Using Graph-cuts and watershed" MICCAI 2008 participation
     """
     (gradient_image, directedness) = xxx_todo_changeme
-    label_image = scipy.asarray(label_image)
-    gradient_image = scipy.asarray(gradient_image)
+    label_image = numpy.asarray(label_image)
+    gradient_image = numpy.asarray(gradient_image)
 
     if label_image.flags[
         "F_CONTIGUOUS"
     ]:  # strangely one this one is required to be ctype ordering
-        label_image = scipy.ascontiguousarray(label_image)
+        label_image = numpy.ascontiguousarray(label_image)
 
     __check_label_image(label_image)
 
@@ -333,9 +333,9 @@ def boundary_stawiaski_directed(
 
     # pick and vectorize the function to achieve a speedup
     if 0 > directedness:
-        vaddition = scipy.vectorize(addition_directed_dtl)
+        vaddition = numpy.vectorize(addition_directed_dtl)
     else:
-        vaddition = scipy.vectorize(addition_directed_ltd)
+        vaddition = numpy.vectorize(addition_directed_ltd)
 
     # iterate over each dimension
     for dim in range(label_image.ndim):
@@ -345,10 +345,10 @@ def boundary_stawiaski_directed(
             slices_x.append(slice(None, -1 if di == dim else None))
             slices_y.append(slice(1 if di == dim else None, None))
         vaddition(
-            label_image[slices_x],
-            label_image[slices_y],
-            gradient_image[slices_x],
-            gradient_image[slices_y],
+            label_image[tuple(slices_x)],
+            label_image[tuple(slices_y)],
+            gradient_image[tuple(slices_x)],
+            gradient_image[tuple(slices_y)],
         )
 
 
@@ -385,8 +385,8 @@ def regional_atlas(
     This function is tested on 2D and 3D images and theoretically works for all dimensionalities.
     """
     (probability_map, alpha) = xxx_todo_changeme1
-    label_image = scipy.asarray(label_image)
-    probability_map = scipy.asarray(probability_map)
+    label_image = numpy.asarray(label_image)
+    probability_map = numpy.asarray(probability_map)
     __check_label_image(label_image)
 
     # finding the objects in the label image (bounding boxes around regions)
@@ -394,7 +394,7 @@ def regional_atlas(
 
     # iterate over regions and compute the respective sums of atlas values
     for rid in range(1, len(objects) + 1):
-        weight = scipy.sum(
+        weight = numpy.sum(
             probability_map[objects[rid - 1]][label_image[objects[rid - 1]] == rid]
         )
         graph.set_tweight(
@@ -435,7 +435,7 @@ def __compute_edges_nd(label_image):
         if v1 != v2:
             Er.update([(min(v1, v2), max(v1, v2))])
 
-    vappend = scipy.vectorize(append)
+    vappend = numpy.vectorize(append)
 
     for dim in range(label_image.ndim):
         slices_x = []
@@ -450,8 +450,8 @@ def __compute_edges_nd(label_image):
 
 def __check_label_image(label_image):
     """Check the label image for consistent labelling starting from 1."""
-    encountered_indices = scipy.unique(label_image)
-    expected_indices = scipy.arange(1, label_image.max() + 1)
+    encountered_indices = numpy.unique(label_image)
+    expected_indices = numpy.arange(1, label_image.max() + 1)
     if (
         not encountered_indices.size == expected_indices.size
         or not (encountered_indices == expected_indices).all()

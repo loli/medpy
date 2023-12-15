@@ -24,7 +24,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import Logger
@@ -81,7 +81,7 @@ def main():
         )
 
     # swap axes
-    data_output = scipy.swapaxes(data_input, args.dimension1, args.dimension2)
+    data_output = numpy.swapaxes(data_input, args.dimension1, args.dimension2)
     # swap pixel spacing and offset
     ps = list(header.get_pixel_spacing(header_input))
     ps[args.dimension1], ps[args.dimension2] = ps[args.dimension2], ps[args.dimension1]

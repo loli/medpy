@@ -160,7 +160,7 @@ def anisotropic_diffusion(
             slicer = tuple(
                 [slice(None, -1) if j == i else slice(None) for j in range(out.ndim)]
             )
-            deltas[i][slicer] = numpy.diff(out, axis=i)
+            deltas[i][tuple(slicer)] = numpy.diff(out, axis=i)
 
         # update matrices
         matrices = [
@@ -174,7 +174,7 @@ def anisotropic_diffusion(
             slicer = tuple(
                 [slice(1, None) if j == i else slice(None) for j in range(out.ndim)]
             )
-            matrices[i][slicer] = numpy.diff(matrices[i], axis=i)
+            matrices[i][tuple(slicer)] = numpy.diff(matrices[i], axis=i)
 
         # update the image
         out += gamma * (numpy.sum(matrices, axis=0))

@@ -27,7 +27,7 @@ import os
 from argparse import ArgumentError
 
 # third-party modules
-import scipy
+import numpy
 
 from medpy.core import Logger
 
@@ -103,22 +103,20 @@ def main():
             )
         )
     int_types = (
-        scipy.uint,
-        scipy.uint0,
-        scipy.uint8,
-        scipy.uint16,
-        scipy.uint32,
-        scipy.uint64,
-        scipy.uintc,
-        scipy.uintp,
-        scipy.int_,
-        scipy.int0,
-        scipy.int8,
-        scipy.int16,
-        scipy.int32,
-        scipy.int64,
-        scipy.intc,
-        scipy.intp,
+        numpy.uint,
+        numpy.uint8,
+        numpy.uint16,
+        numpy.uint32,
+        numpy.uint64,
+        numpy.uintc,
+        numpy.uintp,
+        numpy.int_,
+        numpy.int8,
+        numpy.int16,
+        numpy.int32,
+        numpy.int64,
+        numpy.intc,
+        numpy.intp,
     )
     if image1_data.dtype not in int_types:
         raise ArgumentError(
@@ -145,7 +143,7 @@ def main():
 
     # create superimposition of the two label images
     logger.info("Creating superimposition image...")
-    image_superimposition_data = scipy.zeros(image1_data.shape, dtype=scipy.uint32)
+    image_superimposition_data = numpy.zeros(image1_data.shape, dtype=numpy.uint32)
     translation = {}
     label_id_counter = 0
     for x in range(image1_data.shape[0]):

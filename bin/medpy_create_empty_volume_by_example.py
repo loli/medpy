@@ -23,7 +23,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import Logger
@@ -62,7 +62,7 @@ def main():
     input_data, input_header = load(args.example)
 
     # create empty volume with same attributes
-    output_data = scipy.zeros(input_data.shape, dtype=input_data.dtype)
+    output_data = numpy.zeros(input_data.shape, dtype=input_data.dtype)
 
     # save resulting image
     save(output_data, args.output, input_header, args.force)

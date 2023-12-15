@@ -28,7 +28,7 @@ import os
 import tempfile
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
 from medpy.core import Logger
@@ -66,10 +66,10 @@ def main():
 
     # copy the example image or generate empty image, depending on the modus
     if args.example:
-        grid_image = scipy.zeros(args.example_image.shape, scipy.bool_)
+        grid_image = numpy.zeros(args.example_image.shape, numpy.bool_)
         grid_header = args.example_header
     else:
-        grid_image = scipy.zeros(args.shape, scipy.bool_)
+        grid_image = numpy.zeros(args.shape, numpy.bool_)
         # !TODO: Find another solution for this
         # Saving and loading image once to generate a valid header
         tmp_dir = tempfile.mkdtemp()
@@ -104,7 +104,7 @@ def main():
         for offset in range(0, grid_image.shape[dim], grid_spacing[dim]):
             slicer = [slice(None)] * grid_image.ndim
             slicer[dim] = slice(offset, offset + 1)
-            grid_image[slicer] = True
+            grid_image[tuple(slicer)] = True
 
     # saving resulting grid volume
     save(grid_image, args.output, grid_header, args.force)
@@ -118,7 +118,7 @@ def list_of_integers_or_int(string, separator=","):
 
 def list_of_integers(string, separator=","):
     values = string.split(separator)
-    if not scipy.all(list(map(str.isdigit, values))):
+    if not numpy.all(list(map(str.isdigit, values))):
         raise argparse.ArgumentTypeError(
             '{} is not a "{}" separated list of integers'.format(string, separator)
         )

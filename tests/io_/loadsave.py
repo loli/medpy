@@ -6,11 +6,10 @@ import tempfile
 import unittest
 
 # third-party modules
-import scipy
-
-from medpy.core.logger import Logger
+import numpy
 
 # own modules
+from medpy.core.logger import Logger
 from medpy.io import load, save
 
 # path changes
@@ -18,7 +17,7 @@ from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.2.2, 2012-05-25"
+__version__ = "r0.2.3, 2012-05-25"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = "Input/output facilities unittest."
@@ -103,13 +102,22 @@ class TestIOFacilities(unittest.TestCase):
         ".recpar",  # failed saving
         ".vox",  # failed saving
         ".voxbo",  # failed saving
-        ".voxbocub",
-    ]  # failed saving
+        ".voxbocub",  # failed saving
+    ]
 
     ##########
     # Combinations to avoid due to technical problems, dim->file ending pairs
     #########
-    __avoid = {}  # e.g. {4: ('.dcm', '.dicom')}
+    __avoid = {
+        4: (
+            ".mnc",
+            ".mnc2",
+        ),  # cause segmentation faults in simpleITK
+        5: (
+            ".mnc",
+            ".mnc2",
+        ),  # cause segmentation faults in simpleITK
+    }  # e.g. {4: ('.dcm', '.dicom')}
 
     def test_SaveLoad(self):
         """
@@ -155,19 +163,19 @@ class TestIOFacilities(unittest.TestCase):
         __suffixes = list(set(__suffixes))
         __ndims = [1, 2, 3, 4, 5]
         __dtypes = [
-            scipy.bool_,
-            scipy.int8,
-            scipy.int16,
-            scipy.int32,
-            scipy.int64,
-            scipy.uint8,
-            scipy.uint16,
-            scipy.uint32,
-            scipy.uint64,
-            scipy.float32,
-            scipy.float64,
-            scipy.complex64,
-            scipy.complex128,
+            numpy.bool_,
+            numpy.int8,
+            numpy.int16,
+            numpy.int32,
+            numpy.int64,
+            numpy.uint8,
+            numpy.uint16,
+            numpy.uint32,
+            numpy.uint64,
+            numpy.float32,
+            numpy.float64,
+            numpy.complex64,
+            numpy.complex128,
         ]
 
         # prepare struct to save settings that passed the test
@@ -196,7 +204,7 @@ class TestIOFacilities(unittest.TestCase):
         try:
             for ndim in __ndims:
                 logger.debug("Testing for dimension {}...".format(ndim))
-                arr_base = scipy.random.randint(0, 10, list(range(10, ndim + 10)))
+                arr_base = numpy.random.randint(0, 10, list(range(10, ndim + 10)))
                 for dtype in __dtypes:
                     arr_save = arr_base.astype(dtype)
                     for suffix in __suffixes:
@@ -333,32 +341,32 @@ class TestIOFacilities(unittest.TestCase):
         Returns True if a data conversion from dtype _from to _to is lossless, otherwise
         False.
         """
-        __int_order = [scipy.int8, scipy.int16, scipy.int32, scipy.int64]
+        __int_order = [numpy.int8, numpy.int16, numpy.int32, numpy.int64]
 
         __uint_order = [
-            scipy.uint8,
-            scipy.int16,
-            scipy.uint16,
-            scipy.int32,
-            scipy.uint32,
-            scipy.int64,
-            scipy.uint64,
+            numpy.uint8,
+            numpy.int16,
+            numpy.uint16,
+            numpy.int32,
+            numpy.uint32,
+            numpy.int64,
+            numpy.uint64,
         ]
 
-        __float_order = [scipy.float32, scipy.float64, scipy.float128]
+        __float_order = [numpy.float32, numpy.float64, numpy.float128]
 
-        __complex_order = [scipy.complex64, scipy.complex128, scipy.complex256]
+        __complex_order = [numpy.complex64, numpy.complex128, numpy.complex256]
 
         __bool_order = [
-            scipy.bool_,
-            scipy.int8,
-            scipy.uint8,
-            scipy.int16,
-            scipy.uint16,
-            scipy.int32,
-            scipy.uint32,
-            scipy.int64,
-            scipy.uint64,
+            numpy.bool_,
+            numpy.int8,
+            numpy.uint8,
+            numpy.int16,
+            numpy.uint16,
+            numpy.int32,
+            numpy.uint32,
+            numpy.int64,
+            numpy.uint64,
         ]
 
         __orders = [

@@ -101,8 +101,8 @@ class SlidingWindowIterator:
             The extracted patch as a view.
         pmask : ndarray
             Boolean array denoting the defined part of the patch.
-        slicer : list
-            List of slicers to apply the same operation to another array (using applyslicer()).
+        slicer : tuple
+            Tuple of slicers to apply the same operation to another array (using applyslicer()).
         """
         # trigger internal iterators
         spointset = next(self.__slicepointiter)  # will raise StopIteration when empty
@@ -120,12 +120,12 @@ class SlidingWindowIterator:
 
         # create patch and patch mask
         def_slicer = [slice(x, None if 0 == y else -1 * y) for x, y in padder]
-        patch = self.array[slicer]
+        patch = self.array[tuple(slicer)]
         patch = patch.reshape(self.psize)
         pmask = numpy.zeros(self.psize, numpy.bool_)
-        pmask[def_slicer] = True
+        pmask[tuple(def_slicer)] = True
 
-        return patch, pmask, slicer
+        return patch, pmask, tuple(slicer)
 
     next = __next__
 
@@ -143,8 +143,8 @@ class SlidingWindowIterator:
         ----------
         array : array_like
             A n-dimensional array.
-        slicer : list
-            List if `slice()` instances as returned by `next()`.
+        slicer : tuple
+            Tuple if `slice()` instances as returned by `next()`.
         cval : number
             Value to fill undefined positions. If None, the ``cval`` of the object is used.
 
@@ -158,7 +158,7 @@ class SlidingWindowIterator:
         _padding = self.padding + [(0, 0)] * (array.ndim - len(self.padding))
         array = numpy.pad(array, _padding, mode="constant", constant_values=cval)
         _psize = self.psize + list(array.shape[len(self.psize) :])
-        return array[slicer].reshape(_psize)
+        return array[tuple(slicer)].reshape(_psize)
 
 
 class CentredPatchIterator:
@@ -321,8 +321,8 @@ class CentredPatchIterator:
             Boolean array denoting the defined part of the patch.
         gridid : sequence
             N-dimensional grid id.
-        slicer : list
-            A list of `slice()` instances definind the patch.
+        slicer : tuple
+            A tuple of `slice()` instances definind the patch.
         """
         # trigger internal iterators
         spointset = next(self.__slicepointiter)  # will raise StopIteration when empty
@@ -339,16 +339,19 @@ class CentredPatchIterator:
             )
         # create patch and patch mask
         patch = numpy.pad(
-            self.array[slicer], padder, mode="constant", constant_values=self.cval
+            self.array[tuple(slicer)],
+            padder,
+            mode="constant",
+            constant_values=self.cval,
         )
         pmask = numpy.pad(
-            numpy.ones(self.array[slicer].shape, dtype=numpy.bool_),
+            numpy.ones(self.array[tuple(slicer)].shape, dtype=numpy.bool_),
             padder,
             mode="constant",
             constant_values=0,
         )
 
-        return patch, pmask, gridid, slicer
+        return patch, pmask, gridid, tuple(slicer)
 
     next = __next__
 
@@ -367,8 +370,8 @@ class CentredPatchIterator:
         ----------
         array : array_like
             A n-dimensional array.
-        slicer : list
-            List if `slice()` instances as returned by `next()`.
+        slicer : tuple
+            Tuple if `slice()` instances as returned by `next()`.
         pmask : narray
             The array mask as returned by `next()`.
         cval : number
@@ -390,7 +393,7 @@ class CentredPatchIterator:
         patch = numpy.zeros(list(pmask.shape[:l]) + list(array.shape[l:]), array.dtype)
         if not 0 == cval:
             patch.fill(cval)
-        sliced = array[slicer]
+        sliced = array[tuple(slicer)]
         patch[pmask] = sliced.reshape(
             [numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:])
         )
@@ -637,8 +640,8 @@ class CentredPatchIteratorOverlapping:
             Boolean array denoting the defined part of the patch.
         gridid : sequence
             N-dimensional grid id.
-        slicer : list
-            A list of `slice()` instances definind the patch.
+        slicer : tuple
+            A tuple of `slice()` instances definind the patch.
         """
         # trigger internal iterators
         spointset = next(self.__slicepointiter)  # will raise StopIteration when empty
@@ -655,16 +658,19 @@ class CentredPatchIteratorOverlapping:
             )
         # create patch and patch mask
         patch = numpy.pad(
-            self.array[slicer], padder, mode="constant", constant_values=self.cval
+            self.array[tuple(slicer)],
+            padder,
+            mode="constant",
+            constant_values=self.cval,
         )
         pmask = numpy.pad(
-            numpy.ones(self.array[slicer].shape, dtype=numpy.bool_),
+            numpy.ones(self.array[tuple(slicer)].shape, dtype=numpy.bool_),
             padder,
             mode="constant",
             constant_values=0,
         )
 
-        return patch, pmask, gridid, slicer
+        return patch, pmask, gridid, tuple(slicer)
 
     next = __next__
 
@@ -683,8 +689,8 @@ class CentredPatchIteratorOverlapping:
         ----------
         array : array_like
             A n-dimensional array.
-        slicer : list
-            List if `slice()` instances as returned by `next()`.
+        slicer : tuple
+            Tuple if `slice()` instances as returned by `next()`.
         pmask : narray
             The array mask as returned by `next()`.
         cval : number
@@ -706,7 +712,7 @@ class CentredPatchIteratorOverlapping:
         patch = numpy.zeros(list(pmask.shape[:l]) + list(array.shape[l:]), array.dtype)
         if not 0 == cval:
             patch.fill(cval)
-        sliced = array[slicer]
+        sliced = array[tuple(slicer)]
         patch[pmask] = sliced.reshape(
             [numpy.prod(sliced.shape[:l])] + list(sliced.shape[l:])
         )

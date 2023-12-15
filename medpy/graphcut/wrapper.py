@@ -18,28 +18,21 @@
 # since 2012-06-25
 # status Release
 
-
 import itertools
-import math
 
 # build-in modules
+import math
 import multiprocessing
 
 # third-party modules
-import scipy
+import numpy
 
-from ..core.exceptions import ArgumentError
-from ..core.logger import Logger
+from ..core import ArgumentError, Logger
 from ..filter import relabel, relabel_map
 
 # own modules
 from .energy_label import boundary_stawiaski
 from .generate import graph_from_labels
-
-try:
-    from functools import reduce
-except ImportError:
-    pass
 
 
 # code
@@ -65,12 +58,12 @@ def split_marker(marker, fg_id=1, bg_id=2):
     fgmarkers, bgmarkers : nadarray
         The fore- and background markers as boolean images.
     """
-    img_marker = scipy.asarray(marker)
+    img_marker = numpy.asarray(marker)
 
-    img_fgmarker = scipy.zeros(img_marker.shape, scipy.bool_)
+    img_fgmarker = numpy.zeros(img_marker.shape, numpy.bool_)
     img_fgmarker[img_marker == fg_id] = True
 
-    img_bgmarker = scipy.zeros(img_marker.shape, scipy.bool_)
+    img_bgmarker = numpy.zeros(img_marker.shape, numpy.bool_)
     img_bgmarker[img_marker == bg_id] = True
 
     return img_fgmarker, img_bgmarker
@@ -123,10 +116,10 @@ def graphcut_split(
     logger = Logger.getInstance()
 
     # ensure that input images are scipy arrays
-    img_region = scipy.asarray(regions)
-    img_gradient = scipy.asarray(gradient)
-    img_fg = scipy.asarray(foreground, dtype=scipy.bool_)
-    img_bg = scipy.asarray(background, dtype=scipy.bool_)
+    img_region = numpy.asarray(regions)
+    img_gradient = numpy.asarray(gradient)
+    img_fg = numpy.asarray(foreground, dtype=numpy.bool_)
+    img_bg = numpy.asarray(background, dtype=numpy.bool_)
 
     # ensure correctness of supplied images
     if not (img_region.shape == img_gradient.shape == img_fg.shape == img_bg.shape):
@@ -172,7 +165,12 @@ def graphcut_split(
         for slicer_step in itertools.product(*slicer_steps)
     ]
     subvolumes_input = [
-        (img_region[slicer], img_gradient[slicer], img_fg[slicer], img_bg[slicer])
+        (
+            img_region[tuple(slicer)],
+            img_gradient[tuple(slicer)],
+            img_fg[tuple(slicer)],
+            img_bg[tuple(slicer)],
+        )
         for slicer in slicers
     ]
 
@@ -182,7 +180,7 @@ def graphcut_split(
     )
 
     # put back data together
-    img_result = scipy.zeros(img_region.shape, dtype=scipy.bool_)
+    img_result = numpy.zeros(img_region.shape, dtype=numpy.bool_)
     for slicer, subvolume in zip(slicers, subvolumes_output):
         sslicer_antioverlap = [slice(None)] * img_result.ndim
 
@@ -193,14 +191,17 @@ def graphcut_split(
             sslicer_antioverlap[dim] = slice(overlap, None)
             sslicer_overlap = [slice(None)] * img_result.ndim
             sslicer_overlap[dim] = slice(0, overlap)
-            img_result[slicer][sslicer_overlap] = scipy.logical_and(
-                img_result[slicer][sslicer_overlap], subvolume[sslicer_overlap]
+            img_result[tuple(slicer)][tuple(sslicer_overlap)] = numpy.logical_and(
+                img_result[tuple(slicer)][tuple(sslicer_overlap)],
+                subvolume[tuple(sslicer_overlap)],
             )
 
         # treat remainder through assignment
-        img_result[slicer][sslicer_antioverlap] = subvolume[sslicer_antioverlap]
+        img_result[tuple(slicer)][tuple(sslicer_antioverlap)] = subvolume[
+            tuple(sslicer_antioverlap)
+        ]
 
-    return img_result.astype(scipy.bool_)
+    return img_result.astype(numpy.bool_)
 
 
 def graphcut_subprocesses(graphcut_function, graphcut_arguments, processes=None):
@@ -278,10 +279,10 @@ def graphcut_stawiaski(regions, gradient=False, foreground=False, background=Fal
         regions, gradient, foreground, background = regions
 
     # ensure that input images are scipy arrays
-    img_region = scipy.asarray(regions)
-    img_gradient = scipy.asarray(gradient)
-    img_fg = scipy.asarray(foreground, dtype=scipy.bool_)
-    img_bg = scipy.asarray(background, dtype=scipy.bool_)
+    img_region = numpy.asarray(regions)
+    img_gradient = numpy.asarray(gradient)
+    img_fg = numpy.asarray(foreground, dtype=numpy.bool_)
+    img_bg = numpy.asarray(background, dtype=numpy.bool_)
 
     # ensure correctness of supplied images
     if not (img_region.shape == img_gradient.shape == img_fg.shape == img_bg.shape):
@@ -311,9 +312,9 @@ def graphcut_stawiaski(regions, gradient=False, foreground=False, background=Fal
     mapping.extend(
         [
             0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1
-            for x in scipy.unique(img_region)
+            for x in numpy.unique(img_region)
         ]
     )
     img_results = relabel_map(img_region, mapping)
 
-    return img_results.astype(scipy.bool_)
+    return img_results.astype(numpy.bool_)

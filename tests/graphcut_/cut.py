@@ -15,15 +15,13 @@ The test is conducted with an artificial boundary term.
 # build-in modules
 import unittest
 
-import scipy
-
-from medpy import filter
+# third-party modules
+import numpy
 
 # own modules
+from medpy import filter
 from medpy.graphcut import Graph, GraphDouble, graph_from_labels, graph_from_voxels
 from medpy.graphcut.energy_voxel import boundary_difference_linear
-
-# third-party modules
 
 
 # code
@@ -66,10 +64,10 @@ class TestCut(unittest.TestCase):
     def test_voxel_based(self):
         """Executes the complete pipeline of the graph cut algorithm."""
         # create the graph from the image
-        original_image = scipy.asarray(self.__voriginal_image)
+        original_image = numpy.asarray(self.__voriginal_image)
         graph = graph_from_voxels(
-            scipy.asarray(self.__vfg_markers),
-            scipy.asarray(self.__vbg_markers),
+            numpy.asarray(self.__vfg_markers),
+            numpy.asarray(self.__vbg_markers),
             boundary_term=boundary_difference_linear,
             boundary_term_args=(original_image, False),
         )
@@ -85,14 +83,14 @@ class TestCut(unittest.TestCase):
             )
 
         # reshape results to form a valid mask
-        result = scipy.zeros(original_image.size, dtype=scipy.bool_)
+        result = numpy.zeros(original_image.size, dtype=numpy.bool_)
         for idx in range(len(result)):
             result[idx] = 0 if graph.termtype.SINK == graph.what_segment(idx) else 1
         result = result.reshape(original_image.shape)
 
         # check results for validity
         self.assertTrue(
-            (result == scipy.asarray(self.__vexpected)).all(),
+            (result == numpy.asarray(self.__vexpected)).all(),
             "Resulting voxel-based cut is different than expected.",
         )
         self.assertEqual(
@@ -173,7 +171,7 @@ class TestCut(unittest.TestCase):
             label_image.tolist(),
             self.__result,
             "The resulting cut is wrong. Expected\n {}\n got\n{}".format(
-                scipy.asarray(self.__result, dtype=scipy.bool_), label_image
+                numpy.asarray(self.__result, dtype=numpy.bool_), label_image
             ),
         )
 

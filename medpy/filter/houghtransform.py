@@ -80,7 +80,7 @@ def ght_alternative(img, template, indices):
     for idx_hough in indices:
         idx_hough = tuple(idx_hough)
         slices_img_padded = [slice(idx_hough[i], None) for i in range(img_hough.ndim)]
-        img_hough[idx_hough] = sum(img_padded[slices_img_padded][template])
+        img_hough[idx_hough] = sum(img_padded[tuple(slices_img_padded)][template])
 
     return img_hough
 
@@ -159,7 +159,7 @@ def ght(img, template):
             else:  # left shifted hough
                 slicers_hough.append(slice(None, pos))
                 slicers_orig.append(slice(-1 * pos, None))
-        img_hough[slicers_hough] += img[slicers_orig]
+        img_hough[tuple(slicers_hough)] += img[tuple(slicers_orig)]
 
     return img_hough
 
@@ -242,14 +242,14 @@ def template_ellipsoid(shape):
             for j in range(template.ndim)
         ]
         if 0 == int(shape[i]) % 2:  # even case
-            template = numpy.concatenate((template[slicers], template), i)
+            template = numpy.concatenate((template[tuple(slicers)], template), i)
         else:  # odd case, in which an overlap has to be created
             slicers_truncate = [
                 (slice(None, -1) if i == j else slice(None))
                 for j in range(template.ndim)
             ]
             template = numpy.concatenate(
-                (template[slicers][slicers_truncate], template), i
+                (template[tuple(slicers)][tuple(slicers_truncate)], template), i
             )
 
     return template

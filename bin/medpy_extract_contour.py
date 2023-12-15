@@ -119,19 +119,23 @@ def main():
 
             eroded = (
                 binary_erosion(
-                    data_input[slicer], structure=bs[bs_slicer], iterations=erosions
+                    data_input[tuple(slicer)],
+                    structure=bs[tuple(bs_slicer)],
+                    iterations=erosions,
                 )
                 if not 0 == erosions
-                else data_input[slicer]
+                else data_input[tuple(slicer)]
             )
             dilated = (
                 binary_dilation(
-                    data_input[slicer], structure=bs[bs_slicer], iterations=dilations
+                    data_input[tuple(slicer)],
+                    structure=bs[tuple(bs_slicer)],
+                    iterations=dilations,
                 )
                 if not 0 == dilations
-                else data_input[slicer]
+                else data_input[tuple(slicer)]
             )
-            data_output[slicer] = dilated - eroded
+            data_output[tuple(slicer)] = dilated - eroded
     logger.debug(
         "Contour image contains {} contour voxels.".format(
             numpy.count_nonzero(data_output)

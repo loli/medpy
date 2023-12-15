@@ -13,10 +13,8 @@ import math
 import sys
 import unittest
 
-import numpy
-
 # third-party modules
-import scipy
+import numpy
 from numpy.testing import assert_raises
 
 # own modules
@@ -76,26 +74,26 @@ class TestEnergyLabel(unittest.TestCase):
             "integer gradient image",
         )
 
-        label = scipy.asarray(label, order="C")  # C-order, gradient same order
-        gradient = scipy.zeros(label.shape, order="C")
+        label = numpy.asarray(label, order="C")  # C-order, gradient same order
+        gradient = numpy.zeros(label.shape, order="C")
         self.__run_boundary_stawiaski_test(
             label, gradient, expected_result, "order (C, C)"
         )
 
-        label = scipy.asarray(label, order="F")  # Fortran order, gradient same order
-        gradient = scipy.zeros(label.shape, order="F")
+        label = numpy.asarray(label, order="F")  # Fortran order, gradient same order
+        gradient = numpy.zeros(label.shape, order="F")
         self.__run_boundary_stawiaski_test(
             label, gradient, expected_result, "order (F, F)"
         )
 
-        label = scipy.asarray(label, order="C")  # C-order, gradient different order
-        gradient = scipy.zeros(label.shape, order="F")
+        label = numpy.asarray(label, order="C")  # C-order, gradient different order
+        gradient = numpy.zeros(label.shape, order="F")
         self.__run_boundary_stawiaski_test(
             label, gradient, expected_result, "order (C, F)"
         )
 
-        label = scipy.asarray(label, order="F")  # F-order, gradient different order
-        gradient = scipy.zeros(label.shape, order="C")
+        label = numpy.asarray(label, order="F")  # F-order, gradient different order
+        gradient = numpy.zeros(label.shape, order="C")
         self.__run_boundary_stawiaski_test(
             label, gradient, expected_result, "order (F, C)"
         )
@@ -170,26 +168,26 @@ class TestEnergyLabel(unittest.TestCase):
             "integer gradient image",
         )
 
-        label = scipy.asarray(label, order="C")  # C-order, gradient same order
-        gradient = scipy.zeros(label.shape, order="C")
+        label = numpy.asarray(label, order="C")  # C-order, gradient same order
+        gradient = numpy.zeros(label.shape, order="C")
         self.__run_boundary_difference_of_means_test(
             label, gradient, expected_result, "order (C, C)"
         )
 
-        label = scipy.asarray(label, order="F")  # Fortran order, gradient same order
-        gradient = scipy.zeros(label.shape, order="F")
+        label = numpy.asarray(label, order="F")  # Fortran order, gradient same order
+        gradient = numpy.zeros(label.shape, order="F")
         self.__run_boundary_difference_of_means_test(
             label, gradient, expected_result, "order (F, F)"
         )
 
-        label = scipy.asarray(label, order="C")  # C-order, gradient different order
-        gradient = scipy.zeros(label.shape, order="F")
+        label = numpy.asarray(label, order="C")  # C-order, gradient different order
+        gradient = numpy.zeros(label.shape, order="F")
         self.__run_boundary_difference_of_means_test(
             label, gradient, expected_result, "order (C, F)"
         )
 
-        label = scipy.asarray(label, order="F")  # F-order, gradient different order
-        gradient = scipy.zeros(label.shape, order="C")
+        label = numpy.asarray(label, order="F")  # F-order, gradient different order
+        gradient = numpy.zeros(label.shape, order="C")
         self.__run_boundary_difference_of_means_test(
             label, gradient, expected_result, "order (F, C)"
         )

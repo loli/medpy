@@ -25,7 +25,7 @@ import logging
 from argparse import RawTextHelpFormatter
 
 # third-party modules
-import scipy
+import numpy
 
 from medpy.core import Logger
 from medpy.core.exceptions import ArgumentError
@@ -81,7 +81,7 @@ def main():
         )
 
     # prepare empty output volume
-    output_data = scipy.zeros(
+    output_data = numpy.zeros(
         [len(args.inputs)] + list(example_data.shape), dtype=example_data.dtype
     )
 
@@ -109,7 +109,7 @@ def main():
     for dim in range(output_data.ndim - 1):
         if dim >= args.position:
             break
-        output_data = scipy.swapaxes(output_data, dim, dim + 1)
+        output_data = numpy.swapaxes(output_data, dim, dim + 1)
 
     # set pixel spacing
     spacing = list(header.get_pixel_spacing(example_header))

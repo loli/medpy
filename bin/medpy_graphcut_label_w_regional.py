@@ -27,7 +27,7 @@ import os
 from argparse import RawTextHelpFormatter
 
 # third-party modules
-import scipy
+import numpy
 
 from medpy import filter, graphcut
 
@@ -174,14 +174,14 @@ def main():
     mapping.extend(
         [
             0 if gcgraph.termtype.SINK == gcgraph.what_segment(int(x) - 1) else 1
-            for x in scipy.unique(region_image_data)
+            for x in numpy.unique(region_image_data)
         ]
     )
     region_image_data = filter.relabel_map(region_image_data, mapping)
 
     # save resulting mask
     save(
-        region_image_data.astype(scipy.bool_), args.output, reference_header, args.force
+        region_image_data.astype(numpy.bool_), args.output, reference_header, args.force
     )
 
     logger.info("Successfully terminated.")

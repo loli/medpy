@@ -22,12 +22,11 @@
 import inspect
 
 # third-party modules
-import scipy
-
-from medpy.graphcut.energy_label import __check_label_image
+import numpy
 
 # own modules
 from ..core import Logger
+from .energy_label import __check_label_image
 from .graph import GCGraph
 
 
@@ -123,8 +122,8 @@ def graph_from_voxels(
     logger.info("Performing attribute tests...")
 
     # check, set and convert all supplied parameters
-    fg_markers = scipy.asarray(fg_markers, dtype=scipy.bool_)
-    bg_markers = scipy.asarray(bg_markers, dtype=scipy.bool_)
+    fg_markers = numpy.asarray(fg_markers, dtype=numpy.bool_)
+    bg_markers = numpy.asarray(bg_markers, dtype=numpy.bool_)
 
     # set dummy functions if not supplied
     if not regional_term:
@@ -167,9 +166,9 @@ def graph_from_voxels(
     # collect all voxels that are under the foreground resp. background markers i.e.
     # collect all nodes that are connected to the source resp. sink
     logger.info("Setting terminal weights for the markers...")
-    if not 0 == scipy.count_nonzero(fg_markers):
+    if not 0 == numpy.count_nonzero(fg_markers):
         graph.set_source_nodes(fg_markers.ravel().nonzero()[0])
-    if not 0 == scipy.count_nonzero(bg_markers):
+    if not 0 == numpy.count_nonzero(bg_markers):
         graph.set_sink_nodes(bg_markers.ravel().nonzero()[0])
 
     return graph.get_graph()
@@ -264,9 +263,9 @@ def graph_from_labels(
     logger.info("Performing attribute tests...")
 
     # check, set and convert all supplied parameters
-    label_image = scipy.asarray(label_image)
-    fg_markers = scipy.asarray(fg_markers, dtype=scipy.bool_)
-    bg_markers = scipy.asarray(bg_markers, dtype=scipy.bool_)
+    label_image = numpy.asarray(label_image)
+    fg_markers = numpy.asarray(fg_markers, dtype=numpy.bool_)
+    bg_markers = numpy.asarray(bg_markers, dtype=numpy.bool_)
 
     __check_label_image(label_image)
 
@@ -293,7 +292,7 @@ def graph_from_labels(
     logger.info("Determining number of nodes and edges.")
 
     # compute number of nodes and edges
-    nodes = len(scipy.unique(label_image))
+    nodes = len(numpy.unique(label_image))
     # POSSIBILITY 1: guess the number of edges (in the best situation is faster but requires a little bit more memory. In the worst is slower.)
     edges = 10 * nodes
     logger.debug("guessed: #nodes={} nodes / #edges={}".format(nodes, edges))
@@ -306,8 +305,8 @@ def graph_from_labels(
 
     logger.debug(
         "#hardwired-nodes source/sink={}/{}".format(
-            len(scipy.unique(label_image[fg_markers])),
-            len(scipy.unique(label_image[bg_markers])),
+            len(numpy.unique(label_image[fg_markers])),
+            len(numpy.unique(label_image[bg_markers])),
         )
     )
 
@@ -332,9 +331,9 @@ def graph_from_labels(
     # collect all nodes that are connected to the source resp. sink
     logger.info("Setting terminal weights for the markers...")
     graph.set_source_nodes(
-        scipy.unique(label_image[fg_markers] - 1)
+        numpy.unique(label_image[fg_markers] - 1)
     )  # requires -1 to adapt to node id system
-    graph.set_sink_nodes(scipy.unique(label_image[bg_markers] - 1))
+    graph.set_sink_nodes(numpy.unique(label_image[bg_markers] - 1))
 
     return graph.get_graph()
 
@@ -378,7 +377,7 @@ def __voxel_4conectedness(shape):
     while 1 in shape:
         shape.remove(
             1
-        )  # empty resp. 1-sized dimensions have to be removed (equal to scipy.squeeze on the array)
+        )  # empty resp. 1-sized dimensions have to be removed (equal to numpy.squeeze on the array)
     return int(
-        round(sum([(dim - 1) / float(dim) for dim in shape]) * scipy.prod(shape))
+        round(sum([(dim - 1) / float(dim) for dim in shape]) * numpy.prod(shape))
     )

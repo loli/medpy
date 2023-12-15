@@ -29,7 +29,8 @@
 
 # code
 class ArgumentError(Exception):
-    r"""Thrown by an application when an invalid command line argument has been supplied."""
+    r"""Thrown by an application when an invalid command line argument has been
+    supplied."""
     pass
 
 

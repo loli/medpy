@@ -6,11 +6,10 @@ import tempfile
 import unittest
 
 # third-party modules
-import scipy
-
-from medpy.core.logger import Logger
+import numpy
 
 # own modules
+from medpy.core.logger import Logger
 from medpy.io import header, load, save
 
 # path changes
@@ -18,7 +17,7 @@ from medpy.io import header, load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.1, 2013-05-24"
+__version__ = "r0.1.2, 2013-05-24"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = "Meta-data consistency unittest."
@@ -103,13 +102,26 @@ class TestMetadataConsistency(unittest.TestCase):
         ".recpar",  # failed saving
         ".vox",  # failed saving
         ".voxbo",  # failed saving
-        ".voxbocub",
-    ]  # failed saving
+        ".voxbocub",  # failed saving
+    ]
 
     ##########
     # Combinations to avoid due to technical problems, dim->file ending pairs
     ##########
-    __avoid = {}  # {4: ('.dcm', '.dicom')}
+    __avoid = {
+        3: (
+            ".mnc",
+            ".mnc2",
+        ),  # cause segmentation faults in simpleITK
+        4: (
+            ".mnc",
+            ".mnc2",
+        ),  # cause segmentation faults in simpleITK
+        5: (
+            ".mnc",
+            ".mnc2",
+        ),  # cause segmentation faults in simpleITK
+    }  # e.g. {4: ('.dcm', '.dicom')}
 
     ##########
     # Error delta: the maximum difference between to meta-data entries that is still considered consistent (required, as there may be rounding errors)
@@ -165,20 +177,20 @@ class TestMetadataConsistency(unittest.TestCase):
         __suffixes = list(set(__suffixes))
         __ndims = [1, 2, 3, 4, 5]
         __dtypes = [
-            scipy.bool_,
-            scipy.int8,
-            scipy.int16,
-            scipy.int32,
-            scipy.int64,
-            scipy.uint8,
-            scipy.uint16,
-            scipy.uint32,
-            scipy.uint64,
-            scipy.float32,
-            scipy.float64,  # scipy.float128, # last one removed, as not present on every machine
-            scipy.complex64,
-            scipy.complex128,
-        ]  # scipy.complex256 ## removed, as not present on every machine
+            numpy.bool_,
+            numpy.int8,
+            numpy.int16,
+            numpy.int32,
+            numpy.int64,
+            numpy.uint8,
+            numpy.uint16,
+            numpy.uint32,
+            numpy.uint64,
+            numpy.float32,
+            numpy.float64,  # numpy.float128, # last one removed, as not present on every machine
+            numpy.complex64,
+            numpy.complex128,
+        ]  # numpy.complex256 ## removed, as not present on every machine
 
         # prepare struct to save settings that passed the test
         consistent_types = dict.fromkeys(__suffixes)
@@ -212,7 +224,7 @@ class TestMetadataConsistency(unittest.TestCase):
         try:
             for ndim in __ndims:
                 logger.debug("Testing for dimension {}...".format(ndim))
-                arr_base = scipy.random.randint(0, 10, list(range(10, ndim + 10)))
+                arr_base = numpy.random.randint(0, 10, list(range(10, ndim + 10)))
                 for dtype in __dtypes:
                     arr_save = arr_base.astype(dtype)
                     for suffix_from in __suffixes:
@@ -258,7 +270,7 @@ class TestMetadataConsistency(unittest.TestCase):
                         header.set_pixel_spacing(
                             hdr_from,
                             [
-                                scipy.random.rand() * scipy.random.randint(1, 10)
+                                numpy.random.rand() * numpy.random.randint(1, 10)
                                 for _ in range(img_from.ndim)
                             ],
                         )
@@ -266,14 +278,14 @@ class TestMetadataConsistency(unittest.TestCase):
                             header.set_pixel_spacing(
                                 hdr_from,
                                 [
-                                    scipy.random.rand() * scipy.random.randint(1, 10)
+                                    numpy.random.rand() * numpy.random.randint(1, 10)
                                     for _ in range(img_from.ndim)
                                 ],
                             )
                             header.set_offset(
                                 hdr_from,
                                 [
-                                    scipy.random.rand() * scipy.random.randint(1, 10)
+                                    numpy.random.rand() * numpy.random.randint(1, 10)
                                     for _ in range(img_from.ndim)
                                 ],
                             )

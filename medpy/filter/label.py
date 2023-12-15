@@ -21,10 +21,10 @@
 # build-in modules
 
 # third-party modules
-import scipy
+import numpy
 
 # own modules
-from ..core.exceptions import ArgumentError
+from ..core import ArgumentError
 
 
 # code
@@ -56,7 +56,7 @@ def relabel_map(label_image, mapping, key=lambda x, y: x[y]):
     ArgumentError
         If a region id is missing in the supplied mapping
     """
-    label_image = scipy.array(label_image)
+    label_image = numpy.array(label_image)
 
     def _map(x):
         try:
@@ -68,7 +68,7 @@ def relabel_map(label_image, mapping, key=lambda x, y: x[y]):
                 )
             )
 
-    vmap = scipy.vectorize(_map, otypes=[label_image.dtype])
+    vmap = numpy.vectorize(_map, otypes=[label_image.dtype])
 
     return vmap(label_image)
 
@@ -94,7 +94,7 @@ def relabel(label_image, start=1):
     --------
     relabel_non_zero
     """
-    label_image = scipy.asarray(label_image)
+    label_image = numpy.asarray(label_image)
     mapping = {}
     rav = label_image.ravel()
     for i in range(len(rav)):
@@ -130,7 +130,7 @@ def relabel_non_zero(label_image, start=1):
     if start <= 0:
         raise ArgumentError("The starting value can not be 0 or lower.")
 
-    l = list(scipy.unique(label_image))
+    l = list(numpy.unique(label_image))
     if 0 in l:
         l.remove(0)
     mapping = dict()
@@ -164,14 +164,14 @@ def fit_labels_to_mask(label_image, mask):
     ValueError
         If ``label_image`` and ``mask`` are not of the same shape.
     """
-    label_image = scipy.asarray(label_image)
-    mask = scipy.asarray(mask, dtype=scipy.bool_)
+    label_image = numpy.asarray(label_image)
+    mask = numpy.asarray(mask, dtype=numpy.bool_)
 
     if label_image.shape != mask.shape:
         raise ValueError("The input images must be of the same shape.")
 
     # prepare collection dictionaries
-    labels = scipy.unique(label_image)
+    labels = numpy.unique(label_image)
     collection = {}
     for label in labels:
         collection[label] = [0, 0, []]  # size, union, points

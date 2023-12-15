@@ -24,7 +24,7 @@ import argparse
 import logging
 
 # third-party modules
-import scipy
+import numpy
 from scipy.ndimage import generic_gradient_magnitude, prewitt
 
 from medpy.core import Logger
@@ -76,7 +76,7 @@ def main():
     #            continue
 
     # prepare result image
-    data_output = scipy.zeros(data_input.shape, dtype=scipy.float32)
+    data_output = numpy.zeros(data_input.shape, dtype=numpy.float32)
 
     # apply the gradient magnitude filter
     logger.info("Computing the gradient magnitude with Prewitt operator...")
