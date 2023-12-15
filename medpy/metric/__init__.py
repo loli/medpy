@@ -115,7 +115,98 @@ Histogram metrics (:mod:`medpy.metric.histogram`)
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import all functions/methods/classes into the module
+from .binary import asd as asd
+from .binary import assd as assd
+from .binary import dc as dc
+from .binary import hd as hd
+from .binary import hd95 as hd95
+from .binary import jc as jc
+from .binary import obj_asd as obj_asd
+from .binary import obj_assd as obj_assd
+from .binary import obj_fpr as obj_fpr
+from .binary import obj_tpr as obj_tpr
+from .binary import positive_predictive_value as positive_predictive_value
+from .binary import precision as precision
+from .binary import ravd as ravd
+from .binary import recall as recall
+from .binary import sensitivity as sensitivity
+from .binary import specificity as specificity
+from .binary import true_negative_rate as true_negative_rate
+from .binary import true_positive_rate as true_positive_rate
+from .binary import volume_change_correlation as volume_change_correlation
+from .binary import volume_correlation as volume_correlation
+from .histogram import chebyshev as chebyshev
+from .histogram import chebyshev_neg as chebyshev_neg
+from .histogram import chi_square as chi_square
+from .histogram import correlate as correlate
+from .histogram import correlate_1 as correlate_1
+from .histogram import cosine as cosine
+from .histogram import cosine_1 as cosine_1
+from .histogram import cosine_2 as cosine_2
+from .histogram import cosine_alt as cosine_alt
+from .histogram import euclidean as euclidean
+from .histogram import fidelity_based as fidelity_based
+from .histogram import histogram_intersection as histogram_intersection
+from .histogram import histogram_intersection_1 as histogram_intersection_1
+from .histogram import jensen_shannon as jensen_shannon
+from .histogram import kullback_leibler as kullback_leibler
+from .histogram import manhattan as manhattan
+from .histogram import minowski as minowski
+from .histogram import noelle_1 as noelle_1
+from .histogram import noelle_2 as noelle_2
+from .histogram import noelle_3 as noelle_3
+from .histogram import noelle_4 as noelle_4
+from .histogram import noelle_5 as noelle_5
+from .histogram import quadratic_forms as quadratic_forms
+from .histogram import relative_bin_deviation as relative_bin_deviation
+from .histogram import relative_deviation as relative_deviation
+from .image import mutual_information
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "asd",
+    "assd",
+    "dc",
+    "hd",
+    "jc",
+    "positive_predictive_value",
+    "precision",
+    "ravd",
+    "recall",
+    "sensitivity",
+    "specificity",
+    "true_negative_rate",
+    "true_positive_rate",
+    "hd95",
+    "obj_asd",
+    "obj_assd",
+    "obj_fpr",
+    "obj_tpr",
+    "volume_change_correlation",
+    "volume_correlation",
+    "chebyshev",
+    "chebyshev_neg",
+    "chi_square",
+    "correlate",
+    "correlate_1",
+    "cosine",
+    "cosine_1",
+    "cosine_2",
+    "cosine_alt",
+    "euclidean",
+    "fidelity_based",
+    "histogram_intersection",
+    "histogram_intersection_1",
+    "jensen_shannon",
+    "kullback_leibler",
+    "manhattan",
+    "minowski",
+    "noelle_1",
+    "noelle_2",
+    "noelle_3",
+    "noelle_4",
+    "noelle_5",
+    "quadratic_forms",
+    "relative_bin_deviation",
+    "relative_deviation",
+    "mutual_information",
+]

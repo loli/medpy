@@ -124,7 +124,66 @@ A learning method to align the intensity ranges of images.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# if __all__ is not set, only the following, explicit import statements are executed
+from .binary import bounding_box as bounding_box
+from .binary import largest_connected_component as largest_connected_component
+from .binary import size_threshold as size_threshold
+from .houghtransform import ght as ght
+from .houghtransform import ght_alternative as ght_alternative
+from .houghtransform import template_ellipsoid as template_ellipsoid
+from .houghtransform import template_sphere as template_sphere
+from .image import average_filter as average_filter
+from .image import local_minima as local_minima
+from .image import otsu as otsu
+from .image import resample as resample
+from .image import sls as sls
+from .image import ssd as ssd
+from .image import sum_filter as sum_filter
+from .IntensityRangeStandardization import (
+    InformationLossException as InformationLossException,
+)
+from .IntensityRangeStandardization import (
+    IntensityRangeStandardization as IntensityRangeStandardization,
+)
+from .IntensityRangeStandardization import (
+    SingleIntensityAccumulationError as SingleIntensityAccumulationError,
+)
+from .IntensityRangeStandardization import UntrainedException as UntrainedException
+from .label import fit_labels_to_mask as fit_labels_to_mask
+from .label import relabel as relabel
+from .label import relabel_map as relabel_map
+from .label import relabel_non_zero as relabel_non_zero
+from .smoothing import anisotropic_diffusion as anisotropic_diffusion
+from .smoothing import gauss_xminus1d as gauss_xminus1d
+from .utilities import intersection as intersection
+from .utilities import pad as pad
+from .utilities import xminus1d as xminus1d
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "largest_connected_component",
+    "size_threshold",
+    "bounding_box",
+    "sls",
+    "ssd",
+    "average_filter",
+    "sum_filter",
+    "otsu",
+    "local_minima",
+    "resample",
+    "anisotropic_diffusion",
+    "gauss_xminus1d",
+    "fit_labels_to_mask",
+    "relabel",
+    "relabel_map",
+    "relabel_non_zero",
+    "ght",
+    "ght_alternative",
+    "template_ellipsoid",
+    "template_sphere",
+    "pad",
+    "intersection",
+    "xminus1d",
+    "IntensityRangeStandardization",
+    "UntrainedException",
+    "InformationLossException",
+    "SingleIntensityAccumulationError",
+]

@@ -36,7 +36,14 @@ Iterators to extract patches from images.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import all functions/methods/classes into the module
+from .patchwise import CentredPatchIterator as CentredPatchIterator
+from .patchwise import (
+    CentredPatchIteratorOverlapping as CentredPatchIteratorOverlapping,
+)
+from .patchwise import SlidingWindowIterator as SlidingWindowIterator
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "CentredPatchIterator",
+    "CentredPatchIteratorOverlapping",
+    "SlidingWindowIterator",
+]

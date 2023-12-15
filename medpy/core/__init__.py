@@ -51,8 +51,24 @@ Exceptions :mod:`medpy.core.exceptions`
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from .exceptions import ArgumentError as ArgumentError
+from .exceptions import DependencyError as DependencyError
+from .exceptions import FunctionError as FunctionError
+from .exceptions import ImageLoadingError as ImageLoadingError
+from .exceptions import ImageSavingError as ImageSavingError
+from .exceptions import ImageTypeError as ImageTypeError
+from .exceptions import MetaDataError as MetaDataError
+from .exceptions import SubprocessError as SubprocessError
+from .logger import Logger as Logger
 
-# import all functions/methods/classes into the module
-
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "Logger",
+    "ArgumentError",
+    "FunctionError",
+    "SubprocessError",
+    "ImageLoadingError",
+    "DependencyError",
+    "ImageSavingError",
+    "ImageTypeError",
+    "MetaDataError",
+]

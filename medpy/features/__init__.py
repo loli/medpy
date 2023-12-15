@@ -151,7 +151,48 @@ Plots of the membership functions can e.g. be found at http://www.atp.ruhr-uni-b
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import all functions/methods/classes into the module
+from .histogram import fuzzy_histogram as fuzzy_histogram
+from .histogram import gaussian_membership as gaussian_membership
+from .histogram import (
+    sigmoidal_difference_membership as sigmoidal_difference_membership,
+)
+from .histogram import trapezoid_membership as trapezoid_membership
+from .histogram import triangular_membership as triangular_membership
+from .intensity import centerdistance as centerdistance
+from .intensity import centerdistance_xdminus1 as centerdistance_xdminus1
+from .intensity import gaussian_gradient_magnitude as gaussian_gradient_magnitude
+from .intensity import hemispheric_difference as hemispheric_difference
+from .intensity import indices as indices
+from .intensity import intensities as intensities
+from .intensity import local_histogram as local_histogram
+from .intensity import local_mean_gauss as local_mean_gauss
+from .intensity import mask_distance as mask_distance
+from .intensity import median as median
+from .intensity import shifted_mean_gauss as shifted_mean_gauss
+from .utilities import append as append
+from .utilities import join as join
+from .utilities import normalize as normalize
+from .utilities import normalize_with_model as normalize_with_model
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "fuzzy_histogram",
+    "triangular_membership",
+    "trapezoid_membership",
+    "gaussian_membership",
+    "sigmoidal_difference_membership",
+    "centerdistance",
+    "centerdistance_xdminus1",
+    "gaussian_gradient_magnitude",
+    "hemispheric_difference",
+    "indices",
+    "intensities",
+    "local_histogram",
+    "local_mean_gauss",
+    "median",
+    "shifted_mean_gauss",
+    "mask_distance",
+    "append",
+    "join",
+    "normalize",
+    "normalize_with_model",
+]

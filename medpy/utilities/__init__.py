@@ -29,6 +29,6 @@ Custom types for the `argparse <https://docs.python.org/3/library/argparse.html>
     sequenceOfFloatsLe
 
 """
-from . import argparseu as argparseu  # nopycln: import
+from . import argparseu as argparseu
 
-_all__ = ["argparseu"]
+__all__ = ["argparseu"]

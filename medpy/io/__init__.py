@@ -52,7 +52,26 @@ Reading / writing metadata (:mod:`medpy.io.header`)
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# import all functions/methods/classes into the module
+from .header import Header as Header
+from .header import copy_meta_data as copy_meta_data
+from .header import get_offset as get_offset
+from .header import get_pixel_spacing as get_pixel_spacing
+from .header import get_voxel_spacing as get_voxel_spacing
+from .header import set_offset as set_offset
+from .header import set_pixel_spacing as set_pixel_spacing
+from .header import set_voxel_spacing as set_voxel_spacing
+from .load import load as load
+from .save import save as save
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "load",
+    "save",
+    "Header",
+    "get_voxel_spacing",
+    "get_pixel_spacing",
+    "get_offset",
+    "set_voxel_spacing",
+    "set_pixel_spacing",
+    "set_offset",
+    "copy_meta_data",
+]

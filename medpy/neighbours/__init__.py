@@ -36,7 +36,10 @@ the ones found there.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import all functions/methods/classes into the module
+from .knn import mkneighbors_graph as mkneighbors_graph
+from .knn import pdist as pdist
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith("_")]
+__all__ = [
+    "mkneighbors_graph",
+    "pdist",
+]
