@@ -17,7 +17,7 @@ MedPy is an image processing library and collection of scripts targeted towards 
 
 - Download (stable release): https://pypi.python.org/pypi/medpy
 - HTML documentation and installation instruction (stable release): http://loli.github.io/medpy/
-- Download from [Bioconda](https://bioconda.github.io/): https://bioconda.github.io/recipes/medpy/README.html#package-medpy (thanks to [PertuyF](https://github.com/PertuyF), see [#96](https://github.com/loli/medpy/issues/96))
+- Download from [Conda-Forge](https://conda-forge.org): https://anaconda.org/conda-forge/medpy
 
 ## Development version
 
