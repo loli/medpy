@@ -223,7 +223,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "MedPy.tex", "MedPy Documentation", "Oskar Maier", "manual"),
+    ("index", "MedPy.tex", "MedPy Documentation", "Oskar Maier", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -271,7 +271,7 @@ texinfo_documents = [
         "MedPy",
         "One line description of project.",
         "Miscellaneous",
-    ),
+    )
 ]
 
 # Documents to append as an appendix to all manuals.

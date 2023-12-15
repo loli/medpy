@@ -42,17 +42,7 @@ class TestEnergyLabel(unittest.TestCase):
 
     # dedicated function tests
     def test_boundary_stawiaski(self):
-        label = [
-            [[1, 1], [1, 1]],
-            [[1, 2], [2, 2]],
-            [
-                [2, 2],
-                [
-                    2,
-                    2,
-                ],
-            ],
-        ]
+        label = [[[1, 1], [1, 1]], [[1, 2], [2, 2]], [[2, 2], [2, 2]]]
         expected_result = {(0, 1): (6, 6)}
         self.__run_boundary_stawiaski_test(
             label, numpy.zeros_like(label), expected_result, "3D images"
@@ -146,17 +136,7 @@ class TestEnergyLabel(unittest.TestCase):
             assert_raises(AttributeError, bt, None, label, (None, None))
 
     def test_boundary_difference_of_means_borders(self):
-        label = [
-            [[1, 1], [1, 1]],
-            [[1, 2], [2, 2]],
-            [
-                [2, 2],
-                [
-                    2,
-                    2,
-                ],
-            ],
-        ]
+        label = [[[1, 1], [1, 1]], [[1, 2], [2, 2]], [[2, 2], [2, 2]]]
         expected_result = {(0, 1): (sys.float_info.min, sys.float_info.min)}
         self.__run_boundary_difference_of_means_test(
             label, numpy.zeros_like(label), expected_result, "3D images"
