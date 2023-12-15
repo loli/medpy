@@ -11,6 +11,7 @@ Unittest for medpy.filter.houghtransform
 import unittest
 
 # third-party modules
+import numpy as np
 import scipy
 
 # own modules
@@ -235,35 +236,35 @@ class TestHoughTransform(unittest.TestCase):
     def test_dimensions(self):
         # 1D
         img = scipy.rand(10)
-        template = scipy.random.randint(0, 2, (3))
+        template = np.random.randint(0, 2, (3))
         result = ght(img, template)
         self.assertEqual(
             result.ndim, 1, "Computing ght with one-dimensional input data failed."
         )
         # 2D
         img = scipy.rand(10, 11)
-        template = scipy.random.randint(0, 2, (3, 4))
+        template = np.random.randint(0, 2, (3, 4))
         result = ght(img, template)
         self.assertEqual(
             result.ndim, 2, "Computing ght with two-dimensional input data failed."
         )
         # 3D
         img = scipy.rand(10, 11, 12)
-        template = scipy.random.randint(0, 2, (3, 4, 5))
+        template = np.random.randint(0, 2, (3, 4, 5))
         result = ght(img, template)
         self.assertEqual(
             result.ndim, 3, "Computing ght with three-dimensional input data failed."
         )
         # 4D
         img = scipy.rand(10, 11, 12, 13)
-        template = scipy.random.randint(0, 2, (3, 4, 5, 6))
+        template = np.random.randint(0, 2, (3, 4, 5, 6))
         result = ght(img, template)
         self.assertEqual(
             result.ndim, 4, "Computing ght with four-dimensional input data failed."
         )
         # 5D
         img = scipy.rand(3, 4, 3, 4, 3)
-        template = scipy.random.randint(0, 2, (2, 2, 2, 2, 2))
+        template = np.random.randint(0, 2, (2, 2, 2, 2, 2))
         result = ght(img, template)
         self.assertEqual(
             result.ndim, 5, "Computing ght with five-dimensional input data failed."

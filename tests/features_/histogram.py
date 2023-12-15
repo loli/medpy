@@ -14,7 +14,7 @@ import math
 import unittest
 
 # third-party modules
-import scipy
+import numpy as np
 
 # own modules
 from medpy.features.histogram import (
@@ -30,7 +30,7 @@ from medpy.features.histogram import (
 class TestHistogramFeatures(unittest.TestCase):
     def test_fuzzy_histogram_contribution(self):
         """Test if all values contribute with nearly one to the created histograms."""
-        values = scipy.random.randint(0, 100, 1000)
+        values = np.random.randint(0, 100, 1000)
 
         # test triangular
         h, _ = fuzzy_histogram(
@@ -236,7 +236,7 @@ class TestHistogramFeatures(unittest.TestCase):
 
     def test_fuzzy_histogram_std_behaviour(self):
         """Test the standard behaviour of fuzzy histogram."""
-        values = scipy.random.randint(0, 10, 100)
+        values = np.random.randint(0, 10, 100)
 
         _, b = fuzzy_histogram(values, bins=12)
         self.assertEqual(len(b), 13, "violation of requested histogram size.")
@@ -258,7 +258,7 @@ class TestHistogramFeatures(unittest.TestCase):
         self.assertEqual(b[-1], 5.0, "violation of requested ranges lower bound.")
 
     def test_fuzzy_histogram_parameters(self):
-        values = scipy.random.randint(0, 10, 100)
+        values = np.random.randint(0, 10, 100)
 
         # membership functions
         fuzzy_histogram(values, membership="triangular")
@@ -276,7 +276,7 @@ class TestHistogramFeatures(unittest.TestCase):
         )  # float in smoothness
 
     def test_fuzzy_histogram_exceptions(self):
-        values = scipy.random.randint(0, 10, 100)
+        values = np.random.randint(0, 10, 100)
 
         # test fuzzy histogram exceptions
         self.assertRaises(AttributeError, fuzzy_histogram, values, range=(0, 0))

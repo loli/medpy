@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 # third-party modules
+import numpy as np
 import scipy
 
 from medpy.core.logger import Logger
@@ -212,7 +213,7 @@ class TestMetadataConsistency(unittest.TestCase):
         try:
             for ndim in __ndims:
                 logger.debug("Testing for dimension {}...".format(ndim))
-                arr_base = scipy.random.randint(0, 10, list(range(10, ndim + 10)))
+                arr_base = np.random.randint(0, 10, list(range(10, ndim + 10)))
                 for dtype in __dtypes:
                     arr_save = arr_base.astype(dtype)
                     for suffix_from in __suffixes:
@@ -258,7 +259,7 @@ class TestMetadataConsistency(unittest.TestCase):
                         header.set_pixel_spacing(
                             hdr_from,
                             [
-                                scipy.random.rand() * scipy.random.randint(1, 10)
+                                np.random.rand() * np.random.randint(1, 10)
                                 for _ in range(img_from.ndim)
                             ],
                         )
@@ -266,14 +267,14 @@ class TestMetadataConsistency(unittest.TestCase):
                             header.set_pixel_spacing(
                                 hdr_from,
                                 [
-                                    scipy.random.rand() * scipy.random.randint(1, 10)
+                                    np.random.rand() * np.random.randint(1, 10)
                                     for _ in range(img_from.ndim)
                                 ],
                             )
                             header.set_offset(
                                 hdr_from,
                                 [
-                                    scipy.random.rand() * scipy.random.randint(1, 10)
+                                    np.random.rand() * np.random.randint(1, 10)
                                     for _ in range(img_from.ndim)
                                 ],
                             )
