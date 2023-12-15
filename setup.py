@@ -31,6 +31,13 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
+def try_find_library(lib_name):
+    if not find_library(lib_name):
+        return None
+    else:
+        return lib_name
+
+
 ### PREDEFINED MODULES
 # The maxflow graphcut wrapper using boost.python
 
@@ -41,11 +48,19 @@ if sys.platform == "darwin":
     else:
         boost_python_library = "boost_python"
 else:
-    boost_python_library = (
+    boost_python_library = try_find_library(
         "boost_python-py" + str(sys.version_info.major) + str(sys.version_info.minor)
     )
-    if not find_library(boost_python_library):
-        # exact version not find, trying with major fit only as fallback
+    if not boost_python_library:
+        boost_python_library = try_find_library(
+            "boost_python-py" + str(sys.version_info.major)
+        )
+    if not boost_python_library:
+        boost_python_library = try_find_library(
+            "boost_python" + str(sys.version_info.major) + str(sys.version_info.minor)
+        )
+    if not boost_python_library:
+        # exact version not found, trying with major fit only as fallback
         boost_python_library = "boost_python" + str(sys.version_info.major)
 
 maxflow = Extension(
