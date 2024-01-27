@@ -165,7 +165,7 @@ def run_setup(with_compilation):
             "Topic :: Scientific/Engineering :: Medical Science Apps.",
             "Topic :: Scientific/Engineering :: Image Recognition",
         ],
-        install_requires=["scipy >= 1.1.0", "numpy >= 1.11.0", "SimpleITK >= 1.1.0"],
+        install_requires=["scipy >= 1.10", "numpy >= 1.20", "SimpleITK >= 2.1"],
         packages=PACKAGES + ap,
         scripts=[
             "bin/medpy_anisotropic_diffusion.py",
