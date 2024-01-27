@@ -111,6 +111,10 @@ def save(arr, filename, hdr=False, force=True, use_compression=False):
         arr = np.moveaxis(arr, -1, 0)
     arr = arr.T
 
+    # treat unsupported dtypes
+    if arr.dtype == bool:
+        arr = arr.astype(np.uint8)
+
     sitkimage = sitk.GetImageFromArray(arr)
 
     # Copy met-data as far as possible
