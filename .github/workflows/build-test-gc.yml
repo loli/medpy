@@ -4,10 +4,11 @@
 name: Build and test (w graphcut)
 
 on:
-  push:
-    branches: [ "master", "Release*" ]
-  pull_request:
-    branches: [ "master", "Release*" ]
+  workflow_dispatch
+  #push:
+  #  branches: [ "master", "Release*" ]
+  #pull_request:
+  #  branches: [ "master", "Release*" ]
 
 jobs:
   build:
@@ -16,7 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        #python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.10"]
 
     steps:
     - uses: actions/checkout@v3
@@ -26,9 +28,21 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install system dependencies for graphcut functionality
       run: sudo apt-get install -y libboost-python-dev build-essential
+    - name: Locate libboost
+      run: |
+        cat /etc/ld.so.conf.d/*
+        ls /usr/lib/x86_64-linux-gnu/libboost_*
+        ls /lib/x86_64-linux-gnu/libboost_*
+    - name: Find library
+      run: python -c "import sys; from ctypes.util import find_library; print('boost_python' + str(sys.version_info.major) + str(sys.version_info.minor), find_library('boost_python' + str(sys.version_info.major) + str(sys.version_info.minor)))"
     - name: Install with test dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -v .[test]
+    - name: Check install
+      run: |
+        python -c "import medpy; print(medpy.__file__)"
+        python -c "import medpy.graphcut; print(medpy.graphcut.__file__)"
+        python -c "import medpy.graphcut; print(medpy.graphcut.maxflow.__file__)"
     - name: Test with pytest
       run: pytest tests/graphcut_/*
