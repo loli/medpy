@@ -34,10 +34,9 @@ jobs:
         ls /lib/x86_64-linux-gnu/libboost_*
     - name: Find library
       run: python -c "import sys; from ctypes.util import find_library; print('boost_python' + str(sys.version_info.major) + str(sys.version_info.minor), find_library('boost_python' + str(sys.version_info.major) + str(sys.version_info.minor)))"
-
-#    - name: Install with test dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#        python -m pip install -v .[test]
-#    - name: Test with pytest
-#      run: pytest tests/graphcut_/*
+    - name: Install with test dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -v .[test]
+    - name: Test with pytest
+      run: pytest tests/graphcut_/*
