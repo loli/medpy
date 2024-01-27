@@ -1,5 +1,4 @@
-Building the HTML documentation
-###############################
+# Building the HTML documentation
 
 Install sphinx first in your environment. Make sure to have the right version.
 
@@ -35,8 +34,7 @@ Finally rerun the build
     sphinx-build -aE -b html source/ build/
 
 
-Enabling the search box
-#######################
+## Enabling the search box
 
 Remove
 
@@ -45,8 +43,7 @@ Remove
 from the scipy template, as it somehow overrides the search box with a custom link to edit the .rst files in-place online.
 
 
-Generate the API documentation files
-####################################
+## Generate the API documentation files
 
 Run
 
