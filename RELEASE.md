@@ -13,6 +13,7 @@
 - Update `CHANGES.txt`, highlighting only major changes
 
 ## Release
-- Build package and upload to pypi
+- Build package (e.g. with `python -m build`)
+- Upload to PyPI
 - Update conda-force recipe to new version (PR)
 - Update DOI

@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [ "master", "Release*" ]
 
+permissions:
+  contents: read
+
 jobs:
   main:
     runs-on: ubuntu-latest

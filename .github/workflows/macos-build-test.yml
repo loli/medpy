@@ -1,9 +1,8 @@
-# Build the package with graph-cut support and runs the graphcut tests
-# This test is kept separate, as the graphcut functionality is optional and unstable
+# MacOS: Build the package and run all tests except the graph-cut ones
 # Triggered whenever a PR into the main or a Release* branch is opened
 # Triggered for each new published release
 
-name: Build and test (w graphcut)
+name: MacOS build and test (wo graphcut)
 
 on:
   release:
@@ -16,8 +15,7 @@ permissions:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
@@ -29,11 +27,13 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install system dependencies for graphcut functionality
-      run: sudo apt-get install -y libboost-python-dev build-essential
     - name: Install with test dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install .[test]
-    - name: Test with pytest (graphcut test only)
-      run: pytest tests/graphcut_/*
+    - name: Test with pytest
+      run: |
+        pytest tests/features_/*
+        pytest tests/filter_/*
+        pytest tests/io_/*
+        pytest tests/metric_/*

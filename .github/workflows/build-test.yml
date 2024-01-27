@@ -2,13 +2,16 @@
 # Triggered whenever a PR into the main or a Release* branch is opened
 # Triggered for each new published release
 
-name: Build and test (wo graphcut)
+name: Linux build and test (wo graphcut)
 
 on:
   release:
       types: [published]
   pull_request:
     branches: [ "master", "Release*" ]
+
+permissions:
+  contents: read
 
 jobs:
   build:
