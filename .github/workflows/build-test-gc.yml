@@ -40,5 +40,6 @@ jobs:
         ls -al
         echo "$PWD"
         cd tests && python -c "import medpy; print(medpy.__file__)"
+        ls /usr/lib/x86_64-linux-gnu/libboost*
     - name: Test with pytest (graphcut test only)
       run: cd tests && pytest graphcut_/*
