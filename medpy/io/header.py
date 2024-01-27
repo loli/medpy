@@ -54,7 +54,7 @@ def get_voxel_spacing(hdr):
 def get_pixel_spacing(hdr):
     r"""Depreciated synonym of `~medpy.io.header.get_voxel_spacing`."""
     warnings.warn(
-        "get_pixel_spacing() is depreciated, use set_voxel_spacing() instead",
+        "get_pixel_spacing() is depreciated, use get_voxel_spacing() instead",
         category=DeprecationWarning,
     )
     return get_voxel_spacing(hdr)
