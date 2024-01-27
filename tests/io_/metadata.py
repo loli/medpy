@@ -267,7 +267,7 @@ class TestMetadataConsistency(unittest.TestCase):
                             )
                             continue
 
-                        header.set_pixel_spacing(
+                        header.set_voxel_spacing(
                             hdr_from,
                             [
                                 numpy.random.rand() * numpy.random.randint(1, 10)
@@ -275,7 +275,7 @@ class TestMetadataConsistency(unittest.TestCase):
                             ],
                         )
                         try:
-                            header.set_pixel_spacing(
+                            header.set_voxel_spacing(
                                 hdr_from,
                                 [
                                     numpy.random.rand() * numpy.random.randint(1, 10)
@@ -437,10 +437,10 @@ class TestMetadataConsistency(unittest.TestCase):
         otherwise False.
         """
         if not self.__same_seq(
-            header.get_pixel_spacing(hdr1), header.get_pixel_spacing(hdr2)
+            header.get_voxel_spacing(hdr1), header.get_voxel_spacing(hdr2)
         ):
             return "the voxel spacing is not consistent: {} != {}".format(
-                header.get_pixel_spacing(hdr1), header.get_pixel_spacing(hdr2)
+                header.get_voxel_spacing(hdr1), header.get_voxel_spacing(hdr2)
             )
         if not self.__same_seq(header.get_offset(hdr1), header.get_offset(hdr2)):
             return "the offset is not consistent: {} != {}".format(
