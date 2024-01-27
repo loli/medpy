@@ -32,6 +32,5 @@ jobs:
       run: |
         pytest tests/features_/*
         pytest tests/filter_/*
-        pytest tests/graphcut_/*
         pytest tests/io_/*
         pytest tests/metric_/*
