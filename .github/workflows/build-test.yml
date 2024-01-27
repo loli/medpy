@@ -1,17 +1,17 @@
-# This workflow will install Python dependencies, the package, and run the tests
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# Build the package and run all tests except the graph-cut ones
+# Triggered whenever a PR into the main or a Release* branch is opened
+# Triggered for each new published release
 
 name: Build and test (wo graphcut)
 
 on:
-  push:
-    branches: [ "master", "Release*" ]
+  release:
+      types: [published]
   pull_request:
     branches: [ "master", "Release*" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,9 +19,9 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install with test dependencies

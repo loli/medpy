@@ -1,24 +1,24 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# Runs the pre-commit hooks to make sure that all pushes are properly and consistently treated
+# Also triggers for PRs (potentially coming from external) into master and Release* branches
 
 name: Pre-commit hooks
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ['**'] # note: without branches would execute for tags, too
+  pull_request:
+    branches: [ "master", "Release*" ]
 
 jobs:
   main:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.x
     - uses: pre-commit/action@v3.0.0
     - uses: pre-commit-ci/lite-action@v1.0.1
       if: always()
