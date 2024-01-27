@@ -28,7 +28,7 @@ import os
 # third-party modules
 import numpy
 from scipy.ndimage import label
-from skimage.morphology import watershed
+from skimage.segmentation import watershed
 
 from medpy.core import ArgumentError, Logger
 from medpy.filter import local_minima
@@ -41,7 +41,7 @@ from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.1, 2013-12-11"
+__version__ = "r0.1.2, 2013-12-11"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """

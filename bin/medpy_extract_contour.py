@@ -37,7 +37,7 @@ from medpy.io import load, save
 
 # information
 __author__ = "Oskar Maier"
-__version__ = "r0.1.0, 2014-06-04"
+__version__ = "r0.1.1, 2014-06-04"
 __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
@@ -107,7 +107,7 @@ def main():
             if not 0 == dilations
             else data_input
         )
-        data_output = dilated - eroded
+        data_output = numpy.logical_xor(dilated, eroded)
     else:
         slicer = [slice(None)] * data_input.ndim
         bs_slicer = [slice(None)] * data_input.ndim
@@ -135,7 +135,7 @@ def main():
                 if not 0 == dilations
                 else data_input[tuple(slicer)]
             )
-            data_output[tuple(slicer)] = dilated - eroded
+            data_output[tuple(slicer)] = numpy.logical_xor(dilated, eroded)
     logger.debug(
         "Contour image contains {} contour voxels.".format(
             numpy.count_nonzero(data_output)
