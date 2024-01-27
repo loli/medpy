@@ -1,5 +1,6 @@
 TODO.txt
 
+
 # Images
 *.nii
 *.mhd
@@ -87,6 +88,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+.hypothesis
 
 #Translations
 *.mo
