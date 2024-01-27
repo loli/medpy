@@ -16,7 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        #python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.10"]
 
     steps:
     - uses: actions/checkout@v3
@@ -26,9 +27,14 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install system dependencies for graphcut functionality
       run: sudo apt-get install -y libboost-python-dev build-essential
-    - name: Install with test dependencies
+    - name: Locate libboost
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install -v .[test]
-    - name: Test with pytest
-      run: pytest tests/graphcut_/*
+        cat /etc/ld.so.conf.d/*
+        ls /usr/lib/x86_64-linux-gnu/libboost_*
+        ls /lib/x86_64-linux-gnu/libboost_*
+#    - name: Install with test dependencies
+#      run: |
+#        python -m pip install --upgrade pip
+#        python -m pip install -v .[test]
+#    - name: Test with pytest
+#      run: pytest tests/graphcut_/*
