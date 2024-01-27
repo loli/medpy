@@ -37,7 +37,6 @@ jobs:
         python -m pip install -v .[test]
     - name: Check
       run: |
-        ls -al /opt/hostedtoolcache/Python/3.11.7/x64/lib/python3.11/site-packages/medpy/graphcut/
         ls -al
         echo "$PWD"
         cd tests && python -c "import medpy; print(medpy.__file__)"
