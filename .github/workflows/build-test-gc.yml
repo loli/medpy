@@ -35,5 +35,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install .[test]
+    - name: Check
+      run: |
+        ls -al /opt/hostedtoolcache/Python/3.11.7/x64/lib/python3.11/site-packages/medpy/graphcut/
+        ls -al
+        echo "$PWD"
+        cd tests && python -c "import medpy; print(medpy.__file__)"
     - name: Test with pytest (graphcut test only)
-      run: pytest tests/graphcut_/*
+      run: cd tests && pytest graphcut_/*
