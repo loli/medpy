@@ -1,0 +1,36 @@
+# Publish a release to PyPI (test)
+# Requires Build pacakge workflow to run first
+# This version releases to https://test.pypi.org/ for testing purposes
+
+name: Publish a release to PyPI (test)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Select tag to publish'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish-test:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: publish
+      url: https://test.pypi.org/p/medpy
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+    steps:
+    - name: Download dists
+      uses: actions/download-artifact@v3
+      with:
+        name: python-package-distributions-${{ inputs.tag }}
+        path: dist/
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@v1.8.11
+      with:
+        repository-url: https://test.pypi.org/legacy/  # test publish platform

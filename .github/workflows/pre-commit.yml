@@ -1,11 +1,11 @@
 # Runs the pre-commit hooks to make sure that all pushes are properly and consistently treated
-# Also triggers for PRs (potentially coming from external) into master and Release* branches
+# Triggers for PRs (potentially coming from external) into master and Release* branches
 
 name: Pre-commit hooks
 
 on:
-  push:
-    branches: ['**'] # note: without branches would execute for tags, too
+  #push:
+  #  branches: ['**'] # note: without branches would execute for tags, too
   pull_request:
     branches: [ "master", "Release*" ]
 

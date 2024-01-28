@@ -1,4 +1,4 @@
-# Build the package and run all tests except the graph-cut ones
+# Linux: Build the package and run all tests except the graph-cut ones
 # Triggered whenever a PR into the main or a Release* branch is opened
 # Triggered for each new published release
 
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test-linux:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
