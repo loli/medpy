@@ -2,7 +2,7 @@
 # Given a tag, downloads the associated code, builds the package, and uploads the binary wheel(s)
 # and source tarball as artifacts
 
-name: Build pacakge
+name: Build package
 
 on:
   workflow_dispatch:

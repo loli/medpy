@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  test-ubuntu-22.04:
+  test-ubuntu-22_04:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
     - name: Test with pytest (graphcut test only)
       run: cd tests && pytest graphcut_/*
 
-  test-ubuntu-20.04:
+  test-ubuntu-20_04:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
