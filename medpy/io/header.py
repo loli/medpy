@@ -177,10 +177,10 @@ class Header:
     ----------
     spacing : tuple of floats
         the image's voxel spacing
-        defaults to a tuple of `1.0`s
+        defaults to a tuple of 1.0s
     offset : tuple of floats
         the image's offset/origin
-        defaults to a tuple of `0.0`s
+        defaults to a tuple of 0.0s
     direction : ndarray
         the image's affine transformation matrix
         must be of square shape

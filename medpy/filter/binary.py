@@ -43,7 +43,7 @@ def size_threshold(img, thr, comp="lt", structure=None):
     Parameters
     ----------
     img : array_like
-        An array containing connected objects. Will be cast to type numpy.bool_.
+        An array containing connected objects. Will be cast to type `bool`.
     thr : int
         Integer defining the threshold size of the binary objects to remove.
     comp : {'lt', 'le', 'gt', 'ge', 'ne', 'eq'}
@@ -98,7 +98,7 @@ def largest_connected_component(img, structure=None):
     Parameters
     ----------
     img : array_like
-        An array containing connected objects. Will be cast to type numpy.bool_.
+        An array containing connected objects. Will be cast to type `bool`.
     structure : array_like
         A structuring element that defines the connectivity. Structure must be symmetric.
         If no structuring element is provided, one is automatically generated with a
