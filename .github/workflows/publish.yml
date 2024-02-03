@@ -1,25 +1,29 @@
-# Publish a release to PyPI (test)
+# Publish a release to PyPI
 # Requires build package workflow to run first
-# This version releases to https://test.pypi.org/ for testing purposes
-# Triggers on: all published releases (incl pre-releases)
+# This version releases to https://pypi.org/, only trigger if the release has been thorough tested
 
-name: Publish a release to PyPI (test)
+# !TOD: Work in progress
+
+name: Publish a release to PyPI
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Select release to publish"
+        required: true
 
 permissions:
   contents: read
 
 jobs:
-  publish-test:
+  publish:
     needs:
       - build
     runs-on: ubuntu-latest
     environment:
-      name: pypi-publish-test
-      url: https://test.pypi.org/p/medpy
+      name: pypi-publish
+      url: https://pypi.org/p/medpy
     permissions:
       id-token: write # IMPORTANT: mandatory for trusted publishing
     steps:
@@ -30,5 +34,3 @@ jobs:
           path: dist/
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@v1.8.11
-        with:
-          repository-url: https://test.pypi.org/legacy/ # test publish platform

@@ -1,15 +1,13 @@
 # Build package
 # Given a tag, downloads the associated code, builds the package, and uploads the binary wheel(s)
 # and source tarball as artifacts
+# Triggers on: all published releases (incl pre-releases)
 
 name: Build package
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Select tag to build'
-        required: true
+  release:
+    types: [published]
 
 permissions:
   contents: read
@@ -18,21 +16,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.tag }}
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.x
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build
-    - name: Build a binary wheel and a source tarball
-      run: python -m build
-    - name: Store the distribution packages
-      uses: actions/uupload-artifact@v4.3.0
-      with:
-        name: python-package-distributions-${{ inputs.tag }}
-        path: dist/
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+      - name: Build a binary wheel and a source tarball
+        run: python -m build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4.3.0
+        with:
+          name: python-package-distributions-${{ github.ref_name }}
+          path: dist/

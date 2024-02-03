@@ -17,3 +17,7 @@
 - Upload to PyPI
 - Update conda-force recipe to new version (PR)
 - Update DOI
+
+## Further readings
+- https://packaging.python.org/
+- https://docs.github.com/en/actions
