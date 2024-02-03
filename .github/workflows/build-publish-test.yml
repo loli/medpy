@@ -47,7 +47,7 @@ jobs:
       id-token: write # IMPORTANT: mandatory for trusted publishing
     steps:
       - name: Download dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.1 # make sure that same major version as actions/upload-artifact
         with:
           name: python-package-distributions-${{ github.ref_name }}
           path: dist/
