@@ -173,6 +173,13 @@ def run_setup(with_compilation):
             "dev": ["pre-commit"],  # for development
             "test": ["pytest", "hypothesis"],  # for testing
             "watershed": ["scikit-image"],  # for watershed segmentation script
+            "doc": [
+                "sphinx >= 1.6",
+                "numpydoc",
+                "pydata-sphinx-theme",
+                # "sphinx-panels",
+                # "sphinx-tabs",
+            ],  # for documentation generation
         },
         packages=PACKAGES + ap,
         scripts=[
