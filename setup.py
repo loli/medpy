@@ -169,11 +169,11 @@ def run_setup(with_compilation):
             "Topic :: Scientific/Engineering :: Image Recognition",
         ],
         python_requires=">=3.5, <4",
-        install_requires=["scipy >= 1.10", "numpy >= 1.20", "SimpleITK >= 2.1"],
+        install_requires=["scipy >= 1.10", "numpy >= 1.24", "SimpleITK >= 2.1"],
         extras_require={
-            "dev": ["pre-commit"],
-            "test": ["pytest", "hypothesis"],
-            "watershed": ["scikit-image"],
+            "dev": ["pre-commit"],  # for development
+            "test": ["pytest", "hypothesis"],  # for testing
+            "watershed": ["scikit-image"],  # for watershed segmentation script
         },
         packages=PACKAGES + ap,
         scripts=[
