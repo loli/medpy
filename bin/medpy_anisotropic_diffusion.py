@@ -43,6 +43,8 @@ __status__ = "Release"
 __description__ = """
                   Executes gradient anisotropic diffusion filter over an image.
                   This smoothing algorithm is edges preserving.
+                  To achieve the best effects, the image should be scaled to
+                  values between 0 and 1 beforehand.
 
                   Note that the images voxel-spacing will be taken into account.
 

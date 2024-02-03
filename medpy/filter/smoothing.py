@@ -62,6 +62,9 @@ def anisotropic_diffusion(
     r"""
     Edge-preserving, XD Anisotropic diffusion.
 
+    To achieve the best effects, the image should be scaled to
+    values between 0 and 1 beforehand.
+
 
     Parameters
     ----------
