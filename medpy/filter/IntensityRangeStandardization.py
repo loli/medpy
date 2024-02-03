@@ -330,7 +330,7 @@ class IntensityRangeStandardization(object):
             The transformed image
 
         Raises
-        -------
+        ------
         InformationLossException
             If a lossless transformation can not be ensured
         Exception

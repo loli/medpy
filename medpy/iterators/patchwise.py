@@ -377,8 +377,8 @@ class CentredPatchIterator:
         cval : number
             Value to fill undefined positions.
 
-        Experiments
-        -----------
+        Examples
+        --------
         >>> import numpy
         >>> from medpy.iterators import CentredPatchIterator
         >>> arr = numpy.arange(0, 25).reshape((5,5))
@@ -696,8 +696,8 @@ class CentredPatchIteratorOverlapping:
         cval : number
             Value to fill undefined positions.
 
-        Experiments
-        -----------
+        Examples
+        --------
         >>> import numpy
         >>> from medpy.iterators import CentredPatchIterator
         >>> arr = numpy.arange(0, 25).reshape((5,5))
@@ -723,8 +723,8 @@ class CentredPatchIteratorOverlapping:
         r"""
         Assemble an image from a number of patches, patch masks and their grid ids.
 
-        Note
-        ----
+        Notes
+        -----
         Currently only applicable for non-overlapping patches.
 
         Parameters

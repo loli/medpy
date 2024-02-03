@@ -522,8 +522,8 @@ def resample(img, hdr, target_spacing, bspline_order=3, mode="constant"):
     mode : str
         Points outside the boundaries of the input are filled according to the given mode ('constant', 'nearest', 'reflect' or 'wrap'). Default is 'constant'.
 
-    Warning
-    -------
+    Warnings
+    --------
     Voxel-spacing of input header will be modified in-place!
 
     Returns
