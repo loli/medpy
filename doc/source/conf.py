@@ -107,7 +107,7 @@ html_theme_options = {
     "header_links_before_dropdown": 5,
     "show_prev_next": False,
     "navigation_with_keys": False,
-    "use_edit_page_button": True,
+    "use_edit_page_button": False,
     "github_url": "https://github.com/loli/medpy/",
     "navbar_center": ["navbar-nav"],
 }

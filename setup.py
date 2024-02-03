@@ -177,8 +177,6 @@ def run_setup(with_compilation):
                 "sphinx >= 1.6",
                 "numpydoc",
                 "pydata-sphinx-theme",
-                # "sphinx-panels",
-                # "sphinx-tabs",
             ],  # for documentation generation
         },
         packages=PACKAGES + ap,
