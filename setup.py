@@ -13,7 +13,6 @@ from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatfo
 from setuptools import Command, Extension, setup
 
 # CONSTANTS
-IS_PYPY = hasattr(sys, "pypy_translation_info")  # why this?
 PACKAGES = [
     "medpy",
     "medpy.core",
@@ -224,7 +223,7 @@ def run_setup(with_compilation):
 
 ### INSTALLATION
 try:
-    run_setup(not IS_PYPY)
+    run_setup(with_compilation=True)
 except BuildFailed:
     BUILD_EXT_WARNING = "WARNING: The medpy.graphcut.maxflow external C++ package could not be compiled, all graphcut functionality will be disabled. You might be missing Boost.Python or some build essentials like g++."
     print(("*" * 75))
@@ -232,7 +231,7 @@ except BuildFailed:
     print("Failure information, if any, is above.")
     print("I'm retrying the build without the graphcut C++ module now.")
     print(("*" * 75))
-    run_setup(False)
+    run_setup(with_compilation=False)
     print(("*" * 75))
     print(BUILD_EXT_WARNING)
     print("Plain-Python installation succeeded.")
