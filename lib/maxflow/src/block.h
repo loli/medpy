@@ -55,7 +55,7 @@
 	...
 
 	DBlock<MyType> *dblock = new DBlock<MyType>(BLOCK_SIZE);
-	
+
 	// adding items
 	for (int i=0; i<sizeof(array); i++)
 	{
@@ -265,4 +265,3 @@ private:
 
 
 #endif
-

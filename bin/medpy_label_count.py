@@ -26,11 +26,12 @@ import sys
 # third-party modules
 import numpy
 
-# path changes
+from medpy.core import Logger
 
 # own modules
 from medpy.io import load
-from medpy.core import Logger
+
+# path changes
 
 
 # information
@@ -41,12 +42,13 @@ __status__ = "Release"
 __description__ = """
                   Counts the regions in a number of label images and prints the results
                   to the stdout in csv syntax.
-                  
+
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
+
 
 # code
 def main():
@@ -54,45 +56,52 @@ def main():
     parser = getParser()
     parser.parse_args()
     args = getArguments(parser)
-    
+
     # prepare logger
     logger = Logger.getInstance()
-    if args.debug: logger.setLevel(logging.DEBUG)
-    elif args.verbose: logger.setLevel(logging.INFO)
-        
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    elif args.verbose:
+        logger.setLevel(logging.INFO)
+
     # write header line
-    print('image;labels\n')
-    
+    print("image;labels\n")
+
     # iterate over input images
     for image in args.images:
-        
         # get and prepare image data
-        logger.info('Processing image {}...'.format(image))
+        logger.info("Processing image {}...".format(image))
         image_data, _ = load(image)
-        
+
         # count number of labels and flag a warning if they reach the ushort border
-        count = len(numpy.unique(image_data)) 
-        
+        count = len(numpy.unique(image_data))
+
         # count number of labels and write
-        print('{};{}\n'.format(image.split('/')[-1], count))
-        
+        print("{};{}\n".format(image.split("/")[-1], count))
+
         sys.stdout.flush()
-            
-    logger.info('Successfully terminated.')
-      
+
+    logger.info("Successfully terminated.")
+
+
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     return parser.parse_args()
 
+
 def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
-    parser.add_argument('images', nargs='+', help='One or more label images.')
-    parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
-    parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
-    
-    return parser    
-    
+    parser.add_argument("images", nargs="+", help="One or more label images.")
+    parser.add_argument(
+        "-v", dest="verbose", action="store_true", help="Display more information."
+    )
+    parser.add_argument(
+        "-d", dest="debug", action="store_true", help="Display debug information."
+    )
+
+    return parser
+
+
 if __name__ == "__main__":
-    main()            
-    
+    main()

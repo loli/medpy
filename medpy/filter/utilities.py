@@ -27,6 +27,7 @@ from scipy.ndimage import _ni_support
 # own modules
 from ..io import header
 
+
 # code
 def xminus1d(img, fun, dim, *args, **kwargs):
     r"""
@@ -59,8 +60,9 @@ def xminus1d(img, fun, dim, *args, **kwargs):
     output = []
     for slid in range(img.shape[dim]):
         slicer[dim] = slice(slid, slid + 1)
-        output.append(fun(numpy.squeeze(img[slicer]), *args, **kwargs))
+        output.append(fun(numpy.squeeze(img[tuple(slicer)]), *args, **kwargs))
     return numpy.rollaxis(numpy.asarray(output), 0, dim + 1)
+
 
 #!TODO: Utilise the numpy.pad function that is available since 1.7.0. The numpy version should go inside this function, since it does not support the supplying of a template/footprint on its own.
 def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0):
@@ -130,118 +132,177 @@ def pad(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0)
         footprint = numpy.asarray(footprint, dtype=bool)
     fshape = [ii for ii in footprint.shape if ii > 0]
     if len(fshape) != input.ndim:
-        raise RuntimeError('filter footprint array has incorrect shape.')
+        raise RuntimeError("filter footprint array has incorrect shape.")
 
-    if numpy.any([x > 2*y for x, y in zip(footprint.shape, input.shape)]):
-        raise ValueError('The size of the padding element is not allowed to be more than double the size of the input array in any dimension.')
+    if numpy.any([x > 2 * y for x, y in zip(footprint.shape, input.shape)]):
+        raise ValueError(
+            "The size of the padding element is not allowed to be more than double the size of the input array in any dimension."
+        )
 
-    padding_offset = [((s - 1) / 2, s / 2) for s in fshape]
+    padding_offset = [((s - 1) // 2, s // 2) for s in fshape]
     input_slicer = [slice(l, None if 0 == r else -1 * r) for l, r in padding_offset]
     output_shape = [s + sum(os) for s, os in zip(input.shape, padding_offset)]
     output = _ni_support._get_output(output, input, output_shape)
 
-    if 'constant' == mode:
+    if "constant" == mode:
         output += cval
-        output[input_slicer] = input
+        output[tuple(input_slicer)] = input
         return output
-    elif 'nearest' == mode:
-        output[input_slicer] = input
-        dim_mult_slices = [(d, l, slice(None, l), slice(l, l + 1)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
-        dim_mult_slices.extend([(d, r, slice(-1 * r, None), slice(-2 * r, -2 * r + 1)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
+    elif "nearest" == mode:
+        output[tuple(input_slicer)] = input
+        dim_mult_slices = [
+            (d, l, slice(None, l), slice(l, l + 1))
+            for d, (l, _) in zip(list(range(output.ndim)), padding_offset)
+            if not 0 == l
+        ]
+        dim_mult_slices.extend(
+            [
+                (d, r, slice(-1 * r, None), slice(-2 * r, -2 * r + 1))
+                for d, (_, r) in zip(list(range(output.ndim)), padding_offset)
+                if not 0 == r
+            ]
+        )
         for dim, mult, to_slice, from_slice in dim_mult_slices:
-            slicer_to = [to_slice if d == dim else slice(None) for d in range(output.ndim)]
-            slicer_from = [from_slice if d == dim else slice(None) for d in range(output.ndim)]
+            slicer_to = [
+                to_slice if d == dim else slice(None) for d in range(output.ndim)
+            ]
+            slicer_from = [
+                from_slice if d == dim else slice(None) for d in range(output.ndim)
+            ]
             if not 0 == mult:
-                output[slicer_to] = numpy.concatenate([output[slicer_from]] * mult, dim)
+                output[tuple(slicer_to)] = numpy.concatenate(
+                    [output[tuple(slicer_from)]] * mult, dim
+                )
         return output
-    elif 'mirror' == mode:
-        dim_slices = [(d, slice(None, l), slice(l + 1, 2 * l + 1)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
-        dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r - 1, -1 * r - 1)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
+    elif "mirror" == mode:
+        dim_slices = [
+            (d, slice(None, l), slice(l + 1, 2 * l + 1))
+            for d, (l, _) in zip(list(range(output.ndim)), padding_offset)
+            if not 0 == l
+        ]
+        dim_slices.extend(
+            [
+                (d, slice(-1 * r, None), slice(-2 * r - 1, -1 * r - 1))
+                for d, (_, r) in zip(list(range(output.ndim)), padding_offset)
+                if not 0 == r
+            ]
+        )
         reverse_slice = slice(None, None, -1)
-    elif 'reflect' == mode:
-        dim_slices = [(d, slice(None, l), slice(l, 2 * l)) for d, (l, _) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
-        dim_slices.extend([(d, slice(-1 * r, None), slice(-2 * r, -1 * r)) for d, (_, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
+    elif "reflect" == mode:
+        dim_slices = [
+            (d, slice(None, l), slice(l, 2 * l))
+            for d, (l, _) in zip(list(range(output.ndim)), padding_offset)
+            if not 0 == l
+        ]
+        dim_slices.extend(
+            [
+                (d, slice(-1 * r, None), slice(-2 * r, -1 * r))
+                for d, (_, r) in zip(list(range(output.ndim)), padding_offset)
+                if not 0 == r
+            ]
+        )
         reverse_slice = slice(None, None, -1)
-    elif 'wrap' == mode:
-        dim_slices = [(d, slice(None, l), slice(-1 * (l + r), -1 * r if not 0 == r else None)) for d, (l, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == l]
-        dim_slices.extend([(d, slice(-1 * r, None), slice(l, r + l)) for d, (l, r) in zip(list(range(output.ndim)), padding_offset) if not 0 == r])
+    elif "wrap" == mode:
+        dim_slices = [
+            (d, slice(None, l), slice(-1 * (l + r), -1 * r if not 0 == r else None))
+            for d, (l, r) in zip(list(range(output.ndim)), padding_offset)
+            if not 0 == l
+        ]
+        dim_slices.extend(
+            [
+                (d, slice(-1 * r, None), slice(l, r + l))
+                for d, (l, r) in zip(list(range(output.ndim)), padding_offset)
+                if not 0 == r
+            ]
+        )
         reverse_slice = slice(None)
     else:
-        raise RuntimeError('boundary mode not supported')
+        raise RuntimeError("boundary mode not supported")
 
-    output[input_slicer] = input
+    output[tuple(input_slicer)] = input
     for dim, to_slice, from_slice in dim_slices:
-        slicer_reverse = [reverse_slice if d == dim else slice(None) for d in range(output.ndim)]
+        slicer_reverse = [
+            reverse_slice if d == dim else slice(None) for d in range(output.ndim)
+        ]
         slicer_to = [to_slice if d == dim else slice(None) for d in range(output.ndim)]
-        slicer_from = [from_slice if d == dim else slice(None) for d in range(output.ndim)]
-        output[slicer_to] = output[slicer_from][slicer_reverse]
+        slicer_from = [
+            from_slice if d == dim else slice(None) for d in range(output.ndim)
+        ]
+        output[tuple(slicer_to)] = output[tuple(slicer_from)][tuple(slicer_reverse)]
 
     return output
 
+
 def intersection(i1, h1, i2, h2):
-        r"""
-        Returns the intersecting parts of two images in real world coordinates.
-        Takes both, voxelspacing and image offset into account.
+    r"""
+    Returns the intersecting parts of two images in real world coordinates.
+    Takes both, voxelspacing and image offset into account.
 
-        Note that the returned new offset might be inaccurate up to 1/2 voxel size for
-        each dimension due to averaging.
+    Note that the returned new offset might be inaccurate up to 1/2 voxel size for
+    each dimension due to averaging.
 
-        Parameters
-        ----------
-        i1 : array_like
-        i2 : array_like
-            The two images.
-        h1 : MedPy image header
-        h2 : MedPy image header
-            The corresponding headers.
+    Parameters
+    ----------
+    i1 : array_like
+    i2 : array_like
+        The two images.
+    h1 : MedPy image header
+    h2 : MedPy image header
+        The corresponding headers.
 
-        Returns
-        -------
-        v1 : ndarray
-            The intersecting part of ``i1``.
-        v2 : ndarray
-            The intersecting part of ``i2``.
-        offset : tuple of floats
-            The new offset of ``v1`` and ``v2`` in real world coordinates.
-        """
+    Returns
+    -------
+    v1 : ndarray
+        The intersecting part of ``i1``.
+    v2 : ndarray
+        The intersecting part of ``i2``.
+    offset : tuple of floats
+        The new offset of ``v1`` and ``v2`` in real world coordinates.
+    """
 
-        # compute image bounding boxes in real-world coordinates
-        os1 = numpy.asarray(header.get_offset(h1))
-        ps1 = numpy.asarray(header.get_pixel_spacing(h1))
-        bb1 = (os1, numpy.asarray(i1.shape) * ps1 + os1)
+    # compute image bounding boxes in real-world coordinates
+    os1 = numpy.asarray(header.get_offset(h1))
+    ps1 = numpy.asarray(header.get_pixel_spacing(h1))
+    bb1 = (os1, numpy.asarray(i1.shape) * ps1 + os1)
 
+    os2 = numpy.asarray(header.get_offset(h2))
+    ps2 = numpy.asarray(header.get_pixel_spacing(h2))
+    bb2 = (os2, numpy.asarray(i2.shape) * ps2 + os2)
 
-        os2 = numpy.asarray(header.get_offset(h2))
-        ps2 = numpy.asarray(header.get_pixel_spacing(h2))
-        bb2 = (os2, numpy.asarray(i2.shape) * ps2 + os2)
+    # compute intersection
+    ib = (numpy.maximum(bb1[0], bb2[0]), numpy.minimum(bb1[1], bb2[1]))
 
-        # compute intersection
-        ib = (numpy.maximum(bb1[0], bb2[0]), numpy.minimum(bb1[1], bb2[1]))
+    # transfer intersection to respective image coordinates image
+    ib1 = [
+        ((ib[0] - os1) / numpy.asarray(ps1)).astype(int),
+        ((ib[1] - os1) / numpy.asarray(ps1)).astype(int),
+    ]
+    ib2 = [
+        ((ib[0] - os2) / numpy.asarray(ps2)).astype(int),
+        ((ib[1] - os2) / numpy.asarray(ps2)).astype(int),
+    ]
 
-        # transfer intersection to respective image coordinates image
-        ib1 = [ ((ib[0] - os1) / numpy.asarray(ps1)).astype(int), ((ib[1] - os1) / numpy.asarray(ps1)).astype(int) ]
-        ib2 = [ ((ib[0] - os2) / numpy.asarray(ps2)).astype(int), ((ib[1] - os2) / numpy.asarray(ps2)).astype(int) ]
+    # ensure that both sub-volumes are of same size (might be affected by rounding errors); only reduction allowed
+    s1 = ib1[1] - ib1[0]
+    s2 = ib2[1] - ib2[0]
+    d1 = s1 - s2
+    d1[d1 > 0] = 0
+    d2 = s2 - s1
+    d2[d2 > 0] = 0
+    ib1[1] -= d1
+    ib2[1] -= d2
 
-        # ensure that both sub-volumes are of same size (might be affected by rounding errors); only reduction allowed
-        s1 = ib1[1] - ib1[0]
-        s2 = ib2[1] - ib2[0]
-        d1 = s1 - s2
-        d1[d1 > 0] = 0
-        d2 = s2 - s1
-        d2[d2 > 0] = 0
-        ib1[1] -= d1
-        ib2[1] -= d2
+    # compute new image offsets (in real-world coordinates); averaged to account for rounding errors due to world-to-voxel mapping
+    nos1 = ib1[0] * ps1 + os1  # real offset for image 1
+    nos2 = ib2[0] * ps2 + os2  # real offset for image 2
+    nos = numpy.average([nos1, nos2], 0)
 
-        # compute new image offsets (in real-world coordinates); averaged to account for rounding errors due to world-to-voxel mapping
-        nos1 = ib1[0] * ps1 + os1 # real offset for image 1
-        nos2 = ib2[0] * ps2 + os2 # real offset for image 2
-        nos = numpy.average([nos1, nos2], 0)
+    # build slice lists
+    sl1 = [slice(l, u) for l, u in zip(*ib1)]
+    sl2 = [slice(l, u) for l, u in zip(*ib2)]
 
-        # build slice lists
-        sl1 = [slice(l, u) for l, u in zip(*ib1)]
-        sl2 = [slice(l, u) for l, u in zip(*ib2)]
+    return i1[tuple(sl1)], i2[tuple(sl2)], nos
 
-        return i1[sl1], i2[sl2], nos
 
 def __make_footprint(input, size, footprint):
     "Creates a standard footprint element ala scipy.ndimage."

@@ -27,7 +27,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(GraphInt_what_segment_overload, what_segm
 void wrap_scopegraphfloat()
 {
 	using namespace boost::python;
-	scope graphFloat = 
+	scope graphFloat =
 		class_<GraphFloat>("GraphFloat", "Graph template intance with float for flowtype, tcaptype and captype. Takes the number of nodes as first and the number of edges as second parameter. Although it is possible to exceed these values later, it is discourage as it leads to bad memory management. The edges i->j and j->i count here as one single edge.", init<int, int>())
         .def("add_node", &GraphFloat::add_node/*, GraphFloat_add_node_overload()*/) // "Add one or more nodes to the graph and returns the id of the first such created node. The total number of added nodes should never exceed the max node number passed to the initializer. Only nodes added with this function can be referenced in methods such as add_edge and add_tweights."
         .def("add_edge", &GraphFloat::add_edge, "Add an edge from i to j with the capacity cap and reversed capacity rev_cap. Node ids start from 0. Repeated calls lead to the addition of multiple arcs and therefore the allocate memory can be exceeded.")
@@ -59,7 +59,7 @@ void wrap_scopegraphfloat()
 void wrap_scopegraphdouble()
 {
 	using namespace boost::python;
-	scope graphDouble = 
+	scope graphDouble =
 		class_<GraphDouble>("GraphDouble", "Graph template intance with double for flowtype, tcaptype and captype. Takes the number of nodes as first and the number of edges as second parameter. Although it is possible to exceed these values later, it is discourage as it leads to bad memory management. The edges i->j and j->i count here as one single edge.", init<int, int>())
         .def("add_node", &GraphDouble::add_node/*, GraphDouble_add_node_overload()*/) // "Add one or more nodes to the graph and returns the id of the first such created node. The total number of added nodes should never exceed the max node number passed to the initializer. Only nodes added with this function can be referenced in methods such as add_edge and add_tweights."
         .def("add_edge", &GraphDouble::add_edge, "Add an edge from i to j with the capacity cap and reversed capacity rev_cap. Node ids start from 0. Repeated calls lead to the addition of multiple arcs and therefore the allocate memory can be exceeded.")
@@ -91,7 +91,7 @@ void wrap_scopegraphdouble()
 void wrap_scopegraphint()
 {
 	using namespace boost::python;
-	scope graphInt = 
+	scope graphInt =
 		class_<GraphInt>("GraphInt", "Graph template intance with int for flowtype, tcaptype and captype. Takes the number of nodes as first and the number of edges as second parameter. Although it is possible to exceed these values later, it is discourage as it leads to bad memory management. The edges i->j and j->i count here as one single edge.", init<int, int>())
 		  .def("add_node", &GraphInt::add_node/*, GraphInt_add_node_overload()*/) // "Add one or more nodes to the graph and returns the id of the first such created node. The total number of added nodes should never exceed the max node number passed to the initializer. Only nodes added with this function can be referenced in methods such as add_edge and add_tweights."
 	      .def("add_edge", &GraphInt::add_edge, "Add an edge from i to j with the capacity cap and reversed capacity rev_cap. Node ids start from 0. Repeated calls lead to the addition of multiple arcs and therefore the allocate memory can be exceeded.")

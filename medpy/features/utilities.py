@@ -28,7 +28,7 @@ import numpy
 # code
 
 
-def normalize(vector, cutoffp = (0, 100), model = False):
+def normalize(vector, cutoffp=(0, 100), model=False):
     r"""
     Returns a feature-wise normalized version of the supplied vector. Normalization is
     achieved to [0,1] over the complete vector using shifting and scaling.
@@ -88,8 +88,8 @@ def normalize(vector, cutoffp = (0, 100), model = False):
 
     # shift outliers to fit range
     for i in range(vector.shape[1]):
-        vector[:,i][vector[:,i] < minp[i]] = minp[i]
-        vector[:,i][vector[:,i] > maxp[i]] = maxp[i]
+        vector[:, i][vector[:, i] < minp[i]] = minp[i]
+        vector[:, i][vector[:, i] > maxp[i]] = maxp[i]
 
     # normalize
     minv = vector.min(0)
@@ -101,6 +101,7 @@ def normalize(vector, cutoffp = (0, 100), model = False):
         return vector
     else:
         return vector, (minp, maxp, minv, maxv)
+
 
 def normalize_with_model(vector, model):
     r"""
@@ -131,14 +132,15 @@ def normalize_with_model(vector, model):
 
     # shift outliers to fit range
     for i in range(vector.shape[1]):
-        vector[:,i][vector[:,i] < minp[i]] = minp[i]
-        vector[:,i][vector[:,i] > maxp[i]] = maxp[i]
+        vector[:, i][vector[:, i] < minp[i]] = minp[i]
+        vector[:, i][vector[:, i] > maxp[i]] = maxp[i]
 
     # normalize
     vector -= minv
     vector /= maxv
 
     return vector
+
 
 def append(*vectors):
     r"""
@@ -177,6 +179,7 @@ def append(*vectors):
             vectors[i] = numpy.asarray([vectors[i]]).T
 
     return numpy.squeeze(numpy.concatenate(vectors, 0))
+
 
 def join(*vectors):
     r"""

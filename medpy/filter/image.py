@@ -20,23 +20,36 @@
 
 # build-in modules
 import itertools
-import numbers
 import math
+import numbers
 
 # third-party modules
 import numpy
-from scipy.ndimage import convolve, gaussian_filter, minimum_filter
+from scipy.ndimage import convolve, gaussian_filter, minimum_filter, zoom
 from scipy.ndimage._ni_support import _get_output
-from scipy.ndimage import zoom
 
-# own modules
-from .utilities import pad, __make_footprint
 from ..io import header
 
+# own modules
+from .utilities import __make_footprint, pad
+
+
 # code
-def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
-        sn_size = None, sn_footprint = None, sn_mode = "reflect", sn_cval = 0.0,
-        pn_size = None, pn_footprint = None, pn_mode = "reflect", pn_cval = 0.0):
+def sls(
+    minuend,
+    subtrahend,
+    metric="ssd",
+    noise="global",
+    signed=True,
+    sn_size=None,
+    sn_footprint=None,
+    sn_mode="reflect",
+    sn_cval=0.0,
+    pn_size=None,
+    pn_footprint=None,
+    pn_mode="reflect",
+    pn_cval=0.0,
+):
     r"""
     Computes the signed local similarity between two images.
 
@@ -124,9 +137,9 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     subtrahend = numpy.asarray(subtrahend)
 
     if numpy.iscomplexobj(minuend):
-        raise TypeError('complex type not supported')
+        raise TypeError("complex type not supported")
     if numpy.iscomplexobj(subtrahend):
-        raise TypeError('complex type not supported')
+        raise TypeError("complex type not supported")
 
     mshape = [ii for ii in minuend.shape if ii > 0]
     sshape = [ii for ii in subtrahend.shape if ii > 0]
@@ -138,7 +151,7 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     sn_footprint = __make_footprint(minuend, sn_size, sn_footprint)
     sn_fshape = [ii for ii in sn_footprint.shape if ii > 0]
     if len(sn_fshape) != minuend.ndim:
-        raise RuntimeError('search neighbourhood footprint array has incorrect shape.')
+        raise RuntimeError("search neighbourhood footprint array has incorrect shape.")
 
     #!TODO: Is this required?
     if not sn_footprint.flags.contiguous:
@@ -148,28 +161,61 @@ def sls(minuend, subtrahend, metric = "ssd", noise = "global", signed = True,
     subtrahend = pad(subtrahend, footprint=sn_footprint, mode=sn_mode, cval=sn_cval)
 
     # compute slicers for position where the search neighbourhood sn_footprint is TRUE
-    slicers = [[slice(x, (x + 1) - d if 0 != (x + 1) - d else None) for x in range(d)] for d in sn_fshape]
-    slicers = [sl for sl, tv in zip(itertools.product(*slicers), sn_footprint.flat) if tv]
+    slicers = [
+        [slice(x, (x + 1) - d if 0 != (x + 1) - d else None) for x in range(d)]
+        for d in sn_fshape
+    ]
+    slicers = [
+        sl for sl, tv in zip(itertools.product(*slicers), sn_footprint.flat) if tv
+    ]
 
     # compute difference images and sign images for search neighbourhood elements
-    ssds = [ssd(minuend, subtrahend[slicer], normalized=True, signed=signed, size=pn_size, footprint=pn_footprint, mode=pn_mode, cval=pn_cval) for slicer in slicers]
+    ssds = [
+        ssd(
+            minuend,
+            subtrahend[tuple(slicer)],
+            normalized=True,
+            signed=signed,
+            size=pn_size,
+            footprint=pn_footprint,
+            mode=pn_mode,
+            cval=pn_cval,
+        )
+        for slicer in slicers
+    ]
     distance = [x[0] for x in ssds]
     distance_sign = [x[1] for x in ssds]
 
     # compute local variance, which constitutes an approximation of local noise, out of patch-distances over the neighbourhood structure
     variance = numpy.average(distance, 0)
-    variance = gaussian_filter(variance, sigma=3) #!TODO: Figure out if a fixed sigma is desirable here... I think that yes
-    if 'global' == noise:
-        variance = variance.sum() / float(numpy.product(variance.shape))
+    variance = gaussian_filter(
+        variance, sigma=3
+    )  #!TODO: Figure out if a fixed sigma is desirable here... I think that yes
+    if "global" == noise:
+        variance = variance.sum() / float(numpy.prod(variance.shape))
     # variance[variance < variance_global / 10.] = variance_global / 10. #!TODO: Should I keep this i.e. regularizing the variance to be at least 10% of the global one?
 
     # compute sls
-    sls = [dist_sign * numpy.exp(-1 * (dist / variance)) for dist_sign, dist in zip(distance_sign, distance)]
+    sls = [
+        dist_sign * numpy.exp(-1 * (dist / variance))
+        for dist_sign, dist in zip(distance_sign, distance)
+    ]
 
     # convert into sls image, swapping dimensions to have varying patches in the last dimension
     return numpy.rollaxis(numpy.asarray(sls), 0, minuend.ndim + 1)
 
-def ssd(minuend, subtrahend, normalized=True, signed=False, size=None, footprint=None, mode="reflect", cval=0.0, origin=0):
+
+def ssd(
+    minuend,
+    subtrahend,
+    normalized=True,
+    signed=False,
+    size=None,
+    footprint=None,
+    mode="reflect",
+    cval=0.0,
+    origin=0,
+):
     r"""
     Computes the sum of squared difference (SSD) between patches of minuend and subtrahend.
 
@@ -219,15 +265,43 @@ def ssd(minuend, subtrahend, normalized=True, signed=False, size=None, footprint
     if signed:
         difference = minuend - subtrahend
         difference_squared = numpy.square(difference)
-        distance_sign = numpy.sign(convolution_filter(numpy.sign(difference) * difference_squared, size=size, footprint=footprint, mode=mode, cval=cval, origin=origin, output=output))
-        distance = convolution_filter(difference_squared, size=size, footprint=footprint, mode=mode, cval=cval, output=output)
+        distance_sign = numpy.sign(
+            convolution_filter(
+                numpy.sign(difference) * difference_squared,
+                size=size,
+                footprint=footprint,
+                mode=mode,
+                cval=cval,
+                origin=origin,
+                output=output,
+            )
+        )
+        distance = convolution_filter(
+            difference_squared,
+            size=size,
+            footprint=footprint,
+            mode=mode,
+            cval=cval,
+            output=output,
+        )
     else:
-        distance = convolution_filter(numpy.square(minuend - subtrahend), size=size, footprint=footprint, mode=mode, cval=cval, origin=origin, output=output)
+        distance = convolution_filter(
+            numpy.square(minuend - subtrahend),
+            size=size,
+            footprint=footprint,
+            mode=mode,
+            cval=cval,
+            origin=origin,
+            output=output,
+        )
         distance_sign = 1
 
     return distance, distance_sign
 
-def average_filter(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0):
+
+def average_filter(
+    input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0
+):
     r"""
     Calculates a multi-dimensional average filter.
 
@@ -279,12 +353,15 @@ def average_filter(input, size=None, footprint=None, output=None, mode="reflect"
     filter_size = footprint.sum()
 
     output = _get_output(output, input)
-    sum_filter(input, footprint=footprint, output=output, mode=mode, cval=cval, origin=origin)
-    output /= filter_size
-    return output
+    sum_filter(
+        input, footprint=footprint, output=output, mode=mode, cval=cval, origin=origin
+    )
+    return output / filter_size
 
 
-def sum_filter(input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0):
+def sum_filter(
+    input, size=None, footprint=None, output=None, mode="reflect", cval=0.0, origin=0
+):
     r"""
     Calculates a multi-dimensional sum filter.
 
@@ -334,9 +411,10 @@ def sum_filter(input, size=None, footprint=None, output=None, mode="reflect", cv
     """
     footprint = __make_footprint(input, size, footprint)
     slicer = [slice(None, None, -1)] * footprint.ndim
-    return convolve(input, footprint[slicer], output, mode, cval, origin)
+    return convolve(input, footprint[tuple(slicer)], output, mode, cval, origin)
 
-def otsu (img, bins=64):
+
+def otsu(img, bins=64):
     r"""
     Otsu's method to find the optimal threshold separating an image into fore- and background.
 
@@ -366,7 +444,7 @@ def otsu (img, bins=64):
 
     # check supplied parameters
     if bins <= 1:
-        raise AttributeError('At least a number two bins have to be provided.')
+        raise AttributeError("At least a number two bins have to be provided.")
 
     # determine initial threshold and threshold step-length
     steplength = (img.max() - img.min()) / float(bins)
@@ -378,13 +456,14 @@ def otsu (img, bins=64):
 
     # iterate over the thresholds and find highest between class variance
     for threshold in numpy.arange(initial_threshold, img.max(), steplength):
-        mask_fg = (img >= threshold)
-        mask_bg = (img < threshold)
+        mask_fg = img >= threshold
+        mask_bg = img < threshold
 
         wfg = numpy.count_nonzero(mask_fg)
         wbg = numpy.count_nonzero(mask_bg)
 
-        if 0 == wfg or 0 == wbg: continue
+        if 0 == wfg or 0 == wbg:
+            continue
 
         mfg = img[mask_fg].mean()
         mbg = img[mask_bg].mean()
@@ -397,7 +476,8 @@ def otsu (img, bins=64):
 
     return best_threshold
 
-def local_minima(img, min_distance = 4):
+
+def local_minima(img, min_distance=4):
     r"""
     Returns all local minima from an image.
 
@@ -417,51 +497,55 @@ def local_minima(img, min_distance = 4):
     """
     # @TODO: Write a unittest for this.
     fits = numpy.asarray(img)
-    minfits = minimum_filter(fits, size=min_distance) # default mode is reflect
+    minfits = minimum_filter(fits, size=min_distance)  # default mode is reflect
     minima_mask = fits == minfits
     good_indices = numpy.transpose(minima_mask.nonzero())
     good_fits = fits[minima_mask]
     order = good_fits.argsort()
     return good_indices[order], good_fits[order]
 
-def resample(img, hdr, target_spacing, bspline_order=3, mode='constant'):
-        """
-        Re-sample an image to a new voxel-spacing.
 
-        Parameters
-        ----------
-        img : array_like
-            The image.
-        hdr : object
-            The image header.
-        target_spacing : number or sequence of numbers
-            The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.
-        bspline_order : int
-            The bspline order used for interpolation.
-        mode : str
-            Points outside the boundaries of the input are filled according to the given mode ('constant', 'nearest', 'reflect' or 'wrap'). Default is 'constant'.
+def resample(img, hdr, target_spacing, bspline_order=3, mode="constant"):
+    """
+    Re-sample an image to a new voxel-spacing.
 
-        Warning
-        -------
-        Voxel-spacing of input header will be modified in-place!
+    Parameters
+    ----------
+    img : array_like
+        The image.
+    hdr : object
+        The image header.
+    target_spacing : number or sequence of numbers
+        The target voxel spacing to achieve. If a single number, isotropic spacing is assumed.
+    bspline_order : int
+        The bspline order used for interpolation.
+    mode : str
+        Points outside the boundaries of the input are filled according to the given mode ('constant', 'nearest', 'reflect' or 'wrap'). Default is 'constant'.
 
-        Returns
-        -------
-        img : ndarray
-            The re-sampled image.
-        hdr : object
-            The image header with the new voxel spacing.
-        """
-        if isinstance(target_spacing, numbers.Number):
-            target_spacing = [target_spacing] * img.ndim
+    Warnings
+    --------
+    Voxel-spacing of input header will be modified in-place!
 
-        # compute zoom values
-        zoom_factors = [old / float(new) for new, old in zip(target_spacing, header.get_pixel_spacing(hdr))]
+    Returns
+    -------
+    img : ndarray
+        The re-sampled image.
+    hdr : object
+        The image header with the new voxel spacing.
+    """
+    if isinstance(target_spacing, numbers.Number):
+        target_spacing = [target_spacing] * img.ndim
 
-        # zoom image
-        img = zoom(img, zoom_factors, order=bspline_order, mode=mode)
+    # compute zoom values
+    zoom_factors = [
+        old / float(new)
+        for new, old in zip(target_spacing, header.get_pixel_spacing(hdr))
+    ]
 
-        # set new voxel spacing
-        header.set_pixel_spacing(hdr, target_spacing)
+    # zoom image
+    img = zoom(img, zoom_factors, order=bspline_order, mode=mode)
 
-        return img, hdr
+    # set new voxel spacing
+    header.set_pixel_spacing(hdr, target_spacing)
+
+    return img, hdr

@@ -1,3 +1,0 @@
-[submodule "dockerfiles"]
-	path = dockerfiles
-	url = https://github.com/loli/medpy-dockerfiles.git

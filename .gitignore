@@ -1,38 +1,35 @@
 TODO.txt
 
-# Images #
-##########
+
+# Images
 *.nii
 *.mhd
 *.raw
 
-# DOC dirs #
-############
+# Local virtual envs
+.venv/
+
+# DOC dirs
 doc/build/
 doc/generated/
 doc/source/generated/
 
-# Notebooks dirs #
-##################
+# Notebooks dirs
 .ipynb_checkpoints
 
-# BUILD dirs #
-##############
+# BUILD dirs
 build/
 dist/
 MedPy.egg-info/
 
-# Only locally used, temporary .py scripts. #
-#############################################
+# Only locally used, temporary .py scripts.
 _*.py
 !__init__.py
 
-# Backup files #
-################
+# Backup files
 *.bak
 
-# Compiled source #
-###################
+# Compiled source
 *.com
 *.class
 *.dll
@@ -42,8 +39,7 @@ _*.py
 *.pyc
 *.pyo
 
-# Packages #
-############
+# Packages
 # it's better to unpack these files and commit the raw source
 # git has its own built in compression methods
 *.7z
@@ -55,29 +51,25 @@ _*.py
 *.tar
 *.zip
 
-# Logs and databases #
-######################
+# Logs and databases
 *.log
 *.sql
 *.sqlite
 
-# OS generated files #
-######################
+# OS generated files
 .DS_Store*
 ehthumbs.db
 Icon?
 Thumbs.db
 *~
 
-# Eclipse and PyDev project files #
-###################################
+# Eclipse and PyDev project files
 .project
 .pydevproject
 .settings/
 .metadata/
 
-# Suggestions by GitHub for Python projects #
-#############################################
+# Suggestions by GitHub for Python projects
 # Packages
 *.egg
 *.egg-info
@@ -96,6 +88,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+.hypothesis
 
 #Translations
 *.mo

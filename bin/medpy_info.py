@@ -23,13 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import argparse
 import logging
 
+from medpy.core import Logger
+
+# own modules
+from medpy.io import get_offset, get_pixel_spacing, load
+
 # third-party modules
 
 # path changes
-
-# own modules
-from medpy.io import load, get_pixel_spacing, get_offset
-from medpy.core import Logger
 
 
 # information
@@ -39,12 +40,13 @@ __email__ = "oskar.maier@googlemail.com"
 __status__ = "Release"
 __description__ = """
                   Prints information about an image volume to the command line.
-                  
+
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
+
 
 # code
 def main():
@@ -52,50 +54,64 @@ def main():
     parser = getParser()
     parser.parse_args()
     args = getArguments(parser)
-    
+
     # prepare logger
     logger = Logger.getInstance()
-    if args.debug: logger.setLevel(logging.DEBUG)
-    elif args.verbose: logger.setLevel(logging.INFO)
-    
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    elif args.verbose:
+        logger.setLevel(logging.INFO)
+
     # load input image
     input_data, input_header = load(args.input)
-    
+
     # print information about the image
     printInfo(input_data, input_header)
-    
-    logger.info('Successfully terminated.')
-        
+
+    logger.info("Successfully terminated.")
+
+
 def printInfo(data, header):
     # print image information
-    print('\nInformations obtained from image header:')
-    print('header type={}'.format(type(header)))
+    print("\nInformations obtained from image header:")
+    print("header type={}".format(type(header)))
     try:
-        print('voxel spacing={}'.format(get_pixel_spacing(header)))
+        print("voxel spacing={}".format(get_pixel_spacing(header)))
     except AttributeError:
-        print('Failed to retrieve voxel spacing.')
+        print("Failed to retrieve voxel spacing.")
     try:
-        print('offset={}'.format(get_offset(header)))
+        print("offset={}".format(get_offset(header)))
     except AttributeError:
-        print('Failed to retrieve offset.')    
-    
-    print('\nInformations obtained from image array:')
-    print('datatype={},dimensions={},shape={}'.format(data.dtype, data.ndim, data.shape))
-    print('first and last element: {} / {}'.format(data.flatten()[0], data.flatten()[-1]))
-        
+        print("Failed to retrieve offset.")
+
+    print("\nInformations obtained from image array:")
+    print(
+        "datatype={},dimensions={},shape={}".format(data.dtype, data.ndim, data.shape)
+    )
+    print(
+        "first and last element: {} / {}".format(data.flatten()[0], data.flatten()[-1])
+    )
+
+
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     return parser.parse_args()
+
 
 def getParser():
     "Creates and returns the argparse parser object."
     parser = argparse.ArgumentParser(description=__description__)
 
-    parser.add_argument('input', help='The image to analyse.')
-    parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
-    parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
-    
-    return parser    
-    
+    parser.add_argument("input", help="The image to analyse.")
+    parser.add_argument(
+        "-v", dest="verbose", action="store_true", help="Display more information."
+    )
+    parser.add_argument(
+        "-d", dest="debug", action="store_true", help="Display debug information."
+    )
+
+    return parser
+
+
 if __name__ == "__main__":
-    main()        
+    main()

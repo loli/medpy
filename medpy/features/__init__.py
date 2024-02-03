@@ -6,7 +6,7 @@ Image feature extraction and manipulation (:mod:`medpy.features`)
 
 This package contains various functions for feature extraction and
 manipulation in medical images.
- 
+
 Intensity :mod:`medpy.features.intensity`
 =========================================
 Functions to extracts intensity based features. Ready to be
@@ -16,7 +16,7 @@ manipulated with :mod:`medpy.features.utilities` and used in
 .. module:: medpy.features.intensity
 .. autosummary::
     :toctree: generated/
-    
+
     intensities
     centerdistance
     centerdistance_xdminus1
@@ -36,12 +36,12 @@ structures::
 
     ===== | == == =====
     s1    | s2 s3 [...]
-    f1.1  | 
-    f1.2  | 
-    f2.1  | 
-    f3.1  | 
-    f3.2  | 
-    [...] | 
+    f1.1  |
+    f1.2  |
+    f2.1  |
+    f3.1  |
+    f3.2  |
+    [...] |
     ===== | == == =====
 
 , where each column sX denotes a single sample (voxel) and each row
@@ -68,12 +68,12 @@ A number of utilities to manipulate feature vectors created with `medpy.features
 .. module:: medpy.features.utilities
 .. autosummary::
     :toctree: generated/
-    
+
     normalize
     normalize_with_model
     append
     join
-    
+
 Histogram :mod:`medy.features.histogram`
 ========================================
 Functions to create various kinds of fuzzy histograms with the fuzzy_histogram function.
@@ -81,12 +81,12 @@ Functions to create various kinds of fuzzy histograms with the fuzzy_histogram f
 .. module:: medpy.features.histogram
 .. autosummary::
     :toctree: generated/
-    
+
     fuzzy_histogram
     triangular_membership
     trapezoid_membership
     gaussian_membership
-    sigmoidal_difference_membership    
+    sigmoidal_difference_membership
 
 Available membership functions
 ------------------------------
@@ -109,9 +109,9 @@ adjunct bins.
 An example of the smoothness parameter::
 
                   ____________ ________ ____________ ________ ____________
-                 /          / \        / \       /  \        / \          \ 
-                /          /   \      /   \     /    \      /   \          \ 
-               /          /     \    /     \   /      \    /     \          \ 
+                 /          / \\        / \\       /  \\        / \\          \\
+                /          /   \\      /   \\     /    \\      /   \\          \\
+               /          /     \\    /     \\   /      \\    /     \\          \\
     ---|----------|----------|----------|----------|----------|----------|----------|----
             x-3        x-2        x-1        x          x+1        x+2        x+3
                   |-nbh      |          |crisp bin |          |      +nbh|
@@ -130,36 +130,69 @@ not contribute with a full value of 1 to the histogram, as part of their contrib
 lies outside of the histogram range. To avoid this affect (which can be quite strong
 for histograms with few bins and a height smoothness term), set 'guarantee' to True.
 The histogram size is then selected to be (left_side - smoothness * bin_width till
-right_side + smoothness * bin_width) and therefore neglect all boundary effects.    
+right_side + smoothness * bin_width) and therefore neglect all boundary effects.
 
 Plots of the membership functions can e.g. be found at http://www.atp.ruhr-uni-bochum.de/rt1/syscontrol/node117.html .
-    
+
 """
 
 # Copyright (C) 2013 Oskar Maier
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import all functions/methods/classes into the module
-from .histogram import fuzzy_histogram, triangular_membership, trapezoid_membership, \
-                       gaussian_membership, sigmoidal_difference_membership
-from .intensity import centerdistance, centerdistance_xdminus1, gaussian_gradient_magnitude, \
-                       hemispheric_difference, indices, intensities, local_histogram, local_mean_gauss, \
-                       median, shifted_mean_gauss, mask_distance
-from .utilities import append, join, normalize, normalize_with_model
+from .histogram import fuzzy_histogram as fuzzy_histogram
+from .histogram import gaussian_membership as gaussian_membership
+from .histogram import (
+    sigmoidal_difference_membership as sigmoidal_difference_membership,
+)
+from .histogram import trapezoid_membership as trapezoid_membership
+from .histogram import triangular_membership as triangular_membership
+from .intensity import centerdistance as centerdistance
+from .intensity import centerdistance_xdminus1 as centerdistance_xdminus1
+from .intensity import gaussian_gradient_magnitude as gaussian_gradient_magnitude
+from .intensity import hemispheric_difference as hemispheric_difference
+from .intensity import indices as indices
+from .intensity import intensities as intensities
+from .intensity import local_histogram as local_histogram
+from .intensity import local_mean_gauss as local_mean_gauss
+from .intensity import mask_distance as mask_distance
+from .intensity import median as median
+from .intensity import shifted_mean_gauss as shifted_mean_gauss
+from .utilities import append as append
+from .utilities import join as join
+from .utilities import normalize as normalize
+from .utilities import normalize_with_model as normalize_with_model
 
-# import all sub-modules in the __all__ variable
-__all__ = [s for s in dir() if not s.startswith('_')]
-
-
+__all__ = [
+    "fuzzy_histogram",
+    "triangular_membership",
+    "trapezoid_membership",
+    "gaussian_membership",
+    "sigmoidal_difference_membership",
+    "centerdistance",
+    "centerdistance_xdminus1",
+    "gaussian_gradient_magnitude",
+    "hemispheric_difference",
+    "indices",
+    "intensities",
+    "local_histogram",
+    "local_mean_gauss",
+    "median",
+    "shifted_mean_gauss",
+    "mask_distance",
+    "append",
+    "join",
+    "normalize",
+    "normalize_with_model",
+]

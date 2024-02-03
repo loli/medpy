@@ -19,7 +19,7 @@
 # status Release
 
 # build-in modules
-from operator import  lt, le, gt, ge, ne, eq
+from operator import eq, ge, gt, le, lt, ne
 
 # third-party modules
 import numpy
@@ -27,8 +27,9 @@ from scipy.ndimage import label
 
 # own modules
 
+
 # code
-def size_threshold(img, thr, comp='lt', structure = None):
+def size_threshold(img, thr, comp="lt", structure=None):
     r"""
     Removes binary objects from an image identified by a size threshold.
 
@@ -42,7 +43,7 @@ def size_threshold(img, thr, comp='lt', structure = None):
     Parameters
     ----------
     img : array_like
-        An array containing connected objects. Will be cast to type numpy.bool_.
+        An array containing connected objects. Will be cast to type `bool`.
     thr : int
         Integer defining the threshold size of the binary objects to remove.
     comp : {'lt', 'le', 'gt', 'ge', 'ne', 'eq'}
@@ -70,7 +71,7 @@ def size_threshold(img, thr, comp='lt', structure = None):
     divide the supplied threshold through the real voxel size.
     """
 
-    operators = {'lt': lt, 'le': le, 'gt': gt, 'ge': ge, 'eq': eq, 'ne': ne}
+    operators = {"lt": lt, "le": le, "gt": gt, "ge": ge, "eq": eq, "ne": ne}
 
     img = numpy.asarray(img).astype(numpy.bool_)
     if comp not in operators:
@@ -85,7 +86,8 @@ def size_threshold(img, thr, comp='lt', structure = None):
 
     return img
 
-def largest_connected_component(img, structure = None):
+
+def largest_connected_component(img, structure=None):
     r"""
     Select the largest connected binary component in an image.
 
@@ -96,7 +98,7 @@ def largest_connected_component(img, structure = None):
     Parameters
     ----------
     img : array_like
-        An array containing connected objects. Will be cast to type numpy.bool_.
+        An array containing connected objects. Will be cast to type `bool`.
     structure : array_like
         A structuring element that defines the connectivity. Structure must be symmetric.
         If no structuring element is provided, one is automatically generated with a
@@ -108,12 +110,16 @@ def largest_connected_component(img, structure = None):
         The supplied binary image with only the largest connected component remaining.
     """
     labeled_array, num_features = label(img, structure)
-    component_sizes = [numpy.count_nonzero(labeled_array == label_idx) for label_idx in range(1, num_features + 1)]
+    component_sizes = [
+        numpy.count_nonzero(labeled_array == label_idx)
+        for label_idx in range(1, num_features + 1)
+    ]
     largest_component_idx = numpy.argmax(component_sizes) + 1
 
     out = numpy.zeros(img.shape, numpy.bool_)
     out[labeled_array == largest_component_idx] = True
     return out
+
 
 def bounding_box(img):
     r"""
@@ -131,4 +137,4 @@ def bounding_box(img):
     locations = numpy.argwhere(img)
     mins = locations.min(0)
     maxs = locations.max(0) + 1
-    return [slice(x, y) for x, y in zip(mins, maxs)]
+    return tuple([slice(x, y) for x, y in zip(mins, maxs)])

@@ -1,3 +1,0 @@
-
-
-from .numpydoc import setup

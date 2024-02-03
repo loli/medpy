@@ -1,0 +1,30 @@
+# Runs the pre-commit hooks to make sure that all changes are properly formatted and such
+# Triggers on: All PRs that are mergable, but not for draft PRs
+# Triggers on: all published releases (incl draft releases)
+
+name: Pre-commit hooks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  pre-commit:
+    if: github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit-ci/lite-action@v1.0.1
+        if: always()

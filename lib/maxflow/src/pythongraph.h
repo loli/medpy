@@ -21,4 +21,3 @@ public:
 	typename Graph<captype, tcaptype, flowtype>::termtype what_segment(int i) { Graph<captype, tcaptype, flowtype>::what_segment(i); };
 };
 #endif
-

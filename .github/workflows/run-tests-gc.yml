@@ -1,0 +1,55 @@
+# Install the package and run the graph-cut tests
+# This test is kept separate, as the graphcut functionality is optional and unstable
+# Triggers on: All PRs that are mergable, but not for draft PRs
+# Triggers on: all published releases (incl pre-releases)
+
+# Note: the dependency libboost_python will always be installed against the OS's main python version,
+# independent of the python version set-up. They are 22.04 = 3.10 and 20.04 = 3.8.
+
+name: Run tests (graphcut only)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  run-tests-gc-ubuntu-22_04:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install system dependencies for graphcut functionality
+        run: sudo apt-get install -y libboost-python-dev build-essential
+      - name: Install with test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -v .[test]
+      - name: Test with pytest (graphcut test only)
+        run: cd tests && pytest graphcut_/*
+
+  run-tests-gc-test-ubuntu-20_04:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - name: Install system dependencies for graphcut functionality
+        run: sudo apt-get install -y libboost-python-dev build-essential
+      - name: Install with test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -v .[test]
+      - name: Test with pytest (graphcut test only)
+        run: cd tests && pytest graphcut_/*

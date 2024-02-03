@@ -1,8 +1,8 @@
 =======================
 Installing MedPy on OsX
 =======================
-**MedPy** does not support OsX. Using *pip*, it might be nevertheless possible to install it
+**MedPy** does not officially support OsX. Using *pip*, it can still be installed fine
 
 .. code-block:: bash
 
-    pip3 install medpy
+    python3 -m pip install medpy
