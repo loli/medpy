@@ -13,4 +13,4 @@ and then install **MedPy** with
 
 .. code-block:: bash
 
-	pip3 install medpy
+	python3 -m pip install medpy

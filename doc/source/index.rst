@@ -14,8 +14,6 @@ Installation
 
     installation/fastpath
     installation/venv
-    installation/asroot
-    installation/asuser
     installation/developmentmode
     installation/graphcutsupport
     installation/windows

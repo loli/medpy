@@ -8,7 +8,7 @@ But you can nevertheless install it into a conda environement using *pip* after 
 .. code-block:: bash
 
 	conda install -c simpleitk simpleitk
-	pip3 install medpy
+	python3 -m pip install medpy
 
 Note that the graph-cut package won't compile in the conda environement due to unmet dependencies.
 
