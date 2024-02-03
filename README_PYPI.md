@@ -1,6 +1,7 @@
 # MedPy
 
 [GitHub](https://github.com/loli/medpy/) | [Documentation](http://loli.github.io/medpy/) | [Tutorials](http://loli.github.io/medpy/) | [Issue tracker](https://github.com/loli/medpy/issues)
+
 **MedPy** is a library and script collection for medical image processing in Python, providing basic functionalities for **reading**, **writing** and **manipulating** large images of **arbitrary dimensionality**.
 Its main contributions are n-dimensional versions of popular **image filters**, a collection of **image feature extractors**, ready to be used with [scikit-learn](http://scikit-learn.org), and an exhaustive n-dimensional **graph-cut** package.
 
