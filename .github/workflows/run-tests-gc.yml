@@ -19,6 +19,7 @@ permissions:
 
 jobs:
   run-tests-gc-ubuntu-22_04:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -36,6 +37,7 @@ jobs:
         run: cd tests && pytest graphcut_/*
 
   run-tests-gc-test-ubuntu-20_04:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
