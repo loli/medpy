@@ -23,7 +23,7 @@ Troubleshooting
 ---------------
 
 If you experience an error like `ModuleNotFoundError: No module named 'medpy.graphcut.maxflow'`, this usually means
-that the `graphcut`` module has not been compiled successfully. To check the error log, try re-installing **MedPy** with:
+that the `graphcut` module has not been compiled successfully. To check the error log, try re-installing **MedPy** with:
 
 .. code-block:: bash
 
@@ -31,7 +31,7 @@ that the `graphcut`` module has not been compiled successfully. To check the err
 
 In the logs, you might see the following warning:
 
-.. code-block:: bash
+::
 
 	2021-06-30T11:07:32,684   ***************************************************************************
 	2021-06-30T11:07:32,685   WARNING: The medpy.graphcut.maxflow external C++ package could not be compiled, all graphcut functionality will be disabled. You might be missing Boost.Python or some build essentials like g++.
@@ -41,11 +41,12 @@ In the logs, you might see the following warning:
 
 The error should be detailed in the lines just above.
 
-Usually, it is a problem with the linking of the `(lib)boost_python3`` lib.
+Usually, it is a problem with the linking of the `(lib)boost_python3` lib.
 There are some inconsistent naming conventions around, rendering the file undiscoverable to **MedPy**.
 
 On Ubuntu, you should be able to locate your *libboost_python3x.so* under `/usr/lib/x86_64-linux-gnu/`.
 If your shared library file is named differently than **MedPy** expects, you might have to create a softlink like, e.g.:
 
 .. code-block:: bash
+
 	sudo ln -s libboost_python38.so libboost_python3.so
