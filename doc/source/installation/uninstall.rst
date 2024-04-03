@@ -5,4 +5,4 @@ Only `pip` supports the removal of Python packages. If you have installed **MedP
 
 .. code-block:: bash
 
-	pip uninstall medpy
+	python3 -m pip uninstall medpy

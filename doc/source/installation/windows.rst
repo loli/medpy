@@ -5,6 +5,6 @@ Installing MedPy on Windows
 
 .. code-block:: bash
 
-    conda create --name medpy-venv python=3.6
+    conda create --name medpy-venv python3
     conda activate medpy-venv
-    pip install medpy
+    python3 -m pip install medpy

@@ -22,13 +22,18 @@
 
 # third-party modules
 import numpy
-from scipy.ndimage import _ni_support
-from scipy.ndimage import distance_transform_edt, binary_erosion,\
-    generate_binary_structure
-from scipy.ndimage import label, find_objects
+from scipy.ndimage import (
+    _ni_support,
+    binary_erosion,
+    distance_transform_edt,
+    find_objects,
+    generate_binary_structure,
+    label,
+)
 from scipy.stats import pearsonr
 
 # own modules
+
 
 # code
 def dc(result, reference):
@@ -74,11 +79,12 @@ def dc(result, reference):
     size_i2 = numpy.count_nonzero(reference)
 
     try:
-        dc = 2. * intersection / float(size_i1 + size_i2)
+        dc = 2.0 * intersection / float(size_i1 + size_i2)
     except ZeroDivisionError:
         dc = 1.0
 
     return dc
+
 
 def jc(result, reference):
     """
@@ -117,6 +123,7 @@ def jc(result, reference):
         jc = 1.0
 
     return jc
+
 
 def precision(result, reference):
     """
@@ -165,6 +172,7 @@ def precision(result, reference):
 
     return precision
 
+
 def recall(result, reference):
     """
     Recall.
@@ -212,6 +220,7 @@ def recall(result, reference):
 
     return recall
 
+
 def sensitivity(result, reference):
     """
     Sensitivity.
@@ -222,6 +231,7 @@ def sensitivity(result, reference):
     :func:`specificity`
     """
     return recall(result, reference)
+
 
 def specificity(result, reference):
     """
@@ -270,6 +280,7 @@ def specificity(result, reference):
 
     return specificity
 
+
 def true_negative_rate(result, reference):
     """
     True negative rate.
@@ -281,6 +292,7 @@ def true_negative_rate(result, reference):
     :func:`positive_predictive_value`
     """
     return specificity(result, reference)
+
 
 def true_positive_rate(result, reference):
     """
@@ -294,6 +306,7 @@ def true_positive_rate(result, reference):
     """
     return recall(result, reference)
 
+
 def positive_predictive_value(result, reference):
     """
     Positive predictive value.
@@ -305,6 +318,7 @@ def positive_predictive_value(result, reference):
     :func:`true_negative_rate`
     """
     return precision(result, reference)
+
 
 def hd(result, reference, voxelspacing=None, connectivity=1):
     """
@@ -453,8 +467,14 @@ def assd(result, reference, voxelspacing=None, connectivity=1):
 
     and then averaging the two lists. The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (__surface_distances(result, reference, voxelspacing, connectivity), __surface_distances(reference, result, voxelspacing, connectivity)) )
+    assd = numpy.mean(
+        (
+            __surface_distances(result, reference, voxelspacing, connectivity),
+            __surface_distances(reference, result, voxelspacing, connectivity),
+        )
+    )
     return assd
+
 
 def asd(result, reference, voxelspacing=None, connectivity=1):
     """
@@ -565,6 +585,7 @@ def asd(result, reference, voxelspacing=None, connectivity=1):
     asd = sds.mean()
     return asd
 
+
 def ravd(result, reference):
     """
     Relative absolute volume difference.
@@ -648,9 +669,12 @@ def ravd(result, reference):
     vol2 = numpy.count_nonzero(reference)
 
     if 0 == vol2:
-        raise RuntimeError('The second supplied array does not contain any binary object.')
+        raise RuntimeError(
+            "The second supplied array does not contain any binary object."
+        )
 
     return (vol1 - vol2) / float(vol2)
+
 
 def volume_correlation(results, references):
     r"""
@@ -684,7 +708,8 @@ def volume_correlation(results, references):
     results_volumes = [numpy.count_nonzero(r) for r in results]
     references_volumes = [numpy.count_nonzero(r) for r in references]
 
-    return pearsonr(results_volumes, references_volumes) # returns (Pearson'
+    return pearsonr(results_volumes, references_volumes)  # returns (Pearson'
+
 
 def volume_change_correlation(results, references):
     r"""
@@ -721,7 +746,10 @@ def volume_change_correlation(results, references):
     results_volumes_changes = results_volumes[1:] - results_volumes[:-1]
     references_volumes_changes = references_volumes[1:] - references_volumes[:-1]
 
-    return pearsonr(results_volumes_changes, references_volumes_changes) # returns (Pearson's correlation coefficient, 2-tailed p-value)
+    return pearsonr(
+        results_volumes_changes, references_volumes_changes
+    )  # returns (Pearson's correlation coefficient, 2-tailed p-value)
+
 
 def obj_assd(result, reference, voxelspacing=None, connectivity=1):
     """
@@ -774,8 +802,14 @@ def obj_assd(result, reference, voxelspacing=None, connectivity=1):
 
     and then averaging the two lists. The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean( (__obj_surface_distances(result, reference, voxelspacing, connectivity), __obj_surface_distances(reference, result, voxelspacing, connectivity)) )
+    assd = numpy.mean(
+        (
+            __obj_surface_distances(result, reference, voxelspacing, connectivity),
+            __obj_surface_distances(reference, result, voxelspacing, connectivity),
+        )
+    )
     return assd
+
 
 def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     """
@@ -911,6 +945,7 @@ def obj_asd(result, reference, voxelspacing=None, connectivity=1):
     asd = numpy.mean(sds)
     return asd
 
+
 def obj_fpr(result, reference, connectivity=1):
     """
     The false positive rate of distinct binary object detection.
@@ -1019,8 +1054,11 @@ def obj_fpr(result, reference, connectivity=1):
     >>> obj_fpr(arr2, arr1)
     0.2
     """
-    _, _, _, n_obj_reference, mapping = __distinct_binary_object_correspondences(reference, result, connectivity)
+    _, _, _, n_obj_reference, mapping = __distinct_binary_object_correspondences(
+        reference, result, connectivity
+    )
     return (n_obj_reference - len(mapping)) / float(n_obj_reference)
+
 
 def obj_tpr(result, reference, connectivity=1):
     """
@@ -1129,8 +1167,11 @@ def obj_tpr(result, reference, connectivity=1):
     >>> obj_tpr(arr2, arr1)
     1.0
     """
-    _, _, n_obj_result, _, mapping = __distinct_binary_object_correspondences(reference, result, connectivity)
+    _, _, n_obj_result, _, mapping = __distinct_binary_object_correspondences(
+        reference, result, connectivity
+    )
     return len(mapping) / float(n_obj_result)
+
 
 def __distinct_binary_object_correspondences(reference, result, connectivity=1):
     """
@@ -1155,36 +1196,53 @@ def __distinct_binary_object_correspondences(reference, result, connectivity=1):
     labelmap2, n_obj_reference = label(reference, footprint)
 
     # find all overlaps from labelmap2 to labelmap1; collect one-to-one relationships and store all one-two-many for later processing
-    slicers = find_objects(labelmap2) # get windows of labelled objects
-    mapping = dict() # mappings from labels in labelmap2 to corresponding object labels in labelmap1
-    used_labels = set() # set to collect all already used labels from labelmap2
-    one_to_many = list() # list to collect all one-to-many mappings
-    for l1id, slicer in enumerate(slicers): # iterate over object in labelmap2 and their windows
-        l1id += 1 # labelled objects have ids sarting from 1
-        bobj = (l1id) == labelmap2[slicer] # find binary object corresponding to the label1 id in the segmentation
-        l2ids = numpy.unique(labelmap1[slicer][bobj]) # extract all unique object identifiers at the corresponding positions in the reference (i.e. the mapping)
-        l2ids = l2ids[0 != l2ids] # remove background identifiers (=0)
-        if 1 == len(l2ids): # one-to-one mapping: if target label not already used, add to final list of object-to-object mappings and mark target label as used
+    slicers = find_objects(labelmap2)  # get windows of labelled objects
+    mapping = (
+        dict()
+    )  # mappings from labels in labelmap2 to corresponding object labels in labelmap1
+    used_labels = set()  # set to collect all already used labels from labelmap2
+    one_to_many = list()  # list to collect all one-to-many mappings
+    for l1id, slicer in enumerate(
+        slicers
+    ):  # iterate over object in labelmap2 and their windows
+        l1id += 1  # labelled objects have ids sarting from 1
+        bobj = (l1id) == labelmap2[
+            slicer
+        ]  # find binary object corresponding to the label1 id in the segmentation
+        l2ids = numpy.unique(
+            labelmap1[slicer][bobj]
+        )  # extract all unique object identifiers at the corresponding positions in the reference (i.e. the mapping)
+        l2ids = l2ids[0 != l2ids]  # remove background identifiers (=0)
+        if 1 == len(
+            l2ids
+        ):  # one-to-one mapping: if target label not already used, add to final list of object-to-object mappings and mark target label as used
             l2id = l2ids[0]
             if not l2id in used_labels:
                 mapping[l1id] = l2id
                 used_labels.add(l2id)
-        elif 1 < len(l2ids): # one-to-many mapping: store relationship for later processing
+        elif 1 < len(
+            l2ids
+        ):  # one-to-many mapping: store relationship for later processing
             one_to_many.append((l1id, set(l2ids)))
 
     # process one-to-many mappings, always choosing the one with the least labelmap2 correspondences first
     while True:
-        one_to_many = [(l1id, l2ids - used_labels) for l1id, l2ids in one_to_many] # remove already used ids from all sets
-        one_to_many = [x for x in one_to_many if x[1]] # remove empty sets
-        one_to_many = sorted(one_to_many, key=lambda x: len(x[1])) # sort by set length
+        one_to_many = [
+            (l1id, l2ids - used_labels) for l1id, l2ids in one_to_many
+        ]  # remove already used ids from all sets
+        one_to_many = [x for x in one_to_many if x[1]]  # remove empty sets
+        one_to_many = sorted(one_to_many, key=lambda x: len(x[1]))  # sort by set length
         if 0 == len(one_to_many):
             break
-        l2id = one_to_many[0][1].pop() # select an arbitrary target label id from the shortest set
-        mapping[one_to_many[0][0]] = l2id # add to one-to-one mappings
-        used_labels.add(l2id) # mark target label as used
-        one_to_many = one_to_many[1:] # delete the processed set from all sets
+        l2id = one_to_many[0][
+            1
+        ].pop()  # select an arbitrary target label id from the shortest set
+        mapping[one_to_many[0][0]] = l2id  # add to one-to-one mappings
+        used_labels.add(l2id)  # mark target label as used
+        one_to_many = one_to_many[1:]  # delete the processed set from all sets
 
     return labelmap1, labelmap2, n_obj_result, n_obj_reference, mapping
+
 
 def __surface_distances(result, reference, voxelspacing=None, connectivity=1):
     """
@@ -1204,13 +1262,19 @@ def __surface_distances(result, reference, voxelspacing=None, connectivity=1):
 
     # test for emptiness
     if 0 == numpy.count_nonzero(result):
-        raise RuntimeError('The first supplied array does not contain any binary object.')
+        raise RuntimeError(
+            "The first supplied array does not contain any binary object."
+        )
     if 0 == numpy.count_nonzero(reference):
-        raise RuntimeError('The second supplied array does not contain any binary object.')
+        raise RuntimeError(
+            "The second supplied array does not contain any binary object."
+        )
 
     # extract only 1-pixel border line of objects
     result_border = result ^ binary_erosion(result, structure=footprint, iterations=1)
-    reference_border = reference ^ binary_erosion(reference, structure=footprint, iterations=1)
+    reference_border = reference ^ binary_erosion(
+        reference, structure=footprint, iterations=1
+    )
 
     # compute average surface distance
     # Note: scipys distance transform is calculated only inside the borders of the
@@ -1220,13 +1284,16 @@ def __surface_distances(result, reference, voxelspacing=None, connectivity=1):
 
     return sds
 
+
 def __obj_surface_distances(result, reference, voxelspacing=None, connectivity=1):
     """
     The distances between the surface voxel between all corresponding binary
     objects in result and reference. Correspondence is defined as unique and at least one voxel overlap.
     """
     sds = list()
-    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(result, reference, connectivity)
+    labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(
+        result, reference, connectivity
+    )
     slicers1 = find_objects(labelmap1)
     slicers2 = find_objects(labelmap2)
     for lid2, lid1 in list(mapping.items()):
@@ -1235,6 +1302,7 @@ def __obj_surface_distances(result, reference, voxelspacing=None, connectivity=1
         object2 = labelmap2[window] == lid2
         sds.extend(__surface_distances(object1, object2, voxelspacing, connectivity))
     return sds
+
 
 def __combine_windows(w1, w2):
     """

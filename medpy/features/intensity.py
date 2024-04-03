@@ -22,20 +22,24 @@
 
 # third-party modules
 import numpy
-from scipy.ndimage import gaussian_filter, median_filter
-from scipy.ndimage import gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude
-from scipy.interpolate.interpolate import interp1d
-from scipy.ndimage import distance_transform_edt
+from scipy.interpolate import interp1d
+from scipy.ndimage import distance_transform_edt, gaussian_filter
+from scipy.ndimage import (
+    gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude,
+)
+from scipy.ndimage import median_filter
 from scipy.ndimage._ni_support import _get_output
 
-# own modules
-from .utilities import join
 from ..core import ArgumentError
 from ..filter import sum_filter
 
+# own modules
+from .utilities import join
+
 # constants
 
-def intensities(image, mask = slice(None)):
+
+def intensities(image, mask=slice(None)):
     r"""Takes a simple or multi-spectral image and returns its voxel-wise intensities.
     A multi-spectral image must be supplied as a list or tuple of its spectra.
 
@@ -56,7 +60,8 @@ def intensities(image, mask = slice(None)):
     """
     return _extract_feature(_extract_intensities, image, mask)
 
-def centerdistance(image, voxelspacing = None, mask = slice(None)):
+
+def centerdistance(image, voxelspacing=None, mask=slice(None)):
     r"""
     Takes a simple or multi-spectral image and returns its voxel-wise center distance in
     mm. A multi-spectral image must be supplied as a list or tuple of its spectra.
@@ -90,12 +95,15 @@ def centerdistance(image, voxelspacing = None, mask = slice(None)):
     centerdistance_xdminus1
 
     """
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
-    return _extract_feature(_extract_centerdistance, image, mask, voxelspacing = voxelspacing)
+    return _extract_feature(
+        _extract_centerdistance, image, mask, voxelspacing=voxelspacing
+    )
 
-def centerdistance_xdminus1(image, dim, voxelspacing = None, mask = slice(None)):
+
+def centerdistance_xdminus1(image, dim, voxelspacing=None, mask=slice(None)):
     r"""
     Implementation of `centerdistance` that allows to compute sub-volume wise
     centerdistances.
@@ -135,7 +143,7 @@ def centerdistance_xdminus1(image, dim, voxelspacing = None, mask = slice(None))
 
     """
     # pre-process arguments
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
     if type(dim) is int:
@@ -145,15 +153,24 @@ def centerdistance_xdminus1(image, dim, voxelspacing = None, mask = slice(None))
 
     # check arguments
     if len(dims) >= image.ndim - 1:
-        raise ArgumentError('Applying a sub-volume extraction of depth {} on a image of dimensionality {} would lead to invalid images of dimensionality <= 1.'.format(len(dims), image.ndim))
+        raise ArgumentError(
+            "Applying a sub-volume extraction of depth {} on a image of dimensionality {} would lead to invalid images of dimensionality <= 1.".format(
+                len(dims), image.ndim
+            )
+        )
     for dim in dims:
         if dim >= image.ndim:
-            raise ArgumentError('Invalid dimension index {} supplied for image(s) of shape {}.'.format(dim, image.shape))
+            raise ArgumentError(
+                "Invalid dimension index {} supplied for image(s) of shape {}.".format(
+                    dim, image.shape
+                )
+            )
 
     # extract desired sub-volume
     slicer = [slice(None)] * image.ndim
-    for dim in dims: slicer[dim] = slice(1)
-    subvolume = numpy.squeeze(image[slicer])
+    for dim in dims:
+        slicer[dim] = slice(1)
+    subvolume = numpy.squeeze(image[tuple(slicer)])
 
     # compute centerdistance for sub-volume and reshape to original sub-volume shape (note that normalization and mask are not passed on in this step)
     o = centerdistance(subvolume, voxelspacing).reshape(subvolume.shape)
@@ -166,7 +183,8 @@ def centerdistance_xdminus1(image, dim, voxelspacing = None, mask = slice(None))
     # extract intensities / centerdistance values, applying normalization and mask in this step
     return intensities(o, mask)
 
-def indices(image, voxelspacing = None, mask = slice(None)):
+
+def indices(image, voxelspacing=None, mask=slice(None)):
     r"""
     Takes an image and returns the voxels ndim-indices as voxel-wise feature. The voxel
     spacing is taken into account, i.e. the indices are not array indices, but millimeter
@@ -196,18 +214,26 @@ def indices(image, voxelspacing = None, mask = slice(None)):
     a multi-spectral image has been supplied.
 
     """
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
     if not type(mask) is slice:
         mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
 
     if voxelspacing is None:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
 
-    return join(*[a[mask].ravel() * vs for a, vs in zip(numpy.indices(image.shape), voxelspacing)])
+    return join(
+        *[
+            a[mask].ravel() * vs
+            for a, vs in zip(numpy.indices(image.shape), voxelspacing)
+        ]
+    )
 
-def shifted_mean_gauss(image, offset = None, sigma = 5, voxelspacing = None, mask = slice(None)):
+
+def shifted_mean_gauss(
+    image, offset=None, sigma=5, voxelspacing=None, mask=slice(None)
+):
     r"""
     The approximate mean over a small region at an offset from each voxel.
 
@@ -241,9 +267,17 @@ def shifted_mean_gauss(image, offset = None, sigma = 5, voxelspacing = None, mas
     local_mean_gauss
 
     """
-    return _extract_feature(_extract_shifted_mean_gauss, image, mask, offset = offset, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(
+        _extract_shifted_mean_gauss,
+        image,
+        mask,
+        offset=offset,
+        sigma=sigma,
+        voxelspacing=voxelspacing,
+    )
 
-def mask_distance(image, voxelspacing = None, mask = slice(None)):
+
+def mask_distance(image, voxelspacing=None, mask=slice(None)):
     r"""
     Computes the distance of each point under the mask to the mask border taking the
     voxel-spacing into account.
@@ -269,12 +303,13 @@ def mask_distance(image, voxelspacing = None, mask = slice(None)):
         Each voxels distance to the mask borders.
 
     """
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         image = image[0]
 
-    return _extract_mask_distance(image, mask = mask, voxelspacing = voxelspacing)
+    return _extract_mask_distance(image, mask=mask, voxelspacing=voxelspacing)
 
-def local_mean_gauss(image, sigma = 5, voxelspacing = None, mask = slice(None)):
+
+def local_mean_gauss(image, sigma=5, voxelspacing=None, mask=slice(None)):
     r"""
     Takes a simple or multi-spectral image and returns the approximate mean over a small
     region around each voxel. A multi-spectral image must be supplied as a list or tuple
@@ -308,9 +343,12 @@ def local_mean_gauss(image, sigma = 5, voxelspacing = None, mask = slice(None)):
         The weighted mean intensities over a region around each voxel.
 
     """
-    return _extract_feature(_extract_local_mean_gauss, image, mask, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(
+        _extract_local_mean_gauss, image, mask, sigma=sigma, voxelspacing=voxelspacing
+    )
 
-def gaussian_gradient_magnitude(image, sigma = 5, voxelspacing = None, mask = slice(None)):
+
+def gaussian_gradient_magnitude(image, sigma=5, voxelspacing=None, mask=slice(None)):
     r"""
     Computes the gradient magnitude (edge-detection) of the supplied image using gaussian
     derivates and returns the intensity values.
@@ -338,9 +376,16 @@ def gaussian_gradient_magnitude(image, sigma = 5, voxelspacing = None, mask = sl
         The gaussian gradient magnitude of the supplied image.
 
     """
-    return _extract_feature(_extract_gaussian_gradient_magnitude, image, mask, sigma = sigma, voxelspacing = voxelspacing)
+    return _extract_feature(
+        _extract_gaussian_gradient_magnitude,
+        image,
+        mask,
+        sigma=sigma,
+        voxelspacing=voxelspacing,
+    )
 
-def median(image, size = 5, voxelspacing = None, mask = slice(None)):
+
+def median(image, size=5, voxelspacing=None, mask=slice(None)):
     """
     Computes the multi-dimensional median filter and returns the resulting values per
     voxel.
@@ -368,9 +413,23 @@ def median(image, size = 5, voxelspacing = None, mask = slice(None)):
         Multi-dimesnional median filtered version of the input images.
 
     """
-    return _extract_feature(_extract_median, image, mask, size = size, voxelspacing = voxelspacing)
+    return _extract_feature(
+        _extract_median, image, mask, size=size, voxelspacing=voxelspacing
+    )
 
-def local_histogram(image, bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0, mask=slice(None)):
+
+def local_histogram(
+    image,
+    bins=19,
+    rang="image",
+    cutoffp=(0.0, 100.0),
+    size=None,
+    footprint=None,
+    output=None,
+    mode="ignore",
+    origin=0,
+    mask=slice(None),
+):
     r"""
     Computes multi-dimensional histograms over a region around each voxel.
 
@@ -449,10 +508,29 @@ def local_histogram(image, bins=19, rang="image", cutoffp=(0.0, 100.0), size=Non
         The bin values of the local histograms for each voxel as a multi-dimensional image.
 
     """
-    return _extract_feature(_extract_local_histogram, image, mask, bins=bins, rang=rang, cutoffp=cutoffp, size=size, footprint=footprint, output=output, mode=mode, origin=origin)
+    return _extract_feature(
+        _extract_local_histogram,
+        image,
+        mask,
+        bins=bins,
+        rang=rang,
+        cutoffp=cutoffp,
+        size=size,
+        footprint=footprint,
+        output=output,
+        mode=mode,
+        origin=origin,
+    )
 
 
-def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_plane = 0, voxelspacing = None, mask = slice(None)):
+def hemispheric_difference(
+    image,
+    sigma_active=7,
+    sigma_reference=7,
+    cut_plane=0,
+    voxelspacing=None,
+    mask=slice(None),
+):
     r"""
     Computes the hemispheric intensity difference between the brain hemispheres of an brain image.
 
@@ -516,23 +594,44 @@ def hemispheric_difference(image, sigma_active = 7, sigma_reference = 7, cut_pla
         If the supplied cut-plane dimension is invalid.
 
     """
-    return _extract_feature(_extract_hemispheric_difference, image, mask, sigma_active = sigma_active, sigma_reference = sigma_reference, cut_plane = cut_plane, voxelspacing = voxelspacing)
+    return _extract_feature(
+        _extract_hemispheric_difference,
+        image,
+        mask,
+        sigma_active=sigma_active,
+        sigma_reference=sigma_reference,
+        cut_plane=cut_plane,
+        voxelspacing=voxelspacing,
+    )
 
 
-def _extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7, sigma_reference = 7, cut_plane = 0, voxelspacing = None):
+def _extract_hemispheric_difference(
+    image,
+    mask=slice(None),
+    sigma_active=7,
+    sigma_reference=7,
+    cut_plane=0,
+    voxelspacing=None,
+):
     """
     Internal, single-image version of `hemispheric_difference`.
     """
     # constants
-    INTERPOLATION_RANGE = int(10) # how many neighbouring values to take into account when interpolating the medial longitudinal fissure slice
+    INTERPOLATION_RANGE = int(
+        10
+    )  # how many neighbouring values to take into account when interpolating the medial longitudinal fissure slice
 
     # check arguments
     if cut_plane >= image.ndim:
-        raise ArgumentError('The suppliedc cut-plane ({}) is invalid, the image has only {} dimensions.'.format(cut_plane, image.ndim))
+        raise ArgumentError(
+            "The suppliedc cut-plane ({}) is invalid, the image has only {} dimensions.".format(
+                cut_plane, image.ndim
+            )
+        )
 
     # set voxel spacing
     if voxelspacing is None:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
 
     # compute the (presumed) location of the medial longitudinal fissure, treating also the special of an odd number of slices, in which case a cut into two equal halves is not possible
     medial_longitudinal_fissure = int(image.shape[cut_plane] / 2)
@@ -542,21 +641,27 @@ def _extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7,
     # this is assumed to be consistent with a cut of the brain along the medial longitudinal fissure, thus separating it into its hemispheres
     slicer = [slice(None)] * image.ndim
     slicer[cut_plane] = slice(None, medial_longitudinal_fissure)
-    left_hemisphere = image[slicer]
+    left_hemisphere = image[tuple(slicer)]
 
-    slicer[cut_plane] = slice(medial_longitudinal_fissure + medial_longitudinal_fissure_excluded, None)
-    right_hemisphere = image[slicer]
+    slicer[cut_plane] = slice(
+        medial_longitudinal_fissure + medial_longitudinal_fissure_excluded, None
+    )
+    right_hemisphere = image[tuple(slicer)]
 
     # flip right hemisphere image along cut plane
     slicer[cut_plane] = slice(None, None, -1)
-    right_hemisphere = right_hemisphere[slicer]
+    right_hemisphere = right_hemisphere[tuple(slicer)]
 
     # substract once left from right and once right from left hemisphere, including smoothing steps
-    right_hemisphere_difference = _substract_hemispheres(right_hemisphere, left_hemisphere, sigma_active, sigma_reference, voxelspacing)
-    left_hemisphere_difference = _substract_hemispheres(left_hemisphere, right_hemisphere, sigma_active, sigma_reference, voxelspacing)
+    right_hemisphere_difference = _substract_hemispheres(
+        right_hemisphere, left_hemisphere, sigma_active, sigma_reference, voxelspacing
+    )
+    left_hemisphere_difference = _substract_hemispheres(
+        left_hemisphere, right_hemisphere, sigma_active, sigma_reference, voxelspacing
+    )
 
     # re-flip right hemisphere image to original orientation
-    right_hemisphere_difference = right_hemisphere_difference[slicer]
+    right_hemisphere_difference = right_hemisphere_difference[tuple(slicer)]
 
     # estimate the medial longitudinal fissure if required
     if 1 == medial_longitudinal_fissure_excluded:
@@ -564,27 +669,60 @@ def _extract_hemispheric_difference(image, mask = slice(None), sigma_active = 7,
         right_slicer = [slice(None)] * image.ndim
         left_slicer[cut_plane] = slice(-1 * INTERPOLATION_RANGE, None)
         right_slicer[cut_plane] = slice(None, INTERPOLATION_RANGE)
-        interp_data_left = left_hemisphere_difference[left_slicer]
-        interp_data_right = right_hemisphere_difference[right_slicer]
+        interp_data_left = left_hemisphere_difference[tuple(left_slicer)]
+        interp_data_right = right_hemisphere_difference[tuple(right_slicer)]
         interp_indices_left = list(range(-1 * interp_data_left.shape[cut_plane], 0))
         interp_indices_right = list(range(1, interp_data_right.shape[cut_plane] + 1))
-        interp_data = numpy.concatenate((left_hemisphere_difference[left_slicer], right_hemisphere_difference[right_slicer]), cut_plane)
-        interp_indices = numpy.concatenate((interp_indices_left, interp_indices_right), 0)
-        medial_longitudinal_fissure_estimated = interp1d(interp_indices, interp_data, kind='cubic', axis=cut_plane)(0)
+        interp_data = numpy.concatenate(
+            (
+                left_hemisphere_difference[tuple(left_slicer)],
+                right_hemisphere_difference[tuple(right_slicer)],
+            ),
+            cut_plane,
+        )
+        interp_indices = numpy.concatenate(
+            (interp_indices_left, interp_indices_right), 0
+        )
+        medial_longitudinal_fissure_estimated = interp1d(
+            interp_indices, interp_data, kind="cubic", axis=cut_plane
+        )(0)
         # add singleton dimension
         slicer[cut_plane] = numpy.newaxis
-        medial_longitudinal_fissure_estimated = medial_longitudinal_fissure_estimated[slicer]
+        medial_longitudinal_fissure_estimated = medial_longitudinal_fissure_estimated[
+            tuple(slicer)
+        ]
 
     # stich images back together
     if 1 == medial_longitudinal_fissure_excluded:
-        hemisphere_difference = numpy.concatenate((left_hemisphere_difference, medial_longitudinal_fissure_estimated, right_hemisphere_difference), cut_plane)
+        hemisphere_difference = numpy.concatenate(
+            (
+                left_hemisphere_difference,
+                medial_longitudinal_fissure_estimated,
+                right_hemisphere_difference,
+            ),
+            cut_plane,
+        )
     else:
-        hemisphere_difference = numpy.concatenate((left_hemisphere_difference, right_hemisphere_difference), cut_plane)
+        hemisphere_difference = numpy.concatenate(
+            (left_hemisphere_difference, right_hemisphere_difference), cut_plane
+        )
 
     # extract intensities and return
     return _extract_intensities(hemisphere_difference, mask)
 
-def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cutoffp=(0.0, 100.0), size=None, footprint=None, output=None, mode="ignore", origin=0):
+
+def _extract_local_histogram(
+    image,
+    mask=slice(None),
+    bins=19,
+    rang="image",
+    cutoffp=(0.0, 100.0),
+    size=None,
+    footprint=None,
+    output=None,
+    mode="ignore",
+    origin=0,
+):
     """
     Internal, single-image version of @see local_histogram
 
@@ -593,16 +731,20 @@ def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cut
     Note: Default dtype of returned values is float.
     """
     if "constant" == mode:
-        raise RuntimeError('boundary mode not supported')
+        raise RuntimeError("boundary mode not supported")
     elif "ignore" == mode:
         mode = "constant"
-    if 'image' == rang:
+    if "image" == rang:
         rang = tuple(numpy.percentile(image[mask], cutoffp))
     elif not 2 == len(rang):
-        raise RuntimeError('the rang must contain exactly two elements or the string "image"')
+        raise RuntimeError(
+            'the rang must contain exactly two elements or the string "image"'
+        )
 
     _, bin_edges = numpy.histogram([], bins=bins, range=rang)
-    output = _get_output(float if None == output else output, image, shape = [bins] + list(image.shape))
+    output = _get_output(
+        float if output is None else output, image, shape=[bins] + list(image.shape)
+    )
 
     # threshold the image into the histogram bins represented by the output images first dimension, treat last bin separately, since upper border is inclusive
     for i in range(bins - 1):
@@ -611,7 +753,15 @@ def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cut
 
     # apply the sum filter to each dimension, then normalize by dividing through the sum of elements in the bins of each histogram
     for i in range(bins):
-        output[i] = sum_filter(output[i], size=size, footprint=footprint, output=None, mode=mode, cval=0.0, origin=origin)
+        output[i] = sum_filter(
+            output[i],
+            size=size,
+            footprint=footprint,
+            output=None,
+            mode=mode,
+            cval=0.0,
+            origin=origin,
+        )
     divident = numpy.sum(output, 0)
     divident[0 == divident] = 1
     output /= divident
@@ -624,39 +774,46 @@ def _extract_local_histogram(image, mask=slice(None), bins=19, rang="image", cut
     # treat as multi-spectral image which intensities to extracted
     return _extract_feature(_extract_intensities, [h for h in output], mask)
 
-def _extract_median(image, mask = slice(None), size = 1, voxelspacing = None):
+
+def _extract_median(image, mask=slice(None), size=1, voxelspacing=None):
     """
     Internal, single-image version of `median`.
     """
     # set voxel spacing
     if voxelspacing is None:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
 
     # determine structure element size in voxel units
     size = _create_structure_array(size, voxelspacing)
 
     return _extract_intensities(median_filter(image, size), mask)
 
-def _extract_gaussian_gradient_magnitude(image, mask = slice(None), sigma = 1, voxelspacing = None):
+
+def _extract_gaussian_gradient_magnitude(
+    image, mask=slice(None), sigma=1, voxelspacing=None
+):
     """
     Internal, single-image version of `gaussian_gradient_magnitude`.
     """
     # set voxel spacing
     if voxelspacing is None:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
 
     # determine gaussian kernel size in voxel units
     sigma = _create_structure_array(sigma, voxelspacing)
 
     return _extract_intensities(scipy_gaussian_gradient_magnitude(image, sigma), mask)
 
-def _extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma = 1, voxelspacing = None):
+
+def _extract_shifted_mean_gauss(
+    image, mask=slice(None), offset=None, sigma=1, voxelspacing=None
+):
     """
     Internal, single-image version of `shifted_mean_gauss`.
     """
     # set voxel spacing
     if voxelspacing is None:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
     # set offset
     if offset is None:
         offset = [0] * image.ndim
@@ -673,11 +830,12 @@ def _extract_shifted_mean_gauss(image, mask = slice(None), offset = None, sigma 
     for o in offset:
         in_slicer.append(slice(o, None))
         out_slicer.append(slice(None, -1 * o))
-    shifted[out_slicer] = smoothed[in_slicer]
+    shifted[tuple(out_slicer)] = smoothed[tuple(in_slicer)]
 
     return _extract_intensities(shifted, mask)
 
-def _extract_mask_distance(image, mask = slice(None), voxelspacing = None):
+
+def _extract_mask_distance(image, mask=slice(None), voxelspacing=None):
     """
     Internal, single-image version of `mask_distance`.
     """
@@ -688,13 +846,14 @@ def _extract_mask_distance(image, mask = slice(None), voxelspacing = None):
 
     return _extract_intensities(distance_map, mask)
 
-def _extract_local_mean_gauss(image, mask = slice(None), sigma = 1, voxelspacing = None):
+
+def _extract_local_mean_gauss(image, mask=slice(None), sigma=1, voxelspacing=None):
     """
     Internal, single-image version of `local_mean_gauss`.
     """
     # set voxel spacing
     if voxelspacing is None:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
 
     # determine gaussian kernel size in voxel units
     sigma = _create_structure_array(sigma, voxelspacing)
@@ -702,17 +861,17 @@ def _extract_local_mean_gauss(image, mask = slice(None), sigma = 1, voxelspacing
     return _extract_intensities(gaussian_filter(image, sigma), mask)
 
 
-def _extract_centerdistance(image, mask = slice(None), voxelspacing = None):
+def _extract_centerdistance(image, mask=slice(None), voxelspacing=None):
     """
     Internal, single-image version of `centerdistance`.
     """
     image = numpy.array(image, copy=False)
 
     if None == voxelspacing:
-        voxelspacing = [1.] * image.ndim
+        voxelspacing = [1.0] * image.ndim
 
     # get image center and an array holding the images indices
-    centers = [(x - 1) / 2. for x in image.shape]
+    centers = [(x - 1) / 2.0 for x in image.shape]
     indices = numpy.indices(image.shape, dtype=float)
 
     # shift to center of image and correct spacing to real world coordinates
@@ -724,24 +883,30 @@ def _extract_centerdistance(image, mask = slice(None), voxelspacing = None):
     return numpy.sqrt(numpy.sum(numpy.square(indices), 0))[mask].ravel()
 
 
-def _extract_intensities(image, mask = slice(None)):
+def _extract_intensities(image, mask=slice(None)):
     """
     Internal, single-image version of `intensities`.
     """
+    if type(mask) is list and type(mask[0]) is slice:
+        mask = tuple(mask)
     return numpy.array(image, copy=True)[mask].ravel()
 
-def _substract_hemispheres(active, reference, active_sigma, reference_sigma, voxel_spacing):
+
+def _substract_hemispheres(
+    active, reference, active_sigma, reference_sigma, voxel_spacing
+):
     """
     Helper function for `_extract_hemispheric_difference`.
     Smoothes both images and then substracts the reference from the active image.
     """
     active_kernel = _create_structure_array(active_sigma, voxel_spacing)
-    active_smoothed = gaussian_filter(active, sigma = active_kernel)
+    active_smoothed = gaussian_filter(active, sigma=active_kernel)
 
     reference_kernel = _create_structure_array(reference_sigma, voxel_spacing)
-    reference_smoothed = gaussian_filter(reference, sigma = reference_kernel)
+    reference_smoothed = gaussian_filter(reference, sigma=reference_kernel)
 
     return active_smoothed - reference_smoothed
+
 
 def _create_structure_array(structure_array, voxelspacing):
     """
@@ -751,13 +916,16 @@ def _create_structure_array(structure_array, voxelspacing):
     voxel spacing.
     """
     try:
-        structure_array = [s / float(vs) for s, vs in zip(structure_array, voxelspacing)]
+        structure_array = [
+            s / float(vs) for s, vs in zip(structure_array, voxelspacing)
+        ]
     except TypeError:
         structure_array = [structure_array / float(vs) for vs in voxelspacing]
 
     return structure_array
 
-def _extract_feature(fun, image, mask = slice(None), **kwargs):
+
+def _extract_feature(fun, image, mask=slice(None), **kwargs):
     """
     Convenient function to cope with multi-spectral images and feature normalization.
 
@@ -775,7 +943,7 @@ def _extract_feature(fun, image, mask = slice(None), **kwargs):
     if not type(mask) is slice:
         mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
 
-    if type(image) == tuple or type(image) == list:
+    if type(image) is tuple or type(image) is list:
         return join(*[fun(i, mask, **kwargs) for i in image])
     else:
         return fun(image, mask, **kwargs)

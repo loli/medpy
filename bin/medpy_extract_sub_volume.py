@@ -19,21 +19,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-# build-in modules
-from argparse import RawTextHelpFormatter
 import argparse
 import logging
-import sys
 import os
+import sys
+
+# build-in modules
+from argparse import RawTextHelpFormatter
 
 # third-party modules
-import scipy
-
-# path changes
+import numpy
 
 # own modules
 from medpy.core import ArgumentError, Logger
 from medpy.io import load, save
+
+# path changes
+
 
 # information
 __author__ = "Oskar Maier"
@@ -44,7 +46,7 @@ __description__ = """
                   Takes a medical image of arbitrary dimensions and the dimensions
                   of a sub-volume that lies inside the dimensions of this images.
                   Extracts the sub-volume from the supplied image and saves it.
-                  
+
                   The volume to be extracted is defined by its slices, the syntax is the same as
                   for numpy array indexes (i.e. starting with zero-index, the first literal (x) of any
                   x:y included and the second (y) excluded).
@@ -56,12 +58,13 @@ __description__ = """
                        Note here the trailing colon.
 
                   Note to take into account the input images orientation when supplying the sub-volume.
-                  
+
                   Copyright (C) 2013 Oskar Maier
                   This program comes with ABSOLUTELY NO WARRANTY; This is free software,
                   and you are welcome to redistribute it under certain conditions; see
-                  the LICENSE file or <http://www.gnu.org/licenses/> for details.   
+                  the LICENSE file or <http://www.gnu.org/licenses/> for details.
                   """
+
 
 # code
 def main():
@@ -69,77 +72,119 @@ def main():
     parser = getParser()
     parser.parse_args()
     args = getArguments(parser)
-    
+
     # prepare logger
     logger = Logger.getInstance()
-    if args.debug: logger.setLevel(logging.DEBUG)
-    elif args.verbose: logger.setLevel(logging.INFO)
-    
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    elif args.verbose:
+        logger.setLevel(logging.INFO)
+
     # check if output image exists
     if not args.force:
         if os.path.exists(args.output + args.image[-4:]):
-            logger.warning('The output file {} already exists. Breaking.'.format(args.output + args.image[-4:]))
+            logger.warning(
+                "The output file {} already exists. Breaking.".format(
+                    args.output + args.image[-4:]
+                )
+            )
             exit(1)
-    
+
     # load images
     image_data, image_header = load(args.image)
-    
+
     # check image dimensions against sub-volume dimensions
     if len(image_data.shape) != len(args.volume):
-        logger.critical('The supplied input image is of different dimension as the sub volume requested ({} to {})'.format(len(image_data.shape), len(args.volume)))
-        raise ArgumentError('The supplied input image is of different dimension as the sub volume requested ({} to {})'.format(len(image_data.shape), len(args.volume)))
-    
-    # execute extraction of the sub-area  
-    logger.info('Extracting sub-volume...')
+        logger.critical(
+            "The supplied input image is of different dimension as the sub volume requested ({} to {})".format(
+                len(image_data.shape), len(args.volume)
+            )
+        )
+        raise ArgumentError(
+            "The supplied input image is of different dimension as the sub volume requested ({} to {})".format(
+                len(image_data.shape), len(args.volume)
+            )
+        )
+
+    # execute extraction of the sub-area
+    logger.info("Extracting sub-volume...")
     index = [slice(x[0], x[1]) for x in args.volume]
-    volume = image_data[index]
-    
+    volume = image_data[tuple(index)]
+
     # check if the output image contains data
     if 0 == len(volume):
-        logger.exception('The extracted sub-volume is of zero-size. This usual means that the supplied volume coordinates and the image coordinates do not intersect. Exiting the application.')
+        logger.exception(
+            "The extracted sub-volume is of zero-size. This usual means that the supplied volume coordinates and the image coordinates do not intersect. Exiting the application."
+        )
         sys.exit(-1)
-    
+
     # squeeze extracted sub-volume for the case in which one dimensions has been eliminated
-    volume = scipy.squeeze(volume)
-    
-    logger.debug('Extracted volume is of shape {}.'.format(volume.shape))
-    
+    volume = numpy.squeeze(volume)
+
+    logger.debug("Extracted volume is of shape {}.".format(volume.shape))
+
     # save results in same format as input image
     save(volume, args.output, image_header, args.force)
-    
-    logger.info('Successfully terminated.')
 
-    
+    logger.info("Successfully terminated.")
+
+
 def getArguments(parser):
     "Provides additional validation of the arguments collected by argparse."
     args = parser.parse_args()
     # parse volume and adapt to zero-indexing
     try:
+
         def _to_int_or_none(string):
-            if 0 == len(string): return None
+            if 0 == len(string):
+                return None
             return int(string)
-        def _to_int_or_none_double (string):
-            if 0 == len(string): return [None, None]
-            return list(map(_to_int_or_none, string.split(':')))        
-        args.volume = list(map(_to_int_or_none_double, args.volume.split(',')))
+
+        def _to_int_or_none_double(string):
+            if 0 == len(string):
+                return [None, None]
+            return list(map(_to_int_or_none, string.split(":")))
+
+        args.volume = list(map(_to_int_or_none_double, args.volume.split(",")))
         args.volume = [(x[0], x[1]) for x in args.volume]
     except (ValueError, IndexError) as e:
-        raise ArgumentError('Maleformed volume parameter "{}", see description with -h flag.'.format(args.volume), e)
+        raise ArgumentError(
+            'Maleformed volume parameter "{}", see description with -h flag.'.format(
+                args.volume
+            ),
+            e,
+        )
 
     return args
 
+
 def getParser():
     "Creates and returns the argparse parser object."
-    parser = argparse.ArgumentParser(description=__description__, formatter_class=RawTextHelpFormatter)
-    
-    parser.add_argument('image', help='The source volume.')
-    parser.add_argument('output', help='The target volume.')
-    parser.add_argument('volume', help='The coordinated of the sub-volume of the images that should be extracted.\nExample: 30:59,40:67,45:75 for a 3D image.\nSee -h for more information.')
-    parser.add_argument('-f', dest='force', action='store_true', help='Set this flag to silently override files that exist.')
-    parser.add_argument('-v', dest='verbose', action='store_true', help='Display more information.')
-    parser.add_argument('-d', dest='debug', action='store_true', help='Display debug information.')
-    
-    return parser    
-    
+    parser = argparse.ArgumentParser(
+        description=__description__, formatter_class=RawTextHelpFormatter
+    )
+
+    parser.add_argument("image", help="The source volume.")
+    parser.add_argument("output", help="The target volume.")
+    parser.add_argument(
+        "volume",
+        help="The coordinated of the sub-volume of the images that should be extracted.\nExample: 30:59,40:67,45:75 for a 3D image.\nSee -h for more information.",
+    )
+    parser.add_argument(
+        "-f",
+        dest="force",
+        action="store_true",
+        help="Set this flag to silently override files that exist.",
+    )
+    parser.add_argument(
+        "-v", dest="verbose", action="store_true", help="Display more information."
+    )
+    parser.add_argument(
+        "-d", dest="debug", action="store_true", help="Display debug information."
+    )
+
+    return parser
+
+
 if __name__ == "__main__":
-    main()    
+    main()

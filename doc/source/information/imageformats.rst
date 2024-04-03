@@ -16,7 +16,7 @@ Medical formats:
 - Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
 - Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)
 - Digital Imaging and Communications in Medicine (DICOM) series (<directory>/)
-- Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr) 
+- Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr)
 - Medical Imaging NetCDF (MINC) (.mnc, .MNC)
 - Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)
 
@@ -39,7 +39,7 @@ Other formats:
 - Windows bitmap (.bmp, .BMP)
 - Hierarchical Data Format (HDF5) (.h5 , .hdf5 , .he5)
 - MSX-DOS Screen-x (.ge4, .ge5)
-    
+
 For informations about which image formats, dimensionalities and pixel data types
 your current configuration supports, run `python3 tests/support.py > myformats.log`.
 

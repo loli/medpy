@@ -1,6 +1,6 @@
 # MedPy
 
-[GitHub](https://github.com/loli/medpy/) | [Documentation](http://loli.github.io/medpy/) | [Tutorials](http://loli.github.io/medpy/) | [Issue tracker](https://github.com/loli/medpy/issues) | [Contact](oskar.maier@gmail.com)
+[GitHub](https://github.com/loli/medpy/) | [Documentation](http://loli.github.io/medpy/) | [Tutorials](http://loli.github.io/medpy/) | [Issue tracker](https://github.com/loli/medpy/issues)
 
 **MedPy** is a library and script collection for medical image processing in Python, providing basic functionalities for **reading**, **writing** and **manipulating** large images of **arbitrary dimensionality**.
 Its main contributions are n-dimensional versions of popular **image filters**, a collection of **image feature extractors**, ready to be used with [scikit-learn](http://scikit-learn.org), and an exhaustive n-dimensional **graph-cut** package.
@@ -8,7 +8,7 @@ Its main contributions are n-dimensional versions of popular **image filters**, 
 * [Installation](#installation)
 * [Getting started with the library](#getting-started-with-the-library)
 * [Getting started with the scripts](#getting-started-with-the-scripts)
-* [Read/write support for medical image formats](#read-write-support-for-medical-image-formats)
+* [Support of medical image formats](#support-of-medical-image-formats)
 * [Requirements](#requirements)
 * [License](#license)
 
@@ -21,20 +21,11 @@ pip3 install medpy
 
 **MedPy** requires **Python 3** and officially supports Ubuntu as well as other Debian derivatives.
 For installation instructions on other operating systems see the [documentation](http://loli.github.io/medpy/).
-While the library itself is written purely in Python, the **graph-cut** extension comes in C++ and has it's own requirements. More details can be found in the [documentation](http://loli.github.io/medpy/).
-
-### Using Python 2
-
-**Python 2** is no longer supported. But you can still use the older releases.
-
-```bash
-pip install medpy==0.3.0
-```
+While the library itself is written purely in Python, the **graph-cut** extension comes in C++ and has [it's own requirements](http://loli.github.io/medpy/installation/graphcutsupport.html).
 
 ## Getting started with the library
 
-If you already have a medical image whose format is support (see the [documentation](http://loli.github.io/medpy/>) for details), then good.
-Otherwise, navigate to http://www.nitrc.org/projects/inia19, click on the *Download Now* button, unpack and look for the *inia19-t1.nii* file. Open it in your favorite medical image viewer (I personally fancy [itksnap](http://www.itksnap.org)) and beware: the INIA19 primate brain atlas.
+If you already have a medical image at hand in [one of the supported formats](http://loli.github.io/medpy/information/imageformats.html), you can use it for this introduction. If not, navigate to http://www.nitrc.org/projects/inia19, click on the *Download Now* button, unpack and look for the *inia19-t1.nii* file. Open it in your favorite medical image viewer (I personally fancy [itksnap](http://www.itksnap.org)) and beware: the INIA19 primate brain atlas.
 
 Load the image
 
@@ -86,7 +77,7 @@ from medpy.io import save
 save(output_data, '/path/to/otsu.xxx', image_header)
 ```
 
-After taking a look at it, you might want to dive deeper with the tutorials found in the [documentation](http://loli.github.io/medpy/).
+After taking a look at it, you might want to dive deeper with the tutorials found in the [documentation](http://loli.github.io/medpy/information/commandline_tools_listing.html).
 
 ## Getting started with the scripts
 
@@ -111,7 +102,7 @@ medpy_anisotropic_diffusion.py /path/to/image.xxx /path/to/output.xxx
 
 lets you apply an edge preserving anisotropic diffusion filter. For a list of all scripts, see the [documentation](http://loli.github.io/medpy/).
 
-## Read/write support for medical image formats
+## Support of medical image formats
 
 MedPy relies on SimpleITK, which enables the power of ITK for image loading and saving.
 The supported image file formats should include at least the following. Note that not all might be supported by your machine.
@@ -123,7 +114,7 @@ The supported image file formats should include at least the following. Note tha
 * Analyze (plain, SPM99, SPM2) (.hdr/.img, .img.gz)
 * Digital Imaging and Communications in Medicine (DICOM) (.dcm, .dicom)
 * Digital Imaging and Communications in Medicine (DICOM) series (<directory>/)
-* Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr) 
+* Nearly Raw Raster Data (Nrrd) (.nrrd, .nhdr)
 * Medical Imaging NetCDF (MINC) (.mnc, .MNC)
 * Guys Image Processing Lab (GIPL) (.gipl, .gipl.gz)
 

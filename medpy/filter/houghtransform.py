@@ -27,8 +27,9 @@ import numpy
 # own modules
 from .utilities import pad
 
+
 # public methods
-def ght_alternative (img, template, indices):
+def ght_alternative(img, template, indices):
     """
     Alternative implementation of the general hough transform, which uses iteration over
     indices rather than broadcasting rules like `ght`.
@@ -58,12 +59,16 @@ def ght_alternative (img, template, indices):
 
     # check supplied parameters
     if img.ndim != template.ndim:
-        raise AttributeError('The supplied image and template must be of the same dimensionality.')
+        raise AttributeError(
+            "The supplied image and template must be of the same dimensionality."
+        )
     if not numpy.all(numpy.greater_equal(img.shape, template.shape)):
-        raise AttributeError('The supplied template is bigger than the image. This setting makes no sense for a hough transform.')
+        raise AttributeError(
+            "The supplied template is bigger than the image. This setting makes no sense for a hough transform."
+        )
 
     # pad the original image
-    img_padded = pad(img, footprint=template, mode='constant')
+    img_padded = pad(img, footprint=template, mode="constant")
 
     # prepare the hough image
     if numpy.bool_ == img.dtype:
@@ -75,9 +80,10 @@ def ght_alternative (img, template, indices):
     for idx_hough in indices:
         idx_hough = tuple(idx_hough)
         slices_img_padded = [slice(idx_hough[i], None) for i in range(img_hough.ndim)]
-        img_hough[idx_hough] = sum(img_padded[slices_img_padded][template])
+        img_hough[idx_hough] = sum(img_padded[tuple(slices_img_padded)][template])
 
     return img_hough
+
 
 def ght(img, template):
     r"""
@@ -121,9 +127,13 @@ def ght(img, template):
 
     # check supplied parameters
     if img.ndim != template.ndim:
-        raise AttributeError('The supplied image and template must be of the same dimensionality.')
+        raise AttributeError(
+            "The supplied image and template must be of the same dimensionality."
+        )
     if not numpy.all(numpy.greater_equal(img.shape, template.shape)):
-        raise AttributeError('The supplied template is bigger than the image. This setting makes no sense for a hough transform.')
+        raise AttributeError(
+            "The supplied template is bigger than the image. This setting makes no sense for a hough transform."
+        )
 
     # compute center of template array
     center = (numpy.asarray(template.shape) - 1) // 2
@@ -140,20 +150,21 @@ def ght(img, template):
         slicers_orig = []
         for i in range(img.ndim):
             pos = -1 * (idx[i] - center[i])
-            if 0 == pos: # no shift
+            if 0 == pos:  # no shift
                 slicers_hough.append(slice(None, None))
                 slicers_orig.append(slice(None, None))
-            elif pos > 0: # right shifted hough
+            elif pos > 0:  # right shifted hough
                 slicers_hough.append(slice(pos, None))
                 slicers_orig.append(slice(None, -1 * pos))
-            else: # left shifted hough
+            else:  # left shifted hough
                 slicers_hough.append(slice(None, pos))
                 slicers_orig.append(slice(-1 * pos, None))
-        img_hough[slicers_hough] += img[slicers_orig]
+        img_hough[tuple(slicers_hough)] += img[tuple(slicers_orig)]
 
     return img_hough
 
-def template_sphere (radius, dimensions):
+
+def template_sphere(radius, dimensions):
     r"""
     Returns a spherical binary structure of a of the supplied radius that can be used as
     template input to the generalized hough transform.
@@ -171,7 +182,7 @@ def template_sphere (radius, dimensions):
         A boolean array containing a sphere.
     """
     if int(dimensions) != dimensions:
-        raise TypeError('The supplied dimension parameter must be of type integer.')
+        raise TypeError("The supplied dimension parameter must be of type integer.")
     dimensions = int(dimensions)
 
     return template_ellipsoid(dimensions * [radius * 2])
@@ -193,16 +204,20 @@ def template_ellipsoid(shape):
         A boolean array containing an ellipsoid.
     """
     # prepare template array
-    template = numpy.zeros([int(x // 2 + (x % 2)) for x in shape], dtype=numpy.bool_) # in odd shape cases, this will include the ellipses middle line, otherwise not
+    template = numpy.zeros(
+        [int(x // 2 + (x % 2)) for x in shape], dtype=numpy.bool_
+    )  # in odd shape cases, this will include the ellipses middle line, otherwise not
 
     # get real world offset to compute the ellipsoid membership
     rw_offset = []
     for s in shape:
-        if int(s) % 2 == 0: rw_offset.append(0.5 - (s % 2) / 2.) # number before point is even
-        else: rw_offset.append(-1 * (s % int(s)) / 2.) # number before point is odd
+        if int(s) % 2 == 0:
+            rw_offset.append(0.5 - (s % 2) / 2.0)  # number before point is even
+        else:
+            rw_offset.append(-1 * (s % int(s)) / 2.0)  # number before point is odd
 
     # prepare an array containing the squares of the half axes to avoid computing inside the loop
-    shape_pow = numpy.power(numpy.asarray(shape) / 2., 2)
+    shape_pow = numpy.power(numpy.asarray(shape) / 2.0, 2)
 
     # we use the ellipse normal form to find all point in its surface as well as volume
     # e.g. for 2D, all voxels inside the ellipse (or on its surface) with half-axes a and b
@@ -210,17 +225,31 @@ def template_ellipsoid(shape):
     # to not have to iterate over each voxel, we make use of the ellipsoids symmetry
     # and construct just a part of the whole ellipse here
     for idx in numpy.ndindex(template.shape):
-        distance = sum((math.pow(coordinate + rwo, 2) / axes_pow for axes_pow, coordinate, rwo in zip(shape_pow, idx, rw_offset))) # plus once since ndarray is zero based, but real-world coordinates not
-        if distance <= 1: template[idx] = True
+        distance = sum(
+            (
+                math.pow(coordinate + rwo, 2) / axes_pow
+                for axes_pow, coordinate, rwo in zip(shape_pow, idx, rw_offset)
+            )
+        )  # plus once since ndarray is zero based, but real-world coordinates not
+        if distance <= 1:
+            template[idx] = True
 
     # we take now our ellipse part and flip it once along each dimension, concatenating it in each step
     # the slicers are constructed to flip in each step the current dimension i.e. to behave like arr[...,::-1,...]
     for i in range(template.ndim):
-        slicers = [(slice(None, None, -1) if i == j else slice(None)) for j in range(template.ndim)]
-        if 0 == int(shape[i]) % 2: # even case
-            template = numpy.concatenate((template[slicers], template), i)
-        else: # odd case, in which an overlap has to be created
-            slicers_truncate = [(slice(None, -1) if i == j else slice(None)) for j in range(template.ndim)]
-            template = numpy.concatenate((template[slicers][slicers_truncate], template), i)
+        slicers = [
+            (slice(None, None, -1) if i == j else slice(None))
+            for j in range(template.ndim)
+        ]
+        if 0 == int(shape[i]) % 2:  # even case
+            template = numpy.concatenate((template[tuple(slicers)], template), i)
+        else:  # odd case, in which an overlap has to be created
+            slicers_truncate = [
+                (slice(None, -1) if i == j else slice(None))
+                for j in range(template.ndim)
+            ]
+            template = numpy.concatenate(
+                (template[tuple(slicers)][tuple(slicers_truncate)], template), i
+            )
 
     return template
