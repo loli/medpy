@@ -1,0 +1,6 @@
+﻿medpy.features.histogram.gaussian\_membership
+=============================================
+
+.. currentmodule:: medpy.features.histogram
+
+.. autofunction:: gaussian_membership

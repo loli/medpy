@@ -1,0 +1,10 @@
+medpy.metric.histogram.cosine\_1
+================================
+
+::: {.currentmodule}
+medpy.metric.histogram
+:::
+
+::: {.autofunction}
+cosine\_1
+:::

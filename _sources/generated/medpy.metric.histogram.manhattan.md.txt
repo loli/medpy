@@ -1,0 +1,10 @@
+medpy.metric.histogram.manhattan
+================================
+
+::: {.currentmodule}
+medpy.metric.histogram
+:::
+
+::: {.autofunction}
+manhattan
+:::

@@ -1,0 +1,10 @@
+medpy.metric.binary.positive\_predictive\_value
+===============================================
+
+::: {.currentmodule}
+medpy.metric.binary
+:::
+
+::: {.autofunction}
+positive\_predictive\_value
+:::

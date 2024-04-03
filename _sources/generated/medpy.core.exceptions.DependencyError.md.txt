@@ -1,0 +1,10 @@
+medpy.core.exceptions.DependencyError
+=====================================
+
+::: {.currentmodule}
+medpy.core.exceptions
+:::
+
+::: {.autoexception}
+DependencyError
+:::

@@ -1,0 +1,10 @@
+medpy.core.exceptions.FunctionError
+===================================
+
+::: {.currentmodule}
+medpy.core.exceptions
+:::
+
+::: {.autoexception}
+FunctionError
+:::

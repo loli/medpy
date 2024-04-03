@@ -1,0 +1,23 @@
+medpy.iterators.patchwise.CentredPatchIteratorOverlapping
+=========================================================
+
+::: {.currentmodule}
+medpy.iterators.patchwise
+:::
+
+::: {.autoclass}
+CentredPatchIteratorOverlapping
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~CentredPatchIteratorOverlapping.\_\_init\_\_
+\~CentredPatchIteratorOverlapping.applyslicer
+\~CentredPatchIteratorOverlapping.assembleimage
+\~CentredPatchIteratorOverlapping.next
+:::
+:::

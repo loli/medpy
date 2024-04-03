@@ -1,0 +1,6 @@
+﻿medpy.graphcut.energy\_voxel.boundary\_maximum\_division
+========================================================
+
+.. currentmodule:: medpy.graphcut.energy_voxel
+
+.. autofunction:: boundary_maximum_division

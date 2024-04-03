@@ -1,342 +1,811 @@
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="./" >
+
   <head>
-    <meta charset="utf-8">
-    
-    <title>Image filter and manipulation (medpy.filter) &mdash; MedPy 0.4.0 documentation</title>
-    
-    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
-    <link rel="stylesheet" href="_static/scipy.css" type="text/css" >
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.4.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/copybutton.js"></script>
-    <link rel="index" title="Index" href="genindex.html" >
-    <link rel="search" title="Search" href="search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="index.html" >
-    <link rel="next" title="medpy.filter.smoothing.anisotropic_diffusion" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html" >
-    <link rel="prev" title="medpy.metric.histogram.relative_deviation" href="generated/medpy.metric.histogram.relative_deviation.html" > 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Image filter and manipulation (medpy.filter) &#8212; MedPy 0.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'filter';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="medpy.filter.smoothing.anisotropic_diffusion" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html" />
+    <link rel="prev" title="medpy.metric.histogram.relative_deviation" href="generated/medpy.metric.histogram.relative_deviation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Feb 03, 2024"/>
   </head>
-  <body>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  <div class="container">
-    <div class="header">
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MedPy 0.5.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="io.html">
+                        Image I/O functionalities (medpy.io)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="metric.html">
+                        Metric measures (medpy.metric)
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+                    <li class="nav-item current active">
+                      <a class="nav-link dropdown-item nav-internal" href="#">
+                        Image filter and manipulation (medpy.filter)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="features.html">
+                        Image feature extraction and manipulation (medpy.features)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="iterators.html">
+                        Image iterators (medpy.iterators)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="neighbours.html">
+                        Neighbours (medpy.neighbours)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="graphcut.html">
+                        Graph-cut (max-flow/min-cut) (medpy.graphcut)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="core.html">
+                        Core functionalities and shared exception objects (medpy.core)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="utilities.html">
+                        Utilities without a direct connection to medical image processing (medpy.utilities)
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
     </div>
-  </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-
-    <div class="container">
-      <div class="main">
-        
-	<div class="row-fluid">
-	  <div class="span12">
-	    <div class="spc-navbar">
-              
-    <ul class="nav nav-pills pull-left">
-        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
-        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-	
-        <li class="active"><a href="index.html">MedPy 0.4.0 documentation</a></li>
-	 
-    </ul>
-              
-              
-    <ul class="nav nav-pills pull-right">
-      <li class="active">
-        <a href="genindex.html" title="General Index"
-           accesskey="I">index</a>
-      </li>
-      <li class="active">
-        <a href="py-modindex.html" title="Python Module Index"
-           >modules</a>
-      </li>
-      <li class="active">
-        <a href="generated/medpy.filter.smoothing.anisotropic_diffusion.html" title="medpy.filter.smoothing.anisotropic_diffusion"
-           accesskey="N">next</a>
-      </li>
-      <li class="active">
-        <a href="generated/medpy.metric.histogram.relative_deviation.html" title="medpy.metric.histogram.relative_deviation"
-           accesskey="P">previous</a>
-      </li>
-    </ul>
-              
-	    </div>
-	  </div>
-	</div>
-        
-
-	<div class="row-fluid">
-      <div class="spc-rightsidebar span3">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a><ul>
-<li><a class="reference internal" href="#smoothing-medpy-filter-smoothing">Smoothing <code class="docutils literal"><span class="pre">medpy.filter.smoothing</span></code></a></li>
-<li><a class="reference internal" href="#binary-medpy-filter-binary">Binary <code class="docutils literal"><span class="pre">medpy.filter.binary</span></code></a></li>
-<li><a class="reference internal" href="#image-medpy-filter-image">Image <code class="docutils literal"><span class="pre">medpy.filter.image</span></code></a></li>
-<li><a class="reference internal" href="#label-medpy-filter-label">Label <code class="docutils literal"><span class="pre">medpy.filter.label</span></code></a></li>
-<li><a class="reference internal" href="#noise-medpy-filter-noise">Noise <code class="docutils literal"><span class="pre">medpy.filter.noise</span></code></a></li>
-<li><a class="reference internal" href="#utilities-medpy-filter-utilities">Utilities <code class="docutils literal"><span class="pre">medpy.filter.utilities</span></code></a></li>
-<li><a class="reference internal" href="#hough-transform-medpy-filter-houghtransform">Hough transform <code class="docutils literal"><span class="pre">medpy.filter.houghtransform</span></code></a></li>
-<li><a class="reference internal" href="#intensity-range-standardization-medpy-filter-intensityrangestandardization">Intensity range standardization <code class="docutils literal"><span class="pre">medpy.filter.IntensityRangeStandardization</span></code></a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="generated/medpy.metric.histogram.relative_deviation.html"
-                        title="previous chapter">medpy.metric.histogram.relative_deviation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="generated/medpy.filter.smoothing.anisotropic_diffusion.html"
-                        title="next chapter">medpy.filter.smoothing.anisotropic_diffusion</a></p>
-  <h3>This Page</h3>
-  <div>
-    <a href="_sources/filter.rst.txt"
-       rel="nofollow">Show Source</a>
-  </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="io.html">
+                        Image I/O functionalities (medpy.io)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="metric.html">
+                        Metric measures (medpy.metric)
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+                    More
+                </button>
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
+                    
+                    <li class="nav-item current active">
+                      <a class="nav-link dropdown-item nav-internal" href="#">
+                        Image filter and manipulation (medpy.filter)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="features.html">
+                        Image feature extraction and manipulation (medpy.features)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="iterators.html">
+                        Image iterators (medpy.iterators)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="neighbours.html">
+                        Neighbours (medpy.neighbours)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="graphcut.html">
+                        Graph-cut (max-flow/min-cut) (medpy.graphcut)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="core.html">
+                        Core functionalities and shared exception objects (medpy.core)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="utilities.html">
+                        Utilities without a direct connection to medical image processing (medpy.utilities)
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+        
       </div>
-          <div class="span9">
-            
-        <div class="bodywrapper">
-          <div class="body" id="spc-section-body">
-            
-  <span class="target" id="module-medpy.filter"></span><div class="section" id="image-filter-and-manipulation-medpy-filter">
-<h1>Image filter and manipulation (<a class="reference internal" href="#module-medpy.filter" title="medpy.filter"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter</span></code></a>)<a class="headerlink" href="#image-filter-and-manipulation-medpy-filter" title="Permalink to this headline">¶</a></h1>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html">medpy.filter.smoothing.anisotropic_diffusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.smoothing.gauss_xminus1d.html">medpy.filter.smoothing.gauss_xminus1d</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.binary.size_threshold.html">medpy.filter.binary.size_threshold</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.binary.largest_connected_component.html">medpy.filter.binary.largest_connected_component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.binary.bounding_box.html">medpy.filter.binary.bounding_box</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.sls.html">medpy.filter.image.sls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.ssd.html">medpy.filter.image.ssd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.average_filter.html">medpy.filter.image.average_filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.sum_filter.html">medpy.filter.image.sum_filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.local_minima.html">medpy.filter.image.local_minima</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.otsu.html">medpy.filter.image.otsu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.image.resample.html">medpy.filter.image.resample</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.label.relabel_map.html">medpy.filter.label.relabel_map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.label.relabel.html">medpy.filter.label.relabel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.label.relabel_non_zero.html">medpy.filter.label.relabel_non_zero</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.label.fit_labels_to_mask.html">medpy.filter.label.fit_labels_to_mask</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.noise.immerkaer.html">medpy.filter.noise.immerkaer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.noise.immerkaer_local.html">medpy.filter.noise.immerkaer_local</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.noise.separable_convolution.html">medpy.filter.noise.separable_convolution</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.utilities.xminus1d.html">medpy.filter.utilities.xminus1d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.utilities.intersection.html">medpy.filter.utilities.intersection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.utilities.pad.html">medpy.filter.utilities.pad</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html">medpy.filter.houghtransform.ght</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.houghtransform.ght_alternative.html">medpy.filter.houghtransform.ght_alternative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.houghtransform.template_ellipsoid.html">medpy.filter.houghtransform.template_ellipsoid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.houghtransform.template_sphere.html">medpy.filter.houghtransform.template_sphere</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.html">medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Image...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="image-filter-and-manipulation-medpy-filter">
+<span id="module-medpy.filter"></span><h1>Image filter and manipulation (<a class="reference internal" href="#module-medpy.filter" title="medpy.filter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter</span></code></a>)<a class="headerlink" href="#image-filter-and-manipulation-medpy-filter" title="Link to this heading">#</a></h1>
 <p>This package contains various image filters and image
 manipulation functions.</p>
-<div class="section" id="smoothing-medpy-filter-smoothing">
-<h2>Smoothing <a class="reference internal" href="#module-medpy.filter.smoothing" title="medpy.filter.smoothing"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.smoothing</span></code></a><a class="headerlink" href="#smoothing-medpy-filter-smoothing" title="Permalink to this headline">¶</a></h2>
+<section id="smoothing-medpy-filter-smoothing">
+<h2>Smoothing <a class="reference internal" href="#module-medpy.filter.smoothing" title="medpy.filter.smoothing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.smoothing</span></code></a><a class="headerlink" href="#smoothing-medpy-filter-smoothing" title="Link to this heading">#</a></h2>
 <p>Image smoothing / noise reduction in grayscale images.</p>
-<span class="target" id="module-medpy.filter.smoothing"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html#medpy.filter.smoothing.anisotropic_diffusion" title="medpy.filter.smoothing.anisotropic_diffusion"><code class="xref py py-obj docutils literal"><span class="pre">anisotropic_diffusion</span></code></a>(img[,&nbsp;niter,&nbsp;kappa,&nbsp;…])</td>
-<td>Edge-preserving, XD Anisotropic diffusion.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.smoothing.anisotropic_diffusion.html#medpy.filter.smoothing.anisotropic_diffusion" title="medpy.filter.smoothing.anisotropic_diffusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">anisotropic_diffusion</span></code></a>(img[, niter, kappa, ...])</p></td>
+<td><p>Edge-preserving, XD Anisotropic diffusion.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.smoothing.gauss_xminus1d.html#medpy.filter.smoothing.gauss_xminus1d" title="medpy.filter.smoothing.gauss_xminus1d"><code class="xref py py-obj docutils literal"><span class="pre">gauss_xminus1d</span></code></a>(img,&nbsp;sigma[,&nbsp;dim])</td>
-<td>Applies a X-1D gauss to a copy of a XD image, slicing it along dim.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.smoothing.gauss_xminus1d.html#medpy.filter.smoothing.gauss_xminus1d" title="medpy.filter.smoothing.gauss_xminus1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gauss_xminus1d</span></code></a>(img, sigma[, dim])</p></td>
+<td><p>Applies a X-1D gauss to a copy of a XD image, slicing it along dim.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="binary-medpy-filter-binary">
-<h2>Binary <a class="reference internal" href="#module-medpy.filter.binary" title="medpy.filter.binary"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.binary</span></code></a><a class="headerlink" href="#binary-medpy-filter-binary" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="binary-medpy-filter-binary">
+<h2>Binary <a class="reference internal" href="#module-medpy.filter.binary" title="medpy.filter.binary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.binary</span></code></a><a class="headerlink" href="#binary-medpy-filter-binary" title="Link to this heading">#</a></h2>
 <p>Binary image manipulation.</p>
-<span class="target" id="module-medpy.filter.binary"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.binary.size_threshold.html#medpy.filter.binary.size_threshold" title="medpy.filter.binary.size_threshold"><code class="xref py py-obj docutils literal"><span class="pre">size_threshold</span></code></a>(img,&nbsp;thr[,&nbsp;comp,&nbsp;structure])</td>
-<td>Removes binary objects from an image identified by a size threshold.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.binary.size_threshold.html#medpy.filter.binary.size_threshold" title="medpy.filter.binary.size_threshold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size_threshold</span></code></a>(img, thr[, comp, structure])</p></td>
+<td><p>Removes binary objects from an image identified by a size threshold.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.binary.largest_connected_component.html#medpy.filter.binary.largest_connected_component" title="medpy.filter.binary.largest_connected_component"><code class="xref py py-obj docutils literal"><span class="pre">largest_connected_component</span></code></a>(img[,&nbsp;structure])</td>
-<td>Select the largest connected binary component in an image.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.binary.largest_connected_component.html#medpy.filter.binary.largest_connected_component" title="medpy.filter.binary.largest_connected_component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">largest_connected_component</span></code></a>(img[, structure])</p></td>
+<td><p>Select the largest connected binary component in an image.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.binary.bounding_box.html#medpy.filter.binary.bounding_box" title="medpy.filter.binary.bounding_box"><code class="xref py py-obj docutils literal"><span class="pre">bounding_box</span></code></a>(img)</td>
-<td>Return the bounding box incorporating all non-zero values in the image.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.binary.bounding_box.html#medpy.filter.binary.bounding_box" title="medpy.filter.binary.bounding_box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bounding_box</span></code></a>(img)</p></td>
+<td><p>Return the bounding box incorporating all non-zero values in the image.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="image-medpy-filter-image">
-<h2>Image <a class="reference internal" href="#module-medpy.filter.image" title="medpy.filter.image"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.image</span></code></a><a class="headerlink" href="#image-medpy-filter-image" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="image-medpy-filter-image">
+<h2>Image <a class="reference internal" href="#module-medpy.filter.image" title="medpy.filter.image"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.image</span></code></a><a class="headerlink" href="#image-medpy-filter-image" title="Link to this heading">#</a></h2>
 <p>Grayscale image manipulation.</p>
-<span class="target" id="module-medpy.filter.image"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.sls.html#medpy.filter.image.sls" title="medpy.filter.image.sls"><code class="xref py py-obj docutils literal"><span class="pre">sls</span></code></a>(minuend,&nbsp;subtrahend[,&nbsp;metric,&nbsp;noise,&nbsp;…])</td>
-<td>Computes the signed local similarity between two images.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.image.sls.html#medpy.filter.image.sls" title="medpy.filter.image.sls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sls</span></code></a>(minuend, subtrahend[, metric, noise, ...])</p></td>
+<td><p>Computes the signed local similarity between two images.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.image.ssd.html#medpy.filter.image.ssd" title="medpy.filter.image.ssd"><code class="xref py py-obj docutils literal"><span class="pre">ssd</span></code></a>(minuend,&nbsp;subtrahend[,&nbsp;normalized,&nbsp;…])</td>
-<td>Computes the sum of squared difference (SSD) between patches of minuend and subtrahend.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.image.ssd.html#medpy.filter.image.ssd" title="medpy.filter.image.ssd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssd</span></code></a>(minuend, subtrahend[, normalized, ...])</p></td>
+<td><p>Computes the sum of squared difference (SSD) between patches of minuend and subtrahend.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.average_filter.html#medpy.filter.image.average_filter" title="medpy.filter.image.average_filter"><code class="xref py py-obj docutils literal"><span class="pre">average_filter</span></code></a>(input[,&nbsp;size,&nbsp;footprint,&nbsp;…])</td>
-<td>Calculates a multi-dimensional average filter.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.image.average_filter.html#medpy.filter.image.average_filter" title="medpy.filter.image.average_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_filter</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Calculates a multi-dimensional average filter.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.image.sum_filter.html#medpy.filter.image.sum_filter" title="medpy.filter.image.sum_filter"><code class="xref py py-obj docutils literal"><span class="pre">sum_filter</span></code></a>(input[,&nbsp;size,&nbsp;footprint,&nbsp;output,&nbsp;…])</td>
-<td>Calculates a multi-dimensional sum filter.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.image.sum_filter.html#medpy.filter.image.sum_filter" title="medpy.filter.image.sum_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum_filter</span></code></a>(input[, size, footprint, output, ...])</p></td>
+<td><p>Calculates a multi-dimensional sum filter.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.local_minima.html#medpy.filter.image.local_minima" title="medpy.filter.image.local_minima"><code class="xref py py-obj docutils literal"><span class="pre">local_minima</span></code></a>(img[,&nbsp;min_distance])</td>
-<td>Returns all local minima from an image.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.image.local_minima.html#medpy.filter.image.local_minima" title="medpy.filter.image.local_minima"><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_minima</span></code></a>(img[, min_distance])</p></td>
+<td><p>Returns all local minima from an image.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.image.otsu.html#medpy.filter.image.otsu" title="medpy.filter.image.otsu"><code class="xref py py-obj docutils literal"><span class="pre">otsu</span></code></a>(img[,&nbsp;bins])</td>
-<td>Otsu’s method to find the optimal threshold separating an image into fore- and background.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.image.otsu.html#medpy.filter.image.otsu" title="medpy.filter.image.otsu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">otsu</span></code></a>(img[, bins])</p></td>
+<td><p>Otsu's method to find the optimal threshold separating an image into fore- and background.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.image.resample.html#medpy.filter.image.resample" title="medpy.filter.image.resample"><code class="xref py py-obj docutils literal"><span class="pre">resample</span></code></a>(img,&nbsp;hdr,&nbsp;target_spacing[,&nbsp;…])</td>
-<td>Re-sample an image to a new voxel-spacing.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.image.resample.html#medpy.filter.image.resample" title="medpy.filter.image.resample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample</span></code></a>(img, hdr, target_spacing[, ...])</p></td>
+<td><p>Re-sample an image to a new voxel-spacing.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="label-medpy-filter-label">
-<h2>Label <a class="reference internal" href="#module-medpy.filter.label" title="medpy.filter.label"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.label</span></code></a><a class="headerlink" href="#label-medpy-filter-label" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="label-medpy-filter-label">
+<h2>Label <a class="reference internal" href="#module-medpy.filter.label" title="medpy.filter.label"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.label</span></code></a><a class="headerlink" href="#label-medpy-filter-label" title="Link to this heading">#</a></h2>
 <p>Label map manipulation.</p>
-<span class="target" id="module-medpy.filter.label"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.label.relabel_map.html#medpy.filter.label.relabel_map" title="medpy.filter.label.relabel_map"><code class="xref py py-obj docutils literal"><span class="pre">relabel_map</span></code></a>(label_image,&nbsp;mapping[,&nbsp;key])</td>
-<td>Relabel an image using the supplied mapping.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.label.relabel_map.html#medpy.filter.label.relabel_map" title="medpy.filter.label.relabel_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relabel_map</span></code></a>(label_image, mapping[, key])</p></td>
+<td><p>Relabel an image using the supplied mapping.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.label.relabel.html#medpy.filter.label.relabel" title="medpy.filter.label.relabel"><code class="xref py py-obj docutils literal"><span class="pre">relabel</span></code></a>(label_image[,&nbsp;start])</td>
-<td>Relabel the regions of a label image.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.label.relabel.html#medpy.filter.label.relabel" title="medpy.filter.label.relabel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relabel</span></code></a>(label_image[, start])</p></td>
+<td><p>Relabel the regions of a label image.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.label.relabel_non_zero.html#medpy.filter.label.relabel_non_zero" title="medpy.filter.label.relabel_non_zero"><code class="xref py py-obj docutils literal"><span class="pre">relabel_non_zero</span></code></a>(label_image[,&nbsp;start])</td>
-<td>Relabel the regions of a label image.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.label.relabel_non_zero.html#medpy.filter.label.relabel_non_zero" title="medpy.filter.label.relabel_non_zero"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relabel_non_zero</span></code></a>(label_image[, start])</p></td>
+<td><p>Relabel the regions of a label image.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.label.fit_labels_to_mask.html#medpy.filter.label.fit_labels_to_mask" title="medpy.filter.label.fit_labels_to_mask"><code class="xref py py-obj docutils literal"><span class="pre">fit_labels_to_mask</span></code></a>(label_image,&nbsp;mask)</td>
-<td>Reduces a label images by overlaying it with a binary mask and assign the labels either to the mask or to the background.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.label.fit_labels_to_mask.html#medpy.filter.label.fit_labels_to_mask" title="medpy.filter.label.fit_labels_to_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_labels_to_mask</span></code></a>(label_image, mask)</p></td>
+<td><p>Reduces a label images by overlaying it with a binary mask and assign the labels either to the mask or to the background.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="noise-medpy-filter-noise">
-<h2>Noise <a class="reference internal" href="#module-medpy.filter.noise" title="medpy.filter.noise"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.noise</span></code></a><a class="headerlink" href="#noise-medpy-filter-noise" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="noise-medpy-filter-noise">
+<h2>Noise <a class="reference internal" href="#module-medpy.filter.noise" title="medpy.filter.noise"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.noise</span></code></a><a class="headerlink" href="#noise-medpy-filter-noise" title="Link to this heading">#</a></h2>
 <p>Global and local noise estimation in grayscale images.</p>
-<span class="target" id="module-medpy.filter.noise"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.noise.immerkaer.html#medpy.filter.noise.immerkaer" title="medpy.filter.noise.immerkaer"><code class="xref py py-obj docutils literal"><span class="pre">immerkaer</span></code></a>(input[,&nbsp;mode,&nbsp;cval])</td>
-<td>Estimate the global noise.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.noise.immerkaer.html#medpy.filter.noise.immerkaer" title="medpy.filter.noise.immerkaer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">immerkaer</span></code></a>(input[, mode, cval])</p></td>
+<td><p>Estimate the global noise.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.noise.immerkaer_local.html#medpy.filter.noise.immerkaer_local" title="medpy.filter.noise.immerkaer_local"><code class="xref py py-obj docutils literal"><span class="pre">immerkaer_local</span></code></a>(input,&nbsp;size[,&nbsp;output,&nbsp;mode,&nbsp;…])</td>
-<td>Estimate the local noise.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.noise.immerkaer_local.html#medpy.filter.noise.immerkaer_local" title="medpy.filter.noise.immerkaer_local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">immerkaer_local</span></code></a>(input, size[, output, mode, ...])</p></td>
+<td><p>Estimate the local noise.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.noise.separable_convolution.html#medpy.filter.noise.separable_convolution" title="medpy.filter.noise.separable_convolution"><code class="xref py py-obj docutils literal"><span class="pre">separable_convolution</span></code></a>(input,&nbsp;weights[,&nbsp;…])</td>
-<td>Calculate a n-dimensional convolution of a separable kernel to a n-dimensional input.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.noise.separable_convolution.html#medpy.filter.noise.separable_convolution" title="medpy.filter.noise.separable_convolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separable_convolution</span></code></a>(input, weights[, ...])</p></td>
+<td><p>Calculate a n-dimensional convolution of a separable kernel to a n-dimensional input.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="utilities-medpy-filter-utilities">
-<h2>Utilities <a class="reference internal" href="#module-medpy.filter.utilities" title="medpy.filter.utilities"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.utilities</span></code></a><a class="headerlink" href="#utilities-medpy-filter-utilities" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="utilities-medpy-filter-utilities">
+<h2>Utilities <a class="reference internal" href="#module-medpy.filter.utilities" title="medpy.filter.utilities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.utilities</span></code></a><a class="headerlink" href="#utilities-medpy-filter-utilities" title="Link to this heading">#</a></h2>
 <p>Utilities to apply filters selectively and create your own ones.</p>
-<span class="target" id="module-medpy.filter.utilities"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.utilities.xminus1d.html#medpy.filter.utilities.xminus1d" title="medpy.filter.utilities.xminus1d"><code class="xref py py-obj docutils literal"><span class="pre">xminus1d</span></code></a>(img,&nbsp;fun,&nbsp;dim,&nbsp;*args,&nbsp;**kwargs)</td>
-<td>Applies the function fun along all X-1D dimensional volumes of the images img dimension dim.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.utilities.xminus1d.html#medpy.filter.utilities.xminus1d" title="medpy.filter.utilities.xminus1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xminus1d</span></code></a>(img, fun, dim, *args, **kwargs)</p></td>
+<td><p>Applies the function fun along all X-1D dimensional volumes of the images img dimension dim.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.utilities.intersection.html#medpy.filter.utilities.intersection" title="medpy.filter.utilities.intersection"><code class="xref py py-obj docutils literal"><span class="pre">intersection</span></code></a>(i1,&nbsp;h1,&nbsp;i2,&nbsp;h2)</td>
-<td>Returns the intersecting parts of two images in real world coordinates.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.utilities.intersection.html#medpy.filter.utilities.intersection" title="medpy.filter.utilities.intersection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intersection</span></code></a>(i1, h1, i2, h2)</p></td>
+<td><p>Returns the intersecting parts of two images in real world coordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.utilities.pad.html#medpy.filter.utilities.pad" title="medpy.filter.utilities.pad"><code class="xref py py-obj docutils literal"><span class="pre">pad</span></code></a>(input[,&nbsp;size,&nbsp;footprint,&nbsp;output,&nbsp;mode,&nbsp;cval])</td>
-<td>Returns a copy of the input, padded by the supplied structuring element.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.utilities.pad.html#medpy.filter.utilities.pad" title="medpy.filter.utilities.pad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pad</span></code></a>(input[, size, footprint, output, mode, cval])</p></td>
+<td><p>Returns a copy of the input, padded by the supplied structuring element.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="hough-transform-medpy-filter-houghtransform">
-<h2>Hough transform <a class="reference internal" href="#module-medpy.filter.houghtransform" title="medpy.filter.houghtransform"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.houghtransform</span></code></a><a class="headerlink" href="#hough-transform-medpy-filter-houghtransform" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="hough-transform-medpy-filter-houghtransform">
+<h2>Hough transform <a class="reference internal" href="#module-medpy.filter.houghtransform" title="medpy.filter.houghtransform"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.houghtransform</span></code></a><a class="headerlink" href="#hough-transform-medpy-filter-houghtransform" title="Link to this heading">#</a></h2>
 <p>The hough transform shape detection algorithm.</p>
-<span class="target" id="module-medpy.filter.houghtransform"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html#medpy.filter.houghtransform.ght" title="medpy.filter.houghtransform.ght"><code class="xref py py-obj docutils literal"><span class="pre">ght</span></code></a>(img,&nbsp;template)</td>
-<td>Implementation of the general hough transform for all dimensions.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html#medpy.filter.houghtransform.ght" title="medpy.filter.houghtransform.ght"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ght</span></code></a>(img, template)</p></td>
+<td><p>Implementation of the general hough transform for all dimensions.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.ght_alternative.html#medpy.filter.houghtransform.ght_alternative" title="medpy.filter.houghtransform.ght_alternative"><code class="xref py py-obj docutils literal"><span class="pre">ght_alternative</span></code></a>(img,&nbsp;template,&nbsp;indices)</td>
-<td>Alternative implementation of the general hough transform, which uses iteration over indices rather than broadcasting rules like <a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html#medpy.filter.houghtransform.ght" title="medpy.filter.houghtransform.ght"><code class="xref py py-obj docutils literal"><span class="pre">ght</span></code></a>.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.houghtransform.ght_alternative.html#medpy.filter.houghtransform.ght_alternative" title="medpy.filter.houghtransform.ght_alternative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ght_alternative</span></code></a>(img, template, indices)</p></td>
+<td><p>Alternative implementation of the general hough transform, which uses iteration over indices rather than broadcasting rules like <a class="reference internal" href="generated/medpy.filter.houghtransform.ght.html#medpy.filter.houghtransform.ght" title="medpy.filter.houghtransform.ght"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ght</span></code></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.template_ellipsoid.html#medpy.filter.houghtransform.template_ellipsoid" title="medpy.filter.houghtransform.template_ellipsoid"><code class="xref py py-obj docutils literal"><span class="pre">template_ellipsoid</span></code></a>(shape)</td>
-<td>Returns an ellipsoid binary structure of a of the supplied radius that can be used as template input to the generalized hough transform.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.houghtransform.template_ellipsoid.html#medpy.filter.houghtransform.template_ellipsoid" title="medpy.filter.houghtransform.template_ellipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_ellipsoid</span></code></a>(shape)</p></td>
+<td><p>Returns an ellipsoid binary structure of a of the supplied radius that can be used as template input to the generalized hough transform.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.filter.houghtransform.template_sphere.html#medpy.filter.houghtransform.template_sphere" title="medpy.filter.houghtransform.template_sphere"><code class="xref py py-obj docutils literal"><span class="pre">template_sphere</span></code></a>(radius,&nbsp;dimensions)</td>
-<td>Returns a spherical binary structure of a of the supplied radius that can be used as template input to the generalized hough transform.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.filter.houghtransform.template_sphere.html#medpy.filter.houghtransform.template_sphere" title="medpy.filter.houghtransform.template_sphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_sphere</span></code></a>(radius, dimensions)</p></td>
+<td><p>Returns a spherical binary structure of a of the supplied radius that can be used as template input to the generalized hough transform.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="intensity-range-standardization-medpy-filter-intensityrangestandardization">
-<h2>Intensity range standardization <a class="reference internal" href="#module-medpy.filter.IntensityRangeStandardization" title="medpy.filter.IntensityRangeStandardization"><code class="xref py py-mod docutils literal"><span class="pre">medpy.filter.IntensityRangeStandardization</span></code></a><a class="headerlink" href="#intensity-range-standardization-medpy-filter-intensityrangestandardization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="intensity-range-standardization-medpy-filter-intensityrangestandardization">
+<h2>Intensity range standardization <a class="reference internal" href="#module-medpy.filter.IntensityRangeStandardization" title="medpy.filter.IntensityRangeStandardization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.IntensityRangeStandardization</span></code></a><a class="headerlink" href="#intensity-range-standardization-medpy-filter-intensityrangestandardization" title="Link to this heading">#</a></h2>
 <p>A learning method to align the intensity ranges of images.</p>
-<span class="target" id="module-medpy.filter.IntensityRangeStandardization"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization"><code class="xref py py-obj docutils literal"><span class="pre">IntensityRangeStandardization</span></code></a>([cutoffp,&nbsp;…])</td>
-<td>Class to standardize intensity ranges between a number of images.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization.html#medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization" title="medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntensityRangeStandardization</span></code></a>([cutoffp, ...])</p></td>
+<td><p>Class to standardize intensity ranges between a number of images.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
+</section>
+</section>
 
 
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-    <div class="container container-navbar-bottom">
-      <div class="spc-navbar">
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smoothing-medpy-filter-smoothing">Smoothing <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.smoothing</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-medpy-filter-binary">Binary <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.binary</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-medpy-filter-image">Image <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.image</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#label-medpy-filter-label">Label <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.label</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#noise-medpy-filter-noise">Noise <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.noise</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities-medpy-filter-utilities">Utilities <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.utilities</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hough-transform-medpy-filter-houghtransform">Hough transform <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.houghtransform</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intensity-range-standardization-medpy-filter-intensityrangestandardization">Intensity range standardization <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.filter.IntensityRangeStandardization</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/loli/medpy/edit/master/doc/source/filter.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
         
-      </div>
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
     </div>
-    <div class="container">
-    <div class="footer">
-    <div class="row-fluid">
-    <ul class="inline pull-left">
-      <li>
-        &copy; Copyright 2013-2019, Oskar Maier.
-      </li>
-      <li>
-      Last updated on Feb 14, 2019.
-      </li>
-      <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
-      </li>
-    </ul>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2013-2024, Oskar Maier.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
     </div>
-    </div>
+  
+</div>
+
+  </footer>
   </body>
 </html>

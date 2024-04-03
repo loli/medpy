@@ -1,0 +1,26 @@
+medpy.graphcut.maxflow.GraphInt
+===============================
+
+::: {.currentmodule}
+medpy.graphcut.maxflow
+:::
+
+::: {.autoclass}
+GraphInt
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~GraphInt.\_\_init\_\_ \~GraphInt.add\_edge \~GraphInt.add\_node
+\~GraphInt.add\_tweights \~GraphInt.get\_arc\_ends
+\~GraphInt.get\_arc\_num \~GraphInt.get\_edge \~GraphInt.get\_node\_num
+\~GraphInt.get\_rcap \~GraphInt.get\_trcap \~GraphInt.mark\_node
+\~GraphInt.maxflow \~GraphInt.remove\_from\_changed\_list
+\~GraphInt.reset \~GraphInt.set\_rcap \~GraphInt.set\_trcap
+\~GraphInt.sum\_edge \~GraphInt.what\_segment
+:::
+:::

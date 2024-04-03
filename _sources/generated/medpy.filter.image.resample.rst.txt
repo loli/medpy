@@ -1,0 +1,6 @@
+﻿medpy.filter.image.resample
+===========================
+
+.. currentmodule:: medpy.filter.image
+
+.. autofunction:: resample

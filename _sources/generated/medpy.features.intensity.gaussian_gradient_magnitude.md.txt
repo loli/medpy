@@ -1,0 +1,10 @@
+medpy.features.intensity.gaussian\_gradient\_magnitude
+======================================================
+
+::: {.currentmodule}
+medpy.features.intensity
+:::
+
+::: {.autofunction}
+gaussian\_gradient\_magnitude
+:::

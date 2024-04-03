@@ -1,0 +1,10 @@
+medpy.core.exceptions.ImageTypeError
+====================================
+
+::: {.currentmodule}
+medpy.core.exceptions
+:::
+
+::: {.autoexception}
+ImageTypeError
+:::

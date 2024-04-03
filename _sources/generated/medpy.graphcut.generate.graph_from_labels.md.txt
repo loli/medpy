@@ -1,0 +1,10 @@
+medpy.graphcut.generate.graph\_from\_labels
+===========================================
+
+::: {.currentmodule}
+medpy.graphcut.generate
+:::
+
+::: {.autofunction}
+graph\_from\_labels
+:::

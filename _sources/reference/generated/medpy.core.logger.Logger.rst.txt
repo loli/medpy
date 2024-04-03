@@ -1,0 +1,54 @@
+﻿medpy.core.logger.Logger
+========================
+
+.. currentmodule:: medpy.core.logger
+
+.. autoclass:: Logger
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Logger.__init__
+      ~Logger.addFilter
+      ~Logger.addHandler
+      ~Logger.callHandlers
+      ~Logger.critical
+      ~Logger.debug
+      ~Logger.error
+      ~Logger.exception
+      ~Logger.fatal
+      ~Logger.filter
+      ~Logger.findCaller
+      ~Logger.getChild
+      ~Logger.getEffectiveLevel
+      ~Logger.handle
+      ~Logger.hasHandlers
+      ~Logger.info
+      ~Logger.isEnabledFor
+      ~Logger.log
+      ~Logger.makeRecord
+      ~Logger.removeFilter
+      ~Logger.removeHandler
+      ~Logger.setHandler
+      ~Logger.setLevel
+      ~Logger.warn
+      ~Logger.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Logger.getInstance
+      ~Logger.manager
+      ~Logger.root
+   
+   

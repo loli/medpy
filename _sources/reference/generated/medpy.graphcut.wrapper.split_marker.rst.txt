@@ -1,0 +1,6 @@
+﻿medpy.graphcut.wrapper.split\_marker
+====================================
+
+.. currentmodule:: medpy.graphcut.wrapper
+
+.. autofunction:: split_marker

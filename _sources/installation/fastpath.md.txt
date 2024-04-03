@@ -1,0 +1,16 @@
+Installing MedPy the fast way
+=============================
+
+::: {.note}
+::: {.title}
+Note
+:::
+
+All installation instructions are for Debian derivates, such as Ubuntu,
+but they should be simmilar for other distributions.
+:::
+
+``` {.bash}
+sudo apt-get install libboost-python-dev build-essential
+python3 -m pip install medpy
+```

@@ -1,0 +1,10 @@
+medpy.graphcut.wrapper.graphcut\_split
+======================================
+
+::: {.currentmodule}
+medpy.graphcut.wrapper
+:::
+
+::: {.autofunction}
+graphcut\_split
+:::

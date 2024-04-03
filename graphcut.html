@@ -1,353 +1,733 @@
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="./" >
+
   <head>
-    <meta charset="utf-8">
-    
-    <title>Graph-cut (max-flow/min-cut) (medpy.graphcut) &mdash; MedPy 0.4.0 documentation</title>
-    
-    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
-    <link rel="stylesheet" href="_static/scipy.css" type="text/css" >
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.4.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/copybutton.js"></script>
-    <link rel="index" title="Index" href="genindex.html" >
-    <link rel="search" title="Search" href="search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="index.html" >
-    <link rel="next" title="medpy.graphcut.generate.graph_from_voxels" href="generated/medpy.graphcut.generate.graph_from_voxels.html" >
-    <link rel="prev" title="medpy.neighbours.knn.pdist" href="generated/medpy.neighbours.knn.pdist.html" > 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Graph-cut (max-flow/min-cut) (medpy.graphcut) &#8212; MedPy 0.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'graphcut';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="medpy.graphcut.generate.graph_from_voxels" href="generated/medpy.graphcut.generate.graph_from_voxels.html" />
+    <link rel="prev" title="medpy.neighbours.knn.pdist" href="generated/medpy.neighbours.knn.pdist.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Feb 03, 2024"/>
   </head>
-  <body>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  <div class="container">
-    <div class="header">
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MedPy 0.5.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="io.html">
+                        Image I/O functionalities (medpy.io)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="metric.html">
+                        Metric measures (medpy.metric)
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="filter.html">
+                        Image filter and manipulation (medpy.filter)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="features.html">
+                        Image feature extraction and manipulation (medpy.features)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="iterators.html">
+                        Image iterators (medpy.iterators)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="neighbours.html">
+                        Neighbours (medpy.neighbours)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link dropdown-item nav-internal" href="#">
+                        Graph-cut (max-flow/min-cut) (medpy.graphcut)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="core.html">
+                        Core functionalities and shared exception objects (medpy.core)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="utilities.html">
+                        Utilities without a direct connection to medical image processing (medpy.utilities)
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
     </div>
-  </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-
-    <div class="container">
-      <div class="main">
-        
-	<div class="row-fluid">
-	  <div class="span12">
-	    <div class="spc-navbar">
-              
-    <ul class="nav nav-pills pull-left">
-        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
-        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-	
-        <li class="active"><a href="index.html">MedPy 0.4.0 documentation</a></li>
-	 
-    </ul>
-              
-              
-    <ul class="nav nav-pills pull-right">
-      <li class="active">
-        <a href="genindex.html" title="General Index"
-           accesskey="I">index</a>
-      </li>
-      <li class="active">
-        <a href="py-modindex.html" title="Python Module Index"
-           >modules</a>
-      </li>
-      <li class="active">
-        <a href="generated/medpy.graphcut.generate.graph_from_voxels.html" title="medpy.graphcut.generate.graph_from_voxels"
-           accesskey="N">next</a>
-      </li>
-      <li class="active">
-        <a href="generated/medpy.neighbours.knn.pdist.html" title="medpy.neighbours.knn.pdist"
-           accesskey="P">previous</a>
-      </li>
-    </ul>
-              
-	    </div>
-	  </div>
-	</div>
-        
-
-	<div class="row-fluid">
-      <div class="spc-rightsidebar span3">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Graph-cut (max-flow/min-cut) (<code class="docutils literal"><span class="pre">medpy.graphcut</span></code>)</a><ul>
-<li><a class="reference internal" href="#directly-generate-graphs-from-image-medpy-graphcut-generate">Directly generate graphs from image <code class="docutils literal"><span class="pre">medpy.graphcut.generate</span></code></a></li>
-<li><a class="reference internal" href="#energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel">Energy terms for voxel-based graph-cuts <code class="docutils literal"><span class="pre">medpy.graphcut.energy_voxel</span></code></a><ul>
-<li><a class="reference internal" href="#boundary-energy-terms">Boundary energy terms</a></li>
-<li><a class="reference internal" href="#regional-energy-terms">Regional energy terms</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label">Energy terms for label-based graph-cuts <code class="docutils literal"><span class="pre">medpy.graphcut.energy_label</span></code></a><ul>
-<li><a class="reference internal" href="#id8">Boundary energy terms</a></li>
-<li><a class="reference internal" href="#id9">Regional energy terms</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#persist-a-graph-medpy-graphcut-write">Persist a graph <code class="docutils literal"><span class="pre">medpy.graphcut.write</span></code></a></li>
-<li><a class="reference internal" href="#graph-medpy-graphcut-graph">Graph <code class="docutils literal"><span class="pre">medpy.graphcut.graph</span></code></a></li>
-<li><a class="reference internal" href="#maxflow-medpy-graphcut-maxflow">Maxflow <code class="docutils literal"><span class="pre">medpy.graphcut.maxflow</span></code></a></li>
-<li><a class="reference internal" href="#wrapper-medpy-graphcut-wrapper">Wrapper <code class="docutils literal"><span class="pre">medpy.graphcut.wrapper</span></code></a><ul>
-<li><a class="reference internal" href="#example-of-voxel-based-graph-cut">Example of voxel based graph cut</a></li>
-<li><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="generated/medpy.neighbours.knn.pdist.html"
-                        title="previous chapter">medpy.neighbours.knn.pdist</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="generated/medpy.graphcut.generate.graph_from_voxels.html"
-                        title="next chapter">medpy.graphcut.generate.graph_from_voxels</a></p>
-  <h3>This Page</h3>
-  <div>
-    <a href="_sources/graphcut.rst.txt"
-       rel="nofollow">Show Source</a>
-  </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="io.html">
+                        Image I/O functionalities (medpy.io)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="metric.html">
+                        Metric measures (medpy.metric)
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+                    More
+                </button>
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="filter.html">
+                        Image filter and manipulation (medpy.filter)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="features.html">
+                        Image feature extraction and manipulation (medpy.features)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="iterators.html">
+                        Image iterators (medpy.iterators)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="neighbours.html">
+                        Neighbours (medpy.neighbours)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link dropdown-item nav-internal" href="#">
+                        Graph-cut (max-flow/min-cut) (medpy.graphcut)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="core.html">
+                        Core functionalities and shared exception objects (medpy.core)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="utilities.html">
+                        Utilities without a direct connection to medical image processing (medpy.utilities)
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+        
       </div>
-          <div class="span9">
-            
-        <div class="bodywrapper">
-          <div class="body" id="spc-section-body">
-            
-  <span class="target" id="module-medpy.graphcut"></span><div class="section" id="graph-cut-max-flow-min-cut-medpy-graphcut">
-<h1>Graph-cut (max-flow/min-cut) (<a class="reference internal" href="#module-medpy.graphcut" title="medpy.graphcut"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut</span></code></a>)<a class="headerlink" href="#graph-cut-max-flow-min-cut-medpy-graphcut" title="Permalink to this headline">¶</a></h1>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_voxels.html">medpy.graphcut.generate.graph_from_voxels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_labels.html">medpy.graphcut.generate.graph_from_labels</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_linear.html">medpy.graphcut.energy_voxel.boundary_maximum_linear</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_linear.html">medpy.graphcut.energy_voxel.boundary_difference_linear</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_exponential.html">medpy.graphcut.energy_voxel.boundary_maximum_exponential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_exponential.html">medpy.graphcut.energy_voxel.boundary_difference_exponential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_division.html">medpy.graphcut.energy_voxel.boundary_maximum_division</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_division.html">medpy.graphcut.energy_voxel.boundary_difference_division</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_power.html">medpy.graphcut.energy_voxel.boundary_maximum_power</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_power.html">medpy.graphcut.energy_voxel.boundary_difference_power</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.regional_probability_map.html">medpy.graphcut.energy_voxel.regional_probability_map</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_difference_of_means.html">medpy.graphcut.energy_label.boundary_difference_of_means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski.html">medpy.graphcut.energy_label.boundary_stawiaski</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski_directed.html">medpy.graphcut.energy_label.boundary_stawiaski_directed</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.energy_label.regional_atlas.html">medpy.graphcut.energy_label.regional_atlas</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.write.graph_to_dimacs.html">medpy.graphcut.write.graph_to_dimacs</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.graph.GCGraph.html">medpy.graphcut.graph.GCGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.graph.Graph.html">medpy.graphcut.graph.Graph</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphDouble.html">medpy.graphcut.maxflow.GraphDouble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphFloat.html">medpy.graphcut.maxflow.GraphFloat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphInt.html">medpy.graphcut.maxflow.GraphInt</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.wrapper.split_marker.html">medpy.graphcut.wrapper.split_marker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_split.html">medpy.graphcut.wrapper.graphcut_split</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_subprocesses.html">medpy.graphcut.wrapper.graphcut_subprocesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_stawiaski.html">medpy.graphcut.wrapper.graphcut_stawiaski</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Graph-cut...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="graph-cut-max-flow-min-cut-medpy-graphcut">
+<span id="module-medpy.graphcut"></span><h1>Graph-cut (max-flow/min-cut) (<a class="reference internal" href="#module-medpy.graphcut" title="medpy.graphcut"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut</span></code></a>)<a class="headerlink" href="#graph-cut-max-flow-min-cut-medpy-graphcut" title="Link to this heading">#</a></h1>
 <p>Provides functionalities to efficiently construct nD graphs from various sources using
 arbitrary energy functions (boundary and regional terms). The graph can then be saved in
-the Dimacs graph standard <a class="reference internal" href="#r28" id="id1">[R28]</a> and/or processed (i.e. cut) using 3rd party graph-cut <a class="reference internal" href="#r24" id="id2">[R24]</a>
+the Dimacs graph standard <a class="reference internal" href="#r0edf6d6ddef8-5" id="id1">[5]</a> and/or processed (i.e. cut) using 3rd party graph-cut <a class="reference internal" href="#r0edf6d6ddef8-1" id="id2">[1]</a>
 algorithms.</p>
-<p>This module makes use of a custom <em>Boost.Python</em> <a class="reference internal" href="#r25" id="id3">[R25]</a> wrapper written for a modified
-version of Boykov and Kolmogorovs max-flow/min-cut algorithm (v3.01) <a class="reference internal" href="#r27" id="id4">[R27]</a> that can be found at <a class="reference internal" href="#r26" id="id5">[R26]</a>.</p>
+<p>This module makes use of a custom <em>Boost.Python</em> <a class="reference internal" href="#r0edf6d6ddef8-2" id="id3">[2]</a> wrapper written for a modified
+version of Boykov and Kolmogorovs max-flow/min-cut algorithm (v3.01) <a class="reference internal" href="#r0edf6d6ddef8-4" id="id4">[4]</a> that can be found at <a class="reference internal" href="#r0edf6d6ddef8-3" id="id5">[3]</a>.</p>
 <p>Supports voxel- as well as label/region-based graph-cuts.</p>
 <p>See below for examples.</p>
-<div class="section" id="directly-generate-graphs-from-image-medpy-graphcut-generate">
-<h2>Directly generate graphs from image <a class="reference internal" href="#module-medpy.graphcut.generate" title="medpy.graphcut.generate"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.generate</span></code></a><a class="headerlink" href="#directly-generate-graphs-from-image-medpy-graphcut-generate" title="Permalink to this headline">¶</a></h2>
+<section id="directly-generate-graphs-from-image-medpy-graphcut-generate">
+<h2>Directly generate graphs from image <a class="reference internal" href="#module-medpy.graphcut.generate" title="medpy.graphcut.generate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.generate</span></code></a><a class="headerlink" href="#directly-generate-graphs-from-image-medpy-graphcut-generate" title="Link to this heading">#</a></h2>
 <p>Provides functions to generate graphs efficiently from nD images.
-Use together with an energy term from <a class="reference internal" href="#module-medpy.graphcut.energy_voxel" title="medpy.graphcut.energy_voxel"><code class="xref py py-mod docutils literal"><span class="pre">energy_voxel</span></code></a> respectively <a class="reference internal" href="#module-medpy.graphcut.energy_label" title="medpy.graphcut.energy_label"><code class="xref py py-mod docutils literal"><span class="pre">energy_label</span></code></a>,</p>
-<span class="target" id="module-medpy.graphcut.generate"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_voxels.html#medpy.graphcut.generate.graph_from_voxels" title="medpy.graphcut.generate.graph_from_voxels"><code class="xref py py-obj docutils literal"><span class="pre">graph_from_voxels</span></code></a>(fg_markers,&nbsp;bg_markers[,&nbsp;…])</td>
-<td>Create a graph-cut ready graph to segment a nD image using the voxel neighbourhood.</td>
+Use together with an energy term from <a class="reference internal" href="#module-medpy.graphcut.energy_voxel" title="medpy.graphcut.energy_voxel"><code class="xref py py-mod docutils literal notranslate"><span class="pre">energy_voxel</span></code></a> respectively <a class="reference internal" href="#module-medpy.graphcut.energy_label" title="medpy.graphcut.energy_label"><code class="xref py py-mod docutils literal notranslate"><span class="pre">energy_label</span></code></a>,</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_voxels.html#medpy.graphcut.generate.graph_from_voxels" title="medpy.graphcut.generate.graph_from_voxels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graph_from_voxels</span></code></a>(fg_markers, bg_markers[, ...])</p></td>
+<td><p>Create a graph-cut ready graph to segment a nD image using the voxel neighbourhood.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_labels.html#medpy.graphcut.generate.graph_from_labels" title="medpy.graphcut.generate.graph_from_labels"><code class="xref py py-obj docutils literal"><span class="pre">graph_from_labels</span></code></a>(label_image,&nbsp;fg_markers,&nbsp;…)</td>
-<td>Create a graph-cut ready graph to segment a nD image using the region neighbourhood.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.generate.graph_from_labels.html#medpy.graphcut.generate.graph_from_labels" title="medpy.graphcut.generate.graph_from_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graph_from_labels</span></code></a>(label_image, fg_markers, ...)</p></td>
+<td><p>Create a graph-cut ready graph to segment a nD image using the region neighbourhood.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel">
-<h2>Energy terms for voxel-based graph-cuts <a class="reference internal" href="#module-medpy.graphcut.energy_voxel" title="medpy.graphcut.energy_voxel"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.energy_voxel</span></code></a><a class="headerlink" href="#energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel" title="Permalink to this headline">¶</a></h2>
-<p>Run-time optimized energy functions for the graph generation. Voxel based <a class="reference internal" href="#r30" id="id6">[R30]</a>.</p>
-<span class="target" id="module-medpy.graphcut.energy_voxel"></span><div class="section" id="boundary-energy-terms">
-<h3>Boundary energy terms<a class="headerlink" href="#boundary-energy-terms" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_linear.html#medpy.graphcut.energy_voxel.boundary_maximum_linear" title="medpy.graphcut.energy_voxel.boundary_maximum_linear"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_linear</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels maximum value using a linear relationship.</td>
+</section>
+<section id="energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel">
+<h2>Energy terms for voxel-based graph-cuts <a class="reference internal" href="#module-medpy.graphcut.energy_voxel" title="medpy.graphcut.energy_voxel"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.energy_voxel</span></code></a><a class="headerlink" href="#energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel" title="Link to this heading">#</a></h2>
+<p>Run-time optimized energy functions for the graph generation. Voxel based <a class="reference internal" href="#r0edf6d6ddef8-7" id="id6">[7]</a>.</p>
+<section id="boundary-energy-terms">
+<span id="module-medpy.graphcut.energy_voxel"></span><h3>Boundary energy terms<a class="headerlink" href="#boundary-energy-terms" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_linear.html#medpy.graphcut.energy_voxel.boundary_maximum_linear" title="medpy.graphcut.energy_voxel.boundary_maximum_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_maximum_linear</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels maximum value using a linear relationship.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_linear.html#medpy.graphcut.energy_voxel.boundary_difference_linear" title="medpy.graphcut.energy_voxel.boundary_difference_linear"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_linear</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels difference value using a linear relationship.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_linear.html#medpy.graphcut.energy_voxel.boundary_difference_linear" title="medpy.graphcut.energy_voxel.boundary_difference_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_difference_linear</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels difference value using a linear relationship.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_exponential.html#medpy.graphcut.energy_voxel.boundary_maximum_exponential" title="medpy.graphcut.energy_voxel.boundary_maximum_exponential"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_exponential</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels maximum value using an exponential relationship.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_exponential.html#medpy.graphcut.energy_voxel.boundary_maximum_exponential" title="medpy.graphcut.energy_voxel.boundary_maximum_exponential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_maximum_exponential</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels maximum value using an exponential relationship.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_exponential.html#medpy.graphcut.energy_voxel.boundary_difference_exponential" title="medpy.graphcut.energy_voxel.boundary_difference_exponential"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_exponential</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels difference value using an exponential relationship.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_exponential.html#medpy.graphcut.energy_voxel.boundary_difference_exponential" title="medpy.graphcut.energy_voxel.boundary_difference_exponential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_difference_exponential</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels difference value using an exponential relationship.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_division.html#medpy.graphcut.energy_voxel.boundary_maximum_division" title="medpy.graphcut.energy_voxel.boundary_maximum_division"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_division</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels maximum value using a division relationship.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_division.html#medpy.graphcut.energy_voxel.boundary_maximum_division" title="medpy.graphcut.energy_voxel.boundary_maximum_division"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_maximum_division</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels maximum value using a division relationship.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_division.html#medpy.graphcut.energy_voxel.boundary_difference_division" title="medpy.graphcut.energy_voxel.boundary_difference_division"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_division</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels difference value using a division relationship.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_division.html#medpy.graphcut.energy_voxel.boundary_difference_division" title="medpy.graphcut.energy_voxel.boundary_difference_division"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_difference_division</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels difference value using a division relationship.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_power.html#medpy.graphcut.energy_voxel.boundary_maximum_power" title="medpy.graphcut.energy_voxel.boundary_maximum_power"><code class="xref py py-obj docutils literal"><span class="pre">boundary_maximum_power</span></code></a>(graph,&nbsp;xxx_todo_changeme7)</td>
-<td>Boundary term processing adjacent voxels maximum value using a power relationship.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_maximum_power.html#medpy.graphcut.energy_voxel.boundary_maximum_power" title="medpy.graphcut.energy_voxel.boundary_maximum_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_maximum_power</span></code></a>(graph, xxx_todo_changeme7)</p></td>
+<td><p>Boundary term processing adjacent voxels maximum value using a power relationship.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_power.html#medpy.graphcut.energy_voxel.boundary_difference_power" title="medpy.graphcut.energy_voxel.boundary_difference_power"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_power</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term processing adjacent voxels difference value using a power relationship.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.boundary_difference_power.html#medpy.graphcut.energy_voxel.boundary_difference_power" title="medpy.graphcut.energy_voxel.boundary_difference_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_difference_power</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term processing adjacent voxels difference value using a power relationship.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="regional-energy-terms">
-<h3>Regional energy terms<a class="headerlink" href="#regional-energy-terms" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.regional_probability_map.html#medpy.graphcut.energy_voxel.regional_probability_map" title="medpy.graphcut.energy_voxel.regional_probability_map"><code class="xref py py-obj docutils literal"><span class="pre">regional_probability_map</span></code></a>(graph,&nbsp;…)</td>
-<td>Regional term based on a probability atlas.</td>
+</section>
+<section id="regional-energy-terms">
+<h3>Regional energy terms<a class="headerlink" href="#regional-energy-terms" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_voxel.regional_probability_map.html#medpy.graphcut.energy_voxel.regional_probability_map" title="medpy.graphcut.energy_voxel.regional_probability_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regional_probability_map</span></code></a>(graph, ...)</p></td>
+<td><p>Regional term based on a probability atlas.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label">
-<h2>Energy terms for label-based graph-cuts <a class="reference internal" href="#module-medpy.graphcut.energy_label" title="medpy.graphcut.energy_label"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.energy_label</span></code></a><a class="headerlink" href="#energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label" title="Permalink to this headline">¶</a></h2>
-<p>Run-time optimized energy functions for the graph generation. Label/Superpixel based <a class="reference internal" href="#r29" id="id7">[R29]</a>.</p>
-<span class="target" id="module-medpy.graphcut.energy_label"></span><div class="section" id="id8">
-<h3>Boundary energy terms<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_difference_of_means.html#medpy.graphcut.energy_label.boundary_difference_of_means" title="medpy.graphcut.energy_label.boundary_difference_of_means"><code class="xref py py-obj docutils literal"><span class="pre">boundary_difference_of_means</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term based on the difference of means between adjacent image regions.</td>
+</section>
+</section>
+<section id="energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label">
+<h2>Energy terms for label-based graph-cuts <a class="reference internal" href="#module-medpy.graphcut.energy_label" title="medpy.graphcut.energy_label"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.energy_label</span></code></a><a class="headerlink" href="#energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label" title="Link to this heading">#</a></h2>
+<p>Run-time optimized energy functions for the graph generation. Label/Superpixel based <a class="reference internal" href="#r0edf6d6ddef8-6" id="id7">[6]</a>.</p>
+<section id="module-medpy.graphcut.energy_label">
+<span id="id8"></span><h3>Boundary energy terms<a class="headerlink" href="#module-medpy.graphcut.energy_label" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_difference_of_means.html#medpy.graphcut.energy_label.boundary_difference_of_means" title="medpy.graphcut.energy_label.boundary_difference_of_means"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_difference_of_means</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term based on the difference of means between adjacent image regions.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski.html#medpy.graphcut.energy_label.boundary_stawiaski" title="medpy.graphcut.energy_label.boundary_stawiaski"><code class="xref py py-obj docutils literal"><span class="pre">boundary_stawiaski</span></code></a>(graph,&nbsp;label_image,&nbsp;…)</td>
-<td>Boundary term based on the sum of border voxel pairs differences.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski.html#medpy.graphcut.energy_label.boundary_stawiaski" title="medpy.graphcut.energy_label.boundary_stawiaski"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_stawiaski</span></code></a>(graph, label_image, ...)</p></td>
+<td><p>Boundary term based on the sum of border voxel pairs differences.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski_directed.html#medpy.graphcut.energy_label.boundary_stawiaski_directed" title="medpy.graphcut.energy_label.boundary_stawiaski_directed"><code class="xref py py-obj docutils literal"><span class="pre">boundary_stawiaski_directed</span></code></a>(graph,&nbsp;…)</td>
-<td>Boundary term based on the sum of border voxel pairs differences, directed version.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_label.boundary_stawiaski_directed.html#medpy.graphcut.energy_label.boundary_stawiaski_directed" title="medpy.graphcut.energy_label.boundary_stawiaski_directed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_stawiaski_directed</span></code></a>(graph, ...)</p></td>
+<td><p>Boundary term based on the sum of border voxel pairs differences, directed version.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="id9">
-<h3>Regional energy terms<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.energy_label.regional_atlas.html#medpy.graphcut.energy_label.regional_atlas" title="medpy.graphcut.energy_label.regional_atlas"><code class="xref py py-obj docutils literal"><span class="pre">regional_atlas</span></code></a>(graph,&nbsp;label_image,&nbsp;…)</td>
-<td>Regional term based on a probability atlas.</td>
+</section>
+<section id="id9">
+<h3>Regional energy terms<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.energy_label.regional_atlas.html#medpy.graphcut.energy_label.regional_atlas" title="medpy.graphcut.energy_label.regional_atlas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regional_atlas</span></code></a>(graph, label_image, ...)</p></td>
+<td><p>Regional term based on a probability atlas.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="persist-a-graph-medpy-graphcut-write">
-<h2>Persist a graph <a class="reference internal" href="#module-medpy.graphcut.write" title="medpy.graphcut.write"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.write</span></code></a><a class="headerlink" href="#persist-a-graph-medpy-graphcut-write" title="Permalink to this headline">¶</a></h2>
-<p>Functions to persist a graph in file formats like Dimacs <a class="reference internal" href="#r28" id="id10">[R28]</a>, which can be read by external graph-cut algorithms.</p>
-<span class="target" id="module-medpy.graphcut.write"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.write.graph_to_dimacs.html#medpy.graphcut.write.graph_to_dimacs" title="medpy.graphcut.write.graph_to_dimacs"><code class="xref py py-obj docutils literal"><span class="pre">graph_to_dimacs</span></code></a>(g,&nbsp;f)</td>
-<td>Persists the supplied graph in valid dimacs format into the file.</td>
+</section>
+</section>
+<section id="persist-a-graph-medpy-graphcut-write">
+<h2>Persist a graph <a class="reference internal" href="#module-medpy.graphcut.write" title="medpy.graphcut.write"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.write</span></code></a><a class="headerlink" href="#persist-a-graph-medpy-graphcut-write" title="Link to this heading">#</a></h2>
+<p>Functions to persist a graph in file formats like Dimacs <a class="reference internal" href="#r0edf6d6ddef8-5" id="id10">[5]</a>, which can be read by external graph-cut algorithms.</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.write.graph_to_dimacs.html#medpy.graphcut.write.graph_to_dimacs" title="medpy.graphcut.write.graph_to_dimacs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graph_to_dimacs</span></code></a>(g, f)</p></td>
+<td><p>Persists the supplied graph in valid dimacs format into the file.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="graph-medpy-graphcut-graph">
-<h2>Graph <a class="reference internal" href="#module-medpy.graphcut.graph" title="medpy.graphcut.graph"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.graph</span></code></a><a class="headerlink" href="#graph-medpy-graphcut-graph" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="graph-medpy-graphcut-graph">
+<h2>Graph <a class="reference internal" href="#module-medpy.graphcut.graph" title="medpy.graphcut.graph"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.graph</span></code></a><a class="headerlink" href="#graph-medpy-graphcut-graph" title="Link to this heading">#</a></h2>
 <p>Graph objects that can be used to generate a custom graph and execute a graph-cut over it.</p>
-<span class="target" id="module-medpy.graphcut.graph"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.graph.GCGraph.html#medpy.graphcut.graph.GCGraph" title="medpy.graphcut.graph.GCGraph"><code class="xref py py-obj docutils literal"><span class="pre">GCGraph</span></code></a>(nodes,&nbsp;edges)</td>
-<td>A graph representation that works directly with the maxflow.GraphDouble graph as base.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.graph.GCGraph.html#medpy.graphcut.graph.GCGraph" title="medpy.graphcut.graph.GCGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GCGraph</span></code></a>(nodes, edges)</p></td>
+<td><p>A graph representation that works directly with the maxflow.GraphDouble graph as base.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.graph.Graph.html#medpy.graphcut.graph.Graph" title="medpy.graphcut.graph.Graph"><code class="xref py py-obj docutils literal"><span class="pre">Graph</span></code></a>()</td>
-<td>Represents a graph suitable for further processing with the graphcut package.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.graph.Graph.html#medpy.graphcut.graph.Graph" title="medpy.graphcut.graph.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a>()</p></td>
+<td><p>Represents a graph suitable for further processing with the graphcut package.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="maxflow-medpy-graphcut-maxflow">
-<h2>Maxflow <a class="reference internal" href="#module-medpy.graphcut.maxflow" title="medpy.graphcut.maxflow"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.maxflow</span></code></a><a class="headerlink" href="#maxflow-medpy-graphcut-maxflow" title="Permalink to this headline">¶</a></h2>
-<p>C++ wrapper around the max-flow/min-cut implementation of <a class="reference internal" href="#r27" id="id11">[R27]</a> using Boost.Python.
-Do not use these directly, but rather the graph objects supplied by <a class="reference internal" href="#module-medpy.graphcut.graph" title="medpy.graphcut.graph"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.graph</span></code></a>.</p>
-<span class="target" id="module-medpy.graphcut.maxflow"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphDouble.html#medpy.graphcut.maxflow.GraphDouble" title="medpy.graphcut.maxflow.GraphDouble"><code class="xref py py-obj docutils literal"><span class="pre">GraphDouble</span></code></a></td>
-<td>Graph template intance with double for flowtype, tcaptype and captype.</td>
+</section>
+<section id="maxflow-medpy-graphcut-maxflow">
+<h2>Maxflow <a class="reference internal" href="#module-medpy.graphcut.maxflow" title="medpy.graphcut.maxflow"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.maxflow</span></code></a><a class="headerlink" href="#maxflow-medpy-graphcut-maxflow" title="Link to this heading">#</a></h2>
+<p>C++ wrapper around the max-flow/min-cut implementation of <a class="reference internal" href="#r0edf6d6ddef8-4" id="id11">[4]</a> using Boost.Python.
+Do not use these directly, but rather the graph objects supplied by <a class="reference internal" href="#module-medpy.graphcut.graph" title="medpy.graphcut.graph"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.graph</span></code></a>.</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphDouble.html#medpy.graphcut.maxflow.GraphDouble" title="medpy.graphcut.maxflow.GraphDouble"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphDouble</span></code></a></p></td>
+<td><p>Graph template intance with double for flowtype, tcaptype and captype.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphFloat.html#medpy.graphcut.maxflow.GraphFloat" title="medpy.graphcut.maxflow.GraphFloat"><code class="xref py py-obj docutils literal"><span class="pre">GraphFloat</span></code></a></td>
-<td>Graph template intance with float for flowtype, tcaptype and captype.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphFloat.html#medpy.graphcut.maxflow.GraphFloat" title="medpy.graphcut.maxflow.GraphFloat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphFloat</span></code></a></p></td>
+<td><p>Graph template intance with float for flowtype, tcaptype and captype.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphInt.html#medpy.graphcut.maxflow.GraphInt" title="medpy.graphcut.maxflow.GraphInt"><code class="xref py py-obj docutils literal"><span class="pre">GraphInt</span></code></a></td>
-<td>Graph template intance with int for flowtype, tcaptype and captype.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.maxflow.GraphInt.html#medpy.graphcut.maxflow.GraphInt" title="medpy.graphcut.maxflow.GraphInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphInt</span></code></a></p></td>
+<td><p>Graph template intance with int for flowtype, tcaptype and captype.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="wrapper-medpy-graphcut-wrapper">
-<h2>Wrapper <a class="reference internal" href="#module-medpy.graphcut.wrapper" title="medpy.graphcut.wrapper"><code class="xref py py-mod docutils literal"><span class="pre">medpy.graphcut.wrapper</span></code></a><a class="headerlink" href="#wrapper-medpy-graphcut-wrapper" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="wrapper-medpy-graphcut-wrapper">
+<h2>Wrapper <a class="reference internal" href="#module-medpy.graphcut.wrapper" title="medpy.graphcut.wrapper"><code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.wrapper</span></code></a><a class="headerlink" href="#wrapper-medpy-graphcut-wrapper" title="Link to this heading">#</a></h2>
 <p>Wrappers for executing graph cuts in a memory-friendly way and other convenience functions.</p>
-<span class="target" id="module-medpy.graphcut.wrapper"></span><table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.split_marker.html#medpy.graphcut.wrapper.split_marker" title="medpy.graphcut.wrapper.split_marker"><code class="xref py py-obj docutils literal"><span class="pre">split_marker</span></code></a>(marker[,&nbsp;fg_id,&nbsp;bg_id])</td>
-<td>Splits an integer marker image into two binary image containing the foreground and background markers respectively.</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.wrapper.split_marker.html#medpy.graphcut.wrapper.split_marker" title="medpy.graphcut.wrapper.split_marker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_marker</span></code></a>(marker[, fg_id, bg_id])</p></td>
+<td><p>Splits an integer marker image into two binary image containing the foreground and background markers respectively.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_split.html#medpy.graphcut.wrapper.graphcut_split" title="medpy.graphcut.wrapper.graphcut_split"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_split</span></code></a>(graphcut_function,&nbsp;regions,&nbsp;…)</td>
-<td>Executes a graph cut by splitting the original volume into a number of sub-volumes of a minimal edge length.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_split.html#medpy.graphcut.wrapper.graphcut_split" title="medpy.graphcut.wrapper.graphcut_split"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphcut_split</span></code></a>(graphcut_function, regions, ...)</p></td>
+<td><p>Executes a graph cut by splitting the original volume into a number of sub-volumes of a minimal edge length.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_subprocesses.html#medpy.graphcut.wrapper.graphcut_subprocesses" title="medpy.graphcut.wrapper.graphcut_subprocesses"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_subprocesses</span></code></a>(graphcut_function,&nbsp;…)</td>
-<td>Executes multiple graph cuts in parallel.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_subprocesses.html#medpy.graphcut.wrapper.graphcut_subprocesses" title="medpy.graphcut.wrapper.graphcut_subprocesses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphcut_subprocesses</span></code></a>(graphcut_function, ...)</p></td>
+<td><p>Executes multiple graph cuts in parallel.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_stawiaski.html#medpy.graphcut.wrapper.graphcut_stawiaski" title="medpy.graphcut.wrapper.graphcut_stawiaski"><code class="xref py py-obj docutils literal"><span class="pre">graphcut_stawiaski</span></code></a>(regions[,&nbsp;gradient,&nbsp;…])</td>
-<td>Executes a Stawiaski label graph cut.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/medpy.graphcut.wrapper.graphcut_stawiaski.html#medpy.graphcut.wrapper.graphcut_stawiaski" title="medpy.graphcut.wrapper.graphcut_stawiaski"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphcut_stawiaski</span></code></a>(regions[, gradient, ...])</p></td>
+<td><p>Executes a Stawiaski label graph cut.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="section" id="example-of-voxel-based-graph-cut">
-<h3>Example of voxel based graph cut<a class="headerlink" href="#example-of-voxel-based-graph-cut" title="Permalink to this headline">¶</a></h3>
+<section id="example-of-voxel-based-graph-cut">
+<h3>Example of voxel based graph cut<a class="headerlink" href="#example-of-voxel-based-graph-cut" title="Link to this heading">#</a></h3>
 <p>Import the necessary methods</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.io</span> <span class="k">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">header</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.graphcut</span> <span class="k">import</span> <span class="n">graphcut_from_voxels</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mdepy.graphcut.energy_voxel</span> <span class="k">import</span> <span class="n">boundary_difference_exponential</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.io</span> <span class="kn">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">header</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">medpy.graphcut</span> <span class="kn">import</span> <span class="n">graphcut_from_voxels</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mdepy.graphcut.energy_voxel</span> <span class="kn">import</span> <span class="n">boundary_difference_exponential</span>
 </pre></div>
 </div>
 <p>Loading the images and setting the parameters. Assuming that <em>image.nii</em> contains
 the image on which to execute the graph-cut, <em>fgmarkers_image.nii</em> a binary image
 of the same size with True values for the foreground markers and <em>bgmarkers_image.nii</em>
 respectively for the background markers.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image_data</span><span class="p">,</span> <span class="n">image_header</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;image.nii&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image_data</span><span class="p">,</span> <span class="n">image_header</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;image.nii&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fgmarkers_image_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;fgmarkers_image.nii&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bgmarkers_image_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;bgmarkers_image.nii&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sigma</span> <span class="o">=</span> <span class="mf">15.</span>
@@ -355,107 +735,182 @@ respectively for the background markers.</p>
 </pre></div>
 </div>
 <p>Building the graph.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gcgraph</span> <span class="o">=</span> <span class="n">graph_from_voxels</span><span class="p">(</span><span class="n">fgmarkers_image_data</span><span class="p">,</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gcgraph</span> <span class="o">=</span> <span class="n">graph_from_voxels</span><span class="p">(</span><span class="n">fgmarkers_image_data</span><span class="p">,</span>
 <span class="go">                                bgmarkers_image_data,</span>
 <span class="go">                                boundary_term = boundary_difference_exponential,</span>
 <span class="go">                                boundary_term_args = (image_data, sigma, spacing))</span>
 </pre></div>
 </div>
 <p>Executing the graph-cut (depending on the image size, this might take a while).</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">maxflow</span> <span class="o">=</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">maxflow</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">maxflow</span> <span class="o">=</span> <span class="n">gcgraph</span><span class="o">.</span><span class="n">maxflow</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Building the resulting segmentation image, with True values for foreground and False
 values for background voxels.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result_image_data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result_image_data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result_image_data</span><span class="p">)):</span>
-<span class="go">        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1    </span>
+<span class="go">        result_image_data[idx] = 0 if gcgraph.termtype.SINK == gcgraph.what_segment(idx) else 1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result_image_data</span> <span class="o">=</span> <span class="n">result_image_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h3>
+<div role="list" class="citation-list">
+<div class="citation" id="r0edf6d6ddef8-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision">http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision</a></p>
 </div>
-<div class="section" id="references">
-<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
-<table class="docutils citation" frame="void" id="r24" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[R24]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision">http://en.wikipedia.org/wiki/Graph_cuts_in_computer_vision</a></td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="r25" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[R25]</a></td><td><a class="reference external" href="http://www.boost.org/doc/libs/1_55_0/libs/python/doc/">http://www.boost.org/doc/libs/1_55_0/libs/python/doc/</a></td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="r26" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[R26]</a></td><td><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="r27" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[R27]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> Boykov Y., Kolmogorov V. “An Experimental Comparison of Min-Cut/Max-Flow
+<div class="citation" id="r0edf6d6ddef8-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://www.boost.org/doc/libs/1_55_0/libs/python/doc/">http://www.boost.org/doc/libs/1_55_0/libs/python/doc/</a></p>
+</div>
+<div class="citation" id="r0edf6d6ddef8-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></p>
+</div>
+<div class="citation" id="r0edf6d6ddef8-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id11">2</a>)</span>
+<p>Boykov Y., Kolmogorov V. “An Experimental Comparison of Min-Cut/Max-Flow
 Algorithms for Energy Minimization in Vision” In IEEE Transactions on PAMI, Vol. 26,
-No. 9, pp. 1124-1137, Sept. 2004</td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="r28" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[R28]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id10">2</a>)</em> <a class="reference external" href="http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm">http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm</a></td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="r29" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id7">[R29]</a></td><td>Stawiaski J., Decenciere E., Bidlaut F. “Interactive Liver Tumor Segmentation
-Using Graph-cuts and watershed” MICCAI 2008 participation</td></tr>
-</tbody>
-</table>
-<table class="docutils citation" frame="void" id="r30" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[R30]</a></td><td>Kolmogorov, Vladimir, and Ramin Zabin. “What energy functions can be minimized
+No. 9, pp. 1124-1137, Sept. 2004</p>
+</div>
+<div class="citation" id="r0edf6d6ddef8-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
+<p><a class="reference external" href="http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm">http://lpsolve.sourceforge.net/5.5/DIMACS_maxf.htm</a></p>
+</div>
+<div class="citation" id="r0edf6d6ddef8-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">6</a><span class="fn-bracket">]</span></span>
+<p>Stawiaski J., Decenciere E., Bidlaut F. “Interactive Liver Tumor Segmentation
+Using Graph-cuts and watershed” MICCAI 2008 participation</p>
+</div>
+<div class="citation" id="r0edf6d6ddef8-7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">7</a><span class="fn-bracket">]</span></span>
+<p>Kolmogorov, Vladimir, and Ramin Zabin. “What energy functions can be minimized
 via graph cuts?.” Pattern Analysis and Machine Intelligence, IEEE Transactions
-on 26.2 (2004): 147-159.</td></tr>
-</tbody>
-</table>
+on 26.2 (2004): 147-159.</p>
 </div>
 </div>
-</div>
+</section>
+</section>
+</section>
 
 
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-    <div class="container container-navbar-bottom">
-      <div class="spc-navbar">
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directly-generate-graphs-from-image-medpy-graphcut-generate">Directly generate graphs from image <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.generate</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-terms-for-voxel-based-graph-cuts-medpy-graphcut-energy-voxel">Energy terms for voxel-based graph-cuts <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.energy_voxel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-energy-terms">Boundary energy terms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regional-energy-terms">Regional energy terms</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-terms-for-label-based-graph-cuts-medpy-graphcut-energy-label">Energy terms for label-based graph-cuts <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.energy_label</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-medpy.graphcut.energy_label">Boundary energy terms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Regional energy terms</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persist-a-graph-medpy-graphcut-write">Persist a graph <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.write</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-medpy-graphcut-graph">Graph <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.graph</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maxflow-medpy-graphcut-maxflow">Maxflow <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.maxflow</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrapper-medpy-graphcut-wrapper">Wrapper <code class="xref py py-mod docutils literal notranslate"><span class="pre">medpy.graphcut.wrapper</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-voxel-based-graph-cut">Example of voxel based graph cut</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/loli/medpy/edit/master/doc/source/graphcut.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
         
-      </div>
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
     </div>
-    <div class="container">
-    <div class="footer">
-    <div class="row-fluid">
-    <ul class="inline pull-left">
-      <li>
-        &copy; Copyright 2013-2019, Oskar Maier.
-      </li>
-      <li>
-      Last updated on Feb 14, 2019.
-      </li>
-      <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
-      </li>
-    </ul>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2013-2024, Oskar Maier.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
     </div>
-    </div>
+  
+</div>
+
+  </footer>
   </body>
 </html>

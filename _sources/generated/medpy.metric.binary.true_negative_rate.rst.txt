@@ -1,0 +1,6 @@
+﻿medpy.metric.binary.true\_negative\_rate
+========================================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: true_negative_rate

@@ -1,0 +1,6 @@
+﻿medpy.filter.noise.immerkaer\_local
+===================================
+
+.. currentmodule:: medpy.filter.noise
+
+.. autofunction:: immerkaer_local

@@ -1,0 +1,6 @@
+﻿medpy.graphcut.energy\_label.boundary\_difference\_of\_means
+============================================================
+
+.. currentmodule:: medpy.graphcut.energy_label
+
+.. autofunction:: boundary_difference_of_means

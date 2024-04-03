@@ -1,224 +1,522 @@
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="./" >
+
   <head>
-    <meta charset="utf-8">
-    
-    <title>MedPy &mdash; MedPy 0.4.0 documentation</title>
-    
-    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
-    <link rel="stylesheet" href="_static/scipy.css" type="text/css" >
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.4.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/copybutton.js"></script>
-    <link rel="index" title="Index" href="genindex.html" >
-    <link rel="search" title="Search" href="search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="#" >
-    <link rel="next" title="Installing MedPy the fast way" href="installation/fastpath.html" > 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MedPy &#8212; MedPy 0.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Apr 03, 2024"/>
   </head>
-  <body>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  <div class="container">
-    <div class="header">
-    </div>
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
   </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
+  
 
-    <div class="container">
-      <div class="main">
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MedPy 0.5.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
         
-	<div class="row-fluid">
-	  <div class="span12">
-	    <div class="spc-navbar">
-              
-    <ul class="nav nav-pills pull-left">
-        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
-        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-	 
-    </ul>
-              
-              
-    <ul class="nav nav-pills pull-right">
-      <li class="active">
-        <a href="genindex.html" title="General Index"
-           accesskey="I">index</a>
-      </li>
-      <li class="active">
-        <a href="py-modindex.html" title="Python Module Index"
-           >modules</a>
-      </li>
-      <li class="active">
-        <a href="installation/fastpath.html" title="Installing MedPy the fast way"
-           accesskey="N">next</a>
-      </li>
-    </ul>
-              
-	    </div>
-	  </div>
-	</div>
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
-	<div class="row-fluid">
-      <div class="spc-rightsidebar span3">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">MedPy</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#information">Information</a></li>
-<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
-<li><a class="reference internal" href="#notebooks">Notebooks</a></li>
-<li><a class="reference internal" href="#reference">Reference</a></li>
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="medpy">
+<h1>MedPy<a class="headerlink" href="#medpy" title="Link to this heading">#</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Release<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0.5.0</p>
+</dd>
+<dt class="field-even">Date<span class="colon">:</span></dt>
+<dd class="field-even"><p>Apr 03, 2024</p>
+</dd>
+</dl>
+<p>MedPy is a medical image processing library written in Python. MedPy requires <em>Python 3</em>.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation/fastpath.html">Installing MedPy the fast way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/venv.html">Installing MedPy in a virtual environement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/developmentmode.html">Installing MedPy in development mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/graphcutsupport.html">Installing MedPy with GraphCut support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/windows.html">Installing MedPy on Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/osx.html">Installing MedPy on OsX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/conda.html">Installing MedPy with Conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/python2.html">Installing MedPy with Python 2 support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/uninstall.html">Uninstall MedPy</a></li>
 </ul>
 </li>
 </ul>
+</div>
+</section>
+<section id="information">
+<h2>Information<a class="headerlink" href="#information" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="information/index.html">Information</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="information/commandline_tools_listing.html">List of commandline tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information/imageformats.html">Supported medical image formats</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/loadsave.html">Loading and saving images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/metadata.html">Accessing metadata</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="notebooks">
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Notebooks</a></li>
+</ul>
+</div>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a></li>
+</ul>
+</div>
+</section>
+</section>
 
-  <h4>Next topic</h4>
-  <p class="topless"><a href="installation/fastpath.html"
-                        title="next chapter">Installing MedPy the fast way</a></p>
-  <h3>This Page</h3>
-  <div>
-    <a href="_sources/index.rst.txt"
-       rel="nofollow">Show Source</a>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-          <div class="span9">
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#information">Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials">Tutorials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebooks">Notebooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference">Reference</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
-        <div class="bodywrapper">
-          <div class="body" id="spc-section-body">
+          </div>
+          <footer class="bd-footer-content">
             
-  <div class="section" id="medpy">
-<h1>MedPy<a class="headerlink" href="#medpy" title="Permalink to this headline">¶</a></h1>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.4.0</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">Feb 14, 2019</td>
-</tr>
-</tbody>
-</table>
-<p>MedPy is a medical image processing library written in Python. MedPy requires <em>Python 3</em>.</p>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation/fastpath.html">Installing MedPy the fast way</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/venv.html">Installing MedPy in a virtual environement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/asroot.html">Installing MedPy as root</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/asuser.html">Installing MedPy as user</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/developmentmode.html">Installing MedPy in development mode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/graphcutsupport.html">Installing MedPy with GraphCut support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/windows.html">Installing MedPy on Windows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/osx.html">Installing MedPy on OsX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/conda.html">Installing MedPy with Conda</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/python2.html">Installing MedPy with Python 2 support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/uninstall.html">Uninstall MedPy</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="information">
-<h2>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="information/commandline_tools_listing.html">List of commandline tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="information/imageformats.html">Supported medical image formats</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="tutorials">
-<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/loadsave.html">Loading and saving images</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/metadata.html">Accessing metadata</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="notebooks">
-<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Accessing%20the%20image's%20meta-data.ipynb">Accessing the image’s meta-data</a>.</dt>
-<dd>In this tutorial we will learn how to access and manipulate the image’s meta-data form the header.</dd>
-<dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Load%2C%20threshold%20and%20save%20an%20image.ipynb">Load, threshold and save an image</a>.</dt>
-<dd>In this tutorial you will learn how to load a medical image with MedPy, how to perform a simple thresholding operation and how to save the resulting binary image.</dd>
-<dt><a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/Simple%20binary%20image%20processing.ipynb">Simple binary image processing</a>.</dt>
-<dd>In this tutorial you will learn some simple binary image processing.</dd>
-</dl>
-</div>
-<div class="section" id="reference">
-<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="io.html">Image I/O functionalities (<code class="docutils literal"><span class="pre">medpy.io</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="metric.html">Metric measures (<code class="docutils literal"><span class="pre">medpy.metric</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filter.html">Image filter and manipulation (<code class="docutils literal"><span class="pre">medpy.filter</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="features.html">Image feature extraction and manipulation (<code class="docutils literal"><span class="pre">medpy.features</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iterators.html">Image iterators (<code class="docutils literal"><span class="pre">medpy.iterators</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neighbours.html">Neighbours (<code class="docutils literal"><span class="pre">medpy.neighbours</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="graphcut.html">Graph-cut (max-flow/min-cut) (<code class="docutils literal"><span class="pre">medpy.graphcut</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="core.html">Core functionalities and shared exception objects (<code class="docutils literal"><span class="pre">medpy.core</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities without a direct connection to medical image processing (<code class="docutils literal"><span class="pre">medpy.utilities</span></code>)</a></li>
-</ul>
-</div>
-</div>
-</div>
-
-
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container container-navbar-bottom">
-      <div class="spc-navbar">
+          </footer>
         
-      </div>
+      </main>
     </div>
-    <div class="container">
-    <div class="footer">
-    <div class="row-fluid">
-    <ul class="inline pull-left">
-      <li>
-        &copy; Copyright 2013-2019, Oskar Maier.
-      </li>
-      <li>
-      Last updated on Feb 14, 2019.
-      </li>
-      <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
-      </li>
-    </ul>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2013-2024, Oskar Maier.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
     </div>
-    </div>
+  
+</div>
+
+  </footer>
   </body>
 </html>

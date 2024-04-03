@@ -1,0 +1,6 @@
+﻿medpy.metric.histogram.quadratic\_forms
+=======================================
+
+.. currentmodule:: medpy.metric.histogram
+
+.. autofunction:: quadratic_forms

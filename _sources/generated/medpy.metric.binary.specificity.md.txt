@@ -1,0 +1,10 @@
+medpy.metric.binary.specificity
+===============================
+
+::: {.currentmodule}
+medpy.metric.binary
+:::
+
+::: {.autofunction}
+specificity
+:::

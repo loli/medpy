@@ -1,0 +1,10 @@
+medpy.features.histogram.sigmoidal\_difference\_membership
+==========================================================
+
+::: {.currentmodule}
+medpy.features.histogram
+:::
+
+::: {.autofunction}
+sigmoidal\_difference\_membership
+:::

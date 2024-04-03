@@ -1,0 +1,6 @@
+﻿medpy.io.load.load
+==================
+
+.. currentmodule:: medpy.io.load
+
+.. autofunction:: load

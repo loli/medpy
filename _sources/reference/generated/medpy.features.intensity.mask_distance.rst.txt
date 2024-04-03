@@ -1,0 +1,6 @@
+﻿medpy.features.intensity.mask\_distance
+=======================================
+
+.. currentmodule:: medpy.features.intensity
+
+.. autofunction:: mask_distance

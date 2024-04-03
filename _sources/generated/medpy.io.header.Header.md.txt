@@ -1,0 +1,24 @@
+medpy.io.header.Header
+======================
+
+::: {.currentmodule}
+medpy.io.header
+:::
+
+::: {.autoclass}
+Header
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~Header.\_\_init\_\_ \~Header.copy\_to \~Header.get\_direction
+\~Header.get\_info\_consistent \~Header.get\_offset
+\~Header.get\_sitkimage \~Header.get\_voxel\_spacing
+\~Header.set\_direction \~Header.set\_offset
+\~Header.set\_voxel\_spacing
+:::
+:::

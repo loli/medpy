@@ -1,0 +1,6 @@
+﻿medpy.filter.utilities.xminus1d
+===============================
+
+.. currentmodule:: medpy.filter.utilities
+
+.. autofunction:: xminus1d

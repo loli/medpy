@@ -1,0 +1,10 @@
+medpy.metric.histogram.noelle\_3
+================================
+
+::: {.currentmodule}
+medpy.metric.histogram
+:::
+
+::: {.autofunction}
+noelle\_3
+:::

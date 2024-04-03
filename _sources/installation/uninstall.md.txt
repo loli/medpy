@@ -1,0 +1,10 @@
+Uninstall MedPy
+===============
+
+Only [pip]{.title-ref} supports the removal of Python packages. If you
+have installed **MedPy** by other means, you will have to remove the
+package manually. With [pip]{.title-ref}, call simply
+
+``` {.bash}
+python3 -m pip uninstall medpy
+```

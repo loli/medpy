@@ -1,0 +1,10 @@
+medpy.utilities.argparseu.sequenceOfIntegersLt
+==============================================
+
+::: {.currentmodule}
+medpy.utilities.argparseu
+:::
+
+::: {.autofunction}
+sequenceOfIntegersLt
+:::

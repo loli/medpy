@@ -1,0 +1,10 @@
+medpy.filter.binary.largest\_connected\_component
+=================================================
+
+::: {.currentmodule}
+medpy.filter.binary
+:::
+
+::: {.autofunction}
+largest\_connected\_component
+:::

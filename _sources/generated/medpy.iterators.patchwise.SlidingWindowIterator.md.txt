@@ -1,0 +1,21 @@
+medpy.iterators.patchwise.SlidingWindowIterator
+===============================================
+
+::: {.currentmodule}
+medpy.iterators.patchwise
+:::
+
+::: {.autoclass}
+SlidingWindowIterator
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~SlidingWindowIterator.\_\_init\_\_ \~SlidingWindowIterator.applyslicer
+\~SlidingWindowIterator.next
+:::
+:::

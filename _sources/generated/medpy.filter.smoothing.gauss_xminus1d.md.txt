@@ -1,0 +1,10 @@
+medpy.filter.smoothing.gauss\_xminus1d
+======================================
+
+::: {.currentmodule}
+medpy.filter.smoothing
+:::
+
+::: {.autofunction}
+gauss\_xminus1d
+:::

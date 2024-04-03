@@ -1,0 +1,39 @@
+﻿medpy.graphcut.graph.GCGraph
+============================
+
+.. currentmodule:: medpy.graphcut.graph
+
+.. autoclass:: GCGraph
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GCGraph.__init__
+      ~GCGraph.get_edge_count
+      ~GCGraph.get_graph
+      ~GCGraph.get_node_count
+      ~GCGraph.get_nodes
+      ~GCGraph.set_nweight
+      ~GCGraph.set_nweights
+      ~GCGraph.set_sink_nodes
+      ~GCGraph.set_source_nodes
+      ~GCGraph.set_tweight
+      ~GCGraph.set_tweights
+      ~GCGraph.set_tweights_all
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GCGraph.MAX
+   
+   

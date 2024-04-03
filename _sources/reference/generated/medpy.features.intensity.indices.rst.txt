@@ -1,0 +1,6 @@
+﻿medpy.features.intensity.indices
+================================
+
+.. currentmodule:: medpy.features.intensity
+
+.. autofunction:: indices

@@ -1,0 +1,10 @@
+medpy.features.intensity.median
+===============================
+
+::: {.currentmodule}
+medpy.features.intensity
+:::
+
+::: {.autofunction}
+median
+:::

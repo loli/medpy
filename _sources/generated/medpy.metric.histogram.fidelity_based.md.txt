@@ -1,0 +1,10 @@
+medpy.metric.histogram.fidelity\_based
+======================================
+
+::: {.currentmodule}
+medpy.metric.histogram
+:::
+
+::: {.autofunction}
+fidelity\_based
+:::

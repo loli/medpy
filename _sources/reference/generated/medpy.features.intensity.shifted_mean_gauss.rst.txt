@@ -1,0 +1,6 @@
+﻿medpy.features.intensity.shifted\_mean\_gauss
+=============================================
+
+.. currentmodule:: medpy.features.intensity
+
+.. autofunction:: shifted_mean_gauss

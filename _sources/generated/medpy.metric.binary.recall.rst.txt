@@ -1,0 +1,6 @@
+﻿medpy.metric.binary.recall
+==========================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: recall

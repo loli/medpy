@@ -1,0 +1,10 @@
+medpy.filter.binary.size\_threshold
+===================================
+
+::: {.currentmodule}
+medpy.filter.binary
+:::
+
+::: {.autofunction}
+size\_threshold
+:::

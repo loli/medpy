@@ -1,0 +1,41 @@
+medpy.filter.IntensityRangeStandardization.IntensityRangeStandardization
+========================================================================
+
+::: {.currentmodule}
+medpy.filter.IntensityRangeStandardization
+:::
+
+::: {.autoclass}
+IntensityRangeStandardization
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~IntensityRangeStandardization.\_\_init\_\_
+\~IntensityRangeStandardization.are\_in\_interval
+\~IntensityRangeStandardization.are\_numbers
+\~IntensityRangeStandardization.is\_in\_interval
+\~IntensityRangeStandardization.is\_number
+\~IntensityRangeStandardization.is\_sequence
+\~IntensityRangeStandardization.linear\_model
+\~IntensityRangeStandardization.to\_float
+\~IntensityRangeStandardization.train
+\~IntensityRangeStandardization.train\_transform
+\~IntensityRangeStandardization.transform
+:::
+
+**Attributes**
+
+::: {.autosummary}
+\~IntensityRangeStandardization.L2 \~IntensityRangeStandardization.L3
+\~IntensityRangeStandardization.L4
+\~IntensityRangeStandardization.cutoffp
+\~IntensityRangeStandardization.landmarkp
+\~IntensityRangeStandardization.model
+\~IntensityRangeStandardization.stdrange
+:::
+:::

@@ -1,0 +1,6 @@
+﻿medpy.graphcut.wrapper.graphcut\_subprocesses
+=============================================
+
+.. currentmodule:: medpy.graphcut.wrapper
+
+.. autofunction:: graphcut_subprocesses

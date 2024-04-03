@@ -1,0 +1,6 @@
+﻿medpy.filter.noise.separable\_convolution
+=========================================
+
+.. currentmodule:: medpy.filter.noise
+
+.. autofunction:: separable_convolution

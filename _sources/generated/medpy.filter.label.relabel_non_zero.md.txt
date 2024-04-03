@@ -1,0 +1,10 @@
+medpy.filter.label.relabel\_non\_zero
+=====================================
+
+::: {.currentmodule}
+medpy.filter.label
+:::
+
+::: {.autofunction}
+relabel\_non\_zero
+:::

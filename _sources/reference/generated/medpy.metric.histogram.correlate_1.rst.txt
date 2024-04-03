@@ -1,0 +1,6 @@
+﻿medpy.metric.histogram.correlate\_1
+===================================
+
+.. currentmodule:: medpy.metric.histogram
+
+.. autofunction:: correlate_1

@@ -1,0 +1,10 @@
+medpy.metric.binary.assd
+========================
+
+::: {.currentmodule}
+medpy.metric.binary
+:::
+
+::: {.autofunction}
+assd
+:::

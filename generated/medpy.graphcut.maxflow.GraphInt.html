@@ -1,228 +1,568 @@
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="../" >
+
   <head>
-    <meta charset="utf-8">
-    
-    <title>medpy.graphcut.maxflow.GraphInt &mdash; MedPy 0.4.0 documentation</title>
-    
-    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
-    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.4.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" >
-    <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
-    <link rel="up" title="Graph-cut (max-flow/min-cut) (medpy.graphcut)" href="../graphcut.html" >
-    <link rel="next" title="medpy.graphcut.wrapper.split_marker" href="medpy.graphcut.wrapper.split_marker.html" >
-    <link rel="prev" title="medpy.graphcut.maxflow.GraphFloat" href="medpy.graphcut.maxflow.GraphFloat.html" > 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>medpy.graphcut.maxflow.GraphInt &#8212; MedPy 0.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/medpy.graphcut.maxflow.GraphInt';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Feb 03, 2024"/>
   </head>
-  <body>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  <div class="container">
-    <div class="header">
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MedPy 0.5.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
     </div>
-  </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-
-    <div class="container">
-      <div class="main">
-        
-	<div class="row-fluid">
-	  <div class="span12">
-	    <div class="spc-navbar">
-              
-    <ul class="nav nav-pills pull-left">
-        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
-        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-	
-        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
-	
-          <li class="active"><a href="../graphcut.html" accesskey="U">Graph-cut (max-flow/min-cut) (<code class="docutils literal"><span class="pre">medpy.graphcut</span></code>)</a></li> 
-    </ul>
-              
-              
-    <ul class="nav nav-pills pull-right">
-      <li class="active">
-        <a href="../genindex.html" title="General Index"
-           accesskey="I">index</a>
-      </li>
-      <li class="active">
-        <a href="../py-modindex.html" title="Python Module Index"
-           >modules</a>
-      </li>
-      <li class="active">
-        <a href="medpy.graphcut.wrapper.split_marker.html" title="medpy.graphcut.wrapper.split_marker"
-           accesskey="N">next</a>
-      </li>
-      <li class="active">
-        <a href="medpy.graphcut.maxflow.GraphFloat.html" title="medpy.graphcut.maxflow.GraphFloat"
-           accesskey="P">previous</a>
-      </li>
-    </ul>
-              
-	    </div>
-	  </div>
-	</div>
-        
-
-	<div class="row-fluid">
-      <div class="spc-rightsidebar span3">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="medpy.graphcut.maxflow.GraphFloat.html"
-                        title="previous chapter">medpy.graphcut.maxflow.GraphFloat</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="medpy.graphcut.wrapper.split_marker.html"
-                        title="next chapter">medpy.graphcut.wrapper.split_marker</a></p>
-  <h3>This Page</h3>
-  <div>
-    <a href="../_sources/generated/medpy.graphcut.maxflow.GraphInt.rst.txt"
-       rel="nofollow">Show Source</a>
-  </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
       </div>
-          <div class="span9">
-            
-        <div class="bodywrapper">
-          <div class="body" id="spc-section-body">
-            
-  <div class="section" id="medpy-graphcut-maxflow-graphint">
-<h1>medpy.graphcut.maxflow.GraphInt<a class="headerlink" href="#medpy-graphcut-maxflow-graphint" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="medpy.graphcut.maxflow.GraphInt">
-<em class="property">class </em><code class="descclassname">medpy.graphcut.maxflow.</code><code class="descname">GraphInt</code><a class="headerlink" href="#medpy.graphcut.maxflow.GraphInt" title="Permalink to this definition">¶</a></dt>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">medpy.graphc...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="medpy-graphcut-maxflow-graphint">
+<h1>medpy.graphcut.maxflow.GraphInt<a class="headerlink" href="#medpy-graphcut-maxflow-graphint" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="medpy.graphcut.maxflow.GraphInt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">medpy.graphcut.maxflow.</span></span><span class="sig-name descname"><span class="pre">GraphInt</span></span><a class="reference external" href="https://github.com/loli/medpy/tree/master/medpy/medpy/graphcut/maxflow.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medpy.graphcut.maxflow.GraphInt" title="Link to this definition">#</a></dt>
 <dd><p>Graph template intance with int for flowtype, tcaptype and captype. Takes the number of nodes as first and the number of edges as second parameter. Although it is possible to exceed these values later, it is discourage as it leads to bad memory management. The edges i-&gt;j and j-&gt;i count here as one single edge.</p>
-<dl class="method">
-<dt id="medpy.graphcut.maxflow.GraphInt.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>(object)arg1</em>, <em>(int)arg2</em>, <em>(int)arg3</em><span class="sig-paren">)</span> &#x2192; None :<a class="headerlink" href="#medpy.graphcut.maxflow.GraphInt.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>C++ signature :</dt>
-<dd>void __init__(_object*,int,int)</dd>
+<dl class="py method">
+<dt class="sig sig-object py" id="medpy.graphcut.maxflow.GraphInt.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">(object)arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(int)arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(int)arg3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span> <span class="pre">:</span></span></span><a class="reference external" href="https://github.com/loli/medpy/tree/master/medpy/medpy/graphcut/maxflow.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medpy.graphcut.maxflow.GraphInt.__init__" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>C++ signature :</dt><dd><p>void __init__(_object*,int,int)</p>
+</dd>
 </dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#medpy.graphcut.maxflow.GraphInt.__init__" title="medpy.graphcut.maxflow.GraphInt.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>((object)arg1,&nbsp;(int)arg2,&nbsp;(int)arg3)</td>
-<td>C++ signature :</td>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../reference/generated/medpy.graphcut.maxflow.GraphInt.html#medpy.graphcut.maxflow.GraphInt.__init__" title="medpy.graphcut.maxflow.GraphInt.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(arg1, arg2, arg3)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_edge</span></code>((GraphInt)arg1,&nbsp;(int)arg2,&nbsp;…)</td>
-<td>Add an edge from i to j with the capacity cap and reversed capacity rev_cap.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_edge</span></code>(arg1, arg2, arg3, arg4, arg5)</p></td>
+<td><p>Add an edge from i to j with the capacity cap and reversed capacity rev_cap.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_node</span></code>((GraphInt)arg1,&nbsp;(int)arg2)</td>
-<td>C++ signature :</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code>(arg1, arg2)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_tweights</span></code>((GraphInt)arg1,&nbsp;(int)arg2,&nbsp;…)</td>
-<td>Add a terminal weight from cap_source to i and from i to cap_sink.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_tweights</span></code>(arg1, arg2, arg3, arg4)</p></td>
+<td><p>Add a terminal weight from cap_source to i and from i to cap_sink.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">get_arc_ends</span></code>((GraphInt)arg1,&nbsp;(object)arg2,&nbsp;…)</td>
-<td>C++ signature :</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_arc_ends</span></code>(arg1, arg2, arg3, arg4)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">get_arc_num</span></code>((GraphInt)arg1)</td>
-<td>C++ signature :</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_arc_num</span></code>(arg1)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">get_edge</span></code>((GraphInt)arg1,&nbsp;(int)arg2,&nbsp;(int)arg3)</td>
-<td>Returns the weight of the directed edge i-&gt;j between two node.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge</span></code>(arg1, arg2, arg3)</p></td>
+<td><p>Returns the weight of the directed edge i-&gt;j between two node.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">get_node_num</span></code>((GraphInt)arg1)</td>
-<td>Returns the number of nodes already declared with the add_node method.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_node_num</span></code>(arg1)</p></td>
+<td><p>Returns the number of nodes already declared with the add_node method.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">get_rcap</span></code>((GraphInt)arg1,&nbsp;(object)arg2)</td>
-<td>C++ signature :</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rcap</span></code>(arg1, arg2)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">get_trcap</span></code>((GraphInt)arg1,&nbsp;(int)arg2)</td>
-<td>C++ signature :</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trcap</span></code>(arg1, arg2)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">mark_node</span></code>((GraphInt)arg1,&nbsp;(int)arg2)</td>
-<td>C++ signature :</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mark_node</span></code>(arg1, arg2)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">maxflow</span></code>((GraphInt)arg1)</td>
-<td>Compute the min-cut/max-flow of the graph and return the maxflow value.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">maxflow</span></code>(arg1)</p></td>
+<td><p>Compute the min-cut/max-flow of the graph and return the maxflow value.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">remove_from_changed_list</span></code>((GraphInt)arg1,&nbsp;…)</td>
-<td>C++ signature :</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_from_changed_list</span></code>(arg1, arg2)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">reset</span></code>((GraphInt)arg1)</td>
-<td>Reset the whole graph to the state just after initialization.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code>(arg1)</p></td>
+<td><p>Reset the whole graph to the state just after initialization.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">set_rcap</span></code>((GraphInt)arg1,&nbsp;(object)arg2,&nbsp;(int)arg3)</td>
-<td>C++ signature :</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_rcap</span></code>(arg1, arg2, arg3)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">set_trcap</span></code>((GraphInt)arg1,&nbsp;(int)arg2,&nbsp;(int)arg3)</td>
-<td>C++ signature :</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_trcap</span></code>(arg1, arg2, arg3)</p></td>
+<td><p>C++ signature :</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">sum_edge</span></code>((GraphInt)arg1,&nbsp;(int)arg2,&nbsp;…)</td>
-<td>Add an edge from i to j with the capacity cap and reversed capacity rev_cap.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum_edge</span></code>(arg1, arg2, arg3, arg4, arg5)</p></td>
+<td><p>Add an edge from i to j with the capacity cap and reversed capacity rev_cap.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">what_segment</span></code>((GraphInt)arg1,&nbsp;(int)arg2)</td>
-<td>Returns the terminal the node i belongs to after executing the min-cut/max-flow.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">what_segment</span></code>(arg1, arg2)</p></td>
+<td><p>Returns the terminal the node i belongs to after executing the min-cut/max-flow.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#medpy.graphcut.maxflow.GraphInt"><code class="docutils literal notranslate"><span class="pre">GraphInt</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#medpy.graphcut.maxflow.GraphInt.__init__"><code class="docutils literal notranslate"><span class="pre">GraphInt.__init__</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/loli/medpy/edit/master/doc/source/generated/medpy.graphcut.maxflow.GraphInt.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
 </div>
 
-
+</div></div>
+              
+            
           </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container container-navbar-bottom">
-      <div class="spc-navbar">
+          <footer class="bd-footer-content">
+            
+          </footer>
         
-      </div>
+      </main>
     </div>
-    <div class="container">
-    <div class="footer">
-    <div class="row-fluid">
-    <ul class="inline pull-left">
-      <li>
-        &copy; Copyright 2013-2019, Oskar Maier.
-      </li>
-      <li>
-      Last updated on Feb 14, 2019.
-      </li>
-      <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
-      </li>
-    </ul>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2013-2024, Oskar Maier.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
     </div>
-    </div>
+  
+</div>
+
+  </footer>
   </body>
 </html>

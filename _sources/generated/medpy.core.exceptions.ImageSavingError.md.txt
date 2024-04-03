@@ -1,0 +1,10 @@
+medpy.core.exceptions.ImageSavingError
+======================================
+
+::: {.currentmodule}
+medpy.core.exceptions
+:::
+
+::: {.autoexception}
+ImageSavingError
+:::

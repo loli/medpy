@@ -1,0 +1,28 @@
+medpy.graphcut.maxflow.GraphDouble
+==================================
+
+::: {.currentmodule}
+medpy.graphcut.maxflow
+:::
+
+::: {.autoclass}
+GraphDouble
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~GraphDouble.\_\_init\_\_ \~GraphDouble.add\_edge
+\~GraphDouble.add\_node \~GraphDouble.add\_tweights
+\~GraphDouble.get\_arc\_ends \~GraphDouble.get\_arc\_num
+\~GraphDouble.get\_edge \~GraphDouble.get\_node\_num
+\~GraphDouble.get\_rcap \~GraphDouble.get\_trcap
+\~GraphDouble.mark\_node \~GraphDouble.maxflow
+\~GraphDouble.remove\_from\_changed\_list \~GraphDouble.reset
+\~GraphDouble.set\_rcap \~GraphDouble.set\_trcap \~GraphDouble.sum\_edge
+\~GraphDouble.what\_segment
+:::
+:::

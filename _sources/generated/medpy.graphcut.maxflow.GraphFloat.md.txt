@@ -1,0 +1,27 @@
+medpy.graphcut.maxflow.GraphFloat
+=================================
+
+::: {.currentmodule}
+medpy.graphcut.maxflow
+:::
+
+::: {.autoclass}
+GraphFloat
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~GraphFloat.\_\_init\_\_ \~GraphFloat.add\_edge \~GraphFloat.add\_node
+\~GraphFloat.add\_tweights \~GraphFloat.get\_arc\_ends
+\~GraphFloat.get\_arc\_num \~GraphFloat.get\_edge
+\~GraphFloat.get\_node\_num \~GraphFloat.get\_rcap
+\~GraphFloat.get\_trcap \~GraphFloat.mark\_node \~GraphFloat.maxflow
+\~GraphFloat.remove\_from\_changed\_list \~GraphFloat.reset
+\~GraphFloat.set\_rcap \~GraphFloat.set\_trcap \~GraphFloat.sum\_edge
+\~GraphFloat.what\_segment
+:::
+:::

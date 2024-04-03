@@ -1,0 +1,6 @@
+﻿medpy.filter.label.relabel\_map
+===============================
+
+.. currentmodule:: medpy.filter.label
+
+.. autofunction:: relabel_map

@@ -1,0 +1,31 @@
+medpy.graphcut.graph.Graph
+==========================
+
+::: {.currentmodule}
+medpy.graphcut.graph
+:::
+
+::: {.autoclass}
+Graph
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~Graph.\_\_init\_\_ \~Graph.add\_tweights \~Graph.get\_edges
+\~Graph.get\_node\_count \~Graph.get\_nodes \~Graph.get\_nweights
+\~Graph.get\_sink\_nodes \~Graph.get\_source\_nodes
+\~Graph.get\_tweights \~Graph.inconsistent \~Graph.set\_nodes
+\~Graph.set\_nweights \~Graph.set\_sink\_nodes
+\~Graph.set\_source\_nodes
+:::
+
+**Attributes**
+
+::: {.autosummary}
+\~Graph.MAX
+:::
+:::

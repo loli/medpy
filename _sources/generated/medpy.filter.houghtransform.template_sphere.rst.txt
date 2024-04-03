@@ -1,0 +1,6 @@
+﻿medpy.filter.houghtransform.template\_sphere
+============================================
+
+.. currentmodule:: medpy.filter.houghtransform
+
+.. autofunction:: template_sphere

@@ -1,0 +1,6 @@
+﻿medpy.features.intensity.hemispheric\_difference
+================================================
+
+.. currentmodule:: medpy.features.intensity
+
+.. autofunction:: hemispheric_difference

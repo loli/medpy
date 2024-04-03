@@ -1,0 +1,10 @@
+medpy.metric.binary.true\_positive\_rate
+========================================
+
+::: {.currentmodule}
+medpy.metric.binary
+:::
+
+::: {.autofunction}
+true\_positive\_rate
+:::

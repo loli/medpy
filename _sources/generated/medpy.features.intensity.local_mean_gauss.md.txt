@@ -1,0 +1,10 @@
+medpy.features.intensity.local\_mean\_gauss
+===========================================
+
+::: {.currentmodule}
+medpy.features.intensity
+:::
+
+::: {.autofunction}
+local\_mean\_gauss
+:::

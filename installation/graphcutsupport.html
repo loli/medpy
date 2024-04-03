@@ -1,172 +1,539 @@
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="../" >
+
   <head>
-    <meta charset="utf-8">
-    
-    <title>Installing MedPy with GraphCut support &mdash; MedPy 0.4.0 documentation</title>
-    
-    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
-    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.4.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" >
-    <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
-    <link rel="next" title="Installing MedPy on Windows" href="windows.html" >
-    <link rel="prev" title="Installing MedPy in development mode" href="developmentmode.html" > 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installing MedPy with GraphCut support &#8212; MedPy 0.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'installation/graphcutsupport';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installing MedPy on Windows" href="windows.html" />
+    <link rel="prev" title="Installing MedPy in development mode" href="developmentmode.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Apr 03, 2024"/>
   </head>
-  <body>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  <div class="container">
-    <div class="header">
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MedPy 0.5.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
     </div>
-  </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-
-    <div class="container">
-      <div class="main">
-        
-	<div class="row-fluid">
-	  <div class="span12">
-	    <div class="spc-navbar">
-              
-    <ul class="nav nav-pills pull-left">
-        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
-        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-	
-        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
-	 
-    </ul>
-              
-              
-    <ul class="nav nav-pills pull-right">
-      <li class="active">
-        <a href="../genindex.html" title="General Index"
-           accesskey="I">index</a>
-      </li>
-      <li class="active">
-        <a href="../py-modindex.html" title="Python Module Index"
-           >modules</a>
-      </li>
-      <li class="active">
-        <a href="windows.html" title="Installing MedPy on Windows"
-           accesskey="N">next</a>
-      </li>
-      <li class="active">
-        <a href="developmentmode.html" title="Installing MedPy in development mode"
-           accesskey="P">previous</a>
-      </li>
-    </ul>
-              
-	    </div>
-	  </div>
-	</div>
-        
-
-	<div class="row-fluid">
-      <div class="spc-rightsidebar span3">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Installing MedPy with GraphCut support</a><ul>
-<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="developmentmode.html"
-                        title="previous chapter">Installing MedPy in development mode</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="windows.html"
-                        title="next chapter">Installing MedPy on Windows</a></p>
-  <h3>This Page</h3>
-  <div>
-    <a href="../_sources/installation/graphcutsupport.rst.txt"
-       rel="nofollow">Show Source</a>
-  </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../information/index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
       </div>
-          <div class="span9">
-            
-        <div class="bodywrapper">
-          <div class="body" id="spc-section-body">
-            
-  <div class="section" id="installing-medpy-with-graphcut-support">
-<h1>Installing MedPy with GraphCut support<a class="headerlink" href="#installing-medpy-with-graphcut-support" title="Permalink to this headline">¶</a></h1>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fastpath.html">Installing MedPy the fast way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="venv.html">Installing MedPy in a virtual environement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developmentmode.html">Installing MedPy in development mode</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Installing MedPy with GraphCut support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="windows.html">Installing MedPy on Windows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="osx.html">Installing MedPy on OsX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conda.html">Installing MedPy with Conda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python2.html">Installing MedPy with Python 2 support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uninstall.html">Uninstall MedPy</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Installation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Installing...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="installing-medpy-with-graphcut-support">
+<h1>Installing MedPy with GraphCut support<a class="headerlink" href="#installing-medpy-with-graphcut-support" title="Link to this heading">#</a></h1>
 <p>The GraphCut functionalities of <strong>MedPy</strong> depend on the <a class="reference external" href="http://vision.csd.uwo.ca/code/">max-flow/min-cut library</a> by Boykov and Kolmogorov.
 During installation, <strong>MedPy</strong> will try to compile it and its python wrappers. If the compilation fails, <strong>MedPy</strong> will be installed without the GraphCut module.
 To enable the GraphCut functionality of <strong>MedPy</strong>, the dependencies of the library must be met <em>before</em> installing <strong>MedPy</strong> (although it can always be simply re-installed).</p>
-<div class="section" id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li>Boost.Python</li>
-<li>g++</li>
-<li>gcc</li>
+<li><p>Boost.Python</p></li>
+<li><p>g++</p></li>
+<li><p>gcc</p></li>
 </ul>
 <p>These dependencies can be found in the repositories of all major distribution. For e.g. Ubuntu, you can simply call:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install libboost-python-dev build-essential
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libboost-python-dev<span class="w"> </span>build-essential
 </pre></div>
 </div>
 <p>Then install <strong>MedPy</strong> the usual way.</p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<p>If you experience an error like <em class="xref py py-obj">ModuleNotFoundError: No module named ‘medpy.graphcut.maxflow’</em>, this usually means
+that the <em class="xref py py-obj">graphcut</em> module has not been compiled successfully. To check the error log, try re-installing <strong>MedPy</strong> with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>medpy<span class="w"> </span>--no-cache-dir<span class="w"> </span>--force-reinstall<span class="w"> </span>-v
+</pre></div>
 </div>
+<p>In the logs, you might see the following warning:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">30</span><span class="n">T11</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="mi">684</span>   <span class="o">***************************************************************************</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">30</span><span class="n">T11</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="mi">685</span>   <span class="n">WARNING</span><span class="p">:</span> <span class="n">The</span> <span class="n">medpy</span><span class="o">.</span><span class="n">graphcut</span><span class="o">.</span><span class="n">maxflow</span> <span class="n">external</span> <span class="n">C</span><span class="o">++</span> <span class="n">package</span> <span class="n">could</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">compiled</span><span class="p">,</span> <span class="nb">all</span> <span class="n">graphcut</span> <span class="n">functionality</span> <span class="n">will</span> <span class="n">be</span> <span class="n">disabled</span><span class="o">.</span> <span class="n">You</span> <span class="n">might</span> <span class="n">be</span> <span class="n">missing</span> <span class="n">Boost</span><span class="o">.</span><span class="n">Python</span> <span class="ow">or</span> <span class="n">some</span> <span class="n">build</span> <span class="n">essentials</span> <span class="n">like</span> <span class="n">g</span><span class="o">++.</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">30</span><span class="n">T11</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="mi">685</span>   <span class="n">Failure</span> <span class="n">information</span><span class="p">,</span> <span class="k">if</span> <span class="nb">any</span><span class="p">,</span> <span class="ow">is</span> <span class="n">above</span><span class="o">.</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">30</span><span class="n">T11</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="mi">685</span>   <span class="n">I</span><span class="s1">&#39;m retrying the build without the graphcut C++ module now.</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">30</span><span class="n">T11</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="mi">685</span>   <span class="o">***************************************************************************</span>
+</pre></div>
 </div>
+<p>The error should be detailed in the lines just above.</p>
+<p>Usually, it is a problem with the linking of the <em class="xref py py-obj">(lib)boost_python3</em> lib.
+There are some inconsistent naming conventions around, rendering the file undiscoverable to <strong>MedPy</strong>.</p>
+<p>On Ubuntu, you should be able to locate your <em>libboost_python3x.so</em> under <em class="xref py py-obj">/usr/lib/x86_64-linux-gnu/</em>.
+If your shared library file is named differently than <strong>MedPy</strong> expects, you might have to create a softlink like, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>libboost_python38.so<span class="w"> </span>libboost_python3.so
+</pre></div>
+</div>
+</section>
+</section>
 
 
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
           </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container container-navbar-bottom">
-      <div class="spc-navbar">
+          <footer class="bd-footer-content">
+            
+          </footer>
         
-      </div>
+      </main>
     </div>
-    <div class="container">
-    <div class="footer">
-    <div class="row-fluid">
-    <ul class="inline pull-left">
-      <li>
-        &copy; Copyright 2013-2019, Oskar Maier.
-      </li>
-      <li>
-      Last updated on Feb 14, 2019.
-      </li>
-      <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
-      </li>
-    </ul>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2013-2024, Oskar Maier.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
     </div>
-    </div>
+  
+</div>
+
+  </footer>
   </body>
 </html>

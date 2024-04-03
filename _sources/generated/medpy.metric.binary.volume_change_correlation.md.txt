@@ -1,0 +1,10 @@
+medpy.metric.binary.volume\_change\_correlation
+===============================================
+
+::: {.currentmodule}
+medpy.metric.binary
+:::
+
+::: {.autofunction}
+volume\_change\_correlation
+:::

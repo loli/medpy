@@ -1,0 +1,25 @@
+﻿medpy.iterators.patchwise.CentredPatchIterator
+==============================================
+
+.. currentmodule:: medpy.iterators.patchwise
+
+.. autoclass:: CentredPatchIterator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CentredPatchIterator.__init__
+      ~CentredPatchIterator.applyslicer
+      ~CentredPatchIterator.assembleimage
+      ~CentredPatchIterator.next
+   
+   
+
+   
+   
+   

@@ -1,0 +1,10 @@
+medpy.features.histogram.fuzzy\_histogram
+=========================================
+
+::: {.currentmodule}
+medpy.features.histogram
+:::
+
+::: {.autofunction}
+fuzzy\_histogram
+:::

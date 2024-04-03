@@ -1,0 +1,10 @@
+medpy.core.exceptions.ArgumentError
+===================================
+
+::: {.currentmodule}
+medpy.core.exceptions
+:::
+
+::: {.autoexception}
+ArgumentError
+:::

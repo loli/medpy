@@ -1,0 +1,6 @@
+﻿medpy.features.histogram.trapezoid\_membership
+==============================================
+
+.. currentmodule:: medpy.features.histogram
+
+.. autofunction:: trapezoid_membership

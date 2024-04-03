@@ -1,0 +1,30 @@
+medpy.graphcut.graph.GCGraph
+============================
+
+::: {.currentmodule}
+medpy.graphcut.graph
+:::
+
+::: {.autoclass}
+GCGraph
+
+::: {.automethod}
+\_\_init\_\_
+:::
+
+**Methods**
+
+::: {.autosummary}
+\~GCGraph.\_\_init\_\_ \~GCGraph.get\_edge\_count \~GCGraph.get\_graph
+\~GCGraph.get\_node\_count \~GCGraph.get\_nodes \~GCGraph.set\_nweight
+\~GCGraph.set\_nweights \~GCGraph.set\_sink\_nodes
+\~GCGraph.set\_source\_nodes \~GCGraph.set\_tweight
+\~GCGraph.set\_tweights \~GCGraph.set\_tweights\_all
+:::
+
+**Attributes**
+
+::: {.autosummary}
+\~GCGraph.MAX
+:::
+:::

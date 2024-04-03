@@ -1,0 +1,10 @@
+medpy.filter.utilities.intersection
+===================================
+
+::: {.currentmodule}
+medpy.filter.utilities
+:::
+
+::: {.autofunction}
+intersection
+:::

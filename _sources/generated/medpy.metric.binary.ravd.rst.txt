@@ -1,0 +1,6 @@
+﻿medpy.metric.binary.ravd
+========================
+
+.. currentmodule:: medpy.metric.binary
+
+.. autofunction:: ravd

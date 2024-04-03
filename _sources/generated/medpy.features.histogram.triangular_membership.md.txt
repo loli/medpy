@@ -1,0 +1,10 @@
+medpy.features.histogram.triangular\_membership
+===============================================
+
+::: {.currentmodule}
+medpy.features.histogram
+:::
+
+::: {.autofunction}
+triangular\_membership
+:::

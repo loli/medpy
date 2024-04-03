@@ -1,0 +1,6 @@
+﻿medpy.graphcut.energy\_voxel.boundary\_difference\_linear
+=========================================================
+
+.. currentmodule:: medpy.graphcut.energy_voxel
+
+.. autofunction:: boundary_difference_linear

@@ -1,376 +1,711 @@
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="../" >
+
   <head>
-    <meta charset="utf-8">
-    
-    <title>List of commandline tools &mdash; MedPy 0.4.0 documentation</title>
-    
-    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
-    <link rel="stylesheet" href="../_static/scipy.css" type="text/css" >
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.4.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" >
-    <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="MedPy 0.4.0 documentation" href="../index.html" >
-    <link rel="next" title="Supported medical image formats" href="imageformats.html" >
-    <link rel="prev" title="Uninstall MedPy" href="../installation/uninstall.html" > 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>List of commandline tools &#8212; MedPy 0.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'information/commandline_tools_listing';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Supported medical image formats" href="imageformats.html" />
+    <link rel="prev" title="Information" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Apr 03, 2024"/>
   </head>
-  <body>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  <div class="container">
-    <div class="header">
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MedPy 0.5.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
     </div>
-  </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-
-    <div class="container">
-      <div class="main">
-        
-	<div class="row-fluid">
-	  <div class="span12">
-	    <div class="spc-navbar">
-              
-    <ul class="nav nav-pills pull-left">
-        <li class="active"><a href="https://github.com/loli/medpy/">GitHub</a></li>
-        <li class="active"><a href="https://pypi.python.org/pypi/MedPy/">PyPi</a></li>
-	
-        <li class="active"><a href="../index.html">MedPy 0.4.0 documentation</a></li>
-	 
-    </ul>
-              
-              
-    <ul class="nav nav-pills pull-right">
-      <li class="active">
-        <a href="../genindex.html" title="General Index"
-           accesskey="I">index</a>
-      </li>
-      <li class="active">
-        <a href="../py-modindex.html" title="Python Module Index"
-           >modules</a>
-      </li>
-      <li class="active">
-        <a href="imageformats.html" title="Supported medical image formats"
-           accesskey="N">next</a>
-      </li>
-      <li class="active">
-        <a href="../installation/uninstall.html" title="Uninstall MedPy"
-           accesskey="P">previous</a>
-      </li>
-    </ul>
-              
-	    </div>
-	  </div>
-	</div>
-        
-
-	<div class="row-fluid">
-      <div class="spc-rightsidebar span3">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">List of commandline tools</a><ul>
-<li><a class="reference internal" href="#categories">Categories</a></li>
-<li><a class="reference internal" href="#basic-image-manipulation">Basic image manipulation</a></li>
-<li><a class="reference internal" href="#image-volume-manipulation">Image volume manipulation</a></li>
-<li><a class="reference internal" href="#binary-image-manipulation">Binary image manipulation</a></li>
-<li><a class="reference internal" href="#image-filters">Image filters</a></li>
-<li><a class="reference internal" href="#magnetic-resonance-mr-related">Magnetic resonance (MR) related</a></li>
-<li><a class="reference internal" href="#graph-cut">Graph-cut</a></li>
-<li><a class="reference internal" href="#others">Others</a></li>
-<li><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../installation/uninstall.html"
-                        title="previous chapter">Uninstall MedPy</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="imageformats.html"
-                        title="next chapter">Supported medical image formats</a></p>
-  <h3>This Page</h3>
-  <div>
-    <a href="../_sources/information/commandline_tools_listing.rst.txt"
-       rel="nofollow">Show Source</a>
-  </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../installation/index.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        Information
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../tutorial/index.html">
+                        Tutorial
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../notebooks/index.html">
+                        Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../reference/index.html">
+                        Reference
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
       </div>
-          <div class="span9">
-            
-        <div class="bodywrapper">
-          <div class="body" id="spc-section-body">
-            
-  <div class="section" id="list-of-commandline-tools">
-<span id="top"></span><h1>List of commandline tools<a class="headerlink" href="#list-of-commandline-tools" title="Permalink to this headline">¶</a></h1>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/loli/medpy/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">List of commandline tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imageformats.html">Supported medical image formats</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Information</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">List of...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="list-of-commandline-tools">
+<span id="top"></span><h1>List of commandline tools<a class="headerlink" href="#list-of-commandline-tools" title="Link to this heading">#</a></h1>
 <p>MedPy is shipped with a number of python scripts (little programs) that are installed on your system together with MedPy. On this page you can find a short overview over these scripts.
 All are prefixed with <strong>medpy_</strong>.</p>
-<div class="section" id="categories">
-<h2>Categories<a class="headerlink" href="#categories" title="Permalink to this headline">¶</a></h2>
+<section id="categories">
+<h2>Categories<a class="headerlink" href="#categories" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="#basic"><span class="std std-ref">Basic image manipulation</span></a></li>
-<li><a class="reference internal" href="#volume"><span class="std std-ref">Image volume manipulation</span></a></li>
-<li><a class="reference internal" href="#binary"><span class="std std-ref">Binary image manipulation</span></a></li>
-<li><a class="reference internal" href="#filter"><span class="std std-ref">Image filters</span></a></li>
-<li><a class="reference internal" href="#mr"><span class="std std-ref">Magnetic resonance (MR) related</span></a></li>
-<li><a class="reference internal" href="#gc"><span class="std std-ref">Graph-cut</span></a></li>
-<li><a class="reference internal" href="#others"><span class="std std-ref">Others</span></a></li>
+<li><p><a class="reference internal" href="#basic"><span class="std std-ref">Basic image manipulation</span></a></p></li>
+<li><p><a class="reference internal" href="#volume"><span class="std std-ref">Image volume manipulation</span></a></p></li>
+<li><p><a class="reference internal" href="#binary"><span class="std std-ref">Binary image manipulation</span></a></p></li>
+<li><p><a class="reference internal" href="#filter"><span class="std std-ref">Image filters</span></a></p></li>
+<li><p><a class="reference internal" href="#mr"><span class="std std-ref">Magnetic resonance (MR) related</span></a></p></li>
+<li><p><a class="reference internal" href="#gc"><span class="std std-ref">Graph-cut</span></a></p></li>
+<li><p><a class="reference internal" href="#others"><span class="std std-ref">Others</span></a></p></li>
 </ul>
-</div>
-<div class="section" id="basic-image-manipulation">
-<span id="basic"></span><h2>Basic image manipulation<a class="headerlink" href="#basic-image-manipulation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="basic-image-manipulation">
+<span id="basic"></span><h2>Basic image manipulation<a class="headerlink" href="#basic-image-manipulation" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<div class="topic">
-<p class="topic-title first">medpy_info.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_info.py.ipynb">notebook</a>)</p>
+<aside class="topic">
+<p class="topic-title">medpy_info.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_info.py.ipynb">notebook</a>)</p>
 <p>Prints basic information about an image to the stdout.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_convert.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_convert.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_convert.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_convert.py.ipynb">notebook</a>)</p>
 <p>Converts between two image formats. Alternatively can be used to create an empty image by example.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_create_empty_volume_by_example.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_create_empty_volume_by_example.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_create_empty_volume_by_example.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_create_empty_volume_by_example.py.ipynb">notebook</a>)</p>
 <p>Can be used to create an empty image by example.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_resample.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_resample.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_resample.py</p>
 <p>Re-samples an image using b-spline interpolation.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_set_pixel_spacing.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_set_pixel_spacing.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_set_pixel_spacing.py</p>
 <p>Manually set the pixel/voxel spacing of an image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_diff.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_diff.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_diff.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_diff.py.ipynb">notebook</a>)</p>
 <p>Compares the meta-data and intensity values of two images.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_grid.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_grid.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_grid.py</p>
 <p>Creates a binary volume containing a regular grid.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_extract_min_max.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_min_max.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_extract_min_max.py</p>
 <p>Extracts the min and max intensity values of one or more images.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_swap_dimensions.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_swap_dimensions.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_swap_dimensions.py</p>
 <p>Swap two image dimensions.</p>
-</div>
-</div>
-<div class="section" id="image-volume-manipulation">
-<span id="volume"></span><h2>Image volume manipulation<a class="headerlink" href="#image-volume-manipulation" title="Permalink to this headline">¶</a></h2>
+</aside>
+</section>
+<section id="image-volume-manipulation">
+<span id="volume"></span><h2>Image volume manipulation<a class="headerlink" href="#image-volume-manipulation" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<div class="topic">
-<p class="topic-title first">medpy_extract_sub_volume.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume.py.ipynb">notebook</a>)</p>
+<aside class="topic">
+<p class="topic-title">medpy_extract_sub_volume.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume.py.ipynb">notebook</a>)</p>
 <p>Extracts a sub volume from an image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_extract_sub_volume_auto.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume_auto.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_extract_sub_volume_auto.py</p>
 <p>Splits a volume into a number of sub volumes along a given dimension.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_extract_sub_volume_by_example.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume_by_example.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_extract_sub_volume_by_example.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_sub_volume_by_example.py.ipynb">notebook</a>)</p>
 <p>Takes an image and a second image containing a binary mask, then extracts the sub volume of the first image defined by the bounding box of the foreground object in the binary image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_fit_into_shape.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_fit_into_shape.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_fit_into_shape.py</p>
 <p>Fit an existing image into a new shape by either extending or cutting all dimensions symmetrically.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_intersection.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_intersection.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_intersection.py</p>
 <p>Extracts the intersecting parts of two volumes regarding offset and voxel-spacing.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_join_xd_to_xplus1d.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_join_xd_to_xplus1d.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_join_xd_to_xplus1d.py</p>
 <p>Joins a number of xD images by adding a new dimension, resulting in a (x+1)D image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_split_xd_to_xminus1d.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_split_xd_to_xminus1d.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_split_xd_to_xminus1d.py</p>
 <p>Splits a xD image into a number of (x-1)D images.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_stack_sub_volumes.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_stack_sub_volumes.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_stack_sub_volumes.py</p>
 <p>Stacks a number of sub volumes together along a defined dimension.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_zoom_image.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_zoom_image.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_zoom_image.py</p>
 <p>Enlarges an image by adding (interpolated) slices.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_shrink_image.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_shrink_image.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_shrink_image.py</p>
 <p>Reduces an image by simply discarding slices.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_reslice_3d_to_4d.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_reslice_3d_to_4d.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_reslice_3d_to_4d.py</p>
 <p>Reslices a 3D image formed by stacked up 3D volumes into a real 4D images (as e.g. often necessary for DICOM).</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_dicom_slices_to_volume.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_dicom_slices_to_volume.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_dicom_slices_to_volume.py</p>
 <p>Takes a number of 2D DICOM slice (a DICOM series) and creates a 3D volume from them.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_dicom_to_4D.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_dicom_to_4D.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_dicom_to_4D.py</p>
 <p>Takes a number of 2D DICOM slice (a DICOM series) and creates a 4D volume from them (split-points are passed as arguments).</p>
-</div>
-</div>
-<div class="section" id="binary-image-manipulation">
-<span id="binary"></span><h2>Binary image manipulation<a class="headerlink" href="#binary-image-manipulation" title="Permalink to this headline">¶</a></h2>
+</aside>
+</section>
+<section id="binary-image-manipulation">
+<span id="binary"></span><h2>Binary image manipulation<a class="headerlink" href="#binary-image-manipulation" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<div class="topic">
-<p class="topic-title first">medpy_binary_resampling.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_binary_resampling.py.ipynb">notebook</a>)</p>
+<aside class="topic">
+<p class="topic-title">medpy_binary_resampling.py</p>
 <p>Re-samples a binary image according to a supplied voxel spacing using shape based interpolation where necessary.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_extract_contour.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_contour.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_extract_contour.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_extract_contour.py.ipynb">notebook</a>)</p>
 <p>Converts a binary volume into a surface contour.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_join_masks.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_join_masks.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_join_masks.py</p>
 <p>Joins a number of binary images into a single conjunction using sum, avg, max or min.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_merge.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_merge.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_merge.py</p>
 <p>Performs a logical OR on two binary images.</p>
-</div>
-</div>
-<div class="section" id="image-filters">
-<span id="filter"></span><h2>Image filters<a class="headerlink" href="#image-filters" title="Permalink to this headline">¶</a></h2>
+</aside>
+</section>
+<section id="image-filters">
+<span id="filter"></span><h2>Image filters<a class="headerlink" href="#image-filters" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<div class="topic">
-<p class="topic-title first">medpy_gradient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_gradient.py.ipynb">notebook</a>)</p>
+<aside class="topic">
+<p class="topic-title">medpy_gradient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_gradient.py.ipynb">notebook</a>)</p>
 <p>Gradient magnitude image filter. Output is float.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_morphology.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_morphology.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_morphology.py</p>
 <p>Apply binary morphology (dilation, erosion, opening or closing) to a binary image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_anisotropic_diffusion.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_anisotropic_diffusion.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_anisotropic_diffusion.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_anisotropic_diffusion.py.ipynb">notebook</a>)</p>
 <p>Apply the edge preserving anisotropic diffusion filter to an image.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_watershed.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_watershed.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_watershed.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_watershed.py.ipynb">notebook</a>)</p>
 <p>Applies a watershed filter, results in a label map / region image.</p>
-</div>
-</div>
-<div class="section" id="magnetic-resonance-mr-related">
-<span id="mr"></span><h2>Magnetic resonance (MR) related<a class="headerlink" href="#magnetic-resonance-mr-related" title="Permalink to this headline">¶</a></h2>
+</aside>
+</section>
+<section id="magnetic-resonance-mr-related">
+<span id="mr"></span><h2>Magnetic resonance (MR) related<a class="headerlink" href="#magnetic-resonance-mr-related" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<div class="topic">
-<p class="topic-title first">medpy_apparent_diffusion_coefficient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_apparent_diffusion_coefficient.py.ipynb">notebook</a>)</p>
+<aside class="topic">
+<p class="topic-title">medpy_apparent_diffusion_coefficient.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_apparent_diffusion_coefficient.py.ipynb">notebook</a>)</p>
 <p>Computes the apparent diffusion coefficient (ADC) map from two diffusion weight (DW) volumes acquired with different b-values.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_intensity_range_standardization.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_intensity_range_standardization.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_intensity_range_standardization.py</p>
 <p>Standardizes the intensity ranges of a number of MR images and produces a corresponding model that can be applied to new images.</p>
-</div>
-</div>
-<div class="section" id="graph-cut">
-<span id="gc"></span><h2>Graph-cut<a class="headerlink" href="#graph-cut" title="Permalink to this headline">¶</a></h2>
+</aside>
+</section>
+<section id="graph-cut">
+<span id="gc"></span><h2>Graph-cut<a class="headerlink" href="#graph-cut" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-<p>GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algorithm, version 3.01 <a class="footnote-reference" href="#id42" id="id32">[1]</a>.</p>
-<div class="topic">
-<p class="topic-title first">medpy_graphcut_voxel.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_voxel.py.ipynb">notebook</a>)</p>
+<p>GC based on (and shipped with, ask!) Max-flow/min-cut by Boykov-Kolmogorov algorithm, version 3.01 <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<aside class="topic">
+<p class="topic-title">medpy_graphcut_voxel.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_voxel.py.ipynb">notebook</a>)</p>
 <p>Executes a voxel based graph cut. Only supports the boundary term.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_graphcut_label.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_label.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_graphcut_label.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_label.py.ipynb">notebook</a>)</p>
 <p>Executes a label based graph cut. Only supports the boundary term.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_graphcut_label_bgreduced.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_label_bgreduced.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_graphcut_label_bgreduced.py</p>
 <p>Executes a label based graph cut. Only supports the boundary term. Reduces the input image by considering only the region defined by the bounding box around the background markers.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_graphcut_label_wsplit.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_label_wsplit.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_graphcut_label_wsplit.py</p>
 <p>Executes a label based graph cut. Only supports the boundary term. Reduces the memory requirements by splitting the image into a number of sub-volumes. Note that this will result in a non-optimal cut.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_graphcut_label_w_regional.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_graphcut_label_w_regional.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_graphcut_label_w_regional.py</p>
 <p>Executes a label based graph cut. With boundary and regional term.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_label_count.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_label_count.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_label_count.py</p>
 <p>Counts the number of unique intensity values in an image i.e. the amount of labelled regions.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_label_fit_to_mask.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_label_fit_to_mask.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_label_fit_to_mask.py</p>
 <p>Fits the labelled regions of a label map image to a binary segmentation map.</p>
-</div>
-<div class="topic">
-<p class="topic-title first">medpy_label_superimposition.py (<a class="reference external" href="https://github.com/loli/medpy/blob/master/notebooks/scripts/medpy_label_superimposition.py.ipynb">notebook</a>)</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">medpy_label_superimposition.py</p>
 <p>Takes to label maps and superimpose them to create a new label image with more regions.</p>
-</div>
-</div>
-<div class="section" id="others">
-<span id="id41"></span><h2>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h2>
+</aside>
+</section>
+<section id="others">
+<span id="id2"></span><h2>Others<a class="headerlink" href="#others" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#top"><span class="std std-ref">↑top</span></a></p>
-</div>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<table class="docutils footnote" frame="void" id="id42" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id32">[1]</a></td><td><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></td></tr>
-</tbody>
-</table>
-</div>
-</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://vision.csd.uwo.ca/code/">http://vision.csd.uwo.ca/code/</a></p>
+</aside>
+</aside>
+</section>
+</section>
 
 
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categories">Categories</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-image-manipulation">Basic image manipulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-volume-manipulation">Image volume manipulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-image-manipulation">Binary image manipulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-filters">Image filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnetic-resonance-mr-related">Magnetic resonance (MR) related</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-cut">Graph-cut</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#others">Others</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
           </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container container-navbar-bottom">
-      <div class="spc-navbar">
+          <footer class="bd-footer-content">
+            
+          </footer>
         
-      </div>
+      </main>
     </div>
-    <div class="container">
-    <div class="footer">
-    <div class="row-fluid">
-    <ul class="inline pull-left">
-      <li>
-        &copy; Copyright 2013-2019, Oskar Maier.
-      </li>
-      <li>
-      Last updated on Feb 14, 2019.
-      </li>
-      <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.7.
-      </li>
-    </ul>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2013-2024, Oskar Maier.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
     </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
     </div>
-    </div>
+  
+</div>
+
+  </footer>
   </body>
 </html>

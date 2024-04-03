@@ -1,0 +1,10 @@
+medpy.metric.histogram.relative\_deviation
+==========================================
+
+::: {.currentmodule}
+medpy.metric.histogram
+:::
+
+::: {.autofunction}
+relative\_deviation
+:::

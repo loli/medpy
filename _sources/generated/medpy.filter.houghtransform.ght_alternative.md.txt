@@ -1,0 +1,10 @@
+medpy.filter.houghtransform.ght\_alternative
+============================================
+
+::: {.currentmodule}
+medpy.filter.houghtransform
+:::
+
+::: {.autofunction}
+ght\_alternative
+:::

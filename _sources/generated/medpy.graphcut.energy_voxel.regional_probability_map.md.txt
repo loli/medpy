@@ -1,0 +1,10 @@
+medpy.graphcut.energy\_voxel.regional\_probability\_map
+=======================================================
+
+::: {.currentmodule}
+medpy.graphcut.energy\_voxel
+:::
+
+::: {.autofunction}
+regional\_probability\_map
+:::
