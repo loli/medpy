@@ -1,3 +1,9 @@
+v0.5.0, 2024-04-XX -- Addressed all depreciation warnings and incompatabilities
+                      Updated documentation
+                      Updated and fixed tests
+                      Added github workflows as system
+                      Introduced formatting rules and pre-commit to enforce them
+                      Removed dockerfile creation files
 v0.4.0, 2018-02-XX -- Switched to Python 3: finally compatible with modern development environements
                       Switched to simple itk for image loading/saving: read dicom series, more formats, less dependencies, cleaner code, easier to maintain
                       Documentation: installation instructions for Windows and OsX
