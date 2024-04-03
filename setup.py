@@ -20,7 +20,9 @@ PACKAGES = [
     "medpy.filter",
     "medpy.graphcut",
     "medpy.io",
+    "medpy.iterators",
     "medpy.metric",
+    "medpy.neighbours",
     "medpy.utilities",
 ]
 
