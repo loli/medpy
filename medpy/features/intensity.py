@@ -218,7 +218,7 @@ def indices(image, voxelspacing=None, mask=slice(None)):
         image = image[0]
 
     if not type(mask) is slice:
-        mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
+        numpy.asarray(mask).astype(bool)
 
     if voxelspacing is None:
         voxelspacing = [1.0] * image.ndim
@@ -865,7 +865,7 @@ def _extract_centerdistance(image, mask=slice(None), voxelspacing=None):
     """
     Internal, single-image version of `centerdistance`.
     """
-    image = numpy.array(image, copy=False)
+    image = numpy.asarray(image)
 
     if None == voxelspacing:
         voxelspacing = [1.0] * image.ndim
@@ -889,7 +889,7 @@ def _extract_intensities(image, mask=slice(None)):
     """
     if type(mask) is list and type(mask[0]) is slice:
         mask = tuple(mask)
-    return numpy.array(image, copy=True)[mask].ravel()
+    return numpy.asarray(image)[mask].ravel()
 
 
 def _substract_hemispheres(
@@ -941,7 +941,7 @@ def _extract_feature(fun, image, mask=slice(None), **kwargs):
         Additional keyword arguments to be passed to the feature extraction function
     """
     if not type(mask) is slice:
-        mask = numpy.array(mask, copy=False, dtype=numpy.bool_)
+        numpy.asarray(mask).astype(bool)
 
     if type(image) is tuple or type(image) is list:
         return join(*[fun(i, mask, **kwargs) for i in image])

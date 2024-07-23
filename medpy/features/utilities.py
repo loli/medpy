@@ -77,7 +77,7 @@ def normalize(vector, cutoffp=(0, 100), model=False):
         The learned normalization model.
 
     """
-    vector = numpy.array(vector, dtype=float)
+    vector = numpy.asarray(vector).astype(float)
 
     # add a singleton dimension if required
     if 1 == vector.ndim:
@@ -121,7 +121,7 @@ def normalize_with_model(vector, model):
     normalize : ndarray
         The normalized versions of the input vectors.
     """
-    vector = numpy.array(vector, dtype=float)
+    vector = numpy.asarray(vector).astype(float)
 
     # unpack model
     minp, maxp, minv, maxv = model
@@ -213,9 +213,9 @@ def join(*vectors):
     # process supplied arguments
     vectors = list(vectors)
     for i in range(len(vectors)):
-        vectors[i] = numpy.array(vectors[i], copy=False)
+        vectors[i] = numpy.asarray(vectors[i])
         if vectors[i].ndim == 1:
-            vectors[i] = numpy.array([vectors[i]], copy=False).T
+            vectors[i] = numpy.asarray([vectors[i]]).T
 
     # treat single-value cases special (no squeezing)
     if 1 == len(vectors[0]):

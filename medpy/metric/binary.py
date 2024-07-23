@@ -467,12 +467,12 @@ def assd(result, reference, voxelspacing=None, connectivity=1):
 
     and then averaging the two lists. The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean(
-        (
+    assd = numpy.concatenate(
+        [
             __surface_distances(result, reference, voxelspacing, connectivity),
             __surface_distances(reference, result, voxelspacing, connectivity),
-        )
-    )
+        ]
+    ).mean()
     return assd
 
 
@@ -802,12 +802,12 @@ def obj_assd(result, reference, voxelspacing=None, connectivity=1):
 
     and then averaging the two lists. The binary images can therefore be supplied in any order.
     """
-    assd = numpy.mean(
-        (
+    assd = numpy.concatenate(
+        [
             __obj_surface_distances(result, reference, voxelspacing, connectivity),
             __obj_surface_distances(reference, result, voxelspacing, connectivity),
-        )
-    )
+        ]
+    ).mean()
     return assd
 
 
