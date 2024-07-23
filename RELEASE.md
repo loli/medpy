@@ -18,6 +18,7 @@
 - Open PR to master, review, and merge
 - Create a pre-release from master and test
 - Create final release from master and test
+    - You might need to delete test package with same version number ion from test.pypi.org
 - Trigger publish to PyPi workflow (see under [.github/workflows](.github/workflows))
 - Update conda-force recipe to new version (PR)
 - Update DOI
