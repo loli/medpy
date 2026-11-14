@@ -288,7 +288,7 @@ def boundary_stawiaski_directed(
     .. [1] Stawiaski J., Decenciere E., Bidlaut F. "Interactive Liver Tumor Segmentation
            Using Graph-cuts and watershed" MICCAI 2008 participation
     """
-    (gradient_image, directedness) = xxx_todo_changeme
+    gradient_image, directedness = xxx_todo_changeme
     label_image = numpy.asarray(label_image)
     gradient_image = numpy.asarray(gradient_image)
 
@@ -384,7 +384,7 @@ def regional_atlas(
 
     This function is tested on 2D and 3D images and theoretically works for all dimensionalities.
     """
-    (probability_map, alpha) = xxx_todo_changeme1
+    probability_map, alpha = xxx_todo_changeme1
     label_image = numpy.asarray(label_image)
     probability_map = numpy.asarray(probability_map)
     __check_label_image(label_image)

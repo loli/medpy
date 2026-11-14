@@ -23,7 +23,10 @@
 # third-party modules
 import numpy
 from scipy.interpolate import interp1d
-from scipy.ndimage import distance_transform_edt, gaussian_filter
+from scipy.ndimage import (
+    distance_transform_edt,
+    gaussian_filter,
+)
 from scipy.ndimage import (
     gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude,
 )

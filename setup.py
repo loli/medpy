@@ -45,7 +45,14 @@ def try_find_library(lib_name):
 # Special handling for homebrew Boost Python library
 if sys.platform == "darwin":
     if sys.version_info.major > 2:
-        boost_python_library = "boost_python" + str(sys.version_info.major)
+        versioned_library = (
+            "boost_python" + str(sys.version_info.major) + str(sys.version_info.minor)
+        )
+        boost_python_library = (
+            try_find_library(versioned_library)
+            or try_find_library("boost_python" + str(sys.version_info.major))
+            or versioned_library
+        )
     else:
         boost_python_library = "boost_python"
 else:
@@ -165,11 +172,15 @@ def run_setup(with_compilation):
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.13",
+            "Programming Language :: Python :: 3.14",
+            "Programming Language :: Python :: 3.15",
             "Programming Language :: C++",
             "Topic :: Scientific/Engineering :: Medical Science Apps.",
             "Topic :: Scientific/Engineering :: Image Recognition",
         ],
-        python_requires=">=3.5, <4",
+        python_requires=">=3.8, <4",
         install_requires=["scipy >= 1.10", "numpy >= 1.24", "SimpleITK >= 2.1"],
         extras_require={
             "dev": ["pre-commit"],  # for development

@@ -296,9 +296,9 @@ class Header:
 
         if ndim > self.direction.shape[0]:
             direction = np.identity(ndim)
-            direction[
-                : self.direction.shape[0], : self.direction.shape[0]
-            ] = self.direction
+            direction[: self.direction.shape[0], : self.direction.shape[0]] = (
+                self.direction
+            )
         else:
             direction = self.direction[:ndim, :ndim]
 
