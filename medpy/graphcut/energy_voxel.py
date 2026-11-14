@@ -57,7 +57,7 @@ def regional_probability_map(graph, xxx_todo_changeme):
     to be passed along. That means that `~medpy.graphcut.generate.graph_from_labels` has to
     be called with ``regional_term_args`` set to the probability atlas image.
     """
-    (probability_map, alpha) = xxx_todo_changeme
+    probability_map, alpha = xxx_todo_changeme
     probability_map = numpy.asarray(probability_map)
     probabilities = numpy.vstack(
         [(probability_map * alpha).flat, ((1 - probability_map) * alpha).flat]
@@ -92,7 +92,7 @@ def boundary_maximum_linear(graph, xxx_todo_changeme1):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     gradient image.
     """
-    (gradient_image, spacing) = xxx_todo_changeme1
+    gradient_image, spacing = xxx_todo_changeme1
     gradient_image = numpy.asarray(gradient_image)
 
     # compute maximum intensity to encounter
@@ -108,9 +108,9 @@ def boundary_maximum_linear(graph, xxx_todo_changeme1):
         intensities = (
             1.0 - intensities
         )  # reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge
-        intensities[
-            intensities == 0.0
-        ] = sys.float_info.min  # required to avoid zero values
+        intensities[intensities == 0.0] = (
+            sys.float_info.min
+        )  # required to avoid zero values
         return intensities
 
     __skeleton_maximum(graph, gradient_image, boundary_term_linear, spacing)
@@ -167,7 +167,7 @@ def boundary_difference_linear(graph, xxx_todo_changeme2):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
     """
-    (original_image, spacing) = xxx_todo_changeme2
+    original_image, spacing = xxx_todo_changeme2
     original_image = numpy.asarray(original_image)
 
     # compute maximum (possible) intensity difference
@@ -183,9 +183,9 @@ def boundary_difference_linear(graph, xxx_todo_changeme2):
         intensities = (
             1.0 - intensities
         )  # reverse weights such that high intensity difference lead to small weights and hence more likely to a cut at this edge
-        intensities[
-            intensities == 0.0
-        ] = sys.float_info.min  # required to avoid zero values
+        intensities[intensities == 0.0] = (
+            sys.float_info.min
+        )  # required to avoid zero values
         return intensities
 
     __skeleton_difference(graph, original_image, boundary_term_linear, spacing)
@@ -220,7 +220,7 @@ def boundary_maximum_exponential(graph, xxx_todo_changeme3):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     gradient image.
     """
-    (gradient_image, sigma, spacing) = xxx_todo_changeme3
+    gradient_image, sigma, spacing = xxx_todo_changeme3
     gradient_image = numpy.asarray(gradient_image)
 
     def boundary_term_exponential(intensities):
@@ -284,7 +284,7 @@ def boundary_difference_exponential(graph, xxx_todo_changeme4):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
     """
-    (original_image, sigma, spacing) = xxx_todo_changeme4
+    original_image, sigma, spacing = xxx_todo_changeme4
     original_image = numpy.asarray(original_image)
 
     def boundary_term_exponential(intensities):
@@ -331,7 +331,7 @@ def boundary_maximum_division(graph, xxx_todo_changeme5):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     gradient image.
     """
-    (gradient_image, sigma, spacing) = xxx_todo_changeme5
+    gradient_image, sigma, spacing = xxx_todo_changeme5
     gradient_image = numpy.asarray(gradient_image)
 
     def boundary_term_division(intensities):
@@ -393,7 +393,7 @@ def boundary_difference_division(graph, xxx_todo_changeme6):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
     """
-    (original_image, sigma, spacing) = xxx_todo_changeme6
+    original_image, sigma, spacing = xxx_todo_changeme6
     original_image = numpy.asarray(original_image)
 
     def boundary_term_division(intensities):
@@ -438,7 +438,7 @@ def boundary_maximum_power(graph, xxx_todo_changeme7):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     gradient image.
     """
-    (gradient_image, sigma, spacing) = xxx_todo_changeme7
+    gradient_image, sigma, spacing = xxx_todo_changeme7
     gradient_image = numpy.asarray(gradient_image)
 
     def boundary_term_power(intensities):
@@ -500,7 +500,7 @@ def boundary_difference_power(graph, xxx_todo_changeme8):
     `~medpy.graphcut.generate.graph_from_voxels` has to be called with ``boundary_term_args`` set to the
     original image.
     """
-    (original_image, sigma, spacing) = xxx_todo_changeme8
+    original_image, sigma, spacing = xxx_todo_changeme8
     original_image = numpy.asarray(original_image)
 
     def boundary_term_power(intensities):
