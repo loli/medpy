@@ -23,6 +23,7 @@ Compare two binary objects
     dc
     jc
     hd
+    hd95_max
     asd
     assd
     precision
@@ -120,6 +121,7 @@ from .binary import assd as assd
 from .binary import dc as dc
 from .binary import hd as hd
 from .binary import hd95 as hd95
+from .binary import hd95_max as hd95_max
 from .binary import jc as jc
 from .binary import obj_asd as obj_asd
 from .binary import obj_assd as obj_assd
@@ -177,6 +179,7 @@ __all__ = [
     "true_negative_rate",
     "true_positive_rate",
     "hd95",
+    "hd95_max",
     "obj_asd",
     "obj_assd",
     "obj_fpr",

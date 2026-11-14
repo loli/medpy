@@ -376,6 +376,9 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     images. Compared to the Hausdorff Distance, this metric is slightly more stable to small outliers and is
     commonly used in Biomedical Segmentation challenges.
 
+    This implementation computes the 95th percentile of the combined set of directed distances. See function 'hd95_max'
+    for an alternative implementation
+
     Parameters
     ----------
     result : array_like
@@ -399,12 +402,14 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     -------
     hd : float
         The symmetric Hausdorff Distance between the object(s) in ```result``` and the
-        object(s) in ```reference```. The distance unit is the same as for the spacing of
-        elements along each dimension, which is usually given in mm.
+        object(s) in ```reference``` (95th percentile of the combined set of directed distances).
+        The distance unit is the same as for the spacing of elements along each dimension,
+        which is usually given in mm.
 
     See also
     --------
     :func:`hd`
+    :func:`hd95_max`
 
     Notes
     -----
@@ -414,6 +419,52 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
     hd2 = __surface_distances(reference, result, voxelspacing, connectivity)
     hd95 = numpy.percentile(numpy.hstack((hd1, hd2)), 95)
     return hd95
+
+
+def hd95_max(result, reference, voxelspacing=None, connectivity=1):
+    """
+    95th percentile Hausdorff distance using the maximum of directed percentiles.
+
+    Computes the 95th percentile separately for result-to-reference and
+    reference-to-result surface distances, then returns the larger value.
+
+    Parameters
+    ----------
+    result : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    reference : array_like
+        Input data containing objects. Can be any type but will be converted
+        into binary: background where 0, object everywhere else.
+    voxelspacing : float or sequence of floats, optional
+        The voxelspacing in a distance unit i.e. spacing of elements
+        along each dimension. If a sequence, must be of length equal to
+        the input rank; if a single number, this is used for all axes. If
+        not specified, a grid spacing of unity is implied.
+    connectivity : int
+        The neighbourhood/connectivity considered when determining the surface
+        of the binary objects. This value is passed to
+        `scipy.ndimage.generate_binary_structure` and should usually be :math:`> 1`.
+        Note that the connectivity influences the result in the case of the Hausdorff distance.
+
+    Returns
+    -------
+    hd95_max : float
+        The maximum of the two directed 95th percentiles, in the same units as
+        the voxel spacing (usually mm).
+
+    See also
+    --------
+    :func:`hd`
+    :func:`hd95`
+
+    Notes
+    -----
+    This is a real metric. The binary images can therefore be supplied in any order.
+    """
+    hd1 = __surface_distances(result, reference, voxelspacing, connectivity)
+    hd2 = __surface_distances(reference, result, voxelspacing, connectivity)
+    return max(numpy.percentile(hd1, 95), numpy.percentile(hd2, 95))
 
 
 def assd(result, reference, voxelspacing=None, connectivity=1):

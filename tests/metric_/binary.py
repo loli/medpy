@@ -9,7 +9,7 @@ Unittest for medpy.features.histogram.
 
 import numpy as np
 
-from medpy.metric import asd, assd, obj_asd, obj_assd
+from medpy.metric import asd, assd, hd95, hd95_max, obj_asd, obj_assd
 
 result_min = np.asarray([1, 0]).astype(bool)
 reference_min = np.asarray([0, 1]).astype(bool)
@@ -75,3 +75,23 @@ def test_obj_assd_is_symetric():
     assd_1 = obj_assd(result_sym, reference_sym)
     assd_2 = obj_assd(reference_sym, result_sym)
     assert assd_1 == assd_2
+
+
+def test_hd95_identity():
+    assert hd95(result_min, result_min) == 0
+
+
+def test_hd95_max_identity():
+    assert hd95_max(result_min, result_min) == 0
+
+
+def test_hd95_symmetry():
+    val1 = hd95(result_sym, reference_sym)
+    val2 = hd95(reference_sym, result_sym)
+    assert np.isclose(val1, val2)
+
+
+def test_hd95_max_symmetry():
+    val1 = hd95_max(result_sym, reference_sym)
+    val2 = hd95_max(reference_sym, result_sym)
+    assert np.isclose(val1, val2)
