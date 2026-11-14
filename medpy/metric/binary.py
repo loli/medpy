@@ -423,12 +423,10 @@ def hd95(result, reference, voxelspacing=None, connectivity=1):
 
 def hd95_max(result, reference, voxelspacing=None, connectivity=1):
     """
-    Alternative 95th percentile Hausdorff Distance.
+    95th percentile Hausdorff distance using the maximum of directed percentiles.
 
-    Computes the symmetric 95th percentile Hausdorff Distance by taking the maximum of the 95th percentiles of the
-    directed distances from result to reference and from reference to result separately.
-
-    This definition matches the common approach referenced in literature.
+    Computes the 95th percentile separately for result-to-reference and
+    reference-to-result surface distances, then returns the larger value.
 
     Parameters
     ----------
@@ -451,10 +449,9 @@ def hd95_max(result, reference, voxelspacing=None, connectivity=1):
 
     Returns
     -------
-    hd95 : float
-        The symmetric 95th percentile Hausdorff Distance (max of per-direction 95th percentiles).
-        The distance unit is the same as for the spacing of elements along each dimension,
-        which is usually given in mm.
+    hd95_max : float
+        The maximum of the two directed 95th percentiles, in the same units as
+        the voxel spacing (usually mm).
 
     See also
     --------
