@@ -23,6 +23,7 @@ Compare two binary objects
     dc
     jc
     hd
+    hd95_max
     asd
     assd
     precision
