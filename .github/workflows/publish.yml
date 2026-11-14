@@ -18,11 +18,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.tag }}
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: 3.x
       - name: Install dependencies
@@ -32,7 +32,7 @@ jobs:
       - name: Build a source tarball
         run: python -m build --sdist
       - name: Store the distribution packages
-        uses: actions/upload-artifact@v4.3.0
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: python-package-distributions-${{ inputs.tag }}
           path: dist/
@@ -48,9 +48,9 @@ jobs:
       id-token: write # IMPORTANT: mandatory for trusted publishing
     steps:
       - name: Download dists
-        uses: actions/download-artifact@v4.1.7 # make sure that same major version as actions/upload-artifact
+        uses: actions/download-artifact@v4.3.0 # make sure that same major version as actions/upload-artifact
         with:
           name: python-package-distributions-${{ inputs.tag }}
           path: dist/
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@v1.8.11
+        uses: pypa/gh-action-pypi-publish@v1.14.3
