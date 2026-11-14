@@ -283,6 +283,7 @@ class GCGraph:
     underlying C++ implementation and to convert them into catchable and meaningful
     error messages.
     """
+
     # @var __INT_16_BIT The maximum value of signed int 16bit.
     __INT_16_BIT = 32767
     # @var __UINT_16_BIT: The maximum value of unsigned int 16bit.

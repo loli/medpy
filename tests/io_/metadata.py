@@ -260,10 +260,10 @@ class TestMetadataConsistency(unittest.TestCase):
                             _message = (
                                 e.message if hasattr(e, "message") else str(e.args)
                             )
-                            unsupported_types[suffix_from][suffix_from][ndim][
-                                dtype
-                            ] = "Saved reference image of type {} with shape={}/dtype={} could not be loaded. Reason: {}".format(
-                                suffix_from, arr_save.shape, dtype, _message
+                            unsupported_types[suffix_from][suffix_from][ndim][dtype] = (
+                                "Saved reference image of type {} with shape={}/dtype={} could not be loaded. Reason: {}".format(
+                                    suffix_from, arr_save.shape, dtype, _message
+                                )
                             )
                             continue
 

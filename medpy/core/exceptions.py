@@ -31,39 +31,47 @@
 class ArgumentError(Exception):
     r"""Thrown by an application when an invalid command line argument has been
     supplied."""
+
     pass
 
 
 class FunctionError(Exception):
     r"""Thrown when a supplied function returns unexpected results."""
+
     pass
 
 
 class SubprocessError(Exception):
     r"""Thrown by an application when a subprocess execution failed."""
+
     pass
 
 
 class ImageTypeError(Exception):
     r"""Thrown when trying to load or save an image of unknown type."""
+
     pass
 
 
 class DependencyError(Exception):
     r"""Thrown when a required module could not be loaded."""
+
     pass
 
 
 class ImageLoadingError(Exception):
     r"""Thrown when a image could not be loaded."""
+
     pass
 
 
 class ImageSavingError(Exception):
     r"""Thrown when a image could not be saved."""
+
     pass
 
 
 class MetaDataError(Exception):
     r"""Thrown when an image meta data failure occurred."""
+
     pass

@@ -90,10 +90,7 @@ def coarseness(image, voxelspacing=None, mask=slice(None)):
         return None
     # set padding for image border control
     padSize = numpy.asarray(
-        [
-            (int(numpy.rint((2**5.0) * voxelspacing[jj])), 0)
-            for jj in range(image.ndim)
-        ]
+        [(int(numpy.rint((2**5.0) * voxelspacing[jj])), 0) for jj in range(image.ndim)]
     ).astype(int)
     Apad = numpy.pad(image, pad_width=padSize, mode="reflect")
 
