@@ -26,11 +26,11 @@ from scipy.interpolate import interp1d
 from scipy.ndimage import (
     distance_transform_edt,
     gaussian_filter,
-    median_filter,
 )
 from scipy.ndimage import (
     gaussian_gradient_magnitude as scipy_gaussian_gradient_magnitude,
 )
+from scipy.ndimage import median_filter
 from scipy.ndimage._ni_support import _get_output
 
 from ..core import ArgumentError
