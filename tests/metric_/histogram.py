@@ -4,9 +4,8 @@ Unit and Hypothesis Tests for histogram metrics
 """
 
 import numpy as np
-from hypothesis import assume, given
+from hypothesis import assume, given, strategies
 from hypothesis import settings as hyp_settings
-from hypothesis import strategies
 
 from medpy.metric import histogram
 

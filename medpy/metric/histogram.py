@@ -470,9 +470,9 @@ def relative_bin_deviation(h1, h2):  # 79 us @array, 104 us @list \w 100 bins
     )  # divide through zero only occurs when the bin is zero in both histograms, in which case the division is 0/0 and leads to (and should lead to) 0
     result = numerator / denominator
     numpy.seterr(**old_err_state)
-    result[
-        numpy.isnan(result)
-    ] = 0  # faster than numpy.nan_to_num, which checks for +inf and -inf also
+    result[numpy.isnan(result)] = (
+        0  # faster than numpy.nan_to_num, which checks for +inf and -inf also
+    )
     return numpy.sum(result)
 
 
@@ -531,9 +531,9 @@ def chi_square(h1, h2):  # 23 us @array, 49 us @list \w 100
     )  # divide through zero only occurs when the bin is zero in both histograms, in which case the division is 0/0 and leads to (and should lead to) 0
     result = numpy.square(h1 - h2) / (h1 + h2)
     numpy.seterr(**old_err_state)
-    result[
-        numpy.isnan(result)
-    ] = 0  # faster than numpy.nan_to_num, which checks for +inf and -inf also
+    result[numpy.isnan(result)] = (
+        0  # faster than numpy.nan_to_num, which checks for +inf and -inf also
+    )
     return numpy.sum(result)
 
 
