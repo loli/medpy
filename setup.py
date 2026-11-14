@@ -45,7 +45,14 @@ def try_find_library(lib_name):
 # Special handling for homebrew Boost Python library
 if sys.platform == "darwin":
     if sys.version_info.major > 2:
-        boost_python_library = "boost_python" + str(sys.version_info.major)
+        versioned_library = (
+            "boost_python" + str(sys.version_info.major) + str(sys.version_info.minor)
+        )
+        boost_python_library = (
+            try_find_library(versioned_library)
+            or try_find_library("boost_python" + str(sys.version_info.major))
+            or versioned_library
+        )
     else:
         boost_python_library = "boost_python"
 else:
