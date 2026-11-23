@@ -20,7 +20,7 @@
 
 # build-in modules
 from itertools import product
-from operator import itemgetter
+from operator import index, itemgetter
 
 # third-party modules
 import numpy
@@ -34,13 +34,11 @@ from scipy.ndimage import find_objects
 # code
 class SlidingWindowIterator:
     r"""
-    Moves a sliding window over the array, where the first patch is places centered on
-    the top-left voxel and outside-of-image values filled with `cval`. The returned
-    patches are views if the array.
+    Moves a sliding window over the array, starting at the first voxel.
+    The returned patches are views into the padded array.
 
     All yielded patches will be of size ``psize``. Areas outside of the array are
-    filled with ``cval``. Besides the patch, a patch mask is returned, that denoted
-    the outside values.
+    filled with ``cval``. The patch mask is true for voxels from the input array.
 
     Central element for even patches:
 
@@ -60,10 +58,12 @@ class SlidingWindowIterator:
     def __init__(self, array, psize, cval=0):
         # process arguments
         self.array = numpy.asarray(array)
-        if is_integer(psize):
-            self.psize = [psize] * self.array.ndim
+        try:
+            size = index(psize)
+        except TypeError:
+            self.psize = [index(size) for size in psize]
         else:
-            self.psize = list(psize)
+            self.psize = [size] * self.array.ndim
         self.cval = cval
 
         # validate
@@ -75,7 +75,7 @@ class SlidingWindowIterator:
             )
 
         # compute required padding as pairs
-        self.padding = [(p / 2, p / 2 - (p - 1) % 2) for p in self.psize]
+        self.padding = [(p // 2, (p - 1) // 2) for p in self.psize]
 
         # pad array
         self.array = numpy.pad(
@@ -109,14 +109,12 @@ class SlidingWindowIterator:
         # compute slicer object
         slicer = []
         padder = []
-        for dim, sp in enumerate(spointset):
-            slicer.append(slice(sp, sp + self.psize[dim]))
-            padder.append(
-                (
-                    max(0, -1 * (sp - self.padding[dim][0])),
-                    max(0, (sp + self.psize[dim]) - (self.array.shape[dim] - 1)),
-                )
-            )
+        for dim, start in enumerate(spointset):
+            stop = start + self.psize[dim]
+            left, right = self.padding[dim]
+            valid_stop = self.array.shape[dim] - right
+            slicer.append(slice(start, stop))
+            padder.append((max(0, left - start), max(0, stop - valid_stop)))
 
         # create patch and patch mask
         def_slicer = [slice(x, None if 0 == y else -1 * y) for x, y in padder]
@@ -155,6 +153,8 @@ class SlidingWindowIterator:
         """
         if cval is None:
             cval = self.cval
+        if not hasattr(array, "ndim"):
+            array = numpy.asarray(array)
         _padding = self.padding + [(0, 0)] * (array.ndim - len(self.padding))
         array = numpy.pad(array, _padding, mode="constant", constant_values=cval)
         _psize = self.psize + list(array.shape[len(self.psize) :])

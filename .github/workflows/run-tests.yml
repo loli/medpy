@@ -41,3 +41,4 @@ jobs:
           pytest tests/filter_/*
           pytest tests/io_/*
           pytest tests/metric_/*
+          pytest tests/test_sliding_window_iterator.py
