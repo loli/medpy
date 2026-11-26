@@ -99,7 +99,7 @@ def set_voxel_spacing(hdr, spacing):
     ----------
     hdr : medpy.io.Header
         An image header as returned by `load`.
-    pixel_spacing : tuple of floats
+    spacing : tuple of floats
         The desired pixel spacing.
     """
     hdr.set_voxel_spacing(spacing)
