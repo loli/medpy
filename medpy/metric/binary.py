@@ -1105,10 +1105,10 @@ def obj_fpr(result, reference, connectivity=1):
     >>> obj_fpr(arr2, arr1)
     0.2
     """
-    _, _, _, n_obj_reference, mapping = __distinct_binary_object_correspondences(
+    _, _, n_obj_result, _, mapping = __distinct_binary_object_correspondences(
         reference, result, connectivity
     )
-    return (n_obj_reference - len(mapping)) / float(n_obj_reference)
+    return (n_obj_result - len(mapping)) / float(n_obj_result)
 
 
 def obj_tpr(result, reference, connectivity=1):
@@ -1141,8 +1141,8 @@ def obj_tpr(result, reference, connectivity=1):
     Returns
     -------
     tpr : float
-        A percentage measure of how many distinct binary objects in ``result`` also exists
-        in ``reference``. It has the range :math:`[0, 1]`, where a :math:`1` denotes an ideal score.
+        A percentage measure of how many distinct binary objects in ``reference`` also exists
+        in ``result``. It has the range :math:`[0, 1]`, where a :math:`1` denotes an ideal score.
 
     Raises
     ------
@@ -1218,10 +1218,10 @@ def obj_tpr(result, reference, connectivity=1):
     >>> obj_tpr(arr2, arr1)
     1.0
     """
-    _, _, n_obj_result, _, mapping = __distinct_binary_object_correspondences(
+    _, _, _, n_obj_reference, mapping = __distinct_binary_object_correspondences(
         reference, result, connectivity
     )
-    return len(mapping) / float(n_obj_result)
+    return len(mapping) / float(n_obj_reference)
 
 
 def __distinct_binary_object_correspondences(reference, result, connectivity=1):
@@ -1343,7 +1343,7 @@ def __obj_surface_distances(result, reference, voxelspacing=None, connectivity=1
     """
     sds = list()
     labelmap1, labelmap2, _a, _b, mapping = __distinct_binary_object_correspondences(
-        result, reference, connectivity
+        reference, result, connectivity
     )
     slicers1 = find_objects(labelmap1)
     slicers2 = find_objects(labelmap2)
